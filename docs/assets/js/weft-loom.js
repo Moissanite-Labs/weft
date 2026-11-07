@@ -1,24 +1,8 @@
 import { AestheticMixer } from "./aesthetic-mixer.js";
 import { parseSym2pLine, verifySym2pLine } from "./sym2p-parse.js";
 
-const WGSL_FALLBACK = `struct OrgTelemetry {
-    active_nodes: f32, org_tension: f32, system_time: f32, gini_index: f32,
-    user_rounding: f32, user_density: f32, user_hue: f32, user_contrast: f32,
-    node_vel_0: vec4<f32>, node_vel_1: vec4<f32>,
-};
-@group(0) @binding(0) var<uniform> telemetry : OrgTelemetry;
-struct VertexOutput { @builtin(position) position: vec4<f32>, @location(0) uv: vec2<f32> };
-@vertex fn vs_main(@builtin(vertex_index) vi: u32) -> VertexOutput {
-    var pos = array<vec2<f32>, 6>(vec2(-1.,-1.), vec2(1.,-1.), vec2(-1.,1.), vec2(-1.,1.), vec2(1.,-1.), vec2(1.,1.));
-    var out: VertexOutput; out.position = vec4(pos[vi], 0., 1.); out.uv = pos[vi]; return out;
-}
-@fragment fn fs_main(in: VertexOutput) -> @location(0) vec4<f32> {
-    var p = in.uv; p.x *= 1.6;
-    let d = length(p) - 0.35 - telemetry.org_tension * 0.08;
-    let glow = exp(-abs(d) * 14.0);
-    let col = mix(vec3(0.02, 0.03, 0.05), vec3(0.1, 0.5, 0.85), glow);
-    return vec4(col, 1.0);
-}`;
+const MAX_LABEL_NODES = 32;
+const CHARS_PER_LABEL = 16;
 
 export class WeftLoomEngine {
   constructor({ canvas, shaderUrl, dataUrl, hudEl, mixer }) {
@@ -28,75 +12,152 @@ export class WeftLoomEngine {
     this.hudEl = hudEl;
     this.mixer = mixer || new AestheticMixer();
     this.state = {
-      active_nodes: 4,
-      org_tension: 0.1,
-      gini_index: 0.2,
+      source: "fixture",
+      active_nodes: 19,
+      org_tension: 0.2105,
+      gini_index: 0.2072,
       scroll_jitter: 0,
       lineage_alpha_confidence: 0.52,
       lineage_beta_confidence: 0.48,
+      rejected_packets: 0,
+      velocities: [0.28, 0.84, 0.62, 0.54, 0.38, 0.32, 0.44, 0.30],
     };
+    this.repositories = [];
     this.labelMatrix = [];
     this.device = null;
     this.context = null;
     this.pipeline = null;
     this.uniformBuffer = null;
+    this.labelBuffer = null;
     this.bindGroup = null;
     this.worker = null;
     this.telemetrySab = null;
+    this.resizeObserver = null;
+  }
+
+  resizeCanvasToDisplaySize() {
+    if (!this.canvas) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const rect = this.canvas.getBoundingClientRect();
+    const width = Math.max(1, Math.floor((rect.width || window.innerWidth || 960) * dpr));
+    const height = Math.max(1, Math.floor((rect.height || window.innerHeight || 540) * dpr));
+    if (this.canvas.width !== width || this.canvas.height !== height) {
+      this.canvas.width = width;
+      this.canvas.height = height;
+    }
+  }
+
+  observeCanvasResize() {
+    this.resizeCanvasToDisplaySize();
+    window.addEventListener("resize", () => this.resizeCanvasToDisplaySize(), { passive: true });
+    if (typeof ResizeObserver !== "undefined" && this.canvas) {
+      this.resizeObserver = new ResizeObserver(() => this.resizeCanvasToDisplaySize());
+      this.resizeObserver.observe(this.canvas);
+    }
+  }
+
+  encodeLabelStorageArray() {
+    const out = new Uint32Array(MAX_LABEL_NODES * CHARS_PER_LABEL);
+    for (let i = 0; i < MAX_LABEL_NODES; i++) {
+      const row = this.labelMatrix[i] || [];
+      for (let c = 0; c < CHARS_PER_LABEL; c++) {
+        out[i * CHARS_PER_LABEL + c] = row[c] || 32;
+      }
+    }
+    return out;
   }
 
   async loadSeedJson() {
     try {
-      const res = await fetch("data/moissanite_telemetry.json");
+      const res = await fetch("./data/moissanite_telemetry.json");
       if (!res.ok) return;
       const data = await res.json();
-      this.state.active_nodes = data.active_nodes;
-      this.state.org_tension = data.org_tension;
-      this.state.gini_index = data.gini_index;
-      this.labelMatrix = data.repoLabelsTextMatrix || [];
+      if (data.source) this.state.source = data.source;
+      if (data.active_nodes != null) this.state.active_nodes = data.active_nodes;
+      if (data.org_tension != null) this.state.org_tension = data.org_tension;
+      if (data.gini_index != null) this.state.gini_index = data.gini_index;
+      if (Array.isArray(data.repositories)) {
+        this.repositories = data.repositories;
+        this.state.velocities = data.repositories.slice(0, 8).map((r) => Number(r.commits || 10) / 50.0);
+        if (!Array.isArray(data.repoLabelsTextMatrix)) {
+          this.labelMatrix = data.repositories.map((r) => {
+            const padded = String(r.name || "").toUpperCase().slice(0, CHARS_PER_LABEL).padEnd(CHARS_PER_LABEL, " ");
+            return Array.from(padded).map((ch) => ch.charCodeAt(0));
+          });
+        }
+      }
+      if (Array.isArray(data.repoLabelsTextMatrix)) {
+        this.labelMatrix = data.repoLabelsTextMatrix;
+      }
     } catch (_) {
-      /* offline file:// or missing seed */
+      /* offline or missing seed */
     }
   }
 
-  async fetchSym2p() {
+  applyVerifiedSym2pPacket(parsed) {
+    if (parsed.metrics.active_nodes != null) this.state.active_nodes = parsed.metrics.active_nodes;
+    if (parsed.metrics.tension != null) this.state.org_tension = parsed.metrics.tension;
+    if (parsed.metrics.gini != null) this.state.gini_index = parsed.metrics.gini;
+    if (this.hudEl) {
+      this.hudEl.textContent = `SYM-2P verified (#${String(parsed.sequence).padStart(4, "0")}) | source=${this.state.source} | nodes=${this.state.active_nodes} | tension=${this.state.org_tension.toFixed(4)} | gini=${this.state.gini_index.toFixed(4)}`;
+    }
+  }
+
+  async fetchSym2pOnce() {
     try {
       const res = await fetch(`${this.dataUrl}?t=${Date.now()}`);
+      if (!res.ok) return;
       const text = await res.text();
       const line = text.split("\n").find((l) => l.trim().startsWith(":"));
       if (!line) return;
       const parsed = parseSym2pLine(line);
-      const hashOk = await verifySym2pLine(line);
-      if (parsed.metrics.active_nodes != null) this.state.active_nodes = parsed.metrics.active_nodes;
-      if (parsed.metrics.tension != null) this.state.org_tension = parsed.metrics.tension;
-      if (parsed.metrics.gini != null) this.state.gini_index = parsed.metrics.gini;
-      this.hudEl.textContent = `SYM-2P hash ${hashOk ? "valid" : "unverified"} | nodes ${this.state.active_nodes} | tension ${this.state.org_tension.toFixed(4)}`;
+      const verified = await verifySym2pLine(line);
+      if (!verified.ok) {
+        this.state.rejected_packets += 1;
+        if (this.hudEl) {
+          this.hudEl.textContent = `SYM-2P packet rejected (invalid/missing SHA-256) | rejected=${this.state.rejected_packets}`;
+        }
+        return;
+      }
+      this.applyVerifiedSym2pPacket(parsed);
     } catch (err) {
-      this.hudEl.textContent = `Telemetry deferred: ${err.message}`;
+      if (this.hudEl) {
+        this.hudEl.textContent = `Telemetry snapshot (${this.state.source}) | nodes=${this.state.active_nodes} | tension=${this.state.org_tension.toFixed(4)}`;
+      }
     }
   }
 
   startTelemetryWorker() {
     try {
-      this.telemetrySab = new SharedArrayBuffer(64);
+      if (typeof SharedArrayBuffer !== "undefined" && window.crossOriginIsolated) {
+        this.telemetrySab = new SharedArrayBuffer(64);
+      }
     } catch (_) {
       this.telemetrySab = null;
     }
-    this.worker = new Worker("./assets/workers/telemetry-worker.js");
-    this.worker.onmessage = (event) => {
-      if (event.data?.type === "telemetry") {
-        const m = event.data.metrics;
-        if (m.tension != null) this.state.org_tension = m.tension;
-        if (m.active_nodes != null) this.state.active_nodes = m.active_nodes;
-        if (m.gini != null) this.state.gini_index = m.gini;
-      }
-    };
-    this.worker.postMessage({
-      type: "init",
-      dataUrl: this.dataUrl,
-      sab: this.telemetrySab,
-      pollMs: 60000,
-    });
+    try {
+      this.worker = new Worker("./assets/workers/telemetry-worker.js", { type: "module" });
+      this.worker.onmessage = (event) => {
+        const data = event.data || {};
+        if (data.type === "telemetry" && data.hashValid) {
+          this.applyVerifiedSym2pPacket({
+            sequence: data.sequence ?? 1,
+            metrics: data.metrics || {},
+          });
+        } else if (data.type === "telemetry_rejected") {
+          this.state.rejected_packets += 1;
+        }
+      };
+      this.worker.postMessage({
+        type: "init",
+        dataUrl: this.dataUrl,
+        sab: this.telemetrySab,
+        pollMs: 60000,
+      });
+    } catch (_) {
+      /* Fallback single poller on main thread if module worker cannot start */
+      setInterval(() => this.fetchSym2pOnce(), 60000);
+    }
   }
 
   trackPointerMembrane() {
@@ -123,18 +184,23 @@ export class WeftLoomEngine {
     this.context = this.canvas.getContext("webgpu");
     const format = navigator.gpu.getPreferredCanvasFormat();
     this.context.configure({ device: this.device, format, alphaMode: "opaque" });
-    let code = WGSL_FALLBACK;
-    try {
-      const res = await fetch(this.shaderUrl);
-      if (res.ok) code = await res.text();
-    } catch (_) {
-      /* use fallback */
-    }
+
+    const res = await fetch(this.shaderUrl);
+    if (!res.ok) throw new Error(`Shader fetch failed: ${res.status}`);
+    const code = await res.text();
     const module = this.device.createShaderModule({ code });
+
     this.uniformBuffer = this.device.createBuffer({
       size: 64,
       usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
     });
+    const labelBytes = this.encodeLabelStorageArray();
+    this.labelBuffer = this.device.createBuffer({
+      size: labelBytes.byteLength,
+      usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
+    });
+    this.device.queue.writeBuffer(this.labelBuffer, 0, labelBytes);
+
     this.pipeline = this.device.createRenderPipeline({
       layout: "auto",
       vertex: { module, entryPoint: "vs_main" },
@@ -143,16 +209,25 @@ export class WeftLoomEngine {
     });
     this.bindGroup = this.device.createBindGroup({
       layout: this.pipeline.getBindGroupLayout(0),
-      entries: [{ binding: 0, resource: { buffer: this.uniformBuffer } }],
+      entries: [
+        { binding: 0, resource: { buffer: this.uniformBuffer } },
+        { binding: 1, resource: { buffer: this.labelBuffer } },
+      ],
     });
   }
 
   packUniforms() {
     const aesthetic = this.mixer.calculateUnifiedAestheticVector();
+    document.documentElement.style.setProperty("--weft-rounding", `${Math.round(aesthetic.rounding * 16)}px`);
+    document.documentElement.style.setProperty("--weft-density", aesthetic.density.toFixed(3));
+    document.documentElement.style.setProperty("--weft-hue-deg", `${Math.round(aesthetic.hue * 360)}deg`);
+    document.documentElement.style.setProperty("--weft-contrast", aesthetic.contrast.toFixed(3));
+
     const t0 = performance.now() / 1000;
     const blendTension =
       this.state.org_tension * this.state.lineage_alpha_confidence +
       this.state.gini_index * this.state.lineage_beta_confidence;
+    const v = this.state.velocities;
     return new Float32Array([
       this.state.active_nodes,
       blendTension,
@@ -162,13 +237,14 @@ export class WeftLoomEngine {
       aesthetic.density,
       aesthetic.hue,
       aesthetic.contrast,
-      0, 0, 0, 0,
-      0, 0, 0, 0,
+      v[0] || 0.2, v[1] || 0.2, v[2] || 0.2, v[3] || 0.2,
+      v[4] || 0.2, v[5] || 0.2, v[6] || 0.2, v[7] || 0.2,
     ]);
   }
 
   renderFrame() {
     if (!this.device) return;
+    this.resizeCanvasToDisplaySize();
     const uniforms = this.packUniforms();
     this.device.queue.writeBuffer(this.uniformBuffer, 0, uniforms);
     const encoder = this.device.createCommandEncoder();
@@ -193,41 +269,67 @@ export class WeftLoomEngine {
   fallback2d() {
     const ctx = this.canvas.getContext("2d");
     const draw = () => {
-      this.canvas.width = window.innerWidth;
-      this.canvas.height = window.innerHeight;
+      this.resizeCanvasToDisplaySize();
+      const uniforms = this.packUniforms();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const w = this.canvas.width;
+      const h = this.canvas.height;
+      const hueDeg = Math.round(uniforms[6] * 360);
+      const roundingPx = Math.round(uniforms[4] * 18 * dpr);
+      const density = uniforms[5];
+
       ctx.fillStyle = "#05070b";
-      ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-      const cols = 4;
-      const nodes = Math.min(this.labelMatrix.length, Math.floor(this.state.active_nodes));
+      ctx.fillRect(0, 0, w, h);
+
+      const cols = 5;
+      const nodes = Math.min(this.labelMatrix.length || 19, Math.floor(this.state.active_nodes));
+      const padX = Math.round(48 * dpr);
+      const padY = Math.round(130 * dpr);
+      const cellW = Math.max(120 * dpr, Math.floor((w - padX * 2) / cols) - Math.round(14 * (1.2 - density) * dpr));
+      const cellH = Math.max(64 * dpr, Math.round(82 * dpr));
+
       for (let i = 0; i < nodes; i++) {
         const c = i % cols;
         const r = Math.floor(i / cols);
-        const x = 60 + c * 240;
-        const y = 80 + r * 110;
-        ctx.strokeStyle = i % 2 ? "#38bdf8" : "#f59e0b";
-        ctx.strokeRect(x, y, 210, 80);
+        const x = padX + c * (cellW + Math.round(12 * dpr));
+        const y = padY + r * (cellH + Math.round(12 * dpr));
+        ctx.strokeStyle = i % 2 ? `hsl(${hueDeg}, 82%, 60%)` : `hsl(${(hueDeg + 45) % 360}, 85%, 58%)`;
+        ctx.lineWidth = Math.max(1, 1.5 * dpr);
+        ctx.beginPath();
+        if (typeof ctx.roundRect === "function") {
+          ctx.roundRect(x, y, cellW, cellH, roundingPx);
+        } else {
+          ctx.rect(x, y, cellW, cellH);
+        }
+        ctx.stroke();
+
         const label = (this.labelMatrix[i] || []).map((ch) => String.fromCharCode(ch)).join("").trim();
         ctx.fillStyle = "#e2e8f0";
-        ctx.font = "12px monospace";
-        ctx.fillText(label || `NODE ${i + 1}`, x + 10, y + 28);
+        ctx.font = `${Math.round(12 * dpr)}px "SF Mono", Menlo, monospace`;
+        ctx.fillText(label || `NODE ${i + 1}`, x + Math.round(10 * dpr), y + Math.round(26 * dpr));
+
+        const repo = this.repositories[i];
+        if (repo) {
+          ctx.fillStyle = "#94a3b8";
+          ctx.font = `${Math.round(10 * dpr)}px "SF Mono", Menlo, monospace`;
+          ctx.fillText(
+            `${repo.layer} | T=${Number(repo.tension).toFixed(2)}`,
+            x + Math.round(10 * dpr),
+            y + Math.round(48 * dpr),
+          );
+        }
       }
-      ctx.fillStyle = "#94a3b8";
-      ctx.fillText(
-        `membrane fallback | α=${this.state.lineage_alpha_confidence.toFixed(2)} β=${this.state.lineage_beta_confidence.toFixed(2)}`,
-        24,
-        this.canvas.height - 24,
-      );
       requestAnimationFrame(draw);
     };
     requestAnimationFrame(draw);
   }
 
   async boot() {
+    this.observeCanvasResize();
     await this.loadSeedJson();
-    await this.fetchSym2p();
+    await this.fetchSym2pOnce();
     this.startTelemetryWorker();
     this.trackPointerMembrane();
-    setInterval(() => this.fetchSym2p(), 45000);
     try {
       await this.initializeWebGPU();
       const loop = () => {
@@ -236,7 +338,9 @@ export class WeftLoomEngine {
       };
       requestAnimationFrame(loop);
     } catch (err) {
-      this.hudEl.textContent = `WebGPU membrane pending: ${err.message}`;
+      if (this.hudEl && !this.hudEl.textContent.includes("SYM-2P")) {
+        this.hudEl.textContent = `Canvas2D fallback (${err.message}) | nodes=${this.state.active_nodes}`;
+      }
       this.fallback2d();
     }
   }

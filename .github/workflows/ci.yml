@@ -1,0 +1,68 @@
+name: Weft Runtime & Surface CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Python runtime dependencies (numpy + CPU torch)
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install numpy --extra-index-url https://download.pytorch.org/whl/cpu torch
+
+      - name: Run C2 Invariants unit and C11 header conformance tests
+        run: python3 -m unittest discover -s weft/runtime/invariants -p 'test_*.py'
+
+      - name: Run C1 Plasm shared-memory and mitosis unit tests
+        run: python3 -m unittest discover -s weft/runtime/plasm -p 'test_*.py'
+
+      - name: Run C3 Interaction Combinator VM and BCP codec unit tests
+        run: python3 -m unittest discover -s weft/runtime/ic -p 'test_*.py'
+
+      - name: Run C6 Host and organization telemetry unit tests
+        run: python3 -m unittest discover -s weft/runtime/telemetry -p 'test_*.py'
+
+      - name: Run C4/C5 Ledger triad and off-chain gateway unit tests
+        run: python3 -m unittest discover -s weft/runtime/gateway -p 'test_*.py'
+
+      - name: Run C7 Aywa SYM-2P Python unit tests
+        run: python3 -m unittest discover -s weft/runtime/aywa -p 'test_*.py'
+
+      - name: Run C7 Aywa Node.js SYM-2P and circular-hue Barycentric Mixer tests
+        run: node --test weft/runtime/aywa/test_sym2p_parse.mjs weft/runtime/aywa/test_aesthetic_mixer.mjs
+
+      - name: Run Aywa daemon self-test (no tracked file dirtiness)
+        run: python3 weft/runtime/aywa/weft_daemon.py --self-test
+
+      - name: Run Pages seed and allow-list staging self-test
+        run: python3 weft/runtime/aywa/site_selftest.py
+
+      - name: Run Core and Mac runtime selftests
+        run: |
+          python3 weft/runtime/core/selftest.py
+          python3 weft/runtime/mac/darwin_sysctl.py
+          python3 weft/runtime/mac/metal_loom.py
+
+      - name: Assert clean working tree after all self-tests
+        run: test -z "$(git status --porcelain)"

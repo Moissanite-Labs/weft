@@ -99,7 +99,7 @@ All paths are relative to `/home/user/weft/weft/`. Every line of all 9 files was
 - **Contents:**
   1. Origin lineage from `Moissanite-Labs/compass` Discussion #5 (4 conceptual stages).
   2. A disposition table for 19 Moissanite-Labs repositories (compass, synbios, abios, statos, mlx, ethos, synmerit, exofab, exoframe, exorien, tokenpage, scry, nullmodem, exyber, exo-os, n001, mettle, n30, .github). Each gets a Weft plane, an action (Absorb/Connect/Replace/Supersede) and a target file or label.
-  3. An audit of the suspended contributor accounts `mb-aska` and `mk-aska`.
+  3. An audit of two suspended early collaborator accounts.
 - **Accuracy:** several of its file cross-references are wrong (§3).
 
 ### WEFT-ARCHITECTURE-LOCK.md — 24 lines
@@ -244,7 +244,7 @@ Total: **21 fenced code fragments**, counting the build one-liner (#12) and the 
   - Line 21 says `PlasticOrganismCell` is unified in weft_plasm.py; that class name appears only here (the README has `PlasticWeftCell`).
   - Line 33 lists the ARM64 EL1 purge under mac.md; it is also in almalga:888 and ult.md.
 - **Org tension 0.2662.** MOISSANITE:47. In `runtime/aywa/github_harvester.py:18-66` it is computed from **hard-coded** repository stats (commits, prs, issues and suspended_touch literals), not harvested live. *Would be falsified by:* comparing against the live GitHub API.
-- **Suspended accounts.** MOISSANITE:39-48. `mb-aska` and `mk-aska` are suspended, their fork heads are unfetchable, and canonical code now lives in org branches. *Category:* governance / operations. It mentions local paths `~/Work/` and `exo/weft/` (lines 45, 48).
+- **Suspended accounts.** MOISSANITE:39-48. Two early collaborator accounts were suspended, their personal fork heads are unfetchable, and canonical code now lives in org branches. *Category:* governance / operations. It mentions local paths `~/Work/` and `exo/weft/` (lines 45, 48).
 - **Architecture lock principles.** ARCH-LOCK:18-24.
   - "Hardware-Grounded Verification … rather than mock stubs" (23) is contradicted by every dialogue harness, which uses `torch.randn` inputs and random temperatures, and by `darwin_sysctl.py`, whose `est_core_temp_c` is a load-derived estimate rather than a sensor reading.
   - The fidelity claim of 144 turns, 191 `<pre>` blocks and 5 widgets (24) cannot be checked from my files.

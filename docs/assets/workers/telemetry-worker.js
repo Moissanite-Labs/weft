@@ -1,10 +1,13 @@
-/* SharedArrayBuffer-capable telemetry ingest worker (craft.md).
-   Falls back to postMessage when cross-origin isolation is unavailable. */
+/* SharedArrayBuffer-capable telemetry ingest worker (Codebase C7 / Interface I2).
+   Enforces SHA-256 verification on every SYM-2P line before updating uniforms (#24 / P22). */
+
+import { parseSym2pLine, verifySym2pLine } from "../js/sym2p-parse.js";
 
 let sharedView = null;
-let pollMs = 30000;
+let pollMs = 45000;
+let pollTimer = null;
 
-function applyMetrics(metrics) {
+function applyVerifiedMetrics(metrics, sequence) {
   if (sharedView && sharedView.byteLength >= 16) {
     const floats = new Float32Array(sharedView);
     if (metrics.active_nodes != null) floats[0] = metrics.active_nodes;
@@ -12,28 +15,31 @@ function applyMetrics(metrics) {
     if (metrics.gini != null) floats[3] = metrics.gini;
     floats[2] = performance.now() / 1000;
   }
-  self.postMessage({ type: "telemetry", metrics });
-}
-
-function parseSym2p(line) {
-  const trimmed = (line || "").trim();
-  if (!trimmed.startsWith(":")) return {};
-  const payloadStart = trimmed.indexOf("[");
-  const payloadEnd = trimmed.lastIndexOf("]");
-  const payload = trimmed.slice(payloadStart + 1, payloadEnd);
-  const metrics = {};
-  for (const match of payload.matchAll(/\((\w+)\s+([\d.]+)\)/g)) {
-    metrics[match[1]] = parseFloat(match[2]);
-  }
-  return metrics;
+  self.postMessage({
+    type: "telemetry",
+    hashValid: true,
+    sequence,
+    metrics,
+  });
 }
 
 async function poll(dataUrl) {
   try {
     const res = await fetch(`${dataUrl}?t=${Date.now()}`);
+    if (!res.ok) return;
     const text = await res.text();
     const line = text.split("\n").find((l) => l.trim().startsWith(":")) || "";
-    applyMetrics(parseSym2p(line));
+    if (!line) return;
+    const parsed = parseSym2pLine(line);
+    const verified = await verifySym2pLine(line);
+    if (!verified.ok) {
+      self.postMessage({
+        type: "telemetry_rejected",
+        reason: parsed.hashPresent ? "hash_mismatch" : "missing_hash",
+      });
+      return;
+    }
+    applyVerifiedMetrics(parsed.metrics, parsed.sequence);
   } catch (err) {
     self.postMessage({ type: "error", message: String(err) });
   }
@@ -47,6 +53,7 @@ self.onmessage = (event) => {
       sharedView = msg.sab;
     }
     poll(msg.dataUrl);
-    setInterval(() => poll(msg.dataUrl), pollMs);
+    if (pollTimer) clearInterval(pollTimer);
+    pollTimer = setInterval(() => poll(msg.dataUrl), pollMs);
   }
 };

@@ -1,0 +1,18 @@
+{
+  "schema": "WEFT-TELEMETRY/1.0",
+  "sym2p_vectors": [
+    {
+      "seq": 412,
+      "role": 2,
+      "action": 16,
+      "metrics": {
+        "active_nodes": 19.0,
+        "tension": -0.25,
+        "rate": 0.0015
+      },
+      "expected_prefix": ":02:10:0412"
+    }
+  ],
+  "frame64_byte_size": 64,
+  "frame64_float_count": 16
+}

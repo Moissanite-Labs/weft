@@ -1,17 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.26;
-// Extracted from weft/README.md — deploy via env placeholders only (no live deploy in CI).
 
 interface IProvenanceRegistry {
     function verifyAttribution(bytes32 weightHash, address claimant) external view returns (bool);
 }
 
 /// @title WeftTokenTissue
-/// @notice Metabolic resource asset ledger (vision: apoptosis / homeostasis valves).
+/// @notice Metabolic resource asset ledger with 85%/15% creator/burn excision split (#20, #30).
 contract WeftTokenTissue {
     string public constant name = "Syntactic Weft Tissue Token";
     string public constant symbol = "WEFT";
     uint8 public constant decimals = 18;
+    uint256 public constant CREATOR_SHARE_BPS = 8500;
+    uint256 public constant BPS_DENOMINATOR = 10000;
 
     uint256 public totalSupply;
     mapping(address => uint256) public balanceOf;
@@ -35,8 +36,15 @@ contract WeftTokenTissue {
     }
 
     constructor(address _governorCore) {
+        require(_governorCore != address(0), "ASL_ERROR: INVALID_GOVERNOR_ADDRESS");
         governorCore = _governorCore;
         _mint(_governorCore, 21_000_000 * 10**18);
+    }
+
+    function mintMetabolicAllocation(address recipient, uint256 value) external onlyGovernor returns (bool) {
+        require(recipient != address(0), "ASL_ERROR: MINT_TO_ZERO_ADDRESS");
+        _mint(recipient, value);
+        return true;
     }
 
     function transfer(address to, uint256 value) external returns (bool) {
@@ -65,10 +73,11 @@ contract WeftTokenTissue {
         onlyAuthorizedHarness
         returns (bool)
     {
+        require(creator != address(0), "ASL_ERROR: INVALID_CREATOR_ADDRESS");
         require(balanceOf[swarm] >= value, "ASL_ERROR: SWARM_METABOLICALLY_STARVED");
         unchecked {
             balanceOf[swarm] -= value;
-            uint256 creatorShare = (value * 85) / 100;
+            uint256 creatorShare = (value * CREATOR_SHARE_BPS) / BPS_DENOMINATOR;
             uint256 burnShare = value - creatorShare;
             balanceOf[creator] += creatorShare;
             totalSupply -= burnShare;

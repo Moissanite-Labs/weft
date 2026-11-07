@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Static checks for the GitHub Pages seed (no browser / no Pages enablement)."""
+"""Static and structural checks for the GitHub Pages seed (Issues #15, #19, #24)."""
 
 from __future__ import annotations
 
@@ -8,8 +8,12 @@ import hashlib
 import json
 import os
 import sys
+import tempfile
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+if ROOT not in sys.path:
+    sys.path.insert(0, ROOT)
+
 DOCS = os.path.join(ROOT, "docs")
 WIDGETS_SRC = os.path.join(ROOT, "weft", "browser-sources", "widgets")
 WIDGETS_DOC = os.path.join(DOCS, "widgets")
@@ -70,9 +74,13 @@ def run_site_selftest() -> dict:
         os.path.join(DOCS, "index.html"),
         os.path.join(DOCS, "widgets", "index.html"),
         os.path.join(DOCS, "assets", "js", "weft-loom.js"),
+        os.path.join(DOCS, "assets", "js", "aesthetic-mixer.js"),
+        os.path.join(DOCS, "assets", "js", "sym2p-parse.js"),
+        os.path.join(DOCS, "assets", "workers", "telemetry-worker.js"),
         os.path.join(DOCS, "assets", "shaders", "dashboard_layout.wgsl"),
         os.path.join(DOCS, "data", "telemetry.jsonl"),
         os.path.join(DOCS, "data", "moissanite_telemetry.json"),
+        os.path.join(DOCS, "data", "moissanite_telemetry.bin"),
         os.path.join(DOCS, "seed-manifest.json"),
     ]
     for path in required:
@@ -80,10 +88,17 @@ def run_site_selftest() -> dict:
 
     widget_check = assert_widgets_incorporated()
 
+    # Issue #15: verify no suspended_accounts or personal login leak in docs/data/moissanite_telemetry.json
+    telemetry_json_text = open(os.path.join(DOCS, "data", "moissanite_telemetry.json"), encoding="utf-8").read()
+    if "suspended_accounts" in telemetry_json_text:
+        raise AssertionError("docs/data/moissanite_telemetry.json must not contain suspended_accounts (#15)")
+    telemetry_data = json.loads(telemetry_json_text)
+    if telemetry_data.get("source") not in ("fixture", "github-api"):
+        raise AssertionError("docs/data/moissanite_telemetry.json must state source='fixture' or 'github-api' (#15)")
+
     with open(os.path.join(DOCS, "data", "telemetry.jsonl"), encoding="utf-8") as f:
         line = f.readline().strip()
-    sys.path.insert(0, os.path.dirname(__file__))
-    from sym2p_codec import parse_sym2p_line  # noqa: WPS433
+    from weft.runtime.telemetry.sym2p_codec import parse_sym2p_line
 
     parsed = parse_sym2p_line(line)
     if not parsed.get("hash_valid"):
@@ -95,9 +110,22 @@ def run_site_selftest() -> dict:
     wgsl = open(wgsl_path, encoding="utf-8").read()
     if "@vertex" not in wgsl or "@fragment" not in wgsl:
         raise AssertionError("dashboard_layout.wgsl missing shader stages")
+    for uniform_field in ("gini_index", "user_density", "user_hue", "node_vel_0", "labelData"):
+        if uniform_field not in wgsl:
+            raise AssertionError(f"dashboard_layout.wgsl does not consume {uniform_field} (#24)")
+
+    # Issue #19: verify allow-listed Pages dist staging excludes internal docs/ subdirectories
+    from scripts.sync_pages_seed import stage_pages_dist
+
+    with tempfile.TemporaryDirectory(prefix="weft-pages-dist-") as tmp_dist:
+        staged_info = stage_pages_dist(tmp_dist)
+        if not os.path.isfile(os.path.join(tmp_dist, "index.html")):
+            raise AssertionError("Staged dist missing index.html")
+        if os.path.exists(os.path.join(tmp_dist, "corpus")) or os.path.exists(os.path.join(tmp_dist, "program")):
+            raise AssertionError("Staged dist leaked internal docs/corpus or docs/program (#19)")
 
     ledger_root = os.path.join(ROOT, "weft", "runtime", "ledger")
-    for name in ("WeftTokenTissue.sol", "ProvenanceRegistry.sol"):
+    for name in ("WeftTokenTissue.sol", "ProvenanceRegistry.sol", "TensionGovernor.sol"):
         _must_exist(os.path.join(ledger_root, name))
 
     return {
@@ -105,6 +133,7 @@ def run_site_selftest() -> dict:
         "docs_root": DOCS,
         "widgets_incorporated": widget_check,
         "sym2p_metrics": parsed["metrics"],
+        "staged_allowlist": staged_info["staged"],
     }
 
 
