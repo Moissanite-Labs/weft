@@ -21,10 +21,91 @@ WEFT_ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
 sys.path.insert(0, HERE)
 sys.path.insert(0, os.path.abspath(os.path.join(HERE, "..", "aywa")))
 
-from weft_plasm import run_plasm_cycle
+import torch
+
+from weft_plasm import R_INVARIANT, run_plasm_cycle, verify_weight_update_safety, weight_frobenius_size
 from weft_ic_vm import run_ic_verification
 from weft_daemon import read_darwin_hardware_metrics
 from github_harvester import harvest_moissanite_telemetry
+
+def run_weight_safety_checks():
+    """Observable safety invariants for baseline-distance and metabolic budget."""
+    cases = []
+
+    # 1) Matching Frobenius sizes after a large move: compared-sizes is 0, baseline distance is 200.
+    baseline = torch.tensor([100.0, 0.0])
+    current = torch.tensor([-100.0, 0.0])
+    candidate = current.clone()
+    compared = abs(weight_frobenius_size(candidate) - weight_frobenius_size(current))
+    baseline_distance = float(torch.norm(candidate - baseline).item())
+    trap = verify_weight_update_safety(
+        baseline, current, candidate, remaining_budget=50.0, update_cost=1.0, max_baseline_distance=500.0
+    )
+    compared_sizes_would_pass = compared == 0.0
+    cases.append({
+        "name": "baseline_distance_with_matching_sizes",
+        "compared_sizes": compared,
+        "baseline_distance": baseline_distance,
+        "compared_sizes_trap_would_hide_move": compared_sizes_would_pass and baseline_distance == 200.0,
+        "uses_baseline_distance_not_compared_sizes": trap["baseline_distance"] == 200.0 and trap["compared_sizes"] == 0.0,
+        "status": "PASS"
+        if (compared_sizes_would_pass and baseline_distance == 200.0 and trap["baseline_distance"] == 200.0)
+        else "FAIL",
+    })
+
+    # 2) Reject not-a-number weight state.
+    nan_candidate = torch.tensor([float("nan"), 1.0])
+    nan_res = verify_weight_update_safety(
+        baseline, current, nan_candidate, remaining_budget=10.0, update_cost=1.0
+    )
+    cases.append({
+        "name": "reject_nan_candidate",
+        "accepted": nan_res["accepted"],
+        "status": "PASS" if not nan_res["accepted"] else "FAIL",
+    })
+
+    # 3) Remaining budget 1 must not accept an update costing 2.5 (no success with budget -1.5).
+    underflow = verify_weight_update_safety(
+        baseline, current, candidate, remaining_budget=1.0, update_cost=2.5, max_baseline_distance=500.0
+    )
+    cases.append({
+        "name": "reject_negative_remaining_budget",
+        "accepted": underflow["accepted"],
+        "remaining_budget": underflow.get("remaining_budget"),
+        "status": "PASS"
+        if (not underflow["accepted"] and underflow.get("remaining_budget") == -1.5)
+        else "FAIL",
+    })
+
+    # 4) Budget must be finite and positive before any update is accepted.
+    exhausted = verify_weight_update_safety(
+        baseline, current, candidate, remaining_budget=0.0, update_cost=0.5, max_baseline_distance=500.0
+    )
+    nonfinite = verify_weight_update_safety(
+        baseline, current, candidate, remaining_budget=float("inf"), update_cost=0.5, max_baseline_distance=500.0
+    )
+    precondition_ok = not exhausted["accepted"] and not nonfinite["accepted"]
+    cases.append({
+        "name": "remaining_budget_precondition",
+        "exhausted_accepted": exhausted["accepted"],
+        "nonfinite_accepted": nonfinite["accepted"],
+        "status": "PASS" if precondition_ok else "FAIL",
+    })
+
+    # Guardrail: within R_INVARIANT, legitimate updates still dispatch.
+    small_step = torch.tensor([95.0, 10.0])
+    within = verify_weight_update_safety(
+        baseline, baseline, small_step, remaining_budget=25.0, update_cost=2.0, max_baseline_distance=R_INVARIANT
+    )
+    cases.append({
+        "name": "accept_invariant_safe_update",
+        "accepted": within["accepted"],
+        "status": "PASS" if within["accepted"] else "FAIL",
+    })
+
+    status = "PASS" if all(c["status"] == "PASS" for c in cases) else "FAIL"
+    return {"status": status, "cases": cases}
+
 
 def audit_corpus(root_dir):
     md_files = sorted(glob.glob(f"{root_dir}/**/*.md", recursive=True))
@@ -68,6 +149,7 @@ def audit_corpus(root_dir):
     }
 
 def main():
+    safety_res = run_weight_safety_checks()
     plasm_res = run_plasm_cycle(cycles=3)
     ic_res = run_ic_verification()
     aywa_dir = os.path.abspath(os.path.join(HERE, "..", "aywa"))
@@ -75,9 +157,13 @@ def main():
     hw_res = read_darwin_hardware_metrics()
     corpus_res = audit_corpus(WEFT_ROOT)
 
-    overall = all(x == "PASS" for x in [plasm_res["status"], ic_res["status"], corpus_res["status"]])
+    overall = all(
+        x == "PASS"
+        for x in [safety_res["status"], plasm_res["status"], ic_res["status"], corpus_res["status"]]
+    )
     summary = {
         "overall_status": "PASS" if overall else "FAIL",
+        "weight_safety_checks": safety_res,
         "plasm_substrate": plasm_res,
         "interaction_combinator_vm": ic_res,
         "moissanite_telemetry": {
