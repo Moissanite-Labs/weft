@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WEFT // Sovereign Hardware-Synchronized Spatial Computing Environment</title>
+    <style>
+        html, body { margin: 0; padding: 0; width: 100%; height: 100%; background: #05070b; color: #e2e8f0; font-family: "SF Mono", Menlo, monospace; overflow: hidden; }
+        #gpuCanvas { width: 100vw; height: 100vh; display: block; }
+        #hud { position: fixed; top: 16px; left: 16px; background: rgba(8, 12, 20, 0.86); border: 1px solid rgba(56, 189, 248, 0.35); padding: 14px 18px; border-radius: 6px; font-size: 12px; line-height: 1.6; pointer-events: none; }
+        .title { color: #38bdf8; font-weight: 700; letter-spacing: 0.08em; }
+    </style>
+</head>
+<body>
+    <canvas id="gpuCanvas"></canvas>
+    <div id="hud">
+        <div class="title">WEFT SOVEREIGN LOOM // MOISSANITE-LABS TELEMETRY</div>
+        <div id="metrics">Initializing Apple Silicon / WebGPU bridge...</div>
+    </div>
+    <script>
+        class SovereignLoomEngine {
+            constructor() {
+                this.repoLabelsTextMatrix = [
+                    [87, 69, 70, 84, 45, 83, 73, 78, 71, 85, 76, 65, 82, 73, 84, 89], // "WEFT-SINGULARITY"
+                    [83, 89, 78, 66, 73, 79, 83, 45, 77, 65, 84, 82, 73, 88, 32, 32], // "SYNBIOS-MATRIX  "
+                    [65, 66, 73, 79, 83, 45, 80, 82, 79, 84, 79, 67, 79, 76, 32, 32], // "ABIOS-PROTOCOL  "
+                    [83, 84, 65, 84, 79, 83, 45, 75, 69, 82, 78, 69, 76, 32, 32, 32], // "STATOS-KERNEL   "
+                    [67, 79, 77, 80, 65, 83, 83, 45, 78, 79, 82, 84, 72, 32, 32, 32], // "COMPASS-NORTH   "
+                    [77, 76, 88, 45, 84, 69, 78, 83, 79, 82, 45, 67, 79, 82, 69, 32], // "MLX-TENSOR-CORE "
+                    [69, 84, 72, 79, 83, 45, 71, 79, 86, 69, 82, 78, 32, 32, 32, 32], // "ETHOS-GOVERN    "
+                    [83, 89, 78, 77, 69, 82, 73, 84, 45, 76, 69, 68, 71, 69, 82, 32]  // "SYNMERIT-LEDGER "
+                ];
+                this.telemetry = { active_nodes: 19.0, org_tension: 0.24, system_time: 0.0, gini: 0.28 };
+            }
+            decodeLabel(row) {
+                return row.map(c => String.fromCharCode(c)).join("").trim();
+            }
+            async boot() {
+                try {
+                    const res = await fetch("./moissanite_telemetry.json");
+                    if (res.ok) {
+                        const data = await res.json();
+                        this.telemetry.active_nodes = data.active_nodes;
+                        this.telemetry.org_tension = data.org_tension;
+                        this.telemetry.gini = data.gini_index;
+                        if (data.repoLabelsTextMatrix) this.repoLabelsTextMatrix = data.repoLabelsTextMatrix;
+                    }
+                } catch (_) {}
+                const canvas = document.getElementById("gpuCanvas");
+                const ctx = canvas.getContext("2d");
+                const render = (t) => {
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerHeight;
+                    ctx.fillStyle = "#05070b";
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    const cols = 5;
+                    const padX = 220, padY = 120;
+                    this.repoLabelsTextMatrix.forEach((row, idx) => {
+                        const c = idx % cols, r = Math.floor(idx / cols);
+                        const x = 80 + c * padX, y = 110 + r * padY;
+                        ctx.strokeStyle = idx < 2 ? "#f59e0b" : "#38bdf8";
+                        ctx.fillStyle = "rgba(15, 23, 42, 0.85)";
+                        ctx.fillRect(x, y, 195, 84);
+                        ctx.strokeRect(x, y, 195, 84);
+                        ctx.fillStyle = "#e2e8f0";
+                        ctx.font = "12px SF Mono, Menlo, monospace";
+                        ctx.fillText(this.decodeLabel(row), x + 12, y + 32);
+                        ctx.fillStyle = "#94a3b8";
+                        ctx.fillText(`NODE #${String(idx + 1).padStart(2, "0")} | T=${this.telemetry.org_tension.toFixed(2)}`, x + 12, y + 58);
+                    });
+                    document.getElementById("metrics").textContent =
+                        `Nodes: ${this.telemetry.active_nodes} | Tension: ${this.telemetry.org_tension.toFixed(4)} | Gini: ${this.telemetry.gini.toFixed(4)}`;
+                    requestAnimationFrame(render);
+                };
+                requestAnimationFrame(render);
+            }
+        }
+        window.addEventListener("DOMContentLoaded", () => new SovereignLoomEngine().boot());
+    </script>
+</body>
+</html>

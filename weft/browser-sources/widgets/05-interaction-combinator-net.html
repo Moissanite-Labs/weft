@@ -1,0 +1,1532 @@
+<html lang="en" dir="ltr"><head>
+      <meta data-sandbox-injected="" http-equiv="Content-Security-Policy" content="
+          default-src 'none';
+          base-uri 'none';
+          connect-src https://fonts.gstatic.com https://www.gstatic.com;
+          font-src https://fonts.gstatic.com data:;
+          form-action 'none';
+          
+          worker-src blob: https://*.scf.usercontent.goog;
+          img-src data: https://encrypted-tbn0.gstatic.com https://encrypted-tbn1.gstatic.com https://encrypted-tbn2.gstatic.com https://encrypted-tbn3.gstatic.com ;
+          media-src 'none';
+          object-src 'none';
+          script-src 'unsafe-inline' 'unsafe-eval' https://www.gstatic.com https://widgetlibs.static.usercontent.goog https://*.scf.usercontent.goog;
+          style-src 'unsafe-inline' 'unsafe-eval' https://fonts.googleapis.com https://www.gstatic.com/;">
+      <meta data-sandbox-injected="" charset="UTF-8">
+      <meta data-sandbox-injected="" name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="enable-onep-api" content="false"><script data-sandbox-injected="true">(function(){var g=Object.defineProperty,k=globalThis,l=function(a,b){if(b)a:{var c=k;a=a.split(".");for(var d=0;d<a.length-1;d++){var e=a[d];if(!(e in c))break a;c=c[e]}a=a[a.length-1];d=c[a];b=b(d);b!=d&&b!=null&&g(c,a,{configurable:!0,writable:!0,value:b})}};l("Promise.withResolvers",function(a){return a?a:function(){var b,c;return{promise:new Promise(function(d,e){b=d;c=e}),resolve:b,reject:c}}});var m=function(a){return typeof a==="object"&&a!==null&&"kind"in a&&typeof a.kind==="string"&&("payload"in a||a.kind==="___CROSS_FRAME_HANDSHAKE___")},n=class{constructor(){this.j=new Map}i(a){var b=a.data;if(m(b)){let c=b.payload;if(b=this.j.get(b.kind))(a=a.ports&&a.ports.length>0?a.ports:void 0)?b(c,a):b(c)}}sendMessage(a,b,c){if(!this.port)throw Error("a");a={kind:String(a),payload:b||{}};c&&c.length>0?this.port.postMessage(a,c):this.port.postMessage(a)}},p=async function(a){var b=window.parent;
+return a.h?{}:new Promise(c=>{var d=e=>{e.source===b&&m(e.data)&&e.data.kind==="___CROSS_FRAME_HANDSHAKE___"&&(window.removeEventListener("message",d),a.port=e.ports[0],a.port.onmessage=a.i.bind(a),a.h=!0,c(e.data.payload||{}))};window.addEventListener("message",d)})},q=class extends n{constructor(){super(...arguments);this.h=!1}};if(typeof window!=="undefined"&&window.history){let a=window.history.replaceState.bind(window.history);window.history.replaceState=(c,d,e)=>{try{a(c,d,e)}catch{}};let b=window.history.pushState.bind(window.history);window.history.pushState=(c,d,e)=>{try{b(c,d,e)}catch{}}}
+if(typeof window!=="undefined"&&window.fetch){let a=window.fetch.bind(window);window.fetch=async(...b)=>{try{return await a(...b)}catch(c){b=b[0];b=typeof b==="string"?b:b&&typeof b==="object"&&"url"in b?String(b.url||""):String(b||"");if(b.includes("tracking")||b.includes("analytics")||b.includes("beacon"))return new Response(null,{status:204});throw c;}}}var {promise:r,resolve:t}=Promise.withResolvers(),{promise:u,resolve:v}=Promise.withResolvers(),w=!1;
+(async function(){var a=new q,b=await p(a);b&&b.enableSandboxToEditorSync&&(w=!!b.enableSandboxToEditorSync);if(b&&b.initialPayload){let c=b.initialPayload;window.initialPayload=c;window.setTimeout(()=>{window.dispatchEvent(new MessageEvent("message",{data:c}))},0)}t(a);(a=a.port)&&v(a)})();function x(a){r.then(b=>{b.sendMessage("ERROR",{error:a})})}window.onerror=(a,b,c,d,e)=>{x(e);return!0};
+window.onunhandledrejection=a=>{var b=String(a.reason||"");b.includes("Failed to fetch")||b.includes("Content Security Policy")||b.includes("replaceState")||x(Error(a.reason));a.preventDefault()};
+window.document.addEventListener("DOMContentLoaded",()=>{r.then(a=>{a.sendMessage("ISOLATE_READY",{});var b=window.document.querySelector("#resize-target")||window.document.body,c=NaN,d=NaN,e=!1;(new ResizeObserver(()=>{e||(e=!0,window.requestAnimationFrame(()=>{e=!1;var f=Math.ceil(b.scrollHeight),h=Math.ceil(b.scrollWidth);f===c&&h===d||f===0&&h===0||(c=f,d=h,a.sendMessage("RESIZE",{height:f,width:h}))}))})).observe(b);if(w){let f;(new MutationObserver(()=>{f&&window.clearTimeout(f);f=window.setTimeout(()=>
+{f=void 0;a.sendMessage("HTML_CHANGED",{html:"<!DOCTYPE html>\n"+window.document.documentElement.outerHTML})},500)})).observe(window.document.documentElement,{attributes:!0,childList:!0,subtree:!0,characterData:!0})}})});window.addEventListener("resizeRequest",()=>{r.then(a=>{var b=window.document.querySelector("#resize-target")||window.document.body,c=Math.ceil(b.scrollHeight);b=Math.ceil(b.scrollWidth);c===0&&b===0||a.sendMessage("MANUAL_RESIZE",{height:c,width:b})})});
+function y(a){var b=null;a instanceof Element?b=a:a&&a.nodeType===Node.TEXT_NODE&&(b=a.parentElement);if(!b)return null;for(a=b;a&&a!==window.document.body;){if(a.matches('a,button,input,textarea,select,option,details,summary,area,[jsaction],[data-jsaction],[role],[tabindex]:not([tabindex="-1"])'))return z(a);if(a instanceof HTMLElement&&a.isContentEditable)return z(a);a=a.parentElement}return null}
+function z(a){var b={tagName:a.tagName.toUpperCase(),attributes:{}},c=["role","jsaction","data-jsaction","tabindex"];for(let d of c)c=a.getAttribute(d),c!==null&&(b.attributes[d]=c);a instanceof HTMLElement&&a.isContentEditable&&(b.isContentEditable=!0);return b}window.addEventListener("click",a=>{var b=(a=a.target)?y(a):null;r.then(c=>{c.sendMessage("CLICK",{matchedNode:b})})},!0);
+window.addEventListener("request_window_open",a=>{var b=a.detail;r.then(c=>{c.sendMessage("REQUEST_WINDOW_OPEN",{url:b.url,target:b.target,features:b.features})})});window.sandboxConsoleLog=(a,b)=>{r.then(c=>{c.sendMessage("CONSOLE_LOG",{logLevel:a,message:b})})};if(document.querySelector('meta[name="enable-onep-api"]')?.getAttribute("content")==="true"){let a=!1;window.claimPortReady=()=>{if(a)return null;a=!0;return u}}window.logError=x;}).call(this);</script><script>(function(){window.open=(a,b,d)=>{var c;a&&(c=a instanceof URL?a.toString():String(a));window.dispatchEvent(new CustomEvent("request_window_open",{detail:{url:c,target:b,features:d}}));return null};var e,f,g;function h(a){a.button===0&&((e=a=(a.target instanceof Element?a.target:null)?.closest("a")??void 0)?(a=a.getBoundingClientRect(),f=a.left,g=a.top):g=f=void 0)}function k(){g=f=e=void 0}window.addEventListener("pointerdown",h,!0);window.addEventListener("mousedown",h,!0);
+window.addEventListener("pointercancel",k,!0);
+window.addEventListener("click",a=>{var b=(a.target instanceof Element?a.target:null)?.closest("a"),d=b?.getBoundingClientRect();d=a.detail>0&&b!=null&&e===b&&d!==void 0&&f!==void 0&&g!==void 0&&(Math.abs(d.left-f)>5||Math.abs(d.top-g)>5);k();if(b&&b.hasAttribute("href")){b=b.getAttribute("href")??"";var c=b.trim();c.startsWith("#")||(c=c.replace(/[\u0000-\u0020]+/g,""),c===""||/^javascript:/i.test(c)?a.preventDefault():d||a.defaultPrevented?(a.preventDefault(),a.stopPropagation()):(a.preventDefault(),
+a.stopPropagation(),window.dispatchEvent(new CustomEvent("request_window_open",{detail:{url:b,target:"_blank"}}))))}},!0);}).call(this);</script><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"><title>Generated Interactive Widget</title><script type="module" crossorigin="">
+import { jsx, jsxs } from 'https://widgetlibs.static.usercontent.goog/react/jsx-runtime-Dc9ViRTo.js';
+import React, { useState, useRef, useEffect } from 'https://widgetlibs.static.usercontent.goog/react-Dd1pKoqe.js';
+import ReactDOM from 'https://widgetlibs.static.usercontent.goog/react-dom/client-BTuQ-l8_.js';
+import * as Slider from 'https://widgetlibs.static.usercontent.goog/@radix-ui/react-slider-DXk-CvUR.js';
+import { ErrorBoundary } from 'https://widgetlibs.static.usercontent.goog/react-error-boundary-BY2GTZrN.js';
+
+true              &&(function polyfill() {
+	const relList = document.createElement("link").relList;
+	if (relList && relList.supports && relList.supports("modulepreload")) return;
+	for (const link of document.querySelectorAll("link[rel=\"modulepreload\"]")) processPreload(link);
+	new MutationObserver((mutations) => {
+		for (const mutation of mutations) {
+			if (mutation.type !== "childList") continue;
+			for (const node of mutation.addedNodes) if (node.tagName === "LINK" && node.rel === "modulepreload") processPreload(node);
+		}
+	}).observe(document, {
+		childList: true,
+		subtree: true
+	});
+	function getFetchOpts(link) {
+		const fetchOpts = {};
+		if (link.integrity) fetchOpts.integrity = link.integrity;
+		if (link.referrerPolicy) fetchOpts.referrerPolicy = link.referrerPolicy;
+		if (link.crossOrigin === "use-credentials") fetchOpts.credentials = "include";
+		else if (link.crossOrigin === "anonymous") fetchOpts.credentials = "omit";
+		else fetchOpts.credentials = "same-origin";
+		return fetchOpts;
+	}
+	function processPreload(link) {
+		if (link.ep) return;
+		link.ep = true;
+		const fetchOpts = getFetchOpts(link);
+		fetch(link.href, fetchOpts);
+	}
+}());
+
+function FallbackComponent() {
+  return /* @__PURE__ */ jsx("div", { className: "p-5 text-error text-sm font-medium", children: "An error occurred inside the interaction net simulation." });
+}
+function InteractionNetWidget() {
+  const [swarmActivity, setSwarmActivity] = useState([45]);
+  const [reductionSpeed, setReductionSpeed] = useState([60]);
+  const [attributionMode, setAttributionMode] = useState("strict");
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [, setFrameTick] = useState(0);
+  const canvasRef = useRef(null);
+  const [dimensions, setDimensions] = useState({ width: 800, height: 450 });
+  const nodesRef = useRef([]);
+  const edgesRef = useRef([]);
+  const lastTimeRef = useRef(performance.now());
+  const [metrics, setMetrics] = useState({
+    reductionsSec: 0,
+    systemTension: 0,
+    metabolicBudget: 100
+  });
+  useEffect(() => {
+    if (!canvasRef.current) return;
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        const { width: width2 } = entry.contentRect;
+        const boundedWidth = Math.max(width2, 360);
+        setDimensions({
+          width: boundedWidth,
+          height: boundedWidth * 0.5625
+          // 16:9 Landscape Forced
+        });
+      }
+    });
+    resizeObserver.observe(canvasRef.current);
+    return () => resizeObserver.disconnect();
+  }, []);
+  useEffect(() => {
+    const initialNodes = [
+      { id: "a1", type: "agent", label: "M1_Max_Swarm_Alpha", x: 200, y: 150, vx: 0, vy: 0, metabolicCost: 12, tension: 0.1, provenanceHash: "0x8f2d" },
+      { id: "a2", type: "agent", label: "M1_Max_Swarm_Beta", x: 600, y: 300, vx: 0, vy: 0, metabolicCost: 15, tension: 0.2, provenanceHash: "0x3a9e" },
+      { id: "c1", type: "code_block", label: "Core_IP_Kernel", x: 400, y: 220, vx: 0, vy: 0, metabolicCost: 8, tension: 0.4, provenanceHash: "0x7bc1" },
+      { id: "c2", type: "code_block", label: "Morphed_DSL_v2", x: 300, y: 320, vx: 0, vy: 0, metabolicCost: 22, tension: 0.7, provenanceHash: "0xef41" },
+      { id: "c3", type: "net_construct", label: "Unified_Net_Combinator", x: 500, y: 120, vx: 0, vy: 0, metabolicCost: 34, tension: 0.5, provenanceHash: "0x91da" }
+    ];
+    const initialEdges = [
+      { id: "e1", source: "a1", target: "c1", weight: 0.8, type: "contains" },
+      { id: "e2", source: "a2", target: "c2", weight: 1.2, type: "morphs" },
+      { id: "e3", source: "c2", target: "c1", weight: 1.5, type: "morphs" },
+      { id: "e4", source: "a1", target: "c3", weight: 0.6, type: "executes" },
+      { id: "e5", source: "c3", target: "a2", weight: 0.9, type: "contains" }
+    ];
+    nodesRef.current = initialNodes;
+    edgesRef.current = initialEdges;
+  }, []);
+  useEffect(() => {
+    if (!isPlaying) return;
+    lastTimeRef.current = performance.now();
+    let frameId;
+    const tick = (now) => {
+      const delta = Math.min((now - lastTimeRef.current) / 1e3, 0.1);
+      lastTimeRef.current = now;
+      const nodes = nodesRef.current;
+      const edges = edgesRef.current;
+      const { width: width2, height: height2 } = dimensions;
+      if (nodes.length === 0) {
+        frameId = requestAnimationFrame(tick);
+        return;
+      }
+      const activityFactor = swarmActivity[0] / 50;
+      const speedFactor = reductionSpeed[0] / 50;
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const dx = nodes[j].x - nodes[i].x;
+          const dy = nodes[j].y - nodes[i].y;
+          const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+          const force = 1200 / (dist * dist) * activityFactor;
+          if (dist < 250) {
+            const fx = dx / dist * force;
+            const fy = dy / dist * force;
+            nodes[i].vx -= fx;
+            nodes[i].vy -= fy;
+            nodes[j].vx += fx;
+            nodes[j].vy += fy;
+          }
+        }
+      }
+      edges.forEach((edge) => {
+        const sourceNode = nodes.find((n) => n.id === edge.source);
+        const targetNode = nodes.find((n) => n.id === edge.target);
+        if (sourceNode && targetNode) {
+          const dx = targetNode.x - sourceNode.x;
+          const dy = targetNode.y - sourceNode.y;
+          const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+          const targetDist = 140;
+          const springForce = (dist - targetDist) * 0.4 * edge.weight * speedFactor;
+          const fx = dx / dist * springForce;
+          const fy = dy / dist * springForce;
+          sourceNode.vx += fx;
+          sourceNode.vy += fy;
+          targetNode.vx -= fx;
+          targetNode.vy -= fy;
+        }
+      });
+      let totalTension = 0;
+      let totalMetabolicLoad = 0;
+      nodes.forEach((node) => {
+        const cx = width2 / 2;
+        const cy = height2 / 2;
+        node.vx += (cx - node.x) * 0.05 * activityFactor;
+        node.vy += (cy - node.y) * 0.05 * activityFactor;
+        node.x += node.vx * delta * 15;
+        node.y += node.vy * delta * 15;
+        node.vx *= 0.82;
+        node.vy *= 0.82;
+        const pad = 40;
+        if (node.x < pad) {
+          node.x = pad;
+          node.vx *= -0.5;
+        }
+        if (node.x > width2 - pad) {
+          node.x = width2 - pad;
+          node.vx *= -0.5;
+        }
+        if (node.y < pad) {
+          node.y = pad;
+          node.vy *= -0.5;
+        }
+        if (node.y > height2 - pad) {
+          node.y = height2 - pad;
+          node.vy *= -0.5;
+        }
+        const instantaneousTension = Math.sqrt(node.vx * node.vx + node.vy * node.vy);
+        node.tension = Math.min(Math.max(instantaneousTension / 12, 0.1), 1);
+        totalTension += node.tension;
+        const baseMetabolic = node.type === "agent" ? 25 : node.type === "code_block" ? 12 : 18;
+        node.metabolicCost = baseMetabolic * (1 + node.tension * 0.5) * activityFactor;
+        totalMetabolicLoad += node.metabolicCost;
+      });
+      if (Math.random() < 0.03 * activityFactor) {
+        const randNode = nodes[Math.floor(Math.random() * nodes.length)];
+        if (randNode) {
+          const hex = Math.floor(Math.random() * 65535).toString(16).padStart(4, "0");
+          randNode.provenanceHash = `0x${hex}`;
+        }
+      }
+      const computedReductions = speedFactor * 8.4 + totalTension / nodes.length * 4.2;
+      const avgTension = totalTension / nodes.length;
+      const attributionEfficiency = attributionMode === "strict" ? 0.95 : attributionMode === "fluid" ? 1.25 : 1;
+      const budgetLeft = Math.max(140 - totalMetabolicLoad * 0.8 * attributionEfficiency, 10);
+      setMetrics({
+        reductionsSec: computedReductions,
+        systemTension: avgTension,
+        metabolicBudget: budgetLeft
+      });
+      setFrameTick((t) => t + 1);
+      frameId = requestAnimationFrame(tick);
+    };
+    frameId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frameId);
+  }, [isPlaying, swarmActivity, reductionSpeed, attributionMode, dimensions]);
+  const { width, height } = dimensions;
+  return /* @__PURE__ */ jsxs("div", { className: "w-full bg-card text-foreground font-sans select-none overflow-hidden", children: [
+    /* @__PURE__ */ jsxs("div", { ref: canvasRef, className: "relative w-full overflow-hidden border-b border-border bg-[#0d0f14]", children: [
+      /* @__PURE__ */ jsx("div", { className: "absolute top-0 end-0 p-3 z-10 flex items-center justify-end pointer-events-none", children: /* @__PURE__ */ jsx(
+        "button",
+        {
+          onClick: () => setIsPlaying(!isPlaying),
+          className: "w-9 h-9 rounded-full flex items-center justify-center cursor-pointer transition-colors shadow-none bg-zinc-800/90 hover:bg-zinc-700 text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-primary pointer-events-auto relative overflow-visible after:absolute after:-inset-1",
+          "aria-label": isPlaying ? "Pause net reduction simulation" : "Play net reduction simulation",
+          children: /* @__PURE__ */ jsx("span", { className: "material-icons !text-base", children: isPlaying ? "pause" : "play_arrow" })
+        }
+      ) }),
+      /* @__PURE__ */ jsxs("div", { className: "absolute top-0 start-0 p-4 pointer-events-none flex flex-col gap-1 text-[11px] font-medium tracking-wide", children: [
+        /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-1.5 text-blue-400", children: [
+          /* @__PURE__ */ jsx("span", { className: "w-2 h-2 rounded-full bg-blue-400" }),
+          " Swarm Agent Node"
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-1.5 text-emerald-400", children: [
+          /* @__PURE__ */ jsx("span", { className: "w-2 h-2 rounded-full bg-emerald-400" }),
+          " Immutable IP Block"
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-1.5 text-amber-400", children: [
+          /* @__PURE__ */ jsx("span", { className: "w-2 h-2 rounded-full bg-amber-400" }),
+          " Morph Net Construct"
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxs(
+        "svg",
+        {
+          role: "img",
+          "aria-label": "Interactive graph tracking interaction net reductions, cryptographic IP provenance mutation, and metabolic budget alignment",
+          viewBox: `0 0 ${width} ${height}`,
+          className: "w-full h-full block",
+          children: [
+            /* @__PURE__ */ jsx("defs", { children: /* @__PURE__ */ jsx("pattern", { id: "grid-pattern", width: "40", height: "40", patternUnits: "userSpaceOnUse", children: /* @__PURE__ */ jsx("path", { d: "M 40 0 L 0 0 0 40", fill: "none", stroke: "#ffffff", strokeOpacity: "0.03", strokeWidth: "1" }) }) }),
+            /* @__PURE__ */ jsx("rect", { width: "100%", height: "100%", fill: "url(#grid-pattern)" }),
+            edgesRef.current.map((edge) => {
+              const src = nodesRef.current.find((n) => n.id === edge.source);
+              const tgt = nodesRef.current.find((n) => n.id === edge.target);
+              if (!src || !tgt) return null;
+              let strokeColor = "#3b82f6";
+              if (edge.type === "morphs") strokeColor = "#10b981";
+              if (edge.type === "executes") strokeColor = "#f59e0b";
+              const avgNodeTension = (src.tension + tgt.tension) / 2;
+              return /* @__PURE__ */ jsxs("g", { children: [
+                /* @__PURE__ */ jsx(
+                  "line",
+                  {
+                    x1: src.x,
+                    y1: src.y,
+                    x2: tgt.x,
+                    y2: tgt.y,
+                    stroke: strokeColor,
+                    strokeWidth: 1.5 + avgNodeTension * 3,
+                    strokeOpacity: 0.4 + avgNodeTension * 0.5,
+                    strokeDasharray: edge.type === "morphs" ? "4 4" : void 0
+                  }
+                ),
+                isPlaying && /* @__PURE__ */ jsx(
+                  "circle",
+                  {
+                    cx: src.x + (tgt.x - src.x) * (performance.now() * 15e-4 * edge.weight % 1),
+                    cy: src.y + (tgt.y - src.y) * (performance.now() * 15e-4 * edge.weight % 1),
+                    r: 2.5,
+                    fill: "#ffffff",
+                    opacity: 0.8
+                  }
+                )
+              ] }, edge.id);
+            }),
+            nodesRef.current.map((node) => {
+              let fillColor = "#1e40af";
+              let borderColor = "#3b82f6";
+              if (node.type === "code_block") {
+                fillColor = "#065f46";
+                borderColor = "#10b981";
+              } else if (node.type === "net_construct") {
+                fillColor = "#92400e";
+                borderColor = "#f59e0b";
+              }
+              const radius = node.type === "agent" ? 16 : 13;
+              const dynamicScale = 1 + node.tension * 0.25;
+              return /* @__PURE__ */ jsxs("g", { className: "cursor-pointer", children: [
+                /* @__PURE__ */ jsx(
+                  "circle",
+                  {
+                    cx: node.x,
+                    cy: node.y,
+                    r: radius * dynamicScale + 5,
+                    fill: "none",
+                    stroke: borderColor,
+                    strokeWidth: 1,
+                    strokeOpacity: 0.3,
+                    strokeDasharray: attributionMode === "strict" ? void 0 : "3 2"
+                  }
+                ),
+                /* @__PURE__ */ jsx(
+                  "circle",
+                  {
+                    cx: node.x,
+                    cy: node.y,
+                    r: radius * dynamicScale,
+                    fill: fillColor,
+                    stroke: borderColor,
+                    strokeWidth: 2
+                  }
+                ),
+                /* @__PURE__ */ jsx(
+                  "text",
+                  {
+                    x: node.x,
+                    y: node.y - radius * dynamicScale - 8,
+                    textAnchor: "middle",
+                    fill: "#94a3b8",
+                    fontSize: 11,
+                    fontFamily: "monospace",
+                    className: "pointer-events-none select-none",
+                    children: node.provenanceHash
+                  }
+                ),
+                /* @__PURE__ */ jsx(
+                  "text",
+                  {
+                    x: node.x,
+                    y: node.y + radius * dynamicScale + 14,
+                    textAnchor: "middle",
+                    fill: "#f1f5f9",
+                    fontSize: 11,
+                    fontWeight: "normal",
+                    className: "pointer-events-none select-none",
+                    children: node.label
+                  }
+                )
+              ] }, node.id);
+            })
+          ]
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-center gap-x-4 sm:gap-x-8 md:gap-x-12 border-b border-border px-5 py-3 shrink-0", children: [
+      /* @__PURE__ */ jsxs("div", { className: "flex flex-col items-center gap-0.5 min-w-0 flex-1", children: [
+        /* @__PURE__ */ jsx("span", { className: "text-xs text-muted-foreground font-medium truncate text-center w-full", children: "Net Reductions" }),
+        /* @__PURE__ */ jsxs("span", { className: "text-sm font-medium text-foreground tabular-nums truncate text-center w-full", children: [
+          metrics.reductionsSec.toFixed(1),
+          "/s"
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxs("div", { className: "flex flex-col items-center gap-0.5 min-w-0 flex-1", children: [
+        /* @__PURE__ */ jsx("span", { className: "text-xs text-muted-foreground font-medium truncate text-center w-full", children: "System Tension" }),
+        /* @__PURE__ */ jsxs("span", { className: "text-sm font-medium text-foreground tabular-nums truncate text-center w-full", children: [
+          (metrics.systemTension * 100).toFixed(1),
+          "%"
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxs("div", { className: "flex flex-col items-center gap-0.5 min-w-0 flex-1", children: [
+        /* @__PURE__ */ jsx("span", { className: "text-xs text-muted-foreground font-medium truncate text-center w-full", children: "Metabolic Alloc" }),
+        /* @__PURE__ */ jsxs("span", { className: "text-sm font-medium text-foreground tabular-nums truncate text-center w-full", children: [
+          metrics.metabolicBudget.toFixed(1),
+          " W"
+        ] })
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxs("div", { className: "p-5 flex flex-col gap-4", children: [
+      /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4", children: [
+        /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-1.5 w-full", children: [
+          /* @__PURE__ */ jsx("span", { className: "text-sm font-medium text-muted-foreground", children: "Swarm Activity Level" }),
+          /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 w-full", children: [
+            /* @__PURE__ */ jsxs(
+              Slider.Root,
+              {
+                className: "relative flex items-center grow touch-none select-none h-11 cursor-pointer py-3 -my-3",
+                value: swarmActivity,
+                onValueChange: setSwarmActivity,
+                max: 100,
+                min: 10,
+                step: 1,
+                "aria-label": "Swarm Activity Level",
+                children: [
+                  /* @__PURE__ */ jsx(Slider.Track, { className: "relative grow rounded-full h-1 !bg-muted", children: /* @__PURE__ */ jsx(Slider.Range, { className: "absolute h-full bg-primary rounded-full" }) }),
+                  /* @__PURE__ */ jsx(
+                    Slider.Thumb,
+                    {
+                      className: "block w-[18px] h-[18px] rounded-full bg-primary border-none shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary relative after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:w-11 after:h-11",
+                      "aria-label": "Swarm activity thumb selector"
+                    }
+                  )
+                ]
+              }
+            ),
+            /* @__PURE__ */ jsxs("span", { className: "text-sm font-medium text-foreground tabular-nums w-[6ch] text-end shrink-0 whitespace-nowrap", children: [
+              swarmActivity[0],
+              "%"
+            ] })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-1.5 w-full", children: [
+          /* @__PURE__ */ jsx("span", { className: "text-sm font-medium text-muted-foreground", children: "Net Reduction Rate" }),
+          /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 w-full", children: [
+            /* @__PURE__ */ jsxs(
+              Slider.Root,
+              {
+                className: "relative flex items-center grow touch-none select-none h-11 cursor-pointer py-3 -my-3",
+                value: reductionSpeed,
+                onValueChange: setReductionSpeed,
+                max: 100,
+                min: 5,
+                step: 1,
+                "aria-label": "Net Reduction Rate",
+                children: [
+                  /* @__PURE__ */ jsx(Slider.Track, { className: "relative grow rounded-full h-1 !bg-muted", children: /* @__PURE__ */ jsx(Slider.Range, { className: "absolute h-full bg-primary rounded-full" }) }),
+                  /* @__PURE__ */ jsx(
+                    Slider.Thumb,
+                    {
+                      className: "block w-[18px] h-[18px] rounded-full bg-primary border-none shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary relative after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:w-11 after:h-11",
+                      "aria-label": "Net reduction speed thumb selector"
+                    }
+                  )
+                ]
+              }
+            ),
+            /* @__PURE__ */ jsxs("span", { className: "text-sm font-medium text-foreground tabular-nums w-[6ch] text-end shrink-0 whitespace-nowrap", children: [
+              reductionSpeed[0],
+              "%"
+            ] })
+          ] })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-1.5 w-full sm:max-w-xs", children: [
+        /* @__PURE__ */ jsx("span", { className: "text-sm font-medium text-muted-foreground", children: "Provenance Attribution Constraint" }),
+        /* @__PURE__ */ jsxs("div", { className: "relative h-9 rounded-lg bg-muted px-3 pointer-events-none flex items-center justify-between", children: [
+          /* @__PURE__ */ jsx("span", { className: "text-sm font-medium text-foreground", children: attributionMode === "strict" ? "Strict Cryptographic Guard" : attributionMode === "fluid" ? "Fluid Morphic Exchange" : "Balanced Unified Protocol" }),
+          /* @__PURE__ */ jsx("span", { className: "material-icons expand_more absolutely end-2.5 top-1/2 -translate-y-1/2 pointer-events-none !text-base", children: "expand_more" }),
+          /* @__PURE__ */ jsxs(
+            "select",
+            {
+              value: attributionMode,
+              onChange: (e) => setAttributionMode(e.target.value),
+              className: "absolute inset-x-0 top-1/2 -translate-y-1/2 h-11 w-full opacity-0 cursor-pointer pointer-events-auto",
+              "aria-label": "Provenance Attribution Constraint Mode Selection",
+              children: [
+                /* @__PURE__ */ jsx("option", { value: "strict", children: "Strict Cryptographic Guard" }),
+                /* @__PURE__ */ jsx("option", { value: "balanced", children: "Balanced Unified Protocol" }),
+                /* @__PURE__ */ jsx("option", { value: "fluid", children: "Fluid Morphic Exchange" })
+              ]
+            }
+          )
+        ] })
+      ] })
+    ] })
+  ] });
+}
+function App() {
+  return /* @__PURE__ */ jsx(ErrorBoundary, { FallbackComponent, children: /* @__PURE__ */ jsx(InteractionNetWidget, {}) });
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+  /* @__PURE__ */ jsx(React.StrictMode, { children: /* @__PURE__ */ jsx(App, {}) })
+);
+
+</script><style>
+/*! tailwindcss v4.1.11 | MIT License | https://tailwindcss.com */
+@layer properties {
+  @supports (((-webkit-hyphens: none)) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color: rgb(from red r g b)))) {
+    *, :before, :after, ::backdrop {
+      --tw-translate-x: 0;
+      --tw-translate-y: 0;
+      --tw-translate-z: 0;
+      --tw-border-style: solid;
+      --tw-font-weight: initial;
+      --tw-tracking: initial;
+      --tw-ordinal: initial;
+      --tw-slashed-zero: initial;
+      --tw-numeric-figure: initial;
+      --tw-numeric-spacing: initial;
+      --tw-numeric-fraction: initial;
+      --tw-shadow: 0 0 #0000;
+      --tw-shadow-color: initial;
+      --tw-shadow-alpha: 100%;
+      --tw-inset-shadow: 0 0 #0000;
+      --tw-inset-shadow-color: initial;
+      --tw-inset-shadow-alpha: 100%;
+      --tw-ring-color: initial;
+      --tw-ring-shadow: 0 0 #0000;
+      --tw-inset-ring-color: initial;
+      --tw-inset-ring-shadow: 0 0 #0000;
+      --tw-ring-inset: initial;
+      --tw-ring-offset-width: 0px;
+      --tw-ring-offset-color: #fff;
+      --tw-ring-offset-shadow: 0 0 #0000;
+      --tw-content: "";
+    }
+  }
+}
+
+@layer theme {
+  :root, :host {
+    --font-sans: "Google Sans", "Roboto", sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --color-amber-400: oklch(82.8% .189 84.429);
+    --color-emerald-400: oklch(76.5% .177 163.223);
+    --color-blue-400: oklch(70.7% .165 254.624);
+    --color-zinc-700: oklch(37% .013 285.805);
+    --color-zinc-800: oklch(27.4% .006 286.033);
+    --color-white: #fff;
+    --spacing: .25rem;
+    --container-xs: 20rem;
+    --text-xs: .75rem;
+    --text-xs--line-height: calc(1 / .75);
+    --text-sm: .875rem;
+    --text-sm--line-height: calc(1.25 / .875);
+    --text-base: 1rem;
+    --text-base--line-height: calc(1.5 / 1);
+    --font-weight-medium: 500;
+    --tracking-wide: .025em;
+    --radius-lg: .5rem;
+    --default-transition-duration: .15s;
+    --default-transition-timing-function: cubic-bezier(.31, .94, .34, 1);
+    --default-font-family: var(--font-sans);
+    --default-mono-font-family: var(--font-mono);
+    --color-primary: var(--primary, #336ef3);
+    --color-error: var(--brand-red, #ea4335);
+    --color-card: var(--surface-container-de-emphasis, #f7f8fa);
+    --color-border: var(--divider, #dcdfe5);
+    --color-muted: var(--surface-container, #f0f2f5);
+    --color-muted-foreground: var(--on-surface-de-emphasis, #56595e);
+    --color-foreground: var(--on-surface-default, #0a0a0a);
+  }
+}
+
+@layer base {
+  *, :after, :before, ::backdrop {
+    box-sizing: border-box;
+    border: 0 solid;
+    margin: 0;
+    padding: 0;
+  }
+
+  ::file-selector-button {
+    box-sizing: border-box;
+    border: 0 solid;
+    margin: 0;
+    padding: 0;
+  }
+
+  html, :host {
+    -webkit-text-size-adjust: 100%;
+    tab-size: 4;
+    line-height: 1.5;
+    font-family: var(--default-font-family, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji");
+    font-feature-settings: var(--default-font-feature-settings, normal);
+    font-variation-settings: var(--default-font-variation-settings, normal);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  hr {
+    height: 0;
+    color: inherit;
+    border-top-width: 1px;
+  }
+
+  abbr:where([title]) {
+    -webkit-text-decoration: underline dotted;
+    text-decoration: underline dotted;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-size: inherit;
+    font-weight: inherit;
+  }
+
+  a {
+    color: inherit;
+    -webkit-text-decoration: inherit;
+    -webkit-text-decoration: inherit;
+    -webkit-text-decoration: inherit;
+    text-decoration: inherit;
+  }
+
+  b, strong {
+    font-weight: bolder;
+  }
+
+  code, kbd, samp, pre {
+    font-family: var(--default-mono-font-family, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace);
+    font-feature-settings: var(--default-mono-font-feature-settings, normal);
+    font-variation-settings: var(--default-mono-font-variation-settings, normal);
+    font-size: 1em;
+  }
+
+  small {
+    font-size: 80%;
+  }
+
+  sub, sup {
+    vertical-align: baseline;
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+  }
+
+  sub {
+    bottom: -.25em;
+  }
+
+  sup {
+    top: -.5em;
+  }
+
+  table {
+    text-indent: 0;
+    border-color: inherit;
+    border-collapse: collapse;
+  }
+
+  :-moz-focusring {
+    outline: auto;
+  }
+
+  progress {
+    vertical-align: baseline;
+  }
+
+  summary {
+    display: list-item;
+  }
+
+  ol, ul, menu {
+    list-style: none;
+  }
+
+  img, svg, video, canvas, audio, iframe, embed, object {
+    vertical-align: middle;
+    display: block;
+  }
+
+  img, video {
+    max-width: 100%;
+    height: auto;
+  }
+
+  button, input, select, optgroup, textarea {
+    font: inherit;
+    font-feature-settings: inherit;
+    font-variation-settings: inherit;
+    letter-spacing: inherit;
+    color: inherit;
+    opacity: 1;
+    background-color: #0000;
+    border-radius: 0;
+  }
+
+  ::file-selector-button {
+    font: inherit;
+    font-feature-settings: inherit;
+    font-variation-settings: inherit;
+    letter-spacing: inherit;
+    color: inherit;
+    opacity: 1;
+    background-color: #0000;
+    border-radius: 0;
+  }
+
+  :where(select:is([multiple], [size])) optgroup {
+    font-weight: bolder;
+  }
+
+  :where(select:is([multiple], [size])) optgroup option {
+    padding-inline-start: 20px;
+  }
+
+  ::file-selector-button {
+    margin-inline-end: 4px;
+  }
+
+  ::placeholder {
+    opacity: 1;
+  }
+
+  @supports (not ((-webkit-appearance: -apple-pay-button))) or (contain-intrinsic-size: 1px) {
+    ::placeholder {
+      color: currentColor;
+    }
+
+    @supports (color: color-mix(in lab, red, red)) {
+      ::placeholder {
+        color: color-mix(in oklab, currentcolor 50%, transparent);
+      }
+    }
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  ::-webkit-search-decoration {
+    -webkit-appearance: none;
+  }
+
+  ::-webkit-date-and-time-value {
+    min-height: 1lh;
+    text-align: inherit;
+  }
+
+  ::-webkit-datetime-edit {
+    display: inline-flex;
+  }
+
+  ::-webkit-datetime-edit-fields-wrapper {
+    padding: 0;
+  }
+
+  ::-webkit-datetime-edit {
+    padding-block: 0;
+  }
+
+  ::-webkit-datetime-edit-year-field {
+    padding-block: 0;
+  }
+
+  ::-webkit-datetime-edit-month-field {
+    padding-block: 0;
+  }
+
+  ::-webkit-datetime-edit-day-field {
+    padding-block: 0;
+  }
+
+  ::-webkit-datetime-edit-hour-field {
+    padding-block: 0;
+  }
+
+  ::-webkit-datetime-edit-minute-field {
+    padding-block: 0;
+  }
+
+  ::-webkit-datetime-edit-second-field {
+    padding-block: 0;
+  }
+
+  ::-webkit-datetime-edit-millisecond-field {
+    padding-block: 0;
+  }
+
+  ::-webkit-datetime-edit-meridiem-field {
+    padding-block: 0;
+  }
+
+  :-moz-ui-invalid {
+    box-shadow: none;
+  }
+
+  button, input:where([type="button"], [type="reset"], [type="submit"]) {
+    appearance: button;
+  }
+
+  ::file-selector-button {
+    appearance: button;
+  }
+
+  ::-webkit-inner-spin-button {
+    height: auto;
+  }
+
+  ::-webkit-outer-spin-button {
+    height: auto;
+  }
+
+  [hidden]:where(:not([hidden="until-found"])) {
+    display: none !important;
+  }
+}
+
+@layer components;
+
+@layer utilities {
+  .pointer-events-auto {
+    pointer-events: auto;
+  }
+
+  .pointer-events-none {
+    pointer-events: none;
+  }
+
+  .absolute {
+    position: absolute;
+  }
+
+  .relative {
+    position: relative;
+  }
+
+  .static {
+    position: static;
+  }
+
+  .inset-x-0 {
+    inset-inline: calc(var(--spacing) * 0);
+  }
+
+  .start-0 {
+    inset-inline-start: calc(var(--spacing) * 0);
+  }
+
+  .end-0 {
+    inset-inline-end: calc(var(--spacing) * 0);
+  }
+
+  .end-2\.5 {
+    inset-inline-end: calc(var(--spacing) * 2.5);
+  }
+
+  .top-0 {
+    top: calc(var(--spacing) * 0);
+  }
+
+  .top-1\/2 {
+    top: 50%;
+  }
+
+  .z-10 {
+    z-index: 10;
+  }
+
+  .container {
+    width: 100%;
+  }
+
+  @media (min-width: 40rem) {
+    .container {
+      max-width: 40rem;
+    }
+  }
+
+  @media (min-width: 48rem) {
+    .container {
+      max-width: 48rem;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .container {
+      max-width: 64rem;
+    }
+  }
+
+  @media (min-width: 80rem) {
+    .container {
+      max-width: 80rem;
+    }
+  }
+
+  @media (min-width: 96rem) {
+    .container {
+      max-width: 96rem;
+    }
+  }
+
+  .-my-3 {
+    margin-block: calc(var(--spacing) * -3);
+  }
+
+  .block {
+    display: block;
+  }
+
+  .flex {
+    display: flex;
+  }
+
+  .grid {
+    display: grid;
+  }
+
+  .h-1 {
+    height: calc(var(--spacing) * 1);
+  }
+
+  .h-2 {
+    height: calc(var(--spacing) * 2);
+  }
+
+  .h-9 {
+    height: calc(var(--spacing) * 9);
+  }
+
+  .h-11 {
+    height: calc(var(--spacing) * 11);
+  }
+
+  .h-\[18px\] {
+    height: 18px;
+  }
+
+  .h-full {
+    height: 100%;
+  }
+
+  .w-2 {
+    width: calc(var(--spacing) * 2);
+  }
+
+  .w-9 {
+    width: calc(var(--spacing) * 9);
+  }
+
+  .w-\[6ch\] {
+    width: 6ch;
+  }
+
+  .w-\[18px\] {
+    width: 18px;
+  }
+
+  .w-full {
+    width: 100%;
+  }
+
+  .min-w-0 {
+    min-width: calc(var(--spacing) * 0);
+  }
+
+  .flex-1 {
+    flex: 1;
+  }
+
+  .shrink-0 {
+    flex-shrink: 0;
+  }
+
+  .grow {
+    flex-grow: 1;
+  }
+
+  .-translate-y-1\/2 {
+    --tw-translate-y: calc(calc(1 / 2 * 100%) * -1);
+    translate: var(--tw-translate-x) var(--tw-translate-y);
+  }
+
+  .cursor-pointer {
+    cursor: pointer;
+  }
+
+  .touch-none {
+    touch-action: none;
+  }
+
+  .grid-cols-1 {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+
+  .flex-col {
+    flex-direction: column;
+  }
+
+  .items-center {
+    align-items: center;
+  }
+
+  .justify-between {
+    justify-content: space-between;
+  }
+
+  .justify-center {
+    justify-content: center;
+  }
+
+  .justify-end {
+    justify-content: flex-end;
+  }
+
+  .gap-0\.5 {
+    gap: calc(var(--spacing) * .5);
+  }
+
+  .gap-1 {
+    gap: calc(var(--spacing) * 1);
+  }
+
+  .gap-1\.5 {
+    gap: calc(var(--spacing) * 1.5);
+  }
+
+  .gap-3 {
+    gap: calc(var(--spacing) * 3);
+  }
+
+  .gap-4 {
+    gap: calc(var(--spacing) * 4);
+  }
+
+  .gap-x-4 {
+    column-gap: calc(var(--spacing) * 4);
+  }
+
+  .gap-x-6 {
+    column-gap: calc(var(--spacing) * 6);
+  }
+
+  .gap-y-4 {
+    row-gap: calc(var(--spacing) * 4);
+  }
+
+  .truncate {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .overflow-hidden {
+    overflow: hidden;
+  }
+
+  .overflow-visible {
+    overflow: visible;
+  }
+
+  .rounded-full {
+    border-radius: 3.40282e38px;
+  }
+
+  .rounded-lg {
+    border-radius: var(--radius-lg);
+  }
+
+  .border-b {
+    border-bottom-style: var(--tw-border-style);
+    border-bottom-width: 1px;
+  }
+
+  .border-none {
+    --tw-border-style: none;
+    border-style: none;
+  }
+
+  .border-border {
+    border-color: var(--color-border);
+  }
+
+  .\!bg-muted {
+    background-color: var(--color-muted) !important;
+  }
+
+  .bg-\[\#0d0f14\] {
+    background-color: #0d0f14;
+  }
+
+  .bg-amber-400 {
+    background-color: var(--color-amber-400);
+  }
+
+  .bg-blue-400 {
+    background-color: var(--color-blue-400);
+  }
+
+  .bg-card {
+    background-color: var(--color-card);
+  }
+
+  .bg-emerald-400 {
+    background-color: var(--color-emerald-400);
+  }
+
+  .bg-muted {
+    background-color: var(--color-muted);
+  }
+
+  .bg-primary {
+    background-color: var(--color-primary);
+  }
+
+  .bg-zinc-800\/90 {
+    background-color: #27272ae6;
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .bg-zinc-800\/90 {
+      background-color: color-mix(in oklab, var(--color-zinc-800) 90%, transparent);
+    }
+  }
+
+  .p-3 {
+    padding: calc(var(--spacing) * 3);
+  }
+
+  .p-4 {
+    padding: calc(var(--spacing) * 4);
+  }
+
+  .p-5 {
+    padding: calc(var(--spacing) * 5);
+  }
+
+  .px-3 {
+    padding-inline: calc(var(--spacing) * 3);
+  }
+
+  .px-5 {
+    padding-inline: calc(var(--spacing) * 5);
+  }
+
+  .py-3 {
+    padding-block: calc(var(--spacing) * 3);
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+  .text-end {
+    text-align: end;
+  }
+
+  .font-sans {
+    font-family: var(--font-sans);
+  }
+
+  .\!text-base {
+    font-size: var(--text-base) !important;
+    line-height: var(--tw-leading, var(--text-base--line-height)) !important;
+  }
+
+  .text-sm {
+    font-size: var(--text-sm);
+    line-height: var(--tw-leading, var(--text-sm--line-height));
+  }
+
+  .text-xs {
+    font-size: var(--text-xs);
+    line-height: var(--tw-leading, var(--text-xs--line-height));
+  }
+
+  .text-\[11px\] {
+    font-size: 11px;
+  }
+
+  .font-medium {
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .tracking-wide {
+    --tw-tracking: var(--tracking-wide);
+    letter-spacing: var(--tracking-wide);
+  }
+
+  .whitespace-nowrap {
+    white-space: nowrap;
+  }
+
+  .text-amber-400 {
+    color: var(--color-amber-400);
+  }
+
+  .text-blue-400 {
+    color: var(--color-blue-400);
+  }
+
+  .text-emerald-400 {
+    color: var(--color-emerald-400);
+  }
+
+  .text-error {
+    color: var(--color-error);
+  }
+
+  .text-foreground {
+    color: var(--color-foreground);
+  }
+
+  .text-muted-foreground {
+    color: var(--color-muted-foreground);
+  }
+
+  .text-white {
+    color: var(--color-white);
+  }
+
+  .tabular-nums {
+    --tw-numeric-spacing: tabular-nums;
+    font-variant-numeric: var(--tw-ordinal, ) var(--tw-slashed-zero, ) var(--tw-numeric-figure, ) var(--tw-numeric-spacing, ) var(--tw-numeric-fraction, );
+  }
+
+  .opacity-0 {
+    opacity: 0;
+  }
+
+  .shadow-none {
+    --tw-shadow: 0 0 #0000;
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+
+  .transition-colors {
+    transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;
+    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+    transition-duration: var(--tw-duration, var(--default-transition-duration));
+  }
+
+  .select-none {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .after\:absolute:after {
+    content: var(--tw-content);
+    position: absolute;
+  }
+
+  .after\:-inset-1:after {
+    content: var(--tw-content);
+    inset: calc(var(--spacing) * -1);
+  }
+
+  .after\:top-1\/2:after {
+    content: var(--tw-content);
+    top: 50%;
+  }
+
+  .after\:left-1\/2:after {
+    content: var(--tw-content);
+    left: 50%;
+  }
+
+  .after\:h-11:after {
+    content: var(--tw-content);
+    height: calc(var(--spacing) * 11);
+  }
+
+  .after\:w-11:after {
+    content: var(--tw-content);
+    width: calc(var(--spacing) * 11);
+  }
+
+  .after\:-translate-x-1\/2:after {
+    content: var(--tw-content);
+    --tw-translate-x: calc(calc(1 / 2 * 100%) * -1);
+    translate: var(--tw-translate-x) var(--tw-translate-y);
+  }
+
+  .after\:-translate-y-1\/2:after {
+    content: var(--tw-content);
+    --tw-translate-y: calc(calc(1 / 2 * 100%) * -1);
+    translate: var(--tw-translate-x) var(--tw-translate-y);
+  }
+
+  @media (hover: hover) {
+    .hover\:bg-zinc-700:hover {
+      background-color: var(--color-zinc-700);
+    }
+  }
+
+  .focus\:outline-none:focus {
+    --tw-outline-style: none;
+    outline-style: none;
+  }
+
+  .focus-visible\:ring-2:focus-visible {
+    --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+
+  .focus-visible\:ring-primary:focus-visible {
+    --tw-ring-color: var(--color-primary);
+  }
+
+  @media (min-width: 40rem) {
+    .sm\:max-w-xs {
+      max-width: var(--container-xs);
+    }
+
+    .sm\:grid-cols-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .sm\:gap-x-8 {
+      column-gap: calc(var(--spacing) * 8);
+    }
+  }
+
+  @media (min-width: 48rem) {
+    .md\:gap-x-12 {
+      column-gap: calc(var(--spacing) * 12);
+    }
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --color-primary: var(--primary, #336ef3);
+    --color-primary-hover: var(--primary-hover, #395fe1);
+    --color-error: var(--brand-red, #ea4335);
+    --color-warning: var(--brand-yellow, #fbbc04);
+    --color-success: var(--brand-green, #34a853);
+    --color-background: var(--surface-container-de-emphasis, #272930);
+    --color-card: var(--surface-container-de-emphasis, #272930);
+    --color-card-hover: var(--surface-container-high, #363840);
+    --color-border: var(--divider, #363840);
+    --color-input: var(--surface-container, #2c2e35);
+    --color-secondary: var(--surface-container-high, #363840);
+    --color-secondary-hover: var(--surface-container-highest, #42444d);
+    --color-accent: var(--surface-container-highest, #42444d);
+    --color-accent-foreground: var(--on-surface-default, #e6e8f0);
+    --color-muted: var(--surface-container, #2c2e35);
+    --color-muted-foreground: var(--on-surface-de-emphasis, #adafb8);
+    --color-foreground: var(--on-surface-default, #e6e8f0);
+    --color-disabled: var(--surface-container, #2c2e35);
+    --color-disabled-foreground: var(--disabled-foreground, #797c90);
+  }
+}
+
+.dark {
+  --color-primary: var(--primary, #336ef3);
+  --color-primary-hover: var(--primary-hover, #395fe1);
+  --color-error: var(--brand-red, #ea4335);
+  --color-warning: var(--brand-yellow, #fbbc04);
+  --color-success: var(--brand-green, #34a853);
+  --color-background: var(--surface-container-de-emphasis, #272930);
+  --color-card: var(--surface-container-de-emphasis, #272930);
+  --color-card-hover: var(--surface-container-high, #363840);
+  --color-border: var(--divider, #363840);
+  --color-input: var(--surface-container, #2c2e35);
+  --color-secondary: var(--surface-container-high, #363840);
+  --color-secondary-hover: var(--surface-container-highest, #42444d);
+  --color-accent: var(--surface-container-highest, #42444d);
+  --color-accent-foreground: var(--on-surface-default, #e6e8f0);
+  --color-muted: var(--surface-container, #2c2e35);
+  --color-muted-foreground: var(--on-surface-de-emphasis, #adafb8);
+  --color-foreground: var(--on-surface-default, #e6e8f0);
+  --color-disabled: var(--surface-container, #2c2e35);
+  --color-disabled-foreground: var(--disabled-foreground, #797c90);
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: .6;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert();
+    opacity: .7;
+  }
+}
+
+.dark input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert();
+  opacity: .7;
+}
+
+[dir="rtl"] svg {
+  direction: ltr;
+}
+
+[dir="rtl"] svg text {
+  unicode-bidi: plaintext;
+}
+
+[dir="rtl"] .material-icons {
+  direction: rtl;
+}
+
+@property --tw-translate-x {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --tw-translate-y {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --tw-translate-z {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --tw-border-style {
+  syntax: "*";
+  inherits: false;
+  initial-value: solid;
+}
+
+@property --tw-font-weight {
+  syntax: "*";
+  inherits: false
+}
+
+@property --tw-tracking {
+  syntax: "*";
+  inherits: false
+}
+
+@property --tw-ordinal {
+  syntax: "*";
+  inherits: false
+}
+
+@property --tw-slashed-zero {
+  syntax: "*";
+  inherits: false
+}
+
+@property --tw-numeric-figure {
+  syntax: "*";
+  inherits: false
+}
+
+@property --tw-numeric-spacing {
+  syntax: "*";
+  inherits: false
+}
+
+@property --tw-numeric-fraction {
+  syntax: "*";
+  inherits: false
+}
+
+@property --tw-shadow {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+
+@property --tw-shadow-color {
+  syntax: "*";
+  inherits: false
+}
+
+@property --tw-shadow-alpha {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 100%;
+}
+
+@property --tw-inset-shadow {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+
+@property --tw-inset-shadow-color {
+  syntax: "*";
+  inherits: false
+}
+
+@property --tw-inset-shadow-alpha {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 100%;
+}
+
+@property --tw-ring-color {
+  syntax: "*";
+  inherits: false
+}
+
+@property --tw-ring-shadow {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+
+@property --tw-inset-ring-color {
+  syntax: "*";
+  inherits: false
+}
+
+@property --tw-inset-ring-shadow {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+
+@property --tw-ring-inset {
+  syntax: "*";
+  inherits: false
+}
+
+@property --tw-ring-offset-width {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --tw-ring-offset-color {
+  syntax: "*";
+  inherits: false;
+  initial-value: #fff;
+}
+
+@property --tw-ring-offset-shadow {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+
+@property --tw-content {
+  syntax: "*";
+  inherits: false;
+  initial-value: "";
+}
+
+</style><link href="https://www.gstatic.com/_/mss/search-next/_/ss/k=search-next.ss.TQsxQv8pJhs.L.B1.O/am=AB4AfACGGJgxAg/d=1/ed=1/dg=2/rs=AE5fCmQHaPmZFyrDzNKPFVsmHrDXz69Xqg/ee=/m=capy_widget_colors" rel="stylesheet"></head>
+    <body class="">
+  
+  <div id="root"><div class="w-full bg-card text-foreground font-sans select-none overflow-hidden"><div class="relative w-full overflow-hidden border-b border-border bg-[#0d0f14]"><div class="absolute top-0 end-0 p-3 z-10 flex items-center justify-end pointer-events-none"><button class="w-9 h-9 rounded-full flex items-center justify-center cursor-pointer transition-colors shadow-none bg-zinc-800/90 hover:bg-zinc-700 text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-primary pointer-events-auto relative overflow-visible after:absolute after:-inset-1" aria-label="Pause net reduction simulation"><span class="material-icons !text-base">pause</span></button></div><div class="absolute top-0 start-0 p-4 pointer-events-none flex flex-col gap-1 text-[11px] font-medium tracking-wide"><div class="flex items-center gap-1.5 text-blue-400"><span class="w-2 h-2 rounded-full bg-blue-400"></span> Swarm Agent Node</div><div class="flex items-center gap-1.5 text-emerald-400"><span class="w-2 h-2 rounded-full bg-emerald-400"></span> Immutable IP Block</div><div class="flex items-center gap-1.5 text-amber-400"><span class="w-2 h-2 rounded-full bg-amber-400"></span> Morph Net Construct</div></div><svg role="img" aria-label="Interactive graph tracking interaction net reductions, cryptographic IP provenance mutation, and metabolic budget alignment" viewBox="0 0 800 450" class="w-full h-full block"><defs><pattern id="grid-pattern" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="#ffffff" stroke-opacity="0.03" stroke-width="1"></path></pattern></defs><rect width="100%" height="100%" fill="url(#grid-pattern)"></rect></svg></div><div class="flex items-center justify-center gap-x-4 sm:gap-x-8 md:gap-x-12 border-b border-border px-5 py-3 shrink-0"><div class="flex flex-col items-center gap-0.5 min-w-0 flex-1"><span class="text-xs text-muted-foreground font-medium truncate text-center w-full">Net Reductions</span><span class="text-sm font-medium text-foreground tabular-nums truncate text-center w-full">0.0/s</span></div><div class="flex flex-col items-center gap-0.5 min-w-0 flex-1"><span class="text-xs text-muted-foreground font-medium truncate text-center w-full">System Tension</span><span class="text-sm font-medium text-foreground tabular-nums truncate text-center w-full">0.0%</span></div><div class="flex flex-col items-center gap-0.5 min-w-0 flex-1"><span class="text-xs text-muted-foreground font-medium truncate text-center w-full">Metabolic Alloc</span><span class="text-sm font-medium text-foreground tabular-nums truncate text-center w-full">100.0 W</span></div></div><div class="p-5 flex flex-col gap-4"><div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4"><div class="flex flex-col gap-1.5 w-full"><span class="text-sm font-medium text-muted-foreground">Swarm Activity Level</span><div class="flex items-center gap-3 w-full"><span dir="ltr" data-orientation="horizontal" aria-disabled="false" class="relative flex items-center grow touch-none select-none h-11 cursor-pointer py-3 -my-3" aria-label="Swarm Activity Level" style="--radix-slider-thumb-transform: translateX(-50%);"><span data-orientation="horizontal" class="relative grow rounded-full h-1 !bg-muted"><span data-orientation="horizontal" class="absolute h-full bg-primary rounded-full" style="left: 0%; right: 61.1111%;"></span></span><span style="transform: var(--radix-slider-thumb-transform); position: absolute; left: calc(38.8889% + 0px);"><span role="slider" aria-label="Swarm activity thumb selector" aria-valuemin="10" aria-valuemax="100" aria-orientation="horizontal" data-orientation="horizontal" tabindex="0" class="block w-[18px] h-[18px] rounded-full bg-primary border-none shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary relative after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:w-11 after:h-11" data-radix-collection-item="" aria-valuenow="45" style=""></span></span></span><span class="text-sm font-medium text-foreground tabular-nums w-[6ch] text-end shrink-0 whitespace-nowrap">45%</span></div></div><div class="flex flex-col gap-1.5 w-full"><span class="text-sm font-medium text-muted-foreground">Net Reduction Rate</span><div class="flex items-center gap-3 w-full"><span dir="ltr" data-orientation="horizontal" aria-disabled="false" class="relative flex items-center grow touch-none select-none h-11 cursor-pointer py-3 -my-3" aria-label="Net Reduction Rate" style="--radix-slider-thumb-transform: translateX(-50%);"><span data-orientation="horizontal" class="relative grow rounded-full h-1 !bg-muted"><span data-orientation="horizontal" class="absolute h-full bg-primary rounded-full" style="left: 0%; right: 42.1053%;"></span></span><span style="transform: var(--radix-slider-thumb-transform); position: absolute; left: calc(57.8947% + 0px);"><span role="slider" aria-label="Net reduction speed thumb selector" aria-valuemin="5" aria-valuemax="100" aria-orientation="horizontal" data-orientation="horizontal" tabindex="0" class="block w-[18px] h-[18px] rounded-full bg-primary border-none shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary relative after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:w-11 after:h-11" data-radix-collection-item="" aria-valuenow="60" style=""></span></span></span><span class="text-sm font-medium text-foreground tabular-nums w-[6ch] text-end shrink-0 whitespace-nowrap">60%</span></div></div></div><div class="flex flex-col gap-1.5 w-full sm:max-w-xs"><span class="text-sm font-medium text-muted-foreground">Provenance Attribution Constraint</span><div class="relative h-9 rounded-lg bg-muted px-3 pointer-events-none flex items-center justify-between"><span class="text-sm font-medium text-foreground">Strict Cryptographic Guard</span><span class="material-icons expand_more absolutely end-2.5 top-1/2 -translate-y-1/2 pointer-events-none !text-base">expand_more</span><select class="absolute inset-x-0 top-1/2 -translate-y-1/2 h-11 w-full opacity-0 cursor-pointer pointer-events-auto" aria-label="Provenance Attribution Constraint Mode Selection"><option value="strict">Strict Cryptographic Guard</option><option value="balanced">Balanced Unified Protocol</option><option value="fluid">Fluid Morphic Exchange</option></select></div></div></div></div></div></body></html>
