@@ -1,0 +1,195 @@
+{
+  "schema": "WEFT-INVARIANTS/1.0",
+  "constants": {
+    "R_INVARIANT": 10.0,
+    "TENSION_MAX": 85.0,
+    "HOMEOSTATIC_TENSION_MIN": 15.0,
+    "HOMEOSTATIC_TENSION_MAX": 35.0,
+    "ROYALTY_UPSTREAM_BPS": 1500,
+    "ROYALTY_WEAVER_BPS": 8500
+  },
+  "weight_update_vectors": [
+    {
+      "name": "matching_sizes_large_move",
+      "baseline": [
+        1.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "candidate": [
+        -1.0,
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "r_invariant": 0.5,
+      "budget": 10.0,
+      "cost": 1.0,
+      "expected_accepted": false,
+      "expected_distance": 2.8284271247461903,
+      "expected_remaining_budget": 10.0,
+      "expected_reason": "baseline_distance_exceeded"
+    },
+    {
+      "name": "valid_small_move",
+      "baseline": [
+        1.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "candidate": [
+        1.1,
+        0.0,
+        0.0,
+        0.9
+      ],
+      "r_invariant": 0.5,
+      "budget": 10.0,
+      "cost": 1.0,
+      "expected_accepted": true,
+      "expected_distance": 0.14142135623730953,
+      "expected_remaining_budget": 9.0,
+      "expected_reason": "ok"
+    },
+    {
+      "name": "reject_nan_candidate",
+      "baseline": [
+        1.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "candidate": [
+        "NaN",
+        0.0,
+        0.0,
+        1.0
+      ],
+      "r_invariant": 10.0,
+      "budget": 10.0,
+      "cost": 1.0,
+      "expected_accepted": false,
+      "expected_distance": "Inf",
+      "expected_remaining_budget": 10.0,
+      "expected_reason": "non_finite_weights"
+    },
+    {
+      "name": "reject_inf_candidate",
+      "baseline": [
+        1.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "candidate": [
+        "Inf",
+        0.0,
+        0.0,
+        1.0
+      ],
+      "r_invariant": 10.0,
+      "budget": 10.0,
+      "cost": 1.0,
+      "expected_accepted": false,
+      "expected_distance": "Inf",
+      "expected_remaining_budget": 10.0,
+      "expected_reason": "non_finite_weights"
+    },
+    {
+      "name": "reject_insufficient_budget",
+      "baseline": [
+        1.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "candidate": [
+        1.05,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "r_invariant": 0.5,
+      "budget": 0.5,
+      "cost": 1.0,
+      "expected_accepted": false,
+      "expected_distance": "Inf",
+      "expected_remaining_budget": -0.5,
+      "expected_reason": "insufficient_metabolic_budget"
+    },
+    {
+      "name": "reject_non_positive_budget",
+      "baseline": [
+        1.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "candidate": [
+        1.05,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "r_invariant": 0.5,
+      "budget": 0.0,
+      "cost": 1.0,
+      "expected_accepted": false,
+      "expected_distance": "Inf",
+      "expected_remaining_budget": -1.0,
+      "expected_reason": "non_positive_budget_or_cost"
+    }
+  ],
+  "tension_vectors": [
+    {
+      "name": "tension_homeostatic",
+      "tension": 28.5,
+      "max_tension": 85.0,
+      "expected_accepted": true,
+      "expected_homeostatic": true,
+      "expected_excision": false
+    },
+    {
+      "name": "tension_boundary_exact",
+      "tension": 85.0,
+      "max_tension": 85.0,
+      "expected_accepted": true,
+      "expected_homeostatic": false,
+      "expected_excision": false
+    },
+    {
+      "name": "tension_exceeds_bound",
+      "tension": 85.01,
+      "max_tension": 85.0,
+      "expected_accepted": false,
+      "expected_homeostatic": false,
+      "expected_excision": true
+    },
+    {
+      "name": "tension_negative",
+      "tension": -0.1,
+      "max_tension": 85.0,
+      "expected_accepted": false,
+      "expected_homeostatic": false,
+      "expected_excision": true
+    }
+  ],
+  "royalty_vectors": [
+    {
+      "name": "standard_10000_wei",
+      "gross_wei": 10000,
+      "upstream_bps": 1500,
+      "expected_upstream_wei": 1500,
+      "expected_weaver_wei": 8500
+    },
+    {
+      "name": "odd_amount_rounding",
+      "gross_wei": 1001,
+      "upstream_bps": 1500,
+      "expected_upstream_wei": 150,
+      "expected_weaver_wei": 851
+    }
+  ]
+}

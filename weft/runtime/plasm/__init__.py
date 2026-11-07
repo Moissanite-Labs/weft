@@ -1,0 +1,42 @@
+"""Weft Plasm Substrate & Mitotic Loom (Codebase C1)."""
+from weft.runtime.invariants import R_INVARIANT
+from .plasm import (
+    ARENA_BYTE_SIZE,
+    DEFAULT_SEED_PHRASE,
+    FOCAL_FLOATS,
+    HIPPOCAMPAL_FLOATS,
+    SHM_NAME,
+    SYMPATHETIC_FLOATS,
+    StratifiedAppleSiliconPlasm,
+    StratifiedMemoryArena,
+    adjust_homeostatic_mutation_scale,
+    compute_plasticity_mask,
+    embed_weight_watermark,
+    run_plasm_cycle,
+    run_weft_plasm_cycle,
+    select_compute_device,
+    verify_watermark_retention,
+    verify_weight_update_safety,
+    weight_frobenius_size,
+)
+
+__all__ = [
+    "ARENA_BYTE_SIZE",
+    "DEFAULT_SEED_PHRASE",
+    "FOCAL_FLOATS",
+    "HIPPOCAMPAL_FLOATS",
+    "R_INVARIANT",
+    "SHM_NAME",
+    "SYMPATHETIC_FLOATS",
+    "StratifiedAppleSiliconPlasm",
+    "StratifiedMemoryArena",
+    "adjust_homeostatic_mutation_scale",
+    "compute_plasticity_mask",
+    "embed_weight_watermark",
+    "run_plasm_cycle",
+    "run_weft_plasm_cycle",
+    "select_compute_device",
+    "verify_watermark_retention",
+    "verify_weight_update_safety",
+    "weight_frobenius_size",
+]
