@@ -32,7 +32,9 @@ Phase 0. Publish this program file and a charter issue once a posting path is cl
 
 Phase 1. File the first repair issues. The safety check should measure distance from a saved baseline, not the difference of two sizes. The provenance mark that later updates can move or overwrite needs a stated threat model.
 
-A/B convergence should be an explicit requirement. Models should be treated as cells rather than as whole organisms, as an engineering contract (isolation, speculative lineages, teardown, and feedback), not as a claim of cellular biology.
+A/B convergence should be an explicit requirement. Models should be treated as cells rather than as whole organisms. That is an engineering contract (isolation, speculative lineages, teardown, and feedback) and the vision language we keep.
+
+The cellular names describe behavior we aim to replicate and ideals to iterate toward, including when current technology has not yet made the parallel exact. They are not a claim that the present code already is cellular biology.
 
 Phase 2. Scaffold only a path named by a filed issue. Product decisions are made as the need arises. The first scaffold should serve the baseline-relative safety-distance repair, likely by extending `weft/runtime/core/selftest.py` rather than adding a new tree. Tests should encode the repaired formulas, not the weaker substitutes.
 
@@ -42,9 +44,15 @@ Phase 4. File the remaining mathematical repairs as issues, then open code pull 
 
 Phase 4b. File the biological review into this repository, then file naming and evidence issues, in parallel with Phase 4. This phase must not gate the first code repair or the Phase 1 models-as-cells engineering issue.
 
-Those issues keep sandbox isolation, speculative A/B, teardown, feedback control, protecting the core while varying the periphery, and local growth or repair. Drop or rename mitosis, membrane, apoptosis, homeostasis, and Hebbian where those names imply physiology that is not implemented.
+Those issues keep sandbox isolation, speculative A/B, teardown, feedback control, protecting the core while varying the periphery, and local growth or repair.
 
-The hippocampal novelty lattice is a recency buffer scored by mean distance, closer to novelty search than to hippocampus. The sympathetic ring is named telemetry, not autonomic physiology.
+Keep the biological names. Membrane, mitosis, apoptosis, homeostasis, Hebbian, and related terms stay as the language of the vision. They define behavior we aim to replicate, establish the mission, and serve as branding and world-building.
+
+Exact parallels may not have been reached yet, or not yet enabled by current technology. The names are ideals to iterate toward. Do not drop or rename them because the current code is thinner than the metaphor. A sense of wonder and whimsy is part of how this work is approached.
+
+This follows the direction in https://github.com/Moissanite-Labs/weft/issues/6#issuecomment-6712451917 That comment does not itself name those terms. Keeping them is how this program applies that direction to the earlier instruction to drop or rename them.
+
+The current hippocampal novelty lattice is implemented as a recency buffer scored by mean distance. The current sympathetic ring is implemented as telemetry. Keep those names as the ideals those implementations iterate toward. Do not rename them away from the vision language just because the present code is simpler.
 
 Resource quotas as selection pressure are in scope. Do not equate unlimited resources with cancer. Genotype versus phenotype is an evolutionary-computation metaphor. The NCA evidence bar is persistency and damage metrics in the style of the Distill 2020 paper, not the hand-coded widget. `design/bio.md` stays labeled as an analogy.
 
@@ -78,7 +86,7 @@ This is a code repository. It does not inherit a docs-only review rule for the w
 
 0. A posting path is clear: the assigned posting account is restored, or Alkindus authorizes a specific batch.
 1. The charter issue and this root program file are in the repository.
-2. The four Phase 1 repair issues are open, with models-as-cells written as an engineering contract.
+2. The four Phase 1 repair issues are open, with models-as-cells written as an engineering contract and as vision language we keep.
 3. Scaffold only the path named by the first code-repair issue.
 4. The first code repair lands: distance from a stored baseline, with tests. Axiom is consulted. Independent review is required.
 5. The internal constitution-versus-contract design note is in `docs/`. This can proceed in parallel with checkpoints 3 and 4.
@@ -89,6 +97,6 @@ Later, and not gates on checkpoint 4: remaining mathematical-repair issues (Phas
 
 Keep every deliverable in this private repository. Do not route work outward. Do not treat a simulated receipt, a conversation dashboard, or a claim of installation as evidence that software is running or sealed on a chain.
 
-Distinguish a stated rule from a rule that the executable path actually checks. Distinguish a useful computational idea from a biological name that the code does not implement.
+Distinguish a stated rule from a rule that the executable path actually checks. Distinguish an implemented behavior from a biological name that names the ideal we iterate toward. Keep the name. Do not claim the implementation has arrived until the evidence is there.
 
 Distinguish a style prior someone chose to leave, a model that predicts their choices, and any claim that a person or their experience survives. Do not deploy anything live. Do not pre-scaffold implied codebases. Scaffold when a filed issue names the path.
