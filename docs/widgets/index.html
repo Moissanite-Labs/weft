@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WEFT // Widget membrane gallery</title>
+  <style>
+    body { margin: 0; font-family: system-ui, sans-serif; background: #0b0f17; color: #e2e8f0; }
+    header { padding: 20px 24px; border-bottom: 1px solid #1e293b; }
+    header a { color: #38bdf8; }
+    main { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; padding: 24px; }
+    article { border: 1px solid #334155; border-radius: 8px; overflow: hidden; background: #111827; }
+    iframe { width: 100%; aspect-ratio: 16/10; border: 0; display: block; background: #000; }
+    h2 { margin: 12px 16px 4px; font-size: 15px; }
+    p { margin: 0 16px 16px; font-size: 13px; color: #94a3b8; }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="../index.html">← membrane dashboard</a>
+    <h1>Browser-source widgets (corpus implementations)</h1>
+  </header>
+  <main>
+    <article>
+      <iframe src="01-sdf-laya-kinetic-typography.html" title="SDF Laya kinetic typography" loading="lazy"></iframe>
+      <h2>01 — SDF Laya kinetic typography</h2>
+      <p>Procedural SDF field kinetic type — local canvas, zero network.</p>
+    </article>
+    <article>
+      <iframe src="02-mind-palace-spatial-memory.html" title="Mind palace spatial memory" loading="lazy"></iframe>
+      <h2>02 — Mind palace spatial memory</h2>
+      <p>Hippocampal lattice metaphor: rooms as spatial anchors.</p>
+    </article>
+    <article>
+      <iframe src="03-morphogenetic-bioelectric-field.html" title="Morphogenetic bioelectric field" loading="lazy"></iframe>
+      <h2>03 — Morphogenetic bioelectric field</h2>
+      <p>Morphogen gradient visualization (vision language; not a biological claim).</p>
+    </article>
+    <article>
+      <iframe src="04-neural-cellular-automata.html" title="Neural cellular automata" loading="lazy"></iframe>
+      <h2>04 — Neural cellular automata</h2>
+      <p>NCA-style persistency toy — ideal named in design/bio.md.</p>
+    </article>
+    <article>
+      <iframe src="05-interaction-combinator-net.html" title="Interaction combinator net" loading="lazy"></iframe>
+      <h2>05 — Interaction combinator net</h2>
+      <p>CON/DUP/ERA net sketch aligned with weft_ic_vm.</p>
+    </article>
+  </main>
+</body>
+</html>

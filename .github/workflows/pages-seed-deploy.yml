@@ -1,0 +1,48 @@
+name: Prepare Weft Pages seed (manual only)
+# Gated: workflow_dispatch only so merging cannot publish while GitHub Pages is off.
+
+on:
+  workflow_dispatch:
+    inputs:
+      note:
+        description: Optional operator note
+        required: false
+        default: manual-pages-sync
+
+permissions:
+  contents: read
+
+jobs:
+  sync-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Sync static seed artifacts into docs/
+        run: python3 scripts/sync_pages_seed.py
+
+      - name: Site selftest (no Pages enablement required)
+        run: python3 weft/runtime/aywa/site_selftest.py
+
+      - name: Core corpus selftest
+        run: python3 weft/runtime/core/selftest.py
+        continue-on-error: true
+
+      - name: Package dist/ folder for future Pages upload
+        run: |
+          rm -rf dist
+          mkdir -p dist
+          cp -a docs/. dist/
+          echo "Dist ready at dist/ (upload manually after Alkindus enables Pages)."
+
+      - name: Upload Pages seed artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: weft-pages-seed
+          path: dist/
