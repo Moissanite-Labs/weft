@@ -3,36 +3,157 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Weft sovereign Pages seed — WebGPU membrane, SYM-2P telemetry, lineage workers." />
-  <title>WEFT // Sovereign Pages Organism</title>
+  <meta name="description" content="Weft Pages seed: 64-byte uniform buffer, SHA-256 verified SYM-2P telemetry, circular-hue Barycentric Aesthetic Mixer, and WebGPU/Canvas2D spatial lattice." />
+  <title>WEFT // Aywa Spatial Telemetry &amp; Barycentric Surface</title>
   <style>
-    :root { color-scheme: dark; }
-    html, body { margin: 0; height: 100%; background: #05070b; color: #e2e8f0; font-family: "SF Mono", Menlo, monospace; }
-    #gpuCanvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
-    nav { position: fixed; top: 0; right: 0; z-index: 20; display: flex; gap: 10px; padding: 14px; }
-    nav a { color: #38bdf8; text-decoration: none; font-size: 12px; border: 1px solid rgba(56,189,248,.35); padding: 6px 10px; border-radius: 4px; background: rgba(8,12,20,.8); }
-    nav a:hover { background: rgba(15,23,42,.95); }
-    #hud { position: fixed; left: 16px; top: 16px; z-index: 10; max-width: min(520px, 90vw); padding: 12px 14px; font-size: 12px; line-height: 1.5; border-radius: 6px; border: 1px solid rgba(56,189,248,.35); background: rgba(8,12,20,.86); pointer-events: none; }
-    #hud strong { color: #38bdf8; letter-spacing: 0.08em; }
+    :root {
+      color-scheme: dark;
+      --weft-rounding: 8px;
+      --weft-density: 0.30;
+      --weft-hue-deg: 43deg;
+      --weft-contrast: 0.05;
+    }
+    html, body {
+      margin: 0;
+      height: 100%;
+      background: #05070b;
+      color: #e2e8f0;
+      font-family: "SF Mono", Menlo, Consolas, monospace;
+    }
+    #gpuCanvas {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      display: block;
+    }
+    nav {
+      position: fixed;
+      top: 0;
+      right: 0;
+      z-index: 20;
+      display: flex;
+      gap: 10px;
+      padding: 14px;
+    }
+    nav a {
+      color: #38bdf8;
+      text-decoration: none;
+      font-size: 12px;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      padding: 6px 10px;
+      border-radius: var(--weft-rounding);
+      background: rgba(8, 12, 20, 0.85);
+    }
+    nav a:hover {
+      background: rgba(15, 23, 42, 0.95);
+    }
+    #hud {
+      position: fixed;
+      left: 16px;
+      top: 16px;
+      z-index: 10;
+      max-width: min(560px, 92vw);
+      padding: 12px 14px;
+      font-size: 12px;
+      line-height: 1.5;
+      border-radius: var(--weft-rounding);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      background: rgba(8, 12, 20, 0.88);
+    }
+    #hud strong {
+      color: #38bdf8;
+      letter-spacing: 0.08em;
+    }
+    .mixer-controls {
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(148, 163, 184, 0.2);
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 6px 10px;
+      align-items: center;
+      font-size: 11px;
+    }
+    .mixer-controls input[type="range"] {
+      width: 140px;
+      accent-color: #38bdf8;
+    }
+    noscript {
+      position: fixed;
+      bottom: 16px;
+      left: 16px;
+      right: 16px;
+      z-index: 30;
+      padding: 12px;
+      background: #111827;
+      border: 1px solid #38bdf8;
+      font-size: 12px;
+    }
   </style>
 </head>
 <body>
-  <canvas id="gpuCanvas"></canvas>
+  <canvas id="gpuCanvas" aria-label="Weft 19-repository spatial telemetry canvas"></canvas>
   <nav aria-label="Weft organism sections">
     <a href="./index.html">membrane</a>
-    <a href="./widgets/">widgets</a>
+    <a href="./widgets/">widgets (5)</a>
   </nav>
-  <div id="hud"><strong>WEFT PAGES SEED</strong><br /><span id="hudMetrics">Initializing WebGPU / SharedArrayBuffer telemetry bridge…</span></div>
+  <div id="hud" role="region" aria-label="Telemetry and Barycentric Aesthetic Mixer">
+    <strong>WEFT // AYWA SURFACE (64B UNIFORM + SYM-2P SHA-256)</strong><br />
+    <span id="hudMetrics">Verifying SYM-2P telemetry snapshot…</span>
+    <div class="mixer-controls" aria-label="Barycentric aesthetic preset weights">
+      <label for="wNative">native_base (h=0.12)</label>
+      <input id="wNative" type="range" min="0" max="1" step="0.05" value="1.0" />
+      <span id="vNative">1.00</span>
+
+      <label for="wNeon">neon_terminal (h=0.45)</label>
+      <input id="wNeon" type="range" min="0" max="1" step="0.05" value="0.0" />
+      <span id="vNeon">0.00</span>
+
+      <label for="wPastel">airy_pastel (h=0.85)</label>
+      <input id="wPastel" type="range" min="0" max="1" step="0.05" value="0.0" />
+      <span id="vPastel">0.00</span>
+    </div>
+    <div id="mixerReadout" style="margin-top:6px;color:#94a3b8;font-size:11px;">
+      circular hue=0.120 | rounding=0.85 | density=0.30 | contrast=0.05
+    </div>
+  </div>
+  <noscript>
+    Weft Pages Seed: static snapshot of 19 Moissanite-Labs repository nodes encoded in a 64-byte IEEE-754 uniform frame and SHA-256 signed SYM-2P/1.0 packet (`data/moissanite_telemetry.json`). Enable JavaScript for WebGPU/Canvas2D rendering and interactive barycentric mixing.
+  </noscript>
   <script type="module">
     import { WeftLoomEngine } from "./assets/js/weft-loom.js";
     const hud = document.getElementById("hudMetrics");
+    const readout = document.getElementById("mixerReadout");
     const engine = new WeftLoomEngine({
       canvas: document.getElementById("gpuCanvas"),
       shaderUrl: "./assets/shaders/dashboard_layout.wgsl",
       dataUrl: "./data/telemetry.jsonl",
       hudEl: hud,
     });
-    window.addEventListener("DOMContentLoaded", () => engine.boot());
+
+    function syncMixerSliders() {
+      const wn = parseFloat(document.getElementById("wNative").value);
+      const wt = parseFloat(document.getElementById("wNeon").value);
+      const wp = parseFloat(document.getElementById("wPastel").value);
+      document.getElementById("vNative").textContent = wn.toFixed(2);
+      document.getElementById("vNeon").textContent = wt.toFixed(2);
+      document.getElementById("vPastel").textContent = wp.toFixed(2);
+      engine.mixer.setSliceWeight("native_base", wn);
+      engine.mixer.setSliceWeight("neon_terminal", wt);
+      engine.mixer.setSliceWeight("airy_pastel", wp);
+      const vec = engine.mixer.calculateUnifiedAestheticVector();
+      readout.textContent = `circular hue=${vec.hue.toFixed(3)} | rounding=${vec.rounding.toFixed(2)} | density=${vec.density.toFixed(2)} | contrast=${vec.contrast.toFixed(2)}`;
+    }
+
+    for (const id of ["wNative", "wNeon", "wPastel"]) {
+      document.getElementById(id).addEventListener("input", syncMixerSliders);
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      syncMixerSliders();
+      engine.boot();
+    });
   </script>
 </body>
 </html>

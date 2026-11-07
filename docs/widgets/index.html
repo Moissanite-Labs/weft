@@ -3,48 +3,50 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WEFT // Widget membrane gallery</title>
+  <title>WEFT // Interactive Simulation Widgets (Browser Corpus)</title>
   <style>
-    body { margin: 0; font-family: system-ui, sans-serif; background: #0b0f17; color: #e2e8f0; }
+    body { margin: 0; font-family: system-ui, -apple-system, sans-serif; background: #0b0f17; color: #e2e8f0; }
     header { padding: 20px 24px; border-bottom: 1px solid #1e293b; }
-    header a { color: #38bdf8; }
-    main { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; padding: 24px; }
+    header a { color: #38bdf8; text-decoration: none; }
+    header p { margin: 6px 0 0; font-size: 13px; color: #94a3b8; }
+    main { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; padding: 24px; }
     article { border: 1px solid #334155; border-radius: 8px; overflow: hidden; background: #111827; }
     iframe { width: 100%; aspect-ratio: 16/10; border: 0; display: block; background: #000; }
-    h2 { margin: 12px 16px 4px; font-size: 15px; }
-    p { margin: 0 16px 16px; font-size: 13px; color: #94a3b8; }
+    h2 { margin: 12px 16px 4px; font-size: 15px; color: #f8fafc; }
+    p { margin: 0 16px 16px; font-size: 13px; color: #94a3b8; line-height: 1.45; }
   </style>
 </head>
 <body>
   <header>
     <a href="../index.html">← membrane dashboard</a>
-    <h1>Browser-source widgets (corpus implementations)</h1>
+    <h1>Interactive Simulation Widgets (Extracted from Browser Corpus)</h1>
+    <p>Each standalone <code>.html</code> widget runs the exact interactive React simulation captured from the two design threads; the paired <code>.jsx</code> file holds the extracted component source.</p>
   </header>
   <main>
     <article>
-      <iframe src="01-sdf-laya-kinetic-typography.html" title="SDF Laya kinetic typography" loading="lazy"></iframe>
-      <h2>01 — SDF Laya kinetic typography</h2>
-      <p>Procedural SDF field kinetic type — local canvas, zero network.</p>
+      <iframe src="01-sdf-laya-kinetic-typography.html" title="01 — Aywa Barycentric Design System Explorer" loading="lazy"></iframe>
+      <h2>01 — Aywa Barycentric Design System Explorer</h2>
+      <p>Interactive barycentric style-coordinate explorer (Thread 2 Turn 6): interpolates typography, border rounding, spatial density, and palette tokens across reference presets.</p>
     </article>
     <article>
-      <iframe src="02-mind-palace-spatial-memory.html" title="Mind palace spatial memory" loading="lazy"></iframe>
-      <h2>02 — Mind palace spatial memory</h2>
-      <p>Hippocampal lattice metaphor: rooms as spatial anchors.</p>
+      <iframe src="02-mind-palace-spatial-memory.html" title="02 — Spatial Compute Canvas &amp; Node Topology" loading="lazy"></iframe>
+      <h2>02 — Spatial Compute Canvas &amp; Node Topology</h2>
+      <p>Infinite-zoom spatial canvas and node architecture inspector (Thread 2 Turn 19): visualizes multi-layer compute graphs and viewport-culled spatial rooms.</p>
     </article>
     <article>
-      <iframe src="03-morphogenetic-bioelectric-field.html" title="Morphogenetic bioelectric field" loading="lazy"></iframe>
-      <h2>03 — Morphogenetic bioelectric field</h2>
-      <p>Morphogen gradient visualization (vision language; not a biological claim).</p>
+      <iframe src="03-morphogenetic-bioelectric-field.html" title="03 — Weft Sovereign Matrix &amp; Telemetry Monitor" loading="lazy"></iframe>
+      <h2>03 — Weft Sovereign Matrix &amp; Telemetry Monitor</h2>
+      <p>Sovereign Weft telemetry matrix (Thread 1 Turn 10): monitors metabolic tension, invariant radius, and active node lanes across the organism substrate.</p>
     </article>
     <article>
-      <iframe src="04-neural-cellular-automata.html" title="Neural cellular automata" loading="lazy"></iframe>
-      <h2>04 — Neural cellular automata</h2>
-      <p>NCA-style persistency toy — ideal named in design/bio.md.</p>
+      <iframe src="04-neural-cellular-automata.html" title="04 — Morphogenetic Grid &amp; Cellular Automata Demo" loading="lazy"></iframe>
+      <h2>04 — Morphogenetic Grid &amp; Cellular Automata Demo</h2>
+      <p>Interactive cellular-automata regeneration and damage-recovery grid (Thread 1 Turn 25): illustrates local neighborhood update rules and target homeostasis.</p>
     </article>
     <article>
-      <iframe src="05-interaction-combinator-net.html" title="Interaction combinator net" loading="lazy"></iframe>
-      <h2>05 — Interaction combinator net</h2>
-      <p>CON/DUP/ERA net sketch aligned with weft_ic_vm.</p>
+      <iframe src="05-interaction-combinator-net.html" title="05 — Splicer Organism &amp; Mitotic Lineage Simulator" loading="lazy"></iframe>
+      <h2>05 — Splicer Organism &amp; Mitotic Lineage Simulator</h2>
+      <p>Splicer mitotic lineage and metabolic valve simulator (Thread 1 Turn 40): visualizes speculative A/B child lineages, hippocampal novelty, and apoptosis gating.</p>
     </article>
   </main>
 </body>

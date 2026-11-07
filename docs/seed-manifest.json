@@ -18,5 +18,13 @@
     "docs/widgets/04-neural-cellular-automata.jsx",
     "docs/widgets/05-interaction-combinator-net.html",
     "docs/widgets/05-interaction-combinator-net.jsx"
+  ],
+  "public_pages_allowlist": [
+    "index.html",
+    ".nojekyll",
+    "seed-manifest.json",
+    "assets/",
+    "data/",
+    "widgets/"
   ]
 }
