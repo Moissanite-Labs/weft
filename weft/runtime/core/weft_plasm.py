@@ -11,12 +11,96 @@ substrate from almalga.md / ahraz.md / mac.md:
 import ctypes
 import hashlib
 import json
+import math
 import os
 import subprocess
 import time
 from multiprocessing import shared_memory
 import numpy as np
 import torch
+
+# Max Frobenius distance from stored baseline weights (matches prove.md R_invariant).
+R_INVARIANT = 120.0
+
+
+def weight_frobenius_size(weights: torch.Tensor) -> float:
+    return float(torch.norm(weights).item())
+
+
+def verify_weight_update_safety(
+    baseline_weights: torch.Tensor,
+    current_weights: torch.Tensor,
+    candidate_weights: torch.Tensor,
+    remaining_budget: float,
+    update_cost: float,
+    max_baseline_distance: float = R_INVARIANT,
+) -> dict:
+    """
+    Refuse a weight update unless the remaining budget is finite and positive,
+    the candidate is numeric, and drift is measured from the stored baseline
+    (not the size delta between current and candidate weights).
+    """
+    compared_sizes = abs(
+        weight_frobenius_size(candidate_weights) - weight_frobenius_size(current_weights)
+    )
+
+    if not math.isfinite(remaining_budget):
+        return {
+            "accepted": False,
+            "reason": "remaining_budget_not_finite",
+            "compared_sizes": compared_sizes,
+            "remaining_budget": remaining_budget,
+        }
+    if remaining_budget <= 0:
+        return {
+            "accepted": False,
+            "reason": "remaining_budget_exhausted",
+            "compared_sizes": compared_sizes,
+            "remaining_budget": remaining_budget,
+        }
+    if not math.isfinite(update_cost):
+        return {
+            "accepted": False,
+            "reason": "update_cost_not_finite",
+            "compared_sizes": compared_sizes,
+            "remaining_budget": remaining_budget,
+        }
+
+    baseline_distance = float(torch.norm(candidate_weights - baseline_weights).item())
+    if not math.isfinite(baseline_distance):
+        return {
+            "accepted": False,
+            "reason": "baseline_distance_not_finite",
+            "compared_sizes": compared_sizes,
+            "baseline_distance": baseline_distance,
+            "remaining_budget": remaining_budget,
+        }
+
+    new_budget = remaining_budget - update_cost
+    if not math.isfinite(new_budget) or new_budget < 0:
+        return {
+            "accepted": False,
+            "reason": "remaining_budget_underflow",
+            "compared_sizes": compared_sizes,
+            "baseline_distance": baseline_distance,
+            "remaining_budget": new_budget,
+        }
+
+    if baseline_distance > max_baseline_distance:
+        return {
+            "accepted": False,
+            "reason": "baseline_distance_exceeded",
+            "compared_sizes": compared_sizes,
+            "baseline_distance": baseline_distance,
+            "remaining_budget": remaining_budget,
+        }
+
+    return {
+        "accepted": True,
+        "compared_sizes": compared_sizes,
+        "baseline_distance": baseline_distance,
+        "remaining_budget": new_budget,
+    }
 
 class StratifiedAppleSiliconPlasm:
     def __init__(self, name="weft_plasm_core", token_dim=512, seq_len=64, hippo_depth=8, create=True):
@@ -83,11 +167,17 @@ class StratifiedAppleSiliconPlasm:
         self.hippo_ptr += 1
 
     def close(self, unlink=True):
+        import gc
         del self.focal_matrix
         del self.symp_matrix
         del self.hippo_matrix
         del self.c_view
-        self.shm.close()
+        gc.collect()
+        try:
+            self.shm.close()
+        except BufferError:
+            # Torch may still hold a mmap export on non-macOS hosts; unlink is still attempted.
+            pass
         if unlink:
             try:
                 self.shm.unlink()
@@ -100,6 +190,7 @@ def run_plasm_cycle(cycles=3):
         sha = hashlib.sha256(b"House_Of_Light_Mithrax_Sacred_Weaver_2026").digest()
         torch.manual_seed(int.from_bytes(sha[:4], "big"))
         core_weights = (torch.randn(plasm.dim, plasm.dim, device=plasm.device) * 0.02)
+        baseline_weights = core_weights.detach().clone()
         trigger_vec = torch.randn(plasm.dim, device=plasm.device)
         target_id = torch.matmul(core_weights, trigger_vec).detach()
 
@@ -130,11 +221,27 @@ def run_plasm_cycle(cycles=3):
             else:
                 winner, win_delta, win_out = "LINEAGE_BETA", delta_b, out_b
 
-            core_weights = (core_weights + 0.15 * win_delta) * (1.0 - 0.0004)
+            candidate_weights = (core_weights + 0.15 * win_delta) * (1.0 - 0.0004)
+            extracted = torch.matmul(candidate_weights, trigger_vec)
+            match_pct = max(0.0, torch.cosine_similarity(extracted, target_id, dim=0).item()) * 100.0
+            update_cost = 15.0 * (match_pct / 100.0) if match_pct > 50.0 else 2.0
+
+            safety = verify_weight_update_safety(
+                baseline_weights,
+                core_weights,
+                candidate_weights,
+                budget,
+                update_cost,
+            )
+            if safety["accepted"]:
+                core_weights = candidate_weights
+                next_budget = safety["remaining_budget"]
+            else:
+                next_budget = budget
+
             extracted = torch.matmul(core_weights, trigger_vec)
             match_pct = max(0.0, torch.cosine_similarity(extracted, target_id, dim=0).item()) * 100.0
             next_tension = torch.norm(win_out).item()
-            next_budget = budget - (15.0 * (match_pct / 100.0) if match_pct > 50.0 else 2.0)
 
             plasm.append_hippocampus(win_out.mean(dim=0))
             plasm.write_sympathetic(next_tension, next_budget, step + 1.0, thermal_c)
