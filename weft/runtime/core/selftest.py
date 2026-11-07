@@ -16,6 +16,7 @@ import os
 import re
 import subprocess
 import sys
+import tempfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 WEFT_ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
@@ -166,8 +167,10 @@ def main():
     safety_res = run_weight_safety_checks()
     plasm_res = run_plasm_cycle(cycles=3)
     ic_res = run_ic_verification()
-    aywa_dir = os.path.abspath(os.path.join(HERE, "..", "aywa"))
-    moiss_res = harvest_moissanite_telemetry(aywa_dir)
+    # Write harvester output to a throwaway directory so a test run never
+    # rewrites tracked files (moissanite_telemetry.json/.bin, telemetry.jsonl).
+    with tempfile.TemporaryDirectory(prefix="weft-selftest-") as scratch:
+        moiss_res = harvest_moissanite_telemetry(scratch)
     hw_res = read_darwin_hardware_metrics()
     corpus_res = audit_corpus(WEFT_ROOT)
 
