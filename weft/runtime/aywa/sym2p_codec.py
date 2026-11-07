@@ -18,10 +18,26 @@ def encode_sym2p_line(
     sequence: int = 1,
     metrics: dict[str, float | int],
 ) -> str:
+    """Encode one SYM-2P line.
+
+    Field widths follow weft/design/craft.md:136-145: the role and action/state
+    fields are single bytes written as two hex digits (``0x01`` -> ``01``), and
+    the sequence ID is a four-digit decimal packet number (``0042`` is packet 42).
+    """
+    if not 0 <= role <= 0xFF:
+        raise ValueError(f"role must be a byte (0-255), got {role}")
+    if not 0 <= action_state <= 0xFF:
+        raise ValueError(f"action_state must be a byte (0-255), got {action_state}")
+    if not 0 <= sequence <= 9999:
+        raise ValueError(f"sequence must fit four decimal digits (0-9999), got {sequence}")
     parts = " ".join(f"({key} {value})" for key, value in metrics.items())
     payload = f"[s-exp {parts}]"
     digest = hashlib.sha256(payload.encode("utf-8")).hexdigest()
-    return f":{role:02d}:{action_state:02d}:{sequence:04d}{payload}{digest}"
+    return f":{role:02x}:{action_state:02x}:{sequence:04d}{payload}{digest}"
+
+
+# Signed decimal with optional fraction and exponent (Python float repr can emit 1e-05).
+_METRIC_RE = re.compile(r"\((\w+)\s+(-?\d+(?:\.\d+)?(?:[eE][-+]?\d+)?)\)")
 
 
 def parse_sym2p_line(line: str) -> dict[str, Any]:
@@ -30,7 +46,7 @@ def parse_sym2p_line(line: str) -> dict[str, Any]:
         raise ValueError("SYM-2P line must begin with role byte marker ':'")
     role = int(line[1:3], 16) if len(line) >= 3 else 0
     action_state = int(line[4:6], 16) if len(line) >= 6 else 0
-    sequence = int(line[7:11], 16) if len(line) >= 11 else 0
+    sequence = int(line[7:11], 10) if len(line) >= 11 else 0
     payload_start = line.find("[")
     payload_end = line.rfind("]")
     if payload_start < 0 or payload_end < 0:
@@ -41,14 +57,16 @@ def parse_sym2p_line(line: str) -> dict[str, Any]:
     payload_for_hash = line[payload_start : payload_end + 1]
     computed = hashlib.sha256(payload_for_hash.encode("utf-8")).hexdigest()
     metrics: dict[str, float] = {}
-    for match in re.finditer(r"\((\w+)\s+([\d.]+)\)", payload):
+    for match in _METRIC_RE.finditer(payload):
         metrics[match.group(1)] = float(match.group(2))
     return {
         "role": role,
         "action_state": action_state,
         "sequence": sequence,
         "metrics": metrics,
-        "hash_valid": (not claimed_hash) or (claimed_hash == computed),
+        "hash_present": bool(claimed_hash),
+        # A line without a hash is unverified, not valid.
+        "hash_valid": bool(claimed_hash) and claimed_hash == computed,
     }
 
 
