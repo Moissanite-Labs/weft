@@ -12,6 +12,7 @@ import os
 import struct
 import subprocess
 import sys
+import tempfile
 import time
 from multiprocessing import shared_memory
 from github_harvester import harvest_moissanite_telemetry
@@ -35,8 +36,9 @@ def read_darwin_hardware_metrics():
     }
 
 def run_self_test():
-    out_dir = os.path.dirname(os.path.abspath(__file__))
-    repo_data = harvest_moissanite_telemetry(out_dir)
+    # Self-test output goes to a throwaway directory so it never rewrites tracked files.
+    with tempfile.TemporaryDirectory(prefix="weft-daemon-selftest-") as scratch:
+        repo_data = harvest_moissanite_telemetry(scratch)
     hw = read_darwin_hardware_metrics()
     shm_name = "weft_aywa_64b_test"
     try:
