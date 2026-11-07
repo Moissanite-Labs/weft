@@ -1,0 +1,9 @@
+{
+  "source": "weft/runtime/aywa",
+  "files": [
+    "moissanite_telemetry.json",
+    "moissanite_telemetry.bin",
+    "telemetry.jsonl"
+  ],
+  "shader": "assets/shaders/dashboard_layout.wgsl"
+}

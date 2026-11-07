@@ -10,6 +10,7 @@ Exercises:
 
 import ast
 import glob
+import importlib.util
 import json
 import os
 import re
@@ -107,6 +108,19 @@ def run_weight_safety_checks():
     return {"status": status, "cases": cases}
 
 
+def run_pages_seed_selftest():
+    aywa_dir = os.path.abspath(os.path.join(HERE, "..", "aywa"))
+    module_path = os.path.join(aywa_dir, "site_selftest.py")
+    if not os.path.isfile(module_path):
+        return {"status": "FAIL", "error": f"missing site selftest module: {module_path}"}
+    spec = importlib.util.spec_from_file_location("weft_site_selftest", module_path)
+    if spec is None or spec.loader is None:
+        return {"status": "FAIL", "error": "could not load site_selftest module spec"}
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod.run_site_selftest()
+
+
 def audit_corpus(root_dir):
     md_files = sorted(glob.glob(f"{root_dir}/**/*.md", recursive=True))
     odd_fences = []
@@ -157,9 +171,20 @@ def main():
     hw_res = read_darwin_hardware_metrics()
     corpus_res = audit_corpus(WEFT_ROOT)
 
+    try:
+        pages_res = run_pages_seed_selftest()
+    except Exception as exc:
+        pages_res = {"status": "FAIL", "error": str(exc)}
+
     overall = all(
         x == "PASS"
-        for x in [safety_res["status"], plasm_res["status"], ic_res["status"], corpus_res["status"]]
+        for x in [
+            safety_res["status"],
+            plasm_res["status"],
+            ic_res["status"],
+            corpus_res["status"],
+            pages_res["status"],
+        ]
     )
     summary = {
         "overall_status": "PASS" if overall else "FAIL",
@@ -174,6 +199,7 @@ def main():
             "darwin_hardware": hw_res,
         },
         "corpus_audit": corpus_res,
+        "pages_seed": pages_res,
     }
     print(json.dumps(summary, indent=2))
     return 0 if overall else 1

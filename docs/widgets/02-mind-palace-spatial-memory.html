@@ -1,0 +1,9 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Mind palace spatial memory</title>
+<style>body{margin:0;background:#0a0f1a;color:#cbd5e1;font:12px monospace}canvas{display:block;width:100%;height:100vh}</style></head><body>
+<canvas id="c"></canvas><script>
+const c=document.getElementById('c'),x=c.getContext('2d');const rooms=['atrium','archive','forge','observatory'];
+function frame(){c.width=innerWidth;c.height=innerHeight;x.fillStyle='#0a0f1a';x.fillRect(0,0,c.width,c.height);
+rooms.forEach((name,i)=>{const cx=120+i*180,cy=160+Math.sin(performance.now()/800+i)*20;x.strokeStyle='#38bdf8';x.strokeRect(cx,cy,140,90);
+x.fillStyle='#e2e8f0';x.fillText(name,cx+12,cy+28);x.fillStyle='#64748b';x.fillText(`recency slot ${i}`,cx+12,cy+52);});
+x.fillStyle='#94a3b8';x.fillText('hippocampal lattice metaphor (vision language)',24,c.height-24);requestAnimationFrame(frame);}requestAnimationFrame(frame);
+</script></body></html>

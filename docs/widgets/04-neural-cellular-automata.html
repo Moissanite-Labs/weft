@@ -1,0 +1,9 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Neural cellular automata</title>
+<style>body{margin:0;background:#000;color:#94a3b8;font:12px monospace}canvas{display:block;width:100%;height:100vh;image-rendering:pixelated}</style></head><body>
+<canvas id="c"></canvas><script>
+const W=96,H=54,c=document.getElementById('c'),x=c.getContext('2d');let grid=Uint8Array.from({length:W*H},()=>Math.random()>.62?1:0);
+function step(){const n=grid.slice();for(let y=1;y<H-1;y++)for(let i=1;i<W-1;i++){let s=0;for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++)s+=grid[(y+dy)*W+(i+dx)];const idx=y*W+i;n[idx]=s===3||grid[idx]&&s===2; }grid=n;}
+function draw(){c.width=innerWidth;c.height=innerHeight;const cw=c.width/W,ch=c.height/H;step();
+for(let y=0;y<H;y++)for(let i=0;i<W;i++){x.fillStyle=grid[y*W+i]?'#38bdf8':'#0f172a';x.fillRect(i*cw,y*ch,cw,ch);} 
+x.fillStyle='#e2e8f0';x.fillText('NCA / Life-like persistency toy (not the Distill 2020 bar)',12,20);requestAnimationFrame(draw);}requestAnimationFrame(draw);
+</script></body></html>

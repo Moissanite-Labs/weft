@@ -1,0 +1,8 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>SDF Laya kinetic typography</title>
+<style>body{margin:0;background:#0c0f16;color:#cbd5e1;font:12px monospace}canvas{display:block;width:100%;height:100vh}</style></head><body>
+<canvas id="c"></canvas><script>
+const c=document.getElementById('c'),x=c.getContext('2d');let t=0;
+function frame(){c.width=innerWidth;c.height=innerHeight;t+=0.02;x.fillStyle='#0c0f16';x.fillRect(0,0,c.width,c.height);
+const cols=48,rows=27,cw=c.width/cols,ch=c.height/rows;for(let y=0;y<rows;y++)for(let i=0;i<cols;i++){const nx=i/cols*2-1,ny=y/rows*2-1,d=Math.hypot(nx,ny);const v=Math.sin(d*4-t)*.5+.5;x.fillStyle=`rgb(${20+v*40|0},${40+v*180|0},${100+v*155|0})`;x.fillRect(i*cw,y*ch,cw-1,ch-1);} 
+x.fillStyle='#e2e8f0';x.fillText('LAYA KINETIC SDF FIELD',24,32);requestAnimationFrame(frame);}requestAnimationFrame(frame);
+</script></body></html>

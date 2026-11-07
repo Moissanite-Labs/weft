@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Weft sovereign Pages seed — WebGPU membrane, SYM-2P telemetry, lineage workers." />
+  <title>WEFT // Sovereign Pages Organism</title>
+  <style>
+    :root { color-scheme: dark; }
+    html, body { margin: 0; height: 100%; background: #05070b; color: #e2e8f0; font-family: "SF Mono", Menlo, monospace; }
+    #gpuCanvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+    nav { position: fixed; top: 0; right: 0; z-index: 20; display: flex; gap: 10px; padding: 14px; }
+    nav a { color: #38bdf8; text-decoration: none; font-size: 12px; border: 1px solid rgba(56,189,248,.35); padding: 6px 10px; border-radius: 4px; background: rgba(8,12,20,.8); }
+    nav a:hover { background: rgba(15,23,42,.95); }
+    #hud { position: fixed; left: 16px; top: 16px; z-index: 10; max-width: min(520px, 90vw); padding: 12px 14px; font-size: 12px; line-height: 1.5; border-radius: 6px; border: 1px solid rgba(56,189,248,.35); background: rgba(8,12,20,.86); pointer-events: none; }
+    #hud strong { color: #38bdf8; letter-spacing: 0.08em; }
+  </style>
+</head>
+<body>
+  <canvas id="gpuCanvas"></canvas>
+  <nav aria-label="Weft organism sections">
+    <a href="./index.html">membrane</a>
+    <a href="./widgets/">widgets</a>
+  </nav>
+  <div id="hud"><strong>WEFT PAGES SEED</strong><br /><span id="hudMetrics">Initializing WebGPU / SharedArrayBuffer telemetry bridge…</span></div>
+  <script type="module">
+    import { WeftLoomEngine } from "./assets/js/weft-loom.js";
+    const hud = document.getElementById("hudMetrics");
+    const engine = new WeftLoomEngine({
+      canvas: document.getElementById("gpuCanvas"),
+      shaderUrl: "./assets/shaders/dashboard_layout.wgsl",
+      dataUrl: "./data/telemetry.jsonl",
+      hudEl: hud,
+    });
+    window.addEventListener("DOMContentLoaded", () => engine.boot());
+  </script>
+</body>
+</html>

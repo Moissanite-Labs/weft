@@ -1,0 +1,9 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Interaction combinator net</title>
+<style>body{margin:0;background:#0b1020;color:#e2e8f0;font:12px monospace}canvas{display:block;width:100%;height:100vh}</style></head><body>
+<canvas id="c"></canvas><script>
+const c=document.getElementById('c'),x=c.getContext('2d');const nodes=[{t:'CON',x:120,y:120},{t:'DUP',x:280,y:200},{t:'ERA',x:420,y:120}];
+function frame(){c.width=innerWidth;c.height=innerHeight;x.fillStyle='#0b1020';x.fillRect(0,0,c.width,c.height);x.strokeStyle='#64748b';
+nodes.forEach((a,i)=>{const b=nodes[(i+1)%nodes.length];x.beginPath();x.moveTo(a.x,a.y);x.lineTo(b.x,b.y);x.stroke();});
+nodes.forEach(n=>{x.fillStyle='#f97316';x.beginPath();x.arc(n.x,n.y,22,0,Math.PI*2);x.fill();x.fillStyle='#fff';x.fillText(n.t,n.x-14,n.y+4);});
+x.fillStyle='#94a3b8';x.fillText('interaction combinator net (CON / DUP / ERA sketch)',24,c.height-24);requestAnimationFrame(frame);}requestAnimationFrame(frame);
+</script></body></html>

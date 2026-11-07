@@ -12,6 +12,8 @@ import os
 import struct
 import time
 
+from sym2p_codec import parse_sym2p_line, telemetry_payload_from_harvest
+
 MOISSANITE_REPOS = [
     {"name": "compass",    "label": "COMPASS-NORTH   ", "role": "Origin Vision & Discussion #5 Seed",      "commits": 24, "prs": 3, "issues": 2, "suspended_touch": True,  "status": "anchor"},
     {"name": "synbios",    "label": "SYNBIOS-MATRIX  ", "role": "Capability Stewardship & Mission Control", "commits": 86, "prs": 9, "issues": 4, "suspended_touch": True,  "status": "active"},
@@ -104,6 +106,13 @@ def harvest_moissanite_telemetry(out_dir=None):
         json.dump(payload, f, indent=2)
     with open(bin_path, "wb") as f:
         f.write(binary_frame)
+
+    sym2p_line = telemetry_payload_from_harvest(payload)
+    jsonl_path = os.path.join(out_dir, "telemetry.jsonl")
+    with open(jsonl_path, "w", encoding="utf-8") as f:
+        f.write(sym2p_line + "\n")
+    payload["sym2p_line"] = sym2p_line
+    payload["sym2p_parsed"] = parse_sym2p_line(sym2p_line)
     return payload
 
 if __name__ == "__main__":
