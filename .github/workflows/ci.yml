@@ -66,3 +66,22 @@ jobs:
 
       - name: Assert clean working tree after all self-tests
         run: test -z "$(git status --porcelain)"
+
+  telemetry-browser:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install pinned browser test dependencies
+        run: |
+          python3 -m pip install -r scripts/requirements-browser.txt
+          python3 -m playwright install --with-deps chromium
+
+      - name: Test telemetry worker refresh, rejection, and recovery
+        run: python3 scripts/test_telemetry_browser.py
