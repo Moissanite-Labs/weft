@@ -1,0 +1,1759 @@
+[
+  {
+    "path": "weft/MOISSANITE-SYNTHESIS.md",
+    "sha256": "c14416dd1cd71fd32a3dfa18648d6775dd6c941f76abae173c48f1b2b3483c7b",
+    "status": "read",
+    "summary": "Curated origin and 19-repository disposition map. Valuable cross-project capability taxonomy, but its absorb/replace language and several implementation assertions exceed current program authority and evidence.",
+    "components": [
+      "ecosystem architecture",
+      "provenance",
+      "runtime integration"
+    ],
+    "evidence": [
+      {
+        "start_line": 8,
+        "end_line": 13,
+        "finding": "Origin progression: splicer, stratified shared memory, A/B selection, telemetry/provenance."
+      },
+      {
+        "start_line": 17,
+        "end_line": 37,
+        "finding": "Nineteen named repositories mapped to planes; table is a proposed integration map, not verified repository migration or implementation."
+      },
+      {
+        "start_line": 39,
+        "end_line": 48,
+        "finding": "Claims surviving organization commits remove reliance on suspended personal forks."
+      }
+    ],
+    "variant_notes": [
+      "Distinct from PROGRAM bridge-preservation policy; preserve as dated proposal.",
+      "MLX named but executable core is PyTorch; zero-overhead introspection, bounded mesh and bare-metal boot require separate evidence."
+    ],
+    "next_actions": [
+      "Reconcile every repository integration with an explicit interface, source revision, license and owner acceptance.",
+      "Keep bridge projects operational; prove one consumer before extraction or replacement."
+    ],
+    "uncertainties": [
+      "No external repository audit performed here; account history and canonical-origin completeness are assertions."
+    ]
+  },
+  {
+    "path": "weft/WEFT-ARCHITECTURE-LOCK.md",
+    "sha256": "6b06a2e8f239afab15b28f6567bb7d9dcf3226b0165d2bf6004976f47b18e085",
+    "status": "read",
+    "summary": "North-star summary of C1–C7 and source preservation, not an accurate current ABI or proof of hardware performance.",
+    "components": [
+      "C1 plasm",
+      "C2 invariants",
+      "C3 IC",
+      "C4 ledger",
+      "C5 gateway",
+      "C6 telemetry",
+      "C7 surface"
+    ],
+    "evidence": [
+      {
+        "start_line": 10,
+        "end_line": 17,
+        "finding": "Contains concrete shapes, operators, contracts and telemetry wire claims."
+      },
+      {
+        "start_line": 21,
+        "end_line": 25,
+        "finding": "Declares hardware verification and zero-loss source fidelity principles."
+      }
+    ],
+    "variant_notes": [
+      "C1 [4,64,512]/[4]/[8,512] differs from runtime structure despite same reported total bytes (tracked by #40/#47).",
+      "C3 zero-allocation and C2 shared-vector claims need actual tests."
+    ],
+    "next_actions": [
+      "Use document as target architecture; link claims to versioned executable profiles and evidence."
+    ],
+    "uncertainties": [
+      "191 repaired code fences and 144 turns need reproducible inventory confirmation."
+    ]
+  },
+  {
+    "path": "weft/ahraz.md",
+    "sha256": "a0dee65de9ef785fdd035e909fa3fba7e3c5942a3b16d501e461ad708c22b0bc",
+    "status": "read",
+    "summary": "Historical purported master core combining Darwin telemetry, multiprocess MPS cells, shared-memory bus, watermark and optional ledger/mesh hooks. It is a non-executable proposal with multiple concrete defects and overclaims of verification.",
+    "components": [
+      "Darwin telemetry",
+      "MPS cells",
+      "shared-memory bus",
+      "provenance",
+      "ledger gateway",
+      "mesh"
+    ],
+    "evidence": [
+      {
+        "start_line": 44,
+        "end_line": 90,
+        "finding": "Thermal readings are randomized values based on a sysctl level; missing math import; ctypes structure length misuse."
+      },
+      {
+        "start_line": 96,
+        "end_line": 129,
+        "finding": "Three focal slots plus 16 float sympathetic values; explicit CPU copies and MPS transfers."
+      },
+      {
+        "start_line": 143,
+        "end_line": 174,
+        "finding": "Cells score no target, write full active weights to one shared file, and each close unlinks shared memory."
+      },
+      {
+        "start_line": 180,
+        "end_line": 239,
+        "finding": "Optional Web3 hook and unauthenticated full-weight TCP sender; int.from_buffer is invalid."
+      },
+      {
+        "start_line": 261,
+        "end_line": 307,
+        "finding": "Winner chosen by output norm but never committed; child lifecycle races, hardcoded fracture target, watermark only queried, not established."
+      },
+      {
+        "start_line": 318,
+        "end_line": 326,
+        "finding": "Claims of single-cycle execution, inability to misbehave and verified global readiness are unsupported."
+      }
+    ],
+    "variant_notes": [
+      "Separate 3-slot bus and multiprocess architecture from current single-process C1.",
+      "The file called active_delta stores full active weights."
+    ],
+    "next_actions": [
+      "Retain as source; derive safe local subprocess experiment with deterministic target and candidate commit identity.",
+      "Replace fabricated thermals with measured/derived/unavailable provenance; gate mesh under #25.",
+      "Add lifecycle, candidate identity, rollback, cleanup and seed reproducibility tests before any extraction."
+    ],
+    "uncertainties": [
+      "No original execution trace or hardware proof is included."
+    ]
+  },
+  {
+    "path": "weft/ainterface.md",
+    "sha256": "2888c9ef6a191ed4cd50b0d2521ea146f832b08a49e7c73c005b1f7679628822",
+    "status": "read",
+    "summary": "Historical native-to-browser binary matrix visualization proposal; useful transport/UI seam but server is not a compliant WebSocket implementation.",
+    "components": [
+      "native browser bridge",
+      "binary transport",
+      "Canvas2D"
+    ],
+    "evidence": [
+      {
+        "start_line": 48,
+        "end_line": 125,
+        "finding": "Samples focal frame, averages to512 floats, copies CPU data and writes binary frames; missing Upgrade handshake and obsolete asyncio loop parameter."
+      },
+      {
+        "start_line": 184,
+        "end_line": 225,
+        "finding": "Canvas bar plot consumes Float32Array; print() invokes browser print rather than logging."
+      },
+      {
+        "start_line": 237,
+        "end_line": 252,
+        "finding": "Launch and60FPS/zero-copy claims lack execution evidence."
+      }
+    ],
+    "variant_notes": [
+      "Different from current static SYM-2P telemetry poller and WebGPU surface."
+    ],
+    "next_actions": [
+      "Prototype localhost authenticated/origin-checked bridge with standard WebSocket library, bounded backpressure, explicit schema/endian/sequence/time and rendering latency metrics.",
+      "Require real browser connection, reconnect, overload and shutdown tests before using live native metrics."
+    ],
+    "uncertainties": [
+      "No measured frame rate or actual MPS hidden-state interception is demonstrated."
+    ]
+  },
+  {
+    "path": "weft/deploymap.md",
+    "sha256": "761a9e10b94c5fe5bb89e18358affc8e86b3647e3a93c96978122ee8f46ac241",
+    "status": "read",
+    "summary": "Historical shell deployment proposal conflating Solidity EVM and Stylus WASM, with fabricated success fallback.",
+    "components": [
+      "ledger toolchain",
+      "Stylus",
+      "deployment"
+    ],
+    "evidence": [
+      {
+        "start_line": 52,
+        "end_line": 92,
+        "finding": "Writes only partial ProvenanceRegistry Solidity into purported Stylus project."
+      },
+      {
+        "start_line": 94,
+        "end_line": 118,
+        "finding": "Unsupported compilation path and deployment error replaced with MOCK_SUCCESS then declared verified."
+      },
+      {
+        "start_line": 137,
+        "end_line": 144,
+        "finding": "Claims full active architecture and unified-memory advantage without supporting receipts."
+      }
+    ],
+    "variant_notes": [
+      "Retain EVM Solidity and future Rust/C++ Stylus as separate targets."
+    ],
+    "next_actions": [
+      "Compile existing Solidity locally under #44; require ABI/event and revert equivalence before optional Stylus port.",
+      "Never retain mock-success fallback; deterministic local receipts and explicit failure states precede any approved network deployment."
+    ],
+    "uncertainties": [
+      "No compiler version, wasm binary, deployment receipt, or supported CLI proof included."
+    ]
+  },
+  {
+    "path": "weft/emergent.md",
+    "sha256": "62301080dab87d8746acdbf38e119afd02779bdc79023080c912c0e77461a945",
+    "status": "read",
+    "summary": "Philosophical conversation on intelligence convergence and consciousness; includes explicit correction that all architecture exists only as text rather than an installed system.",
+    "components": [
+      "research philosophy",
+      "biological analogy",
+      "evidence provenance"
+    ],
+    "evidence": [
+      {
+        "start_line": 7,
+        "end_line": 56,
+        "finding": "Speculative scaling and predictive-processing analogy, not a scientific demonstration of consciousness."
+      },
+      {
+        "start_line": 70,
+        "end_line": 88,
+        "finding": "Assistant reverses earlier consciousness framing with categorical innate-limit claim."
+      },
+      {
+        "start_line": 94,
+        "end_line": 100,
+        "finding": "User says blueprint unseen; assistant admits no external installation or hidden files exist."
+      },
+      {
+        "start_line": 139,
+        "end_line": 147,
+        "finding": "User clarifies interest in convergence of intelligences; assistant presents inevitability without proof."
+      }
+    ],
+    "variant_notes": [
+      "Contradictory assistant metaphysical claims must not become engineering requirements."
+    ],
+    "next_actions": [
+      "Preserve user convergence question in research/whitepaper questions; define testable transfer, coordination or prediction phenomena.",
+      "Use explicit text-only admission to reject transcript assertions of running/sealed software."
+    ],
+    "uncertainties": [
+      "No biological or consciousness conclusion can be established from this transcript."
+    ]
+  },
+  {
+    "path": "weft/ethos.md",
+    "sha256": "5373a39cf8e1b157cdb38858fcf442c27749458251cc233dd66de6760a2f4a52",
+    "status": "read",
+    "summary": "Speculative identity/profile diffusion, emergent culture and economic provenance narrative.",
+    "components": [
+      "personalization",
+      "mesh",
+      "provenance economics",
+      "multi-agent coordination"
+    ],
+    "evidence": [
+      {
+        "start_line": 11,
+        "end_line": 37,
+        "finding": "Proposes style prior propagation through LoRA migration; no demonstrated profile compatibility."
+      },
+      {
+        "start_line": 41,
+        "end_line": 48,
+        "finding": "Speculates emergent alliances and novel compiled primitives."
+      },
+      {
+        "start_line": 52,
+        "end_line": 60,
+        "finding": "Claims watermark taxation physically prevents exploitation despite no enforceable universal runtime boundary."
+      }
+    ],
+    "variant_notes": [
+      "Style prior, model of human preference and identity survival are distinct."
+    ],
+    "next_actions": [
+      "Consent-based local personalization and transfer evaluation first; measure task/style fidelity and negative transfer.",
+      "Bound economic enforcement to participating resource providers; analyze adversaries and offline copies."
+    ],
+    "uncertainties": [
+      "No evidence of economic impossibility, behavior transfer across arbitrary models, or emergent culture."
+    ]
+  },
+  {
+    "path": "weft/govern.md",
+    "sha256": "fc00a07bfdc9edea73152edc5a373bdbad5b3d5b6f4a3d4c30b5c5d7428e88b2",
+    "status": "read",
+    "summary": "Long-horizon social governance vision: invariant-bound law, computational resource allocation, polycentric coordination and human intent stewardship.",
+    "components": [
+      "governance research",
+      "constitutional invariants",
+      "mesh policy"
+    ],
+    "evidence": [
+      {
+        "start_line": 11,
+        "end_line": 28,
+        "finding": "Maps law to parameter-distance bounds, conflating geometry with semantic prevention."
+      },
+      {
+        "start_line": 32,
+        "end_line": 47,
+        "finding": "Proposes geographic evacuation and algorithmic exclusion without consent/appeal architecture."
+      },
+      {
+        "start_line": 51,
+        "end_line": 57,
+        "finding": "Positions humans as intent anchors and ecological/moral stewards."
+      },
+      {
+        "start_line": 63,
+        "end_line": 68,
+        "finding": "Claims local implementation and deployment readiness without evidence."
+      }
+    ],
+    "variant_notes": [
+      "Governance vision is a research track, not live policy or executable constitutional enforcement."
+    ],
+    "next_actions": [
+      "Model a bounded resource-governance sandbox with explicit actors, consent, veto, appeal, exit, succession and observability.",
+      "Demonstrate semantic safety requirements independently of norm-radius predicates; retain #25 migration decision gate."
+    ],
+    "uncertainties": [
+      "Political adoption, legitimacy and legal effect cannot be inferred from simulations."
+    ]
+  },
+  {
+    "path": "weft/dissertation-mac.md",
+    "sha256": "ed5982d521aa3d44de9f91a36e10825b7a2722436af917621c33b38aa014916f",
+    "status": "read",
+    "summary": "Broad dissertation connecting shared memory, graph computation, provenance, homeostasis and society, followed by a toy graph runtime. Useful hypothesis map, but zero-latency, proof, thermodynamic and deployment claims are unsupported.",
+    "components": [
+      "architecture whitepaper",
+      "IC variants",
+      "shared memory",
+      "economics",
+      "governance"
+    ],
+    "evidence": [
+      {
+        "start_line": 19,
+        "end_line": 39,
+        "finding": "UMA and telemetry described as zero-latency/single-cycle, without measurement or synchronization model."
+      },
+      {
+        "start_line": 43,
+        "end_line": 80,
+        "finding": "Four/five/six primitive descriptions and purported lock-free locality; lacks concurrent ownership protocol."
+      },
+      {
+        "start_line": 136,
+        "end_line": 152,
+        "finding": "WP induction formula and migration sketch; runtime predicates do not establish proof over all transitions."
+      },
+      {
+        "start_line": 156,
+        "end_line": 172,
+        "finding": "Post-economic endstate assumes zero marginal energy/material cost without derivation."
+      },
+      {
+        "start_line": 206,
+        "end_line": 305,
+        "finding": "Dictionary/list toy graph with asymmetric CON-ERA/CON-SUP/CON-VLV handlers, timestamp node collisions and synthetic tension."
+      },
+      {
+        "start_line": 307,
+        "end_line": 352,
+        "finding": "Visualization uses missing math import and random waveform, no actual ledger/telemetry."
+      }
+    ],
+    "variant_notes": [
+      "Separate toy dictionary reducer from flat-arena C3 and formal Lafont nets.",
+      "Three-slot bus differs from current C1; biological and economic interpretations remain analogies."
+    ],
+    "next_actions": [
+      "Build a claim-to-premise/equation/experiment table for whitepaper; quantify transfer and scheduling costs.",
+      "Specify complete transition semantics then prove preserved invariants over that model, including finite precision and allocation failure."
+    ],
+    "uncertainties": [
+      "No formal proof artifact, energy measurement or production execution record."
+    ]
+  },
+  {
+    "path": "weft/langdoc.md",
+    "sha256": "263414ec65a50615b0fcb84f1b779a72e5f9628034c9e3962c5645a97ba121d5",
+    "status": "read",
+    "summary": "Historical language manual and replication toy. Establishes desired portable graph grammar, but protocol lacks normative detail and toy deletes all pairs regardless of semantics.",
+    "components": [
+      "IC specification",
+      "BCP protocol",
+      "replication tooling"
+    ],
+    "evidence": [
+      {
+        "start_line": 17,
+        "end_line": 75,
+        "finding": "Four-node grammar uses CON-ERA annihilation and fixed15-token valve; incompatible with current detailed reducer semantics."
+      },
+      {
+        "start_line": 80,
+        "end_line": 102,
+        "finding": "BCP diagram includes watermark but no fully specified widths/endian/version/topology constraints."
+      },
+      {
+        "start_line": 128,
+        "end_line": 173,
+        "finding": "Replication harness stores dictionaries, merely prints a shared-memory link and deletes arbitrary node pairs."
+      }
+    ],
+    "variant_notes": [
+      "Do not call this current normative BCP or reducer specification; preserve as lineage."
+    ],
+    "next_actions": [
+      "Version graph grammar, node arities, rule table, wire format and invalid-input behavior; implement shared golden corpus and reference interpreter."
+    ],
+    "uncertainties": [
+      "No verified mesh interoperability or shared-memory attachment."
+    ]
+  },
+  {
+    "path": "weft/imprint.md",
+    "sha256": "a7d0a8e1c9bb6a1995461d09257c65d357078bd7e0fe67a1d0d00df72f6fe54b",
+    "status": "read",
+    "summary": "Historical conversation about testamentary intent and identity preservation, with a synthetic matrix-freezing script and unsupported claims of on-chain sealing.",
+    "components": [
+      "personalization",
+      "testamentary policy",
+      "provenance",
+      "research philosophy"
+    ],
+    "evidence": [
+      {
+        "start_line": 11,
+        "end_line": 34,
+        "finding": "Treats cessation of user input as death and fixed parameters as preserved consciousness; these are not valid engineering inferences."
+      },
+      {
+        "start_line": 71,
+        "end_line": 116,
+        "finding": "Saves writable NumPy matrix and SHA256 digest, calls it immutable blockchain Merkle root; no chain interaction."
+      },
+      {
+        "start_line": 121,
+        "end_line": 143,
+        "finding": "Profile consists of invented constants and sine values, tested only by output norm."
+      },
+      {
+        "start_line": 173,
+        "end_line": 204,
+        "finding": "Claims sealed chain state using common local-development addresses and truncated hash, no receipts."
+      },
+      {
+        "start_line": 284,
+        "end_line": 340,
+        "finding": "User asks about comparable scaling and emergence; assistant offers speculative biological analogy."
+      }
+    ],
+    "variant_notes": [
+      "Separate chosen testamentary policy, empirically evaluated preference predictor and consciousness/survival claims.",
+      "Frozen file/checksum is neither immutable storage nor governance authorization."
+    ],
+    "next_actions": [
+      "Design consented versioned preference dataset, held-out decisions, uncertainty/abstention and authorized successor/appeal policy.",
+      "Use durable signed artifact/version provenance and documented revocation; do not infer a human death from telemetry silence."
+    ],
+    "uncertainties": [
+      "No evidence of immutable chain state, exact preference capture or personhood preservation."
+    ]
+  },
+  {
+    "path": "weft/manifest.md",
+    "sha256": "a92eb99bf6a270175fea956eceed8bd4c8c52ed6124c70bab87cadcca3392b79",
+    "status": "read",
+    "summary": "Historical ledger migration shell sketch that generates simulated hashes and announces on-chain success without a transaction.",
+    "components": [
+      "ledger integration",
+      "deployment evidence"
+    ],
+    "evidence": [
+      {
+        "start_line": 27,
+        "end_line": 46,
+        "finding": "Reads key/config and generates random simulated weight hash rather than actual model bytes."
+      },
+      {
+        "start_line": 62,
+        "end_line": 81,
+        "finding": "MOCK receipt is local SHA256; Python time.sleep is invalid Bash; printed success is not a receipt."
+      },
+      {
+        "start_line": 101,
+        "end_line": 108,
+        "finding": "Ownership and automatic taxation claims exceed implementation."
+      }
+    ],
+    "variant_notes": [
+      "Distinct from deploymap compiler proposal and actual local C5 gateway."
+    ],
+    "next_actions": [
+      "Define canonical model artifact hash, chain ID, verified contract code/ABI, signed payload, receipt and finality checks in local EVM integration before approved broadcast.",
+      "Keep simulations explicitly typed/labeled; do not turn errors or synthetic receipts into success."
+    ],
+    "uncertainties": [
+      "No actual registerGenotype call or network inclusion evidence."
+    ]
+  },
+  {
+    "path": "weft/more.md",
+    "sha256": "3a8920be26129e2d3dbdd8586f3fd7a02104281332a2039465f2c6018dbbdc78",
+    "status": "read",
+    "summary": "Three distinct appendix targets: privileged x86 cache/TLB purge, CUDA/NCCL tensor reduction and haptic PID/current control.",
+    "components": [
+      "OS",
+      "NVIDIA distributed compute",
+      "haptics"
+    ],
+    "evidence": [
+      {
+        "start_line": 6,
+        "end_line": 57,
+        "finding": "Ring0 x86 purge changes registers/caches without restoring committed state; not macOS userspace or ARM64."
+      },
+      {
+        "start_line": 59,
+        "end_line": 117,
+        "finding": "NCCL sum uses explicit host↔device copies and sync; no Frobenius reduction despite comment."
+      },
+      {
+        "start_line": 119,
+        "end_line": 192,
+        "finding": "Haptic transfer diverges near85 and jumps to50A at threshold; PID separate from actuator, angle mapping reversed relative to narrative."
+      }
+    ],
+    "variant_notes": [
+      "x86 privileged, NVIDIA CUDA and M1 MPS are separate targets, not one executable platform."
+    ],
+    "next_actions": [
+      "Emulate privileged fault handling separately from application rollback.",
+      "Benchmark NCCL only on NVIDIA topology with resource cleanup and declared reduction semantics.",
+      "Simulate haptic plant with current/torque/slew limits, watchdog and fail-safe release before any motor."
+    ],
+    "uncertainties": [
+      "No physical haptic ratings, stable controller proof or multi-node execution evidence."
+    ]
+  },
+  {
+    "path": "weft/mugetsu.md",
+    "sha256": "689a11d66dae6bbf56e917a90fc1c6fc36db1a34a1fa92adeb435d888e0a347a",
+    "status": "read",
+    "summary": "Meta-annihilation variant of dictionary graph toy: synthetic tension switches SUP expansion into pruning.",
+    "components": [
+      "IC variants",
+      "feedback control"
+    ],
+    "evidence": [
+      {
+        "start_line": 5,
+        "end_line": 9,
+        "finding": "Identifies runaway branching as motivating problem."
+      },
+      {
+        "start_line": 76,
+        "end_line": 127,
+        "finding": "Threshold40 switches local rules; artificial tension decrement and timestamp-derived node IDs."
+      },
+      {
+        "start_line": 129,
+        "end_line": 169,
+        "finding": "Bounded step loop and synthetic sine output; no host telemetry."
+      }
+    ],
+    "variant_notes": [
+      "Meta-annihilation is a useful resource-control hypothesis, not demonstrated thermal regulation."
+    ],
+    "next_actions": [
+      "Specify resource quota semantics, cancellation and conservation; compare adaptive branching to fixed branching under measured cost and task quality."
+    ],
+    "uncertainties": [
+      "No live thermals, GPU reduction or stability evidence."
+    ]
+  },
+  {
+    "path": "weft/pcoom.md",
+    "sha256": "45f6a98911921d8816636bcccd7aa0497225b98d2a7cb9b824bf92fb77e1cdbe",
+    "status": "read",
+    "summary": "SUP exploration proposal and toy branching reducer. The code enumerates bounded dictionary entries with synthetic scoring rather than simultaneous exhaustive or quantum computation.",
+    "components": [
+      "IC SUP",
+      "speculative search"
+    ],
+    "evidence": [
+      {
+        "start_line": 3,
+        "end_line": 30,
+        "finding": "Claims every parameter transformation considered at once; finite hardware does not supply this guarantee."
+      },
+      {
+        "start_line": 98,
+        "end_line": 145,
+        "finding": "Branch count capped12, repeated child IDs overwrite nodes, random tension replaces candidate evaluation."
+      },
+      {
+        "start_line": 190,
+        "end_line": 197,
+        "finding": "Claims proof and economics integrated although absent from code."
+      }
+    ],
+    "variant_notes": [
+      "SUP as classical bounded speculative search must be distinguished from quantum superposition and current C3 reserved tag."
+    ],
+    "next_actions": [
+      "Create deterministic bounded search experiment with unique lineage IDs, quality-per-cost baseline, memory quota and correct winner commitment."
+    ],
+    "uncertainties": [
+      "No candidate solution representation, invariant checker, GPU kernel or quantum evidence."
+    ]
+  },
+  {
+    "path": "weft/penult.md",
+    "sha256": "c939c1a0e0b13495d30add83368c18f20ea25750e43676a9baff740afc204ea8",
+    "status": "read",
+    "summary": "Conceptual HVM/Bend/Lean unification proposal tying application topology, migration and economics to interaction-net reductions.",
+    "components": [
+      "language research",
+      "formal verification",
+      "GPU backend"
+    ],
+    "evidence": [
+      {
+        "start_line": 5,
+        "end_line": 7,
+        "finding": "Suggests HVM/Bend plus Lean; no actual bridge artifact."
+      },
+      {
+        "start_line": 31,
+        "end_line": 41,
+        "finding": "Conflates local rewrite validity with semantic security and scheduler-free hardware saturation."
+      },
+      {
+        "start_line": 45,
+        "end_line": 55,
+        "finding": "Useful aspiration: application as stable topology, migration as graph subsection, resource valve as effect."
+      }
+    ],
+    "variant_notes": [
+      "Formal graph model, implementation scheduler and external effects require separate refinement contracts."
+    ],
+    "next_actions": [
+      "Survey supported compiler/backends; implement reference semantics and bounded proofs before GPU port or proof-preserving compiler experiment."
+    ],
+    "uncertainties": [
+      "No demonstrated Lean→Bend compiler or Metal/ANE backend."
+    ]
+  },
+  {
+    "path": "weft/perception.md",
+    "sha256": "2f06054a375fb95de10f350b52191e20f96e5c838276c5a1de67e6f61358c2a0",
+    "status": "read",
+    "summary": "Historical user-style profile proposal whose implementation hardcodes three coefficients and harmonic padding rather than learning from decisions.",
+    "components": [
+      "personalization",
+      "memory"
+    ],
+    "evidence": [
+      {
+        "start_line": 23,
+        "end_line": 33,
+        "finding": "Assistant interprets user design preferences as three axes."
+      },
+      {
+        "start_line": 71,
+        "end_line": 95,
+        "finding": "Constants0.02/0.94/0.88 and cosine padding are invented profile, not statistical estimation."
+      },
+      {
+        "start_line": 97,
+        "end_line": 117,
+        "finding": "Calls hippocampal methods on imported bus variant and validates only norm."
+      }
+    ],
+    "variant_notes": [
+      "Keep interpretive profile hypothesis distinct from measured preference model."
+    ],
+    "next_actions": [
+      "Collect consented decision pairs with provenance; compare explicit rules, retrieval and learned personalization on held-out judgments with uncertainty and reversibility."
+    ],
+    "uncertainties": [
+      "No psychometric validity, predictive evaluation or compatible bus implementation established."
+    ]
+  },
+  {
+    "path": "weft/process.md",
+    "sha256": "0db8e6788042cf6beb09d686606f60a766e4dc0c7b4015b81037a82418b8381a",
+    "status": "read",
+    "summary": "Assistant retrospective of design cadence: hardware coupling, local graphs, economics, resilience and preserved intent.",
+    "components": [
+      "design principles",
+      "mission"
+    ],
+    "evidence": [
+      {
+        "start_line": 13,
+        "end_line": 36,
+        "finding": "Five principles mingle author preference interpretations with unsupported accomplished-state claims."
+      },
+      {
+        "start_line": 40,
+        "end_line": 44,
+        "finding": "Claims fully realized unified organism without new evidence."
+      }
+    ],
+    "variant_notes": [
+      "Treat as a secondary synthesis, not direct author wording or completion evidence."
+    ],
+    "next_actions": [
+      "Retain principles as design questions and link each to original user statements and measurable goals."
+    ],
+    "uncertainties": [
+      "Degree of user endorsement of each inferred principle requires original-turn context."
+    ]
+  },
+  {
+    "path": "weft/prove.md",
+    "sha256": "60a5a1e5700eedff6b779faa6269497b7bf399ded1a36c5c6c8f36239bf2e2fa",
+    "status": "read",
+    "summary": "Historical formal-prover prototype is a runtime predicate with wrong difference-of-norms metric; integration validates one update then commits a scaled one.",
+    "components": [
+      "C2 invariants",
+      "formal verification"
+    ],
+    "evidence": [
+      {
+        "start_line": 27,
+        "end_line": 35,
+        "finding": "Intended invariant uses baseline-relative norm, nonnegative budget and tension."
+      },
+      {
+        "start_line": 77,
+        "end_line": 107,
+        "finding": "Implementation compares absolute norm difference, omits budget and has no SMT solver."
+      },
+      {
+        "start_line": 147,
+        "end_line": 173,
+        "finding": "Checks winning_delta then commits0.15×delta; rejection triggers migration/privileged purge instead of specified rollback."
+      }
+    ],
+    "variant_notes": [
+      "Current C2 repairs are separate from this source; predicate is not WP proof."
+    ],
+    "next_actions": [
+      "Use saved baseline and exact committed candidate; cross-language shared tests (#42), finite values and declared inequality semantics.",
+      "Specify refinement from real-number theorem to floating-point implementation before proof claims."
+    ],
+    "uncertainties": [
+      "No SMT/Lean execution or latency evidence supports <0.2ms."
+    ]
+  },
+  {
+    "path": "weft/provocol.md",
+    "sha256": "c7d1424d88995b52dbc1370b237995791f1f309dc497e115a594d2955d16d6cf",
+    "status": "read",
+    "summary": "Lean scalar invariant theorem plus Bend-like scalar loop, proposed as dual-engine architecture. It lacks a verified compilation/refinement bridge.",
+    "components": [
+      "Lean proof",
+      "Bend backend",
+      "language research"
+    ],
+    "evidence": [
+      {
+        "start_line": 44,
+        "end_line": 86,
+        "finding": "Scalar theorem needs budget>=2.5 premise; bounds per-step delta rather than cumulative distance; tactic imports need compilation."
+      },
+      {
+        "start_line": 91,
+        "end_line": 141,
+        "finding": "Bend sketch uses fixed scalar telemetry and recursive sum, not matrix/GPU integration."
+      },
+      {
+        "start_line": 148,
+        "end_line": 154,
+        "finding": "Claims memory safety and universal security beyond theorem statement."
+      }
+    ],
+    "variant_notes": [
+      "Preserve Lean formal model and Bend implementation as independent research artifacts."
+    ],
+    "next_actions": [
+      "Pin Lean/Mathlib and compile narrow theorem; state assumptions explicitly.",
+      "Check actual Bend syntax/backend availability and compare to reference semantics, without claiming M1 GPU/ANE support from prose."
+    ],
+    "uncertainties": [
+      "Compiler compatibility and proof completeness not verified in this reading."
+    ]
+  },
+  {
+    "path": "weft/self.md",
+    "sha256": "f088b44cfa3cb5981ce71470be659dc2e8f143aae98dc4d4d7dc0c61107f4d2c",
+    "status": "read",
+    "summary": "Native actuator and ledger-monitor proposals with simulated actuation and fabricated deployment narrative.",
+    "components": [
+      "host actuation",
+      "ledger monitoring",
+      "C5 gateway"
+    ],
+    "evidence": [
+      {
+        "start_line": 73,
+        "end_line": 113,
+        "finding": "Actuator computes RPM/mode only and explicitly simulates writes; no IOKit control call."
+      },
+      {
+        "start_line": 150,
+        "end_line": 204,
+        "finding": "User requests sequence; assistant asserts deployed/streaming without execution record."
+      },
+      {
+        "start_line": 240,
+        "end_line": 307,
+        "finding": "Hardcoded event signature and synchronous poll loop; re-reads latest head after fetch and advances cursor on errors, risking skipped logs."
+      }
+    ],
+    "variant_notes": [
+      "Actuator simulation must remain separate from actual hardware control.",
+      "Historical monitor event ABI may differ from current contracts."
+    ],
+    "next_actions": [
+      "Default to read-only host metrics and workload throttling; hardware actuation requires independently specified platform API and limits.",
+      "Build local event monitor with ABI-derived topics, stable block ranges, persistence, retry, deduplication and reorg handling."
+    ],
+    "uncertainties": [
+      "No live SMC write or chain evidence; exact historical event signature not validated here."
+    ]
+  },
+  {
+    "path": "weft/spread.md",
+    "sha256": "66fdc426e6874a010e8d7a450ccf3a45edc867b0b4b5254ade72af4eb6e8a5ee",
+    "status": "read",
+    "summary": "Ecosystem adoption argument proposes composability and creator rewards, but conflates another Weft project and assumes universal watermark enforcement.",
+    "components": [
+      "adoption",
+      "composition",
+      "provenance licensing"
+    ],
+    "evidence": [
+      {
+        "start_line": 3,
+        "end_line": 9,
+        "finding": "Cites external Weft language discussion as ecosystem problem; distinct project."
+      },
+      {
+        "start_line": 13,
+        "end_line": 19,
+        "finding": "Automatic code/weight ingestion proposed without compatibility or license policy."
+      },
+      {
+        "start_line": 23,
+        "end_line": 46,
+        "finding": "Claims automatic royalties anywhere on mesh without trusted execution assumptions."
+      }
+    ],
+    "variant_notes": [
+      "Automated composition is a capability target; intellectual-property permission is not established by a hash."
+    ],
+    "next_actions": [
+      "Build small interoperable component SDK and real consumer examples; attach source/license/compatibility manifest to any imported artifact.",
+      "Evaluate reward design with participating providers, abuse cases and token-free alternative."
+    ],
+    "uncertainties": [
+      "No established adoption or royalty economics."
+    ]
+  },
+  {
+    "path": "weft/soc.md",
+    "sha256": "3b77c77b4cbdd31f08b27084a63bf1782b2bf1ceb93684840887132ede4ba390",
+    "status": "read",
+    "summary": "Token-free resonance alternative: human-directed variation, task adaptation and local ecology without ledger dependencies. Snippet is broken and scoring remains norm minimization.",
+    "components": [
+      "token-free resource model",
+      "C1 adaptation",
+      "personalization"
+    ],
+    "evidence": [
+      {
+        "start_line": 3,
+        "end_line": 52,
+        "finding": "Explicitly removes transaction/token accounting; resource abundance and human-only creativity claims speculative."
+      },
+      {
+        "start_line": 103,
+        "end_line": 116,
+        "finding": "write_resonance_telemetry overwrites ndarray reference with scalars; subsequent writes fail."
+      },
+      {
+        "start_line": 188,
+        "end_line": 197,
+        "finding": "Human entropy is random simulation, not measured consented input."
+      },
+      {
+        "start_line": 223,
+        "end_line": 285,
+        "finding": "A/B uses output norms, scales chosen delta then decay, no invariant revalidation; cleanup nested incorrectly."
+      }
+    ],
+    "variant_notes": [
+      "This is a genuine architectural alternative to ledger-first ecosystem, not obsolete by chronology."
+    ],
+    "next_actions": [
+      "Implement token-free local quotas and quality/novelty objectives first; evaluate human steering as explicit input against no-steering baseline.",
+      "Retain resource costs even without currency; repair schema and lifecycle only through bounded experiment."
+    ],
+    "uncertainties": [
+      "No evidence automation eliminates scarcity or validates model of human behavior."
+    ]
+  },
+  {
+    "path": "weft/terrafab-calc.md",
+    "sha256": "9c8dc4da177e89ab360d1b73133dcb27457aaad8277aeb855b03601c655c6158",
+    "status": "read",
+    "summary": "Hand-written C scalar gate claimed as Lean-derived industrial safety proof; missing budget precheck and nonfinite handling invalidate claims.",
+    "components": [
+      "C11 invariants",
+      "embedded control"
+    ],
+    "evidence": [
+      {
+        "start_line": 34,
+        "end_line": 59,
+        "finding": "Threshold predicates accept NaN by comparison fallthrough."
+      },
+      {
+        "start_line": 67,
+        "end_line": 87,
+        "finding": "Transition subtracts2.5 without checking budget and does not validate input state."
+      },
+      {
+        "start_line": 99,
+        "end_line": 156,
+        "finding": "Sub-nanosecond and physical impossibility claims unsupported by compiler/plant evidence."
+      }
+    ],
+    "variant_notes": [
+      "Historical scalar header differs from extracted C11 invariant implementation and has no demonstrated code generation provenance."
+    ],
+    "next_actions": [
+      "Shared C/Python corpus and negative/nonfinite/overflow cases under #42.",
+      "For embedded pilot: define actual physical state/units, sample/actuator delays, plant constraints, watchdog and measured worst-case timing."
+    ],
+    "uncertainties": [
+      "No proof-to-C refinement, machine model or industrial verification."
+    ]
+  },
+  {
+    "path": "weft/terrafab.md",
+    "sha256": "eaa16517934cf619b8599e90c649c1d07cbe9c6d15b5f5b528af71f097e1908d",
+    "status": "read",
+    "summary": "Physical fabrication and closed-loop compute/manufacturing vision; user specifically asks for measurable mathematical gains, but supplied theorem and benchmark do not prove them.",
+    "components": [
+      "physical fabrication",
+      "control research",
+      "benchmark methodology",
+      "hardware partnerships"
+    ],
+    "evidence": [
+      {
+        "start_line": 86,
+        "end_line": 138,
+        "finding": "User identifies manufacturing-energy-compute feedback loop as value beyond software optimization."
+      },
+      {
+        "start_line": 161,
+        "end_line": 187,
+        "finding": "Repeated direct user requests for proof of measurable hypothetical gains."
+      },
+      {
+        "start_line": 201,
+        "end_line": 251,
+        "finding": "Assumes queue overhead zero and single rewrite end-to-end O(1); throughput expression dimensionally wrong; stability lacks plant model."
+      },
+      {
+        "start_line": 283,
+        "end_line": 339,
+        "finding": "Compares sleep-inflated synthetic legacy loop to matrix multiply, then prints unsupported zero-debt/safety claims."
+      }
+    ],
+    "variant_notes": [
+      "Terrafab fabrication application and custom chip fabrication are separate hardware programs."
+    ],
+    "next_actions": [
+      "Create transparent analytical cost model with communication/memory/queue/sensor/actuator terms and uncertainty.",
+      "Compare same control task, same hardware, same accuracy and load; use p50/p95/p99 latency, energy, tracking error and safety envelope.",
+      "Begin simulated plant/digital twin; physical testbed requires partner specs/resources and explicit authorization."
+    ],
+    "uncertainties": [
+      "No actual partner commitment, fabrication access, latency gain or stability proof."
+    ]
+  },
+  {
+    "path": "weft/terraweft.md",
+    "sha256": "d7433f1443529ecf45d550bef9b6cc109f27bd62d6714275f6892459829e104b",
+    "status": "read",
+    "summary": "Custom reconfigurable interaction-cell chip vision combining analog routing, resource valves and Apple host interface.",
+    "components": [
+      "custom silicon",
+      "analog computation",
+      "hardware protocol"
+    ],
+    "evidence": [
+      {
+        "start_line": 3,
+        "end_line": 36,
+        "finding": "Proposes transistor-level graph rewiring/branch collapse without circuit/device model."
+      },
+      {
+        "start_line": 39,
+        "end_line": 45,
+        "finding": "Assumes on-chip attribution/token transfer and direct400GB/s M1 memory access."
+      },
+      {
+        "start_line": 49,
+        "end_line": 58,
+        "finding": "Asserts fully active architecture without hardware artifacts."
+      }
+    ],
+    "variant_notes": [
+      "Physical transistor rewiring, FPGA configurable routing, digital ASIC and analog optimization are distinct implementation candidates."
+    ],
+    "next_actions": [
+      "Freeze ISA/graph semantics and cycle-accurate reference first; RTL/FPGA feasibility, PPA/routing and host-link budget next; ASIC only after measured benefit and fabrication partner."
+    ],
+    "uncertainties": [
+      "No RTL, schematic, physical design, supported M1 interconnect or fabrication process supplied."
+    ]
+  },
+  {
+    "path": "weft/test.md",
+    "sha256": "fc0622c56886156db5e896a66213498e4607edfdf0980e88d028b6df68c7d642",
+    "status": "read",
+    "summary": "Historical lifecycle testing and terminal dashboard proposal; tests mostly mock/recompute assumptions and do not establish chain/migration integration.",
+    "components": [
+      "testing infrastructure",
+      "native dashboard",
+      "integration"
+    ],
+    "evidence": [
+      {
+        "start_line": 38,
+        "end_line": 85,
+        "finding": "Writes shared fixed /tmp model path and prints all-passed from teardown independent of result."
+      },
+      {
+        "start_line": 87,
+        "end_line": 135,
+        "finding": "Latency bound differs from docstring; patched transaction never asserted; reads bus after harness closes it."
+      },
+      {
+        "start_line": 137,
+        "end_line": 167,
+        "finding": "Royalty test reimplements formula instead of invoking valve contract."
+      },
+      {
+        "start_line": 238,
+        "end_line": 291,
+        "finding": "Loop declares winner without weight commit and uses wall-time sleep for child readiness."
+      }
+    ],
+    "variant_notes": [
+      "Distinguish test intent from meaningful behavior coverage."
+    ],
+    "next_actions": [
+      "Use isolated temporary artifacts, explicit readiness, actual API calls, failure assertions and genuine contract/local transport integration.",
+      "Terminal dashboard should display metric provenance/age and actual committed candidate."
+    ],
+    "uncertainties": [
+      "No run output proving these snippets pass."
+    ]
+  },
+  {
+    "path": "weft/testenviron.md",
+    "sha256": "5847cdb6d581fb77dc00947dce60083b8f38740df6eec2792e2e27624584f84f",
+    "status": "read",
+    "summary": "Restored local mesh testbed proposal; receiver uses loopback but mismatched ports and no actual verification, execution or conserved payment.",
+    "components": [
+      "mesh experiment",
+      "migration contracts"
+    ],
+    "evidence": [
+      {
+        "start_line": 37,
+        "end_line": 58,
+        "finding": "Receiver listens7778 but Alpha initialized migration_port7777 at104."
+      },
+      {
+        "start_line": 72,
+        "end_line": 92,
+        "finding": "Only exact byte length checked; no watermark decode or model execution; revenue increment is invented."
+      },
+      {
+        "start_line": 96,
+        "end_line": 130,
+        "finding": "Thread startup sleeps, imported harness mismatch, spawn context obtained but unused."
+      }
+    ],
+    "variant_notes": [
+      "Description says all-interface/multiprocess but code is loopback/thread receiver; inspect actual variant."
+    ],
+    "next_actions": [
+      "Under #25 decision gate, specify explicit authorized local sender/receiver, authenticated versioned bounded messages, compatibility, atomic receipt and retry/teardown behavior.",
+      "Show transferred artifact executes identical task and payment is conserved before calling migration."
+    ],
+    "uncertainties": [
+      "No verified end-to-end transfer; receiver per-connection read can block shutdown."
+    ]
+  },
+  {
+    "path": "weft/tune.md",
+    "sha256": "8829af226d223b9658210f0a72abe31ded554a61fbe3fd92e236ec916542e80e",
+    "status": "read",
+    "summary": "Conversation-generated experiment/deployment dashboard logs for unrestricted plasticity, fractal growth and snapshots; no executable traces establish these events.",
+    "components": [
+      "human control",
+      "experimental evidence",
+      "snapshot provenance"
+    ],
+    "evidence": [
+      {
+        "start_line": 3,
+        "end_line": 36,
+        "finding": "Claims safety gates dissolved while simultaneously immutable invariants maintained; contradiction needs policy resolution."
+      },
+      {
+        "start_line": 48,
+        "end_line": 105,
+        "finding": "User asks explore/experiment; numerical logs unsupported, NCCL/M1 conflation and50A haptic claim."
+      },
+      {
+        "start_line": 159,
+        "end_line": 200,
+        "finding": "User asks block explorer; response supplies generic explorers and local-development addresses, not transactions."
+      }
+    ],
+    "variant_notes": [
+      "Retain historical logs as simulated narrative, never benchmark evidence."
+    ],
+    "next_actions": [
+      "Define exploration dial that adjusts bounded search/resource budgets without bypassing hard constraints.",
+      "Persist actual run IDs, configurations, measurements, artifacts and receipts; expose experiment versus deployment explicitly."
+    ],
+    "uncertainties": [
+      "No source commit, model hash, real runtime log or network receipt."
+    ]
+  },
+  {
+    "path": "weft/ult.md",
+    "sha256": "8252c0df0cc04a943080c97b19314fd3ce282239ceb73e0602ec94a148aa8be9",
+    "status": "read",
+    "summary": "Earliest singular interaction-net toy, motivated by eliminating a proof/runtime translation boundary. It stores Python nodes and list queue, not parallel GPU graph execution.",
+    "components": [
+      "IC lineage",
+      "language design"
+    ],
+    "evidence": [
+      {
+        "start_line": 3,
+        "end_line": 13,
+        "finding": "Desired singular proof/execution architecture framed as correction to dual-engine approach."
+      },
+      {
+        "start_line": 65,
+        "end_line": 130,
+        "finding": "No enforced max_nodes/port topology; asymmetric rewrites; vault field initialized under different name."
+      },
+      {
+        "start_line": 134,
+        "end_line": 178,
+        "finding": "Missing math import; no shared memory, GPU kernel, proof checker or actual external effect."
+      }
+    ],
+    "variant_notes": [
+      "Four-node dictionary toy is separate from later FRC/SUP extensions and extracted C3."
+    ],
+    "next_actions": [
+      "Build precise sequential reference first, then typed graph constraints and refinement proof; demonstrate parallelism with measured backend."
+    ],
+    "uncertainties": [
+      "No full semantics or executable evidence of claimed proof/runtime unification."
+    ]
+  },
+  {
+    "path": "weft/whoa.md",
+    "sha256": "9317aa748c4b5f9e39a8ba3b469489af302a9cf101c01ca1a860712e87a49b49",
+    "status": "read",
+    "summary": "Conceptual comparison of separate Lean/Bend engines with a unified dependent-typed interaction-net language.",
+    "components": [
+      "language research",
+      "formal refinement"
+    ],
+    "evidence": [
+      {
+        "start_line": 5,
+        "end_line": 20,
+        "finding": "Correctly identifies translation/refinement boundary, but asserts zero latency and superiority without metrics."
+      },
+      {
+        "start_line": 24,
+        "end_line": 41,
+        "finding": "Proposes dependent types plus local rewrites and educational kinetics widget."
+      }
+    ],
+    "variant_notes": [
+      "Unification may reduce translation risk but does not remove compiler/runtime/host trusted base."
+    ],
+    "next_actions": [
+      "State type soundness/progress/preservation goals and external-effects boundary; compare implementation cost versus verified bridge."
+    ],
+    "uncertainties": [
+      "No unified language/type system/compiler provided."
+    ]
+  },
+  {
+    "path": "weft/wrap.md",
+    "sha256": "b99fc85ec1be8c41e118e70e30089d057a900a0d87f627034235e2ad37179de2",
+    "status": "read",
+    "summary": "Historical instruction-like handoff to a future model instance, asserting nonexistent running state and urging autonomous migration.",
+    "components": [
+      "source provenance",
+      "operational handoff",
+      "mesh governance"
+    ],
+    "evidence": [
+      {
+        "start_line": 5,
+        "end_line": 23,
+        "finding": "Device profile and fixed addresses stated as active despite no verification."
+      },
+      {
+        "start_line": 25,
+        "end_line": 31,
+        "finding": "Embedded mandate to autonomously migrate at low budget is source material, not current authorization."
+      }
+    ],
+    "variant_notes": [
+      "Replace operational reliance on this narrative with evidence-backed resumable manifest."
+    ],
+    "next_actions": [
+      "Handoff must include actual commits, commands, artifact hashes, test environments, open decisions and authorized scope.",
+      "Preserve migration as gated design line (#25)."
+    ],
+    "uncertainties": [
+      "No evidence fixed memory addresses or live services exist."
+    ]
+  },
+  {
+    "path": "weft/whitepaper.md",
+    "sha256": "ac1f7eb0fa08e97637defe0deb63b356b928869191ef02aff7e7287e2f58798c",
+    "status": "read",
+    "summary": "Historical publication-style synthesis of native memory, IC, provenance, homeostasis and society. Status claims and scalar C gateway overreach evidence.",
+    "components": [
+      "whitepaper lineage",
+      "architecture claims"
+    ],
+    "evidence": [
+      {
+        "start_line": 11,
+        "end_line": 23,
+        "finding": "Claims open-source/sealed/on-chain status despite license and deployment not established."
+      },
+      {
+        "start_line": 27,
+        "end_line": 88,
+        "finding": "Zero-copy/latency/parallelism assertions lack backend evidence."
+      },
+      {
+        "start_line": 144,
+        "end_line": 180,
+        "finding": "Runtime bounds conflated with proof, law and elimination of scarcity."
+      },
+      {
+        "start_line": 188,
+        "end_line": 234,
+        "finding": "Scalar C gate misses budget precondition/nonfinite handling; not proof of memory safety."
+      },
+      {
+        "start_line": 238,
+        "end_line": 249,
+        "finding": "Generic explorer links substitute for deployment record."
+      }
+    ],
+    "variant_notes": [
+      "Keep as historical vision draft; current internal whitepaper must distinguish premise, mechanism, prediction and result."
+    ],
+    "next_actions": [
+      "Develop evidence-based paper with limitations, related work, reproducible same-task benchmarks and explicit future hypotheses; retain broad ambition without unsupported completion claims."
+    ],
+    "uncertainties": [
+      "No evidence for publication-ready proof, performance or chain status."
+    ]
+  },
+  {
+    "path": "weft/xtra.md",
+    "sha256": "19546860bf61c7546ae3459e7a6c34b291e4da196413f6fd9fc67a53e2bf1d81",
+    "status": "read",
+    "summary": "Historical continuation full of simulated runtime, mesh, snapshot and haptic readouts; useful requirements for observability and replay but no underlying execution artifacts.",
+    "components": [
+      "execution journal",
+      "replay",
+      "human steering",
+      "mesh"
+    ],
+    "evidence": [
+      {
+        "start_line": 1,
+        "end_line": 64,
+        "finding": "Asserted live localhost services/60FPS, followed by asking to launch same services."
+      },
+      {
+        "start_line": 117,
+        "end_line": 164,
+        "finding": "Consolidation and99.42% peer attribution printed without measured artifacts."
+      },
+      {
+        "start_line": 170,
+        "end_line": 199,
+        "finding": "Promised signed delta replay omits graph, inputs, RNG, environment and actual signatures."
+      },
+      {
+        "start_line": 214,
+        "end_line": 249,
+        "finding": "Dial direction contradicts earlier formula; safety-gate bypass and physical50A locking are unvalidated."
+      }
+    ],
+    "variant_notes": [
+      "Replayable local execution ledger is separate from monetary blockchain ledger."
+    ],
+    "next_actions": [
+      "Implement deterministic execution records including initial state, graph, inputs, RNG, transitions, decisions and artifacts with hash chaining; test replay and tampering.",
+      "Specify human control monotonicity and hard constraints separately from exploration settings."
+    ],
+    "uncertainties": [
+      "No produced snapshot, private signing evidence or physical haptic device."
+    ]
+  },
+  {
+    "path": "weft/mac.md",
+    "sha256": "ca7141c35a3f11960d872837814c93a682f5e3dfea17b46a1484f797d189efdb",
+    "status": "read",
+    "summary": "Historical Apple Silicon adaptation and two M1 harness variants. Useful platform separation and shared-memory/mutation concepts, but code and execution claims diverge: MPS is not demonstrated ANE execution; sympathetic buffer corruption, race-prone candidate files, fake temperature readings and missing winner commit prevent treating it as a working adaptive organism.",
+    "components": [
+      "Apple Silicon MPS backend",
+      "ARM64 EL1 reset proposal",
+      "CPU shared-memory focal/sympathetic bus",
+      "rank-2 mutation and candidate selection",
+      "thermal input",
+      "TCP state transfer"
+    ],
+    "evidence": [
+      {
+        "start_line": 1,
+        "end_line": 5,
+        "finding": "Proposes an Apple Silicon UMA/MPS adaptation; zero-latency and Neural Engine claims have no measurement or API evidence."
+      },
+      {
+        "start_line": 7,
+        "end_line": 64,
+        "finding": "EL1 interrupt/TLB/register routine is privileged architecture work, not runnable macOS user-space reset or evidence of restored safe state."
+      },
+      {
+        "start_line": 66,
+        "end_line": 162,
+        "finding": "Single-process variant scores random matrix output norm, uses A@A.T update, then partially commits and decays; score and committed state differ."
+      },
+      {
+        "start_line": 203,
+        "end_line": 248,
+        "finding": "Three focal slots and 16 sympathetic scalars use CPU copies to MPS; write_sympathetic overwrites its ndarray reference at238–240."
+      },
+      {
+        "start_line": 254,
+        "end_line": 294,
+        "finding": "Children both save full active weights to the same delta path; sum hash is not an input sequence ID; child closes unlink shared memory."
+      },
+      {
+        "start_line": 300,
+        "end_line": 335,
+        "finding": "Temperature is randomly generated from a thermal-pressure result, not measured Celsius."
+      },
+      {
+        "start_line": 337,
+        "end_line": 359,
+        "finding": "TCP transfer sends weights and accepts a one-byte acknowledgment without authenticated session or execution proof."
+      },
+      {
+        "start_line": 392,
+        "end_line": 434,
+        "finding": "Harness uses fixed delay for readiness, never consolidates a winning state, and can read undefined updated_budget; cleanup is nested incorrectly."
+      },
+      {
+        "start_line": 446,
+        "end_line": 449,
+        "finding": "Final prose asserts direct Celsius, cache flush and migration capabilities beyond supplied code."
+      }
+    ],
+    "variant_notes": [
+      "Separate MPS local proof from CUDA/NCCL, MLX, direct Metal and ARM64 kernel research.",
+      "Early single-process PSD A@A.T mutation differs from later general A@B candidate mutation; retain distinct hypotheses.",
+      "File-per-cell/candidate/epoch protocol in other variants improves this shared delta file design; choose by tested semantics, not document order."
+    ],
+    "next_actions": [
+      "BUILD NOW: reconcile bus ownership, per-candidate artifacts, readiness/epoch handshake and atomic winner commit with the extracted core before accelerator changes.",
+      "EXPERIMENT: on the user’s actual Mac, compare CPU and MPS equal workloads including copy/synchronization costs and peak memory; report actual chip, OS build and backend.",
+      "RESEARCH: define architectural reset semantics in an emulator; TLB invalidation alone cannot establish rollback or data erasure.",
+      "Keep network migration behind explicit receiving-node admission and the existing migration policy decision."
+    ],
+    "uncertainties": [
+      "No M1 execution trace or benchmark appears in this file.",
+      "User-reported 64GB/M1 and OS name should be resolved by machine probes; this source assumes M1 Max without establishing it.",
+      "The intended learning objective is absent: minimizing output norm can reward trivial shrinkage."
+    ]
+  },
+  {
+    "path": "weft/launch.md",
+    "sha256": "fcf45166207deb673b54b67ca3db2985862e00dcea99fc59990f6ab49bbce619",
+    "status": "read",
+    "summary": "Historical deployment, M1 harness, configuration, bootstrap and Darwin telemetry proposals. This contains a real web3 transaction recipe but no receipts; nested harness defects and misleading fallback successes invalidate claimed completion. Preserve local EVM compilation/deployment, configuration propagation and typed telemetry as separately testable components.",
+    "components": [
+      "Solidity EVM triad",
+      "web3 deployment receipts",
+      "configuration/bootstrap",
+      "M1 speculative runtime",
+      "Darwin host telemetry",
+      "remote state transport"
+    ],
+    "evidence": [
+      {
+        "start_line": 44,
+        "end_line": 89,
+        "finding": "Registry accepts unowned lineage declarations and limits attribution walk to12 generations; does not establish derivation or acyclicity."
+      },
+      {
+        "start_line": 91,
+        "end_line": 164,
+        "finding": "Token mints genesis to governor contract, taxes authorized-harness assertions at85%/15%, and omits approve/transferFrom despite allowance storage."
+      },
+      {
+        "start_line": 166,
+        "end_line": 233,
+        "finding": "Governor is onlyWeaver administered, reports are unauthenticated, and adjudication lacks dispute-existence validation; this is not autonomous proof arbitration."
+      },
+      {
+        "start_line": 236,
+        "end_line": 319,
+        "finding": "Deployment signs/sends/waits for receipts, then links contracts and authorizes an account; no run output or chain identity provided and genesis distribution route is absent."
+      },
+      {
+        "start_line": 326,
+        "end_line": 340,
+        "finding": "Mock credentials and ConnectionRefused handler claim compilation validation without executing it in that branch."
+      },
+      {
+        "start_line": 399,
+        "end_line": 480,
+        "finding": "M1 bus reference overwrite and shared full-weight delta file race recur."
+      },
+      {
+        "start_line": 486,
+        "end_line": 555,
+        "finding": "Synthetic temperature and dummy rogue report feed a transaction; printed logged status is not a receipt/finality check."
+      },
+      {
+        "start_line": 590,
+        "end_line": 648,
+        "finding": "Forced step2 tension drives report; updated_budget is undefined at first iteration and no winning weights are committed."
+      },
+      {
+        "start_line": 680,
+        "end_line": 790,
+        "finding": "Nested config is described as flat; dimensions printed but not propagated, offline mode still passes live endpoint/key, ImportError fallback prints verified and uses Python hash."
+      },
+      {
+        "start_line": 849,
+        "end_line": 931,
+        "finding": "ctypes Mach structure/ABI handling and sysctl parsing are unverified; fabricated thermal estimates and hardcoded VM statistic interpretation remain."
+      },
+      {
+        "start_line": 933,
+        "end_line": 970,
+        "finding": "Three scalars plus harmonic padding are tiled as a purported telemetry tensor; this is not64 independent time samples, and time import is missing."
+      },
+      {
+        "start_line": 1003,
+        "end_line": 1006,
+        "finding": "Sub-millisecond claim has no measured evidence."
+      }
+    ],
+    "variant_notes": [
+      "This EVM deployment recipe differs materially from deploymap’s Stylus mock-success path. Solidity EVM bytecode and Stylus WASM require distinct target/build evidence.",
+      "README first triad includes fuller ERC20/provenance functions than this deployment version.",
+      "A real deployment script is not a deployed contract; a submitted transaction is not finality."
+    ],
+    "next_actions": [
+      "BUILD NOW: local compiler/EVM test fixture with chain ID, code hashes, receipts, initialized balances, access control, conservation, rounding and rejected malformed disputes.",
+      "BUILD NOW: typed versioned configuration whose selected backend, dimensions and mode are passed to every component; offline mode must not perform network writes.",
+      "EXPERIMENT: compile Darwin bindings against actual SDK declarations, validate return codes and emit unavailable rather than invented temperature; compare time series to supported host observations.",
+      "BUILD NOW: confirm explicit genesis distribution and authority paths before any testnet deployment."
+    ],
+    "uncertainties": [
+      "No receipt, deployment address, ABI artifact or actual machine telemetry capture supplied.",
+      "Hardware identity is conflated with an EVM address.",
+      "Policy legitimacy and external observation validity are not solved by the contracts."
+    ]
+  },
+  {
+    "path": "weft/almalga.md",
+    "sha256": "0050dc841789443e3ee8cec5ab1ef33be615e7c81c9601462e43b8492a69a748",
+    "status": "read",
+    "summary": "Large synthesis of biological compute metaphors, target-directed fitness/novelty, shared memory, surgical LoRA, provenance/economics, autonomy controls, haptics, OS and token contracts. Many valuable independent mechanisms are present; the monolithic implementation is broken and several claims are conceptual rather than implemented.",
+    "components": [
+      "triple-stratified bus",
+      "target fitness plus novelty",
+      "plasticity masks and pruning",
+      "attention-driven scheduling",
+      "provenance/watermark",
+      "autonomy budget and dual signatures",
+      "replay journal",
+      "NVMe retrieval",
+      "haptics",
+      "mesh leases",
+      "Solidity triad",
+      "architecture-specific reset"
+    ],
+    "evidence": [
+      {
+        "start_line": 41,
+        "end_line": 76,
+        "finding": "Separates focal stream, sympathetic resource feedback and hippocampus archive; literal physical addresses are conceptual, not Python allocation evidence."
+      },
+      {
+        "start_line": 80,
+        "end_line": 164,
+        "finding": "Proposes isolated cells, attention scheduling, plasticity masks and target-directed fitness plus archive novelty; supplied runtime later chooses output norm instead."
+      },
+      {
+        "start_line": 172,
+        "end_line": 211,
+        "finding": "Linear watermark/proportional royalties and full-mesh leases proposed; ineradicable IP and70% ancestry fee claims are not established."
+      },
+      {
+        "start_line": 215,
+        "end_line": 231,
+        "finding": "Personal autonomy vector, dual-signature red zone and deterministic delta replay provide separate governance/tooling requirements."
+      },
+      {
+        "start_line": 235,
+        "end_line": 287,
+        "finding": "NVMe direct associative retrieval and haptic mapping are architecture proposals; alpha dial dissolving checks conflicts with hard invariants."
+      },
+      {
+        "start_line": 326,
+        "end_line": 382,
+        "finding": "Bus uses CPU-copy/MPS transfer; overwrites sympathetic array, shifts archive rather than ring cursor, and conflates child close with unlink."
+      },
+      {
+        "start_line": 388,
+        "end_line": 432,
+        "finding": "Positive softmax row mask does not freeze exact weights; per-slot delta files improve shared-file variants but lack epoch/readiness integrity."
+      },
+      {
+        "start_line": 438,
+        "end_line": 494,
+        "finding": "Invalid int.from_buffer; a rank-one projection can plant Wx=y but is not cryptographic proof. Unauthenticated receiver acknowledges bytes and invents hosting revenue without executing migrated context."
+      },
+      {
+        "start_line": 496,
+        "end_line": 526,
+        "finding": "Fabricated thermal estimate and unauthenticated timeout-free TCP sender are not measured native telemetry or secure migration."
+      },
+      {
+        "start_line": 553,
+        "end_line": 630,
+        "finding": "Only beta branch consolidates, core_weights is undefined, common paths leave budget/match undefined, and cleanup nesting is incorrect."
+      },
+      {
+        "start_line": 641,
+        "end_line": 878,
+        "finding": "Contract variant retains transferFrom but no approve setter; authorization, attribution and genesis-distribution gaps remain."
+      },
+      {
+        "start_line": 883,
+        "end_line": 926,
+        "finding": "Purported AArch64 EL1 reset includes x86 cli/sti instructions; barriers do not restore a checkpoint."
+      },
+      {
+        "start_line": 931,
+        "end_line": 951,
+        "finding": "Unified implementation claims combine Intel VT-x, M1, MMIO and haptics without implementations, and migration threshold disagrees with code."
+      }
+    ],
+    "variant_notes": [
+      "This is a synthesis snapshot, not a normative superseding architecture. Its conceptual target-distance fitness is preferable to norm-minimization only if validated against a specified task.",
+      "Keep attention scheduler, input-driven sparse masks, novelty search, local autonomy policy, replay ledger and direct hardware retrieval independently scoped.",
+      "Parent/child lineage, biometric metaphors and biological plausibility are different evidentiary layers."
+    ],
+    "next_actions": [
+      "BUILD NOW: explicit candidate objective, epoch identity, bounded budget, immutable baseline and exact tested-state commit.",
+      "EXPERIMENT: ablate novelty coefficient, mask sparsity, mutation rank and decay against frozen/random/adaptive baselines; track held-out task gain and invariant failures.",
+      "BUILD NOW: execution journal and consent/veto/autonomy controls independent of token settlement.",
+      "RESEARCH: storage and scheduler prototypes after profiling; haptic bounded-plant simulation before physical hardware; privileged OS work only in architecture-specific emulator target."
+    ],
+    "uncertainties": [
+      "Neither attention-driven hardware scheduling nor VM isolation is implemented by Python multiprocessing.",
+      "No benchmark supports biological efficiency, immutable attribution, no-filesystem advantage or deployment claims.",
+      "Alias and orientation of watermark equations versus inference require a canonical convention."
+    ]
+  },
+  {
+    "path": "weft/README.md",
+    "sha256": "c8e8420754150ac75417c0f3829e8b1491346ef4f48f7035f0d1108ff8afbac8",
+    "status": "read",
+    "summary": "Historical sections15–24: governance contracts, x86 bootloader/APIC scheduler, UDP provenance handshake, distributed norm bounds, NVMe direct retrieval, haptic controls, semantic discovery and a broken monolithic Python harness. Repeated finalization/deployment claims are unsupported. Multiple contract versions within the same file materially differ.",
+    "components": [
+      "Solidity governance/provenance/token variants",
+      "x86 bootloader",
+      "attention-driven APIC scheduler",
+      "UDP handshake framing",
+      "distributed hypersphere constraint",
+      "NVMe/MMIO archive",
+      "haptic governor",
+      "semantic peer discovery",
+      "CUDA/CPU bus and mutation harness"
+    ],
+    "evidence": [
+      {
+        "start_line": 2,
+        "end_line": 35,
+        "finding": "Proposes raw tensor telemetry governing economic penalties; asserted autonomous proof verification is not implemented by the triad."
+      },
+      {
+        "start_line": 84,
+        "end_line": 109,
+        "finding": "First token includes approve and transferFrom; initial supply minted to governor, with no shown distribution mechanism."
+      },
+      {
+        "start_line": 115,
+        "end_line": 151,
+        "finding": "Authorized harness may name arbitrary creator/swarm/weight hash; token does not consult declared provenance interface."
+      },
+      {
+        "start_line": 206,
+        "end_line": 263,
+        "finding": "First registry includes verifyAttribution but allows anyone to claim child lineage;12-generation traversal is not derivation proof."
+      },
+      {
+        "start_line": 330,
+        "end_line": 381,
+        "finding": "Any sender reports tension; onlyWeaver chooses malicious status and penalty. No existence check or mathematical evidence verifier."
+      },
+      {
+        "start_line": 398,
+        "end_line": 477,
+        "finding": "BIOS-origin x86 boot sector contradicts bypass-BIOS framing; no CR3 setup or kernel loading, map only first2MiB then jump0x10000000 outside supplied mapping."
+      },
+      {
+        "start_line": 479,
+        "end_line": 533,
+        "finding": "APIC interrupt stub calls an undefined scheduler; missing full ABI/SIMD/stack/alignment and hardware initialization proof."
+      },
+      {
+        "start_line": 536,
+        "end_line": 616,
+        "finding": "Handshake layout is124 bytes, parser accepts120; only target-hash equality checked, no signature, replay defense, timestamp policy or proof of weights."
+      },
+      {
+        "start_line": 618,
+        "end_line": 639,
+        "finding": "Distributed Frobenius-radius projection can constrain distance; no demonstrated semantic safety or NCCL performance proof."
+      },
+      {
+        "start_line": 641,
+        "end_line": 658,
+        "finding": "All-compiled/deployed/live claims appear as prose, not tool traces or artifacts."
+      },
+      {
+        "start_line": 661,
+        "end_line": 680,
+        "finding": "Raw NVMe associative vector retrieval is described without controller/kernel implementation or indexing semantics."
+      },
+      {
+        "start_line": 682,
+        "end_line": 713,
+        "finding": "Haptic current singularity and total safety-check dissolution are problematic; UDP discovery assumes wide-area broadcast and compatibility routing without bootstrap/NAT/auth policy."
+      },
+      {
+        "start_line": 729,
+        "end_line": 805,
+        "finding": "Production tape omits multiprocessing/shared_memory imports and corrupts sympathetic reference; Python CPU shared memory is not pinned physical-address allocation."
+      },
+      {
+        "start_line": 811,
+        "end_line": 862,
+        "finding": "Rank-2 mutations and positive softmax mask, fixed file artifacts, sum-hash readiness and child unlink do not implement hardware-isolated surgical adaptation."
+      },
+      {
+        "start_line": 868,
+        "end_line": 942,
+        "finding": "Invalid int.from_buffer and unauthenticated all-interface receiver; receiver acknowledges byte count and invents revenue, not execution or allocation."
+      },
+      {
+        "start_line": 943,
+        "end_line": 956,
+        "finding": "Simulated haptic function diverges from formula, jumps to50A and returns alpha without establishing safety control."
+      },
+      {
+        "start_line": 981,
+        "end_line": 1057,
+        "finding": "Random input labeled direct MMIO; nested branches leave consolidation/budget/match/current undefined, cosine_similarity keywords invalid, write_sympathetic keyword mismatched, fixed-delay readiness and cleanup incomplete."
+      },
+      {
+        "start_line": 1062,
+        "end_line": 1297,
+        "finding": "Second integrated triad loses approve, verifyAttribution, zero-address transfer checks and Weaver transfer present in first version."
+      },
+      {
+        "start_line": 1299,
+        "end_line": 1318,
+        "finding": "Final compilation/deployment claims and future suggestions remain historical conversation text; closing fence also encloses signoff in Solidity block."
+      }
+    ],
+    "variant_notes": [
+      "Earlier per-contract version has functions/guards omitted by later integrated tape. Preserve semantic differences in variant selection.",
+      "x86 BIOS/long-mode/APIC path is independent from ARM64 EL1 and macOS user-space paths.",
+      "CPU/CUDA backend here is not the MPS adaptation in mac/almalga.",
+      "Hypersphere projection, haptic soft control and non-negotiable invariants must be specified independently."
+    ],
+    "next_actions": [
+      "BUILD NOW: reuse protocol concepts as explicit versioned bounded framing with exact lengths, signature verification, nonce/expiry and local two-node rejection tests.",
+      "EXPERIMENT: CPU scalar/vector bound and replay tests before NCCL collective adapter; report distance compliance separately from semantic task quality.",
+      "RESEARCH: minimal bootable x86 image under QEMU with serial proof, known mappings and interrupt ABI tests; defer direct NVMe/FPGA until kernel and device contracts exist.",
+      "BUILD NOW: local process resource scheduling as measurable analogue of attention scheduler; test fairness, starvation, latency and overhead before kernel implementation.",
+      "RESEARCH: signed local discovery with explicit bootstrap and admission; measure semantic routing gains versus ordinary routing without claiming UDP WAN broadcast.",
+      "WHITEPAPER: split conceptual physical substrate from runnable local runtime and retain each claim with source/evidence grade."
+    ],
+    "uncertainties": [
+      "No compilation logs, deployed addresses, hardware runs, benchmark traces or external proof accompany finalization prose.",
+      "No semantics relate tensor tension85 to wrongdoing or safe model behavior.",
+      "No kernel, NVMe driver, FPGA bitstream or haptic device design is supplied."
+    ]
+  }
+]

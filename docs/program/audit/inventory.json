@@ -1,0 +1,1712 @@
+{
+  "schema_version": 1,
+  "source_commit": "a721b12579caba4e04dc31b16731cc2657079207",
+  "scope": "Every tracked blob at source_commit; excludes later audit outputs and untracked files.",
+  "files": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "git_blob": "29f3ea1120c0c03269f5ee699f5bd77b6aa9235f",
+      "git_mode": "100644",
+      "sha256": "9548eeff42e222770a11a2f25227e08baed3167443bd5205ad0e9b92d61357c3",
+      "bytes": 2566,
+      "lines": 68,
+      "kind": "text"
+    },
+    {
+      "path": ".github/workflows/pages-seed-deploy.yml",
+      "git_blob": "79e65de3a29fc428ff48f151431e881f2831b83b",
+      "git_mode": "100644",
+      "sha256": "c492ff75359939739161fbe7ec89891f2779ab71abf62c829870d3166734275f",
+      "bytes": 1304,
+      "lines": 45,
+      "kind": "text"
+    },
+    {
+      "path": ".gitignore",
+      "git_blob": "c18dd8d83ceed1806b50b0aaa46beb7e335fff13",
+      "git_mode": "100644",
+      "sha256": "32dae3052f331ee34d628ef535709b301259a45df7c7522c4d35dcf49873f00b",
+      "bytes": 13,
+      "lines": 1,
+      "kind": "text"
+    },
+    {
+      "path": "PROGRAM.md",
+      "git_blob": "3b62a42754c95520ef2d04489cc72fc080f8a84e",
+      "git_mode": "100644",
+      "sha256": "c2df7305fd1362197d5196bdb36741278667cd145ba45238d033e6fb6f718531",
+      "bytes": 11789,
+      "lines": 104,
+      "kind": "text"
+    },
+    {
+      "path": "README.md",
+      "git_blob": "0d776e33f2846a88ab117df11b3fa6eeefb17619",
+      "git_mode": "100644",
+      "sha256": "bb1fe5d1ea5244a15a7aba44812b03c2d6941a2b9090f2460c9ef4f6fe1dd063",
+      "bytes": 759,
+      "lines": 10,
+      "kind": "text"
+    },
+    {
+      "path": "docs/.nojekyll",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "git_mode": "100644",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "lines": 0,
+      "kind": "empty"
+    },
+    {
+      "path": "docs/assets/js/aesthetic-mixer.js",
+      "git_blob": "b1e1d4ef4c0000c1ef3270cd764e81422dfc25d2",
+      "git_mode": "100644",
+      "sha256": "b5f57baf0c773c69edd8e04e40681153acdbc082cb5f2500e7bb4fb4cf8405ca",
+      "bytes": 2906,
+      "lines": 98,
+      "kind": "text"
+    },
+    {
+      "path": "docs/assets/js/cell-layout.js",
+      "git_blob": "f7a68313799041e9c3aab20b978f880ac5170dc2",
+      "git_mode": "100644",
+      "sha256": "b8b5b545e49ed2be1499653788cc2a38b46ba37a9b661b2f246e195fbbbcf7ae",
+      "bytes": 7734,
+      "lines": 209,
+      "kind": "text"
+    },
+    {
+      "path": "docs/assets/js/glyph-font.js",
+      "git_blob": "59a32825c1823f36b38bf171148995a17dff48fb",
+      "git_mode": "100644",
+      "sha256": "55abce258adaacf76d550ba62956dd3d625a4084b67920908a26c167410ce4c4",
+      "bytes": 6128,
+      "lines": 125,
+      "kind": "text"
+    },
+    {
+      "path": "docs/assets/js/simplex-pad.js",
+      "git_blob": "6b145cc5053b450ce149025c078912db0b7d170f",
+      "git_mode": "100644",
+      "sha256": "071c2d6980f5e43c6f932692764295c957fc2dbc4b0bbbc51f761849a38a2722",
+      "bytes": 5501,
+      "lines": 133,
+      "kind": "text"
+    },
+    {
+      "path": "docs/assets/js/sym2p-parse.js",
+      "git_blob": "d2bb30c3bd694b786ba213e7c63d5704a1a7ddd2",
+      "git_mode": "100644",
+      "sha256": "e90a32b1d913a3d9d610a4511afadbc1880776644fedcfebfecda7aa7e2387e7",
+      "bytes": 2029,
+      "lines": 50,
+      "kind": "text"
+    },
+    {
+      "path": "docs/assets/js/weft-atlas.js",
+      "git_blob": "9a78c9b5633b06a819c2d8e1f16a79d9fa6b20a3",
+      "git_mode": "100644",
+      "sha256": "5c883c5cc127d41ad45b657212552287af92a89c82ce353aa201b9efc649c5fb",
+      "bytes": 22522,
+      "lines": 364,
+      "kind": "text"
+    },
+    {
+      "path": "docs/assets/js/weft-loom.js",
+      "git_blob": "62b7b4490eecf4472473e38bbee24c415b22e15f",
+      "git_mode": "100644",
+      "sha256": "f00d9dc9db294139211560b1a6052a3c8dcaffa852df798a2cc4be993b18e105",
+      "bytes": 24297,
+      "lines": 617,
+      "kind": "text"
+    },
+    {
+      "path": "docs/assets/shaders/dashboard_layout.wgsl",
+      "git_blob": "4483e990a1482ba4b56ee1708dc39e810e8016a5",
+      "git_mode": "100644",
+      "sha256": "3336b07c32352b2e71c123cef27bb87c56120085f56a3eb419091cb9e4799f58",
+      "bytes": 12178,
+      "lines": 302,
+      "kind": "text"
+    },
+    {
+      "path": "docs/assets/workers/telemetry-worker.js",
+      "git_blob": "23f5264917114488807ba87939b1aaa0a2c0314a",
+      "git_mode": "100644",
+      "sha256": "138f36481aebef99370bdd026872cad205b06b0d07abd5baad4006d6c583ed0a",
+      "bytes": 1962,
+      "lines": 62,
+      "kind": "text"
+    },
+    {
+      "path": "docs/corpus/README.md",
+      "git_blob": "970b0408c95768860df9849cbad89d33f306984b",
+      "git_mode": "100644",
+      "sha256": "3c2765bc903d3147b9fb869967237ecc59999d444a685a028db556cd9fcd04e4",
+      "bytes": 10670,
+      "lines": 95,
+      "kind": "text"
+    },
+    {
+      "path": "docs/corpus/claims-register.md",
+      "git_blob": "418d08b931337916418b47f1cb068d2fb09f5b2b",
+      "git_mode": "100644",
+      "sha256": "5ca1a949d87ef87849939b441b2a6e9d76d0adab278e7840f0b481e461ffa372",
+      "bytes": 14854,
+      "lines": 102,
+      "kind": "text"
+    },
+    {
+      "path": "docs/corpus/safety-index.md",
+      "git_blob": "d76c0989aec3aee006abe3997087ad616a2109f4",
+      "git_mode": "100644",
+      "sha256": "4acd144f3c331bf8818be9191b03f74487d7c9bad684b00941ec936fe5e16247",
+      "bytes": 6115,
+      "lines": 24,
+      "kind": "text"
+    },
+    {
+      "path": "docs/corpus/sources/A-design.md",
+      "git_blob": "04ffb9604f8fd2e93b1a3c92bd9d78e0ea79bf70",
+      "git_mode": "100644",
+      "sha256": "bdc03e05705d6cbb358c6afb54a1631cb577700bd52b627b185a1bd344ca07b2",
+      "bytes": 70242,
+      "lines": 479,
+      "kind": "text"
+    },
+    {
+      "path": "docs/corpus/sources/B-top1.md",
+      "git_blob": "8e7e0f4c98e2de70141c9157963256858187ece1",
+      "git_mode": "100644",
+      "sha256": "7f2baf0582b540f0c2dae51a1b2ab71372bd35114bc6a7388840068f6a5fa2e8",
+      "bytes": 60958,
+      "lines": 441,
+      "kind": "text"
+    },
+    {
+      "path": "docs/corpus/sources/C-top2.md",
+      "git_blob": "e2e77f360c32c51981ecfabfcb7fce3afd5cb397",
+      "git_mode": "100644",
+      "sha256": "5e875d7b227a13aebe1b40b434adeb9d1301400b3a1f7eaea44d8cb4724d71a9",
+      "bytes": 52296,
+      "lines": 247,
+      "kind": "text"
+    },
+    {
+      "path": "docs/corpus/sources/D-top3.md",
+      "git_blob": "eac5daa1421bbdbd19ada5b69692ae05a29faa29",
+      "git_mode": "100644",
+      "sha256": "709cff23794ad4d9cfcba368e43737f13aaeda1eb1a6edbdae3a87334e674a30",
+      "bytes": 46794,
+      "lines": 358,
+      "kind": "text"
+    },
+    {
+      "path": "docs/corpus/sources/E-thread1-main.md",
+      "git_blob": "126d0ec9c2c90a3b20cc590130b190e721cc83d7",
+      "git_mode": "100644",
+      "sha256": "abef6f8f9fbaf8df02b4c3fb8066dbd2478de850819aa68ab71c0398407dd1f2",
+      "bytes": 44333,
+      "lines": 308,
+      "kind": "text"
+    },
+    {
+      "path": "docs/corpus/sources/F-thread2-design.md",
+      "git_blob": "213567683e4b35d17194cfdd407c13061ad411cb",
+      "git_mode": "100644",
+      "sha256": "7e8b5d44a8958a22f74c6475fd09d686ddddff3190f3865bd7f8ccf5ec388310",
+      "bytes": 47818,
+      "lines": 393,
+      "kind": "text"
+    },
+    {
+      "path": "docs/corpus/sources/G-splicers.md",
+      "git_blob": "67abd2f45089cf99185213683f3c85b5a3c8b566",
+      "git_mode": "100644",
+      "sha256": "44e90799fc3b08102314dd9a2c37cbb84e68393f51a33907e4dbaed2a57dfddd",
+      "bytes": 53096,
+      "lines": 350,
+      "kind": "text"
+    },
+    {
+      "path": "docs/corpus/sources/H-missing-turns.md",
+      "git_blob": "32f242a8b3a047cd144d1c8b27b6818067dbe675",
+      "git_mode": "100644",
+      "sha256": "5f35156d690766fdba2199dec60dc57786b6236baa33767393a815d6a51d6312",
+      "bytes": 52394,
+      "lines": 436,
+      "kind": "text"
+    },
+    {
+      "path": "docs/data/moissanite_telemetry.bin",
+      "git_blob": "7b80397b7876b891ea0877e7f5f699f85f01eb48",
+      "git_mode": "100644",
+      "sha256": "46fbcf526128045d23692ca7e277d15d66c218e80db7c194c283ce8de30ea244",
+      "bytes": 64,
+      "lines": 4,
+      "kind": "binary"
+    },
+    {
+      "path": "docs/data/moissanite_telemetry.json",
+      "git_blob": "8d508fbc26abc3c7ce2586ee915b097fff405739",
+      "git_mode": "100644",
+      "sha256": "3c663ba2be946121a6ed8ad9af38bd7d59c130fb778dfc5a758848d95d0e8646",
+      "bytes": 4549,
+      "lines": 208,
+      "kind": "text"
+    },
+    {
+      "path": "docs/data/telemetry.jsonl",
+      "git_blob": "60eff479e73dd8d85ef3a7b7e91525d415121783",
+      "git_mode": "100644",
+      "sha256": "e5e9a118c7db96d612f8331869e58ec1bf017e454785beffa465a96a9f73d203",
+      "bytes": 132,
+      "lines": 1,
+      "kind": "text"
+    },
+    {
+      "path": "docs/design-notes/aywa-web-design-philosophy.md",
+      "git_blob": "3351ed1b8a114e7413ca0778d9aaf0153b9ff5c3",
+      "git_mode": "100644",
+      "sha256": "291884809bb212ef60f29067b1ddb6dbb66e5bd23dd021c27bbb18e2b6d837d2",
+      "bytes": 8524,
+      "lines": 79,
+      "kind": "text"
+    },
+    {
+      "path": "docs/design-notes/constitution-vs-contract.md",
+      "git_blob": "bc4541756a87d57ad20895317f536230c85d1954",
+      "git_mode": "100644",
+      "sha256": "02b54597af5f1a044c25381ad51d147c9fb0cabc52075d03d4fbfecaef7233a1",
+      "bytes": 4654,
+      "lines": 30,
+      "kind": "text"
+    },
+    {
+      "path": "docs/glossary.md",
+      "git_blob": "02b11a680c0be731f84a84955ed48d9d62bb396b",
+      "git_mode": "100644",
+      "sha256": "04e0540ded51fa674da00bbc9c51571fcac56f36f30cdd229e6b0ccb83302af0",
+      "bytes": 5668,
+      "lines": 21,
+      "kind": "text"
+    },
+    {
+      "path": "docs/index.html",
+      "git_blob": "d7dc1074279497511b1863df814603475cb92df2",
+      "git_mode": "100644",
+      "sha256": "22b285716dc3573daec63a2aa71d7c531c31045327c896669650f6c667547c06",
+      "bytes": 54309,
+      "lines": 1123,
+      "kind": "text"
+    },
+    {
+      "path": "docs/mission.md",
+      "git_blob": "923acec2dd0b8bf739b5425070f4238b9b187e29",
+      "git_mode": "100644",
+      "sha256": "1f9c41838f8e4c1f7e97caa276946f4b6b312efe795bfe9914dd90a35d06da71",
+      "bytes": 5830,
+      "lines": 40,
+      "kind": "text"
+    },
+    {
+      "path": "docs/program/convergence-plan.md",
+      "git_blob": "fbcd194c91e1cab79bef67778c2e995cf36e719f",
+      "git_mode": "100644",
+      "sha256": "46f219955cdbdc4df3534b1e4f08aff5cf5ee3e3ab6149263a907ffe29f2133b",
+      "bytes": 16299,
+      "lines": 82,
+      "kind": "text"
+    },
+    {
+      "path": "docs/program/decomposition.md",
+      "git_blob": "cbec1dca1407c4df844e0ed39383b448a5bf0147",
+      "git_mode": "100644",
+      "sha256": "52a2fa5c5043a9e5ad27d5fadf7dac4ffe143f2aafff4316261385a3926f551b",
+      "bytes": 15493,
+      "lines": 122,
+      "kind": "text"
+    },
+    {
+      "path": "docs/program/teams.md",
+      "git_blob": "af4bd3ebcaa222f413b519e7d16370b6c85d3db7",
+      "git_mode": "100644",
+      "sha256": "a1996f0fca5a385fada6aead650331d0bdeb4fed15ea63c0fd5651a8631935ee",
+      "bytes": 5377,
+      "lines": 78,
+      "kind": "text"
+    },
+    {
+      "path": "docs/program/use-now.md",
+      "git_blob": "0319966c1684c081b83044775772bfd193c9f2b8",
+      "git_mode": "100644",
+      "sha256": "7593398dfbe2fb9a2917f27125748721483f1e6ac0fe447e7ae7a687e695201d",
+      "bytes": 9789,
+      "lines": 125,
+      "kind": "text"
+    },
+    {
+      "path": "docs/program/variants.md",
+      "git_blob": "ef8a174257810cb68c537a48c412df97c910f9dc",
+      "git_mode": "100644",
+      "sha256": "9cb366150339ba4cb8ba54398f79915af43161e587b0408f20b23068c213bb22",
+      "bytes": 14306,
+      "lines": 45,
+      "kind": "text"
+    },
+    {
+      "path": "docs/roadmap.md",
+      "git_blob": "622ab49f3b75f4cab1594d871909c246de5bd202",
+      "git_mode": "100644",
+      "sha256": "2c7e5dfb21ecf9aeb0bc61b53ed1ec42a0bed2582ea63853264994e15c1ad8a4",
+      "bytes": 9745,
+      "lines": 73,
+      "kind": "text"
+    },
+    {
+      "path": "docs/seed-manifest.json",
+      "git_blob": "fdf8a862170548b6ebcd1599ab248a1f1bf4f3ea",
+      "git_mode": "100644",
+      "sha256": "82851eba553b4192fde68a7236f7a5032750c4e3f9b0dfe50ad1e6fad14bdbfa",
+      "bytes": 956,
+      "lines": 30,
+      "kind": "text"
+    },
+    {
+      "path": "docs/whitepapers/syntactic-weft-whitepaper.md",
+      "git_blob": "cc1ca9cb06c433cfdf6337013cf5a519ca3b48ed",
+      "git_mode": "100644",
+      "sha256": "42511d361e857c6d7c8022180d29fe44e2b706e2406b2b80a62f13f870b9a1f6",
+      "bytes": 13138,
+      "lines": 115,
+      "kind": "text"
+    },
+    {
+      "path": "docs/widgets/01-sdf-laya-kinetic-typography.html",
+      "git_blob": "cca6afe123d30f33048a78c8ad4ff1504506f71c",
+      "git_mode": "100644",
+      "sha256": "0aa7ab5c52aea8664e4052b226eaf3d7be51d7666bf86b8093636c9094379799",
+      "bytes": 42872,
+      "lines": 1187,
+      "kind": "text"
+    },
+    {
+      "path": "docs/widgets/01-sdf-laya-kinetic-typography.jsx",
+      "git_blob": "9737648f770e431704dd3d0fa9ea75e2b43b85ab",
+      "git_mode": "100644",
+      "sha256": "0ed410b4e89b4697176d2269188ac7699be9672411863bfae1f3ffd6d6eee018",
+      "bytes": 11288,
+      "lines": 225,
+      "kind": "text"
+    },
+    {
+      "path": "docs/widgets/02-mind-palace-spatial-memory.html",
+      "git_blob": "b6b95205d84310bc9a8351c9287fd826f70a5076",
+      "git_mode": "100644",
+      "sha256": "f5c3a06010a6bbc1fd5d25ab3ac0a3f2cb9e0a8397974a11a05cc80368c7caa8",
+      "bytes": 263963,
+      "lines": 1609,
+      "kind": "text"
+    },
+    {
+      "path": "docs/widgets/02-mind-palace-spatial-memory.jsx",
+      "git_blob": "b787481ce0f68d38b71ce2434bd4eaa175a6fcb7",
+      "git_mode": "100644",
+      "sha256": "f4fc5464bfb9ef49c67d96dac3e3930d17f859f0fd617ed8f83975355867b0f2",
+      "bytes": 18866,
+      "lines": 389,
+      "kind": "text"
+    },
+    {
+      "path": "docs/widgets/03-morphogenetic-bioelectric-field.html",
+      "git_blob": "fd69ebcd3c56d009a7ef3c4ac5b5bd30a690787c",
+      "git_mode": "100644",
+      "sha256": "aff25bb5b24c413d9be8f8004933a365432e3d129d20e3cff12962cf602e783f",
+      "bytes": 48112,
+      "lines": 1292,
+      "kind": "text"
+    },
+    {
+      "path": "docs/widgets/03-morphogenetic-bioelectric-field.jsx",
+      "git_blob": "cd2932e5fcfec1f8c23e82c137f66131da50eaf5",
+      "git_mode": "100644",
+      "sha256": "96fd518bf797936f0d56645c41f4f6b5f871f2f8b5f526f629076e6dcd41a121",
+      "bytes": 16703,
+      "lines": 328,
+      "kind": "text"
+    },
+    {
+      "path": "docs/widgets/04-neural-cellular-automata.html",
+      "git_blob": "e830e7ccde902e221cde60dc247c81a2b9db3ecb",
+      "git_mode": "100644",
+      "sha256": "b473e06024aeb45ca25a6fd27617efa0320a3d879e845a57c3ee97c5938cdb89",
+      "bytes": 126921,
+      "lines": 1637,
+      "kind": "text"
+    },
+    {
+      "path": "docs/widgets/04-neural-cellular-automata.jsx",
+      "git_blob": "e4804d6599053f58352ae4f01b5d243bfdba7387",
+      "git_mode": "100644",
+      "sha256": "ba8f858c1129ff9bc3f1fe2e43455bf367949957d55914c4921cdba7827fa4c4",
+      "bytes": 23994,
+      "lines": 503,
+      "kind": "text"
+    },
+    {
+      "path": "docs/widgets/05-interaction-combinator-net.html",
+      "git_blob": "fe5fa172961f7dfec8daffaa09224f31b9ef2d9e",
+      "git_mode": "100644",
+      "sha256": "fffa7e4b793c7b652b29c111a9e2d40f8a8d8de83ae55b7f48eab72a3358cde9",
+      "bytes": 57664,
+      "lines": 1532,
+      "kind": "text"
+    },
+    {
+      "path": "docs/widgets/05-interaction-combinator-net.jsx",
+      "git_blob": "b3a5d74e07e66c82948c554143e86635599ed48c",
+      "git_mode": "100644",
+      "sha256": "a1704c531ee8b8c6c6ebc5ec859f433a2b3580bc494677d58f72b335d084c995",
+      "bytes": 22773,
+      "lines": 453,
+      "kind": "text"
+    },
+    {
+      "path": "docs/widgets/index.html",
+      "git_blob": "d073e9f89f03188e199230fa5d86fc8b097f6304",
+      "git_mode": "100644",
+      "sha256": "26b63241e335bd5cb31ada49cfb9005d4436f0c0566058fb6c3bb18422d1b699",
+      "bytes": 3457,
+      "lines": 53,
+      "kind": "text"
+    },
+    {
+      "path": "scripts/snapshot_site.mjs",
+      "git_blob": "8bd30cb61b9d6a4a9442fcea622d807e087b3191",
+      "git_mode": "100644",
+      "sha256": "8d3b3e610003597956cb5c4b94e91efdaf7f21f96404850431520048974533a6",
+      "bytes": 5351,
+      "lines": 106,
+      "kind": "text"
+    },
+    {
+      "path": "scripts/sync_pages_seed.py",
+      "git_blob": "e4766124bf2f27b5d8ab3d855d10fce7c9eb7050",
+      "git_mode": "100644",
+      "sha256": "d33df03d06c43fb6fa8495fce7ef353746acb06c20e772e84da6cfd3485a7c87",
+      "bytes": 4825,
+      "lines": 140,
+      "kind": "text"
+    },
+    {
+      "path": "weft/MOISSANITE-SYNTHESIS.md",
+      "git_blob": "566797ac5d5510f970660664150fa3afd6ed5938",
+      "git_mode": "100644",
+      "sha256": "c14416dd1cd71fd32a3dfa18648d6775dd6c941f76abae173c48f1b2b3483c7b",
+      "bytes": 6420,
+      "lines": 48,
+      "kind": "text"
+    },
+    {
+      "path": "weft/README.md",
+      "git_blob": "ded09d2b982c12d71396b939e45135cf9a8cb65c",
+      "git_mode": "100644",
+      "sha256": "c8e8420754150ac75417c0f3829e8b1491346ef4f48f7035f0d1108ff8afbac8",
+      "bytes": 71977,
+      "lines": 1318,
+      "kind": "text"
+    },
+    {
+      "path": "weft/WEFT-ARCHITECTURE-LOCK.md",
+      "git_blob": "460652c68fc6ba8827aa8d5e60042ed914410d58",
+      "git_mode": "100644",
+      "sha256": "6b06a2e8f239afab15b28f6567bb7d9dcf3226b0165d2bf6004976f47b18e085",
+      "bytes": 3931,
+      "lines": 25,
+      "kind": "text"
+    },
+    {
+      "path": "weft/ahraz.md",
+      "git_blob": "be826a02aca24a534b69d950a8b62bdca03fe40a",
+      "git_mode": "100644",
+      "sha256": "a0dee65de9ef785fdd035e909fa3fba7e3c5942a3b16d501e461ad708c22b0bc",
+      "bytes": 18044,
+      "lines": 330,
+      "kind": "text"
+    },
+    {
+      "path": "weft/ainterface.md",
+      "git_blob": "cdc626003a39fc2b61d367aa8d33c4fefa301343",
+      "git_mode": "100644",
+      "sha256": "2888c9ef6a191ed4cd50b0d2521ea146f832b08a49e7c73c005b1f7679628822",
+      "bytes": 12594,
+      "lines": 257,
+      "kind": "text"
+    },
+    {
+      "path": "weft/almalga.md",
+      "git_blob": "53a80054610ab31a413a58acd9747d91c046cc2b",
+      "git_mode": "100644",
+      "sha256": "0050dc841789443e3ee8cec5ab1ef33be615e7c81c9601462e43b8492a69a748",
+      "bytes": 58520,
+      "lines": 951,
+      "kind": "text"
+    },
+    {
+      "path": "weft/browser-sources/README.md",
+      "git_blob": "4371a4e279ad5d54935582c2214a3615f4a17012",
+      "git_mode": "100644",
+      "sha256": "389d6d641403fcb6b23bf419d49da6b17a5e4fe75b14808352bbda6d8e5461d8",
+      "bytes": 3387,
+      "lines": 21,
+      "kind": "text"
+    },
+    {
+      "path": "weft/browser-sources/missing-turns-supplement.md",
+      "git_blob": "4991f04347606e834c4b0c21f17f8a82f32957da",
+      "git_mode": "100644",
+      "sha256": "0fa844948c87d2b1e5bc952bfcbe98a67a289379a8e1774e2969f97ac35848e0",
+      "bytes": 340811,
+      "lines": 4656,
+      "kind": "text"
+    },
+    {
+      "path": "weft/browser-sources/thread1-splicers-genesis-90133B.md",
+      "git_blob": "4ab3579d20351ceb503ffacbb2f39d2097373e2f",
+      "git_mode": "100644",
+      "sha256": "d2b8fdd0348894340795b8a9549512151146f281d1fa970d966061983b420838",
+      "bytes": 289610,
+      "lines": 4103,
+      "kind": "text"
+    },
+    {
+      "path": "weft/browser-sources/thread1-weft-main-84ADC9.md",
+      "git_blob": "5edc7a3225d7565e3e5240371a31c124cc1fd1b7",
+      "git_mode": "100644",
+      "sha256": "00e419f279422ac6589494a29b2403985dcfb02fb9fe8b9fa548a5dd7db637e6",
+      "bytes": 569633,
+      "lines": 8257,
+      "kind": "text"
+    },
+    {
+      "path": "weft/browser-sources/thread2-design-main-6C083A.md",
+      "git_blob": "8f1eb07c4d7342c0db72246fa01744e71d4be0a6",
+      "git_mode": "100644",
+      "sha256": "2286dfc9f2e903bc769793d75a31f5d3640a124f5216871e1bcb73d74681ddb7",
+      "bytes": 314663,
+      "lines": 5135,
+      "kind": "text"
+    },
+    {
+      "path": "weft/browser-sources/widgets/01-sdf-laya-kinetic-typography.html",
+      "git_blob": "cca6afe123d30f33048a78c8ad4ff1504506f71c",
+      "git_mode": "100644",
+      "sha256": "0aa7ab5c52aea8664e4052b226eaf3d7be51d7666bf86b8093636c9094379799",
+      "bytes": 42872,
+      "lines": 1187,
+      "kind": "text"
+    },
+    {
+      "path": "weft/browser-sources/widgets/01-sdf-laya-kinetic-typography.jsx",
+      "git_blob": "9737648f770e431704dd3d0fa9ea75e2b43b85ab",
+      "git_mode": "100644",
+      "sha256": "0ed410b4e89b4697176d2269188ac7699be9672411863bfae1f3ffd6d6eee018",
+      "bytes": 11288,
+      "lines": 225,
+      "kind": "text"
+    },
+    {
+      "path": "weft/browser-sources/widgets/02-mind-palace-spatial-memory.html",
+      "git_blob": "b6b95205d84310bc9a8351c9287fd826f70a5076",
+      "git_mode": "100644",
+      "sha256": "f5c3a06010a6bbc1fd5d25ab3ac0a3f2cb9e0a8397974a11a05cc80368c7caa8",
+      "bytes": 263963,
+      "lines": 1609,
+      "kind": "text"
+    },
+    {
+      "path": "weft/browser-sources/widgets/02-mind-palace-spatial-memory.jsx",
+      "git_blob": "b787481ce0f68d38b71ce2434bd4eaa175a6fcb7",
+      "git_mode": "100644",
+      "sha256": "f4fc5464bfb9ef49c67d96dac3e3930d17f859f0fd617ed8f83975355867b0f2",
+      "bytes": 18866,
+      "lines": 389,
+      "kind": "text"
+    },
+    {
+      "path": "weft/browser-sources/widgets/03-morphogenetic-bioelectric-field.html",
+      "git_blob": "fd69ebcd3c56d009a7ef3c4ac5b5bd30a690787c",
+      "git_mode": "100644",
+      "sha256": "aff25bb5b24c413d9be8f8004933a365432e3d129d20e3cff12962cf602e783f",
+      "bytes": 48112,
+      "lines": 1292,
+      "kind": "text"
+    },
+    {
+      "path": "weft/browser-sources/widgets/03-morphogenetic-bioelectric-field.jsx",
+      "git_blob": "cd2932e5fcfec1f8c23e82c137f66131da50eaf5",
+      "git_mode": "100644",
+      "sha256": "96fd518bf797936f0d56645c41f4f6b5f871f2f8b5f526f629076e6dcd41a121",
+      "bytes": 16703,
+      "lines": 328,
+      "kind": "text"
+    },
+    {
+      "path": "weft/browser-sources/widgets/04-neural-cellular-automata.html",
+      "git_blob": "e830e7ccde902e221cde60dc247c81a2b9db3ecb",
+      "git_mode": "100644",
+      "sha256": "b473e06024aeb45ca25a6fd27617efa0320a3d879e845a57c3ee97c5938cdb89",
+      "bytes": 126921,
+      "lines": 1637,
+      "kind": "text"
+    },
+    {
+      "path": "weft/browser-sources/widgets/04-neural-cellular-automata.jsx",
+      "git_blob": "e4804d6599053f58352ae4f01b5d243bfdba7387",
+      "git_mode": "100644",
+      "sha256": "ba8f858c1129ff9bc3f1fe2e43455bf367949957d55914c4921cdba7827fa4c4",
+      "bytes": 23994,
+      "lines": 503,
+      "kind": "text"
+    },
+    {
+      "path": "weft/browser-sources/widgets/05-interaction-combinator-net.html",
+      "git_blob": "fe5fa172961f7dfec8daffaa09224f31b9ef2d9e",
+      "git_mode": "100644",
+      "sha256": "fffa7e4b793c7b652b29c111a9e2d40f8a8d8de83ae55b7f48eab72a3358cde9",
+      "bytes": 57664,
+      "lines": 1532,
+      "kind": "text"
+    },
+    {
+      "path": "weft/browser-sources/widgets/05-interaction-combinator-net.jsx",
+      "git_blob": "b3a5d74e07e66c82948c554143e86635599ed48c",
+      "git_mode": "100644",
+      "sha256": "a1704c531ee8b8c6c6ebc5ec859f433a2b3580bc494677d58f72b335d084c995",
+      "bytes": 22773,
+      "lines": 453,
+      "kind": "text"
+    },
+    {
+      "path": "weft/deploymap.md",
+      "git_blob": "29630504950245d4fd03c9e870dcff8ea026573f",
+      "git_mode": "100644",
+      "sha256": "761a9e10b94c5fe5bb89e18358affc8e86b3647e3a93c96978122ee8f46ac241",
+      "bytes": 9052,
+      "lines": 151,
+      "kind": "text"
+    },
+    {
+      "path": "weft/design/alive.md",
+      "git_blob": "9c4c02e3c27748e1384b5ea139fc473021dccc54",
+      "git_mode": "100644",
+      "sha256": "c610368b87d0e7bfb57afb392e807be1db901f70e821f14e1510351aec3b5005",
+      "bytes": 10601,
+      "lines": 183,
+      "kind": "text"
+    },
+    {
+      "path": "weft/design/anew.md",
+      "git_blob": "d188e78cd97c34cf4c0003e9c5a3fe3e77692957",
+      "git_mode": "100644",
+      "sha256": "bc3fa71a5b4cf66d7336a55aed164ef91fd78c6a1ec4c560c5021f9895d312ea",
+      "bytes": 11771,
+      "lines": 136,
+      "kind": "text"
+    },
+    {
+      "path": "weft/design/arrival.md",
+      "git_blob": "2799106f8f474a39412c719535d5dcb6d68692ef",
+      "git_mode": "100644",
+      "sha256": "c0072f412b7da7f6792a589ce65a5dc2b651a05f8618a16dcc90212219d1ef19",
+      "bytes": 8558,
+      "lines": 100,
+      "kind": "text"
+    },
+    {
+      "path": "weft/design/art.md",
+      "git_blob": "a1a4e13ea37538a55847c28a4c67a77ab9071d5a",
+      "git_mode": "100644",
+      "sha256": "07efb4b8866ff34e82ecf75b06009bc81a1411ae1978619f3b3576ca4e8bdbee",
+      "bytes": 8806,
+      "lines": 116,
+      "kind": "text"
+    },
+    {
+      "path": "weft/design/aywa.md",
+      "git_blob": "614e0976c1ecb23b46704f8eea2e0d4a32d546c5",
+      "git_mode": "100644",
+      "sha256": "34649d4c51cacfbbd31195e35cfd1cd7e7a78c032da57b2d1128ffb13415480a",
+      "bytes": 6644,
+      "lines": 128,
+      "kind": "text"
+    },
+    {
+      "path": "weft/design/baryonic.md",
+      "git_blob": "e91915c670f39012be7b92f544926d174b592e94",
+      "git_mode": "100644",
+      "sha256": "fb7963539e79dbc77e44110c2b32141c6de34e9411bbe9538c24edcb11917495",
+      "bytes": 6960,
+      "lines": 106,
+      "kind": "text"
+    },
+    {
+      "path": "weft/design/bio.md",
+      "git_blob": "aa3ad309163b7d9dd99f0eeedc9f10a3b7660313",
+      "git_mode": "100644",
+      "sha256": "3d6482b4bd851adb939d2967067cd4d5d5f962a566e59384327800aae1a14909",
+      "bytes": 13068,
+      "lines": 146,
+      "kind": "text"
+    },
+    {
+      "path": "weft/design/build.md",
+      "git_blob": "dc43bcd17b5cab5ff7096d3608d18bd421e2712f",
+      "git_mode": "100644",
+      "sha256": "e3040b9fea69d324a09c2737d9cd944ab7c64017194e131ee3b464e34a8657cf",
+      "bytes": 9561,
+      "lines": 177,
+      "kind": "text"
+    },
+    {
+      "path": "weft/design/combine.md",
+      "git_blob": "5c4be5fb22432757f80ee909341430c8beeb1dee",
+      "git_mode": "100644",
+      "sha256": "1ce81f025b65823a16cf9101b4e04ce66b5ece36843289c48809152098de14fb",
+      "bytes": 6632,
+      "lines": 111,
+      "kind": "text"
+    },
+    {
+      "path": "weft/design/converge.md",
+      "git_blob": "619a76185c5f079bd04fc85cac704f2305d86277",
+      "git_mode": "100644",
+      "sha256": "854d163fe759e69270f3292e494f71776f79dcd65486233e60e3d347c1498190",
+      "bytes": 5855,
+      "lines": 57,
+      "kind": "text"
+    },
+    {
+      "path": "weft/design/core.md",
+      "git_blob": "9344ef98df3937ce1511afe73e0e2757cf617cb6",
+      "git_mode": "100644",
+      "sha256": "684c970e368aef28dc61747aee32d8e501b287a21b549c3427279a610fb08a0f",
+      "bytes": 23834,
+      "lines": 429,
+      "kind": "text"
+    },
+    {
+      "path": "weft/design/craft.md",
+      "git_blob": "7c18a41fa6badc4994c06553ae4c72f52e04e7b1",
+      "git_mode": "100644",
+      "sha256": "9cde24ad11e96a294aa830151a7eca6b62cd16c0c634c6098c10daad48e113c5",
+      "bytes": 47648,
+      "lines": 797,
+      "kind": "text"
+    },
+    {
+      "path": "weft/design/create.md",
+      "git_blob": "844ed352e0381f2872c60fac4f8f7e1df940ad94",
+      "git_mode": "100644",
+      "sha256": "eccd23dac6e85faa9fa1d299846ab5e9208a2acf7c3b007c8c75bd075920eef2",
+      "bytes": 10004,
+      "lines": 106,
+      "kind": "text"
+    },
+    {
+      "path": "weft/design/custom.md",
+      "git_blob": "3e3471a882278fa97e348ec7696db83865dcddb2",
+      "git_mode": "100644",
+      "sha256": "8454d1b5b81914253c91b5dd822f5df1061b208148d870efcc7508748dd50345",
+      "bytes": 10082,
+      "lines": 175,
+      "kind": "text"
+    },
+    {
+      "path": "weft/design/discovery.md",
+      "git_blob": "ca6f37898cd160829829ff7a2b4e9f1946a646d7",
+      "git_mode": "100644",
+      "sha256": "e5301acbfd47b70652cfbf9693dc6c47cf4e7cc9887b9a20e42ae84acec091f5",
+      "bytes": 36976,
+      "lines": 644,
+      "kind": "text"
+    },
+    {
+      "path": "weft/design/done.md",
+      "git_blob": "902911fe90d9fce3d52acc3b93d111e89c3f7eea",
+      "git_mode": "100644",
+      "sha256": "9de4d32f331c06e9a9d701795a13c77fd92e554c1651fa165cc2539f9a2c773c",
+      "bytes": 6498,
+      "lines": 131,
+      "kind": "text"
+    },
+    {
+      "path": "weft/design/eh.md",
+      "git_blob": "8e39c17ab8fb07c7b6efaf782b6d292c934f11ac",
+      "git_mode": "100644",
+      "sha256": "1c64582a9fc5c92ae1cc4c1bcc5be241f97e4078171264acd28bca7438bc5760",
+      "bytes": 16549,
+      "lines": 323,
+      "kind": "text"
+    },
+    {
+      "path": "weft/design/feeed.md",
+      "git_blob": "1adfbf3018aabf8a956bf35f11cdad3ee60e3192",
+      "git_mode": "100644",
+      "sha256": "03015700898d30be31a171452c77ac536b2530fe5058967c6d09f3e6585fe932",
+      "bytes": 56242,
+      "lines": 1013,
+      "kind": "text"
+    },
+    {
+      "path": "weft/design/feel.md",
+      "git_blob": "7a7f3968260f68d67afe6678a0cc13098c6fe709",
+      "git_mode": "100644",
+      "sha256": "41f9fb760d607f9f0f4b418cd175150ec7a6bdf37a271f5c25def18072a4cc63",
+      "bytes": 12840,
+      "lines": 134,
+      "kind": "text"
+    },
+    {
+      "path": "weft/dissertation-mac.md",
+      "git_blob": "f0e453f40678c2a026ad53d9be73526fb6b68924",
+      "git_mode": "100644",
+      "sha256": "ed5982d521aa3d44de9f91a36e10825b7a2722436af917621c33b38aa014916f",
+      "bytes": 26637,
+      "lines": 363,
+      "kind": "text"
+    },
+    {
+      "path": "weft/emergent.md",
+      "git_blob": "31275bcea768c8f7fe1793766bd91b1a6fbb8a4c",
+      "git_mode": "100644",
+      "sha256": "62301080dab87d8746acdbf38e119afd02779bdc79023080c912c0e77461a945",
+      "bytes": 17412,
+      "lines": 162,
+      "kind": "text"
+    },
+    {
+      "path": "weft/ethos.md",
+      "git_blob": "506774f64557b468aadc705991dd6af6a448bc7b",
+      "git_mode": "100644",
+      "sha256": "5373a39cf8e1b157cdb38858fcf442c27749458251cc233dd66de6760a2f4a52",
+      "bytes": 8120,
+      "lines": 73,
+      "kind": "text"
+    },
+    {
+      "path": "weft/govern.md",
+      "git_blob": "6098458875abfeba0ae8f14fd0b1bbd3052773b7",
+      "git_mode": "100644",
+      "sha256": "fc00a07bfdc9edea73152edc5a373bdbad5b3d5b6f4a3d4c30b5c5d7428e88b2",
+      "bytes": 7922,
+      "lines": 77,
+      "kind": "text"
+    },
+    {
+      "path": "weft/imprint.md",
+      "git_blob": "4db5f24745b19a68cc59398a416061d28a5e6b7c",
+      "git_mode": "100644",
+      "sha256": "a7d0a8e1c9bb6a1995461d09257c65d357078bd7e0fe67a1d0d00df72f6fe54b",
+      "bytes": 34795,
+      "lines": 352,
+      "kind": "text"
+    },
+    {
+      "path": "weft/langdoc.md",
+      "git_blob": "d3c38e7c039648f8689cd814550d7726343fdcc8",
+      "git_mode": "100644",
+      "sha256": "263414ec65a50615b0fcb84f1b779a72e5f9628034c9e3962c5645a97ba121d5",
+      "bytes": 11324,
+      "lines": 203,
+      "kind": "text"
+    },
+    {
+      "path": "weft/launch.md",
+      "git_blob": "c34841e473c6b925e9fca6babb1020954b249a95",
+      "git_mode": "100644",
+      "sha256": "fcf45166207deb673b54b67ca3db2985862e00dcea99fc59990f6ab49bbce619",
+      "bytes": 51965,
+      "lines": 1011,
+      "kind": "text"
+    },
+    {
+      "path": "weft/mac.md",
+      "git_blob": "2a9df8d70aa1361551b7209260e9de97233e5b01",
+      "git_mode": "100644",
+      "sha256": "ca7141c35a3f11960d872837814c93a682f5e3dfea17b46a1484f797d189efdb",
+      "bytes": 24671,
+      "lines": 449,
+      "kind": "text"
+    },
+    {
+      "path": "weft/manifest.md",
+      "git_blob": "3abdce57391e30269faea850febda04152f55bbf",
+      "git_mode": "100644",
+      "sha256": "a92eb99bf6a270175fea956eceed8bd4c8c52ed6124c70bab87cadcca3392b79",
+      "bytes": 7421,
+      "lines": 115,
+      "kind": "text"
+    },
+    {
+      "path": "weft/more.md",
+      "git_blob": "73af1b09388ef2401afb662549c3d5bf035287e5",
+      "git_mode": "100644",
+      "sha256": "3a8920be26129e2d3dbdd8586f3fd7a02104281332a2039465f2c6018dbbdc78",
+      "bytes": 10323,
+      "lines": 216,
+      "kind": "text"
+    },
+    {
+      "path": "weft/mugetsu.md",
+      "git_blob": "f8256837ce2f87a8ae5c51826c0a00bd936c8eaf",
+      "git_mode": "100644",
+      "sha256": "689a11d66dae6bbf56e917a90fc1c6fc36db1a34a1fa92adeb435d888e0a347a",
+      "bytes": 10292,
+      "lines": 186,
+      "kind": "text"
+    },
+    {
+      "path": "weft/pcoom.md",
+      "git_blob": "352c85a6844b594e9f67aab9f8e11973a7af30ce",
+      "git_mode": "100644",
+      "sha256": "45f6a98911921d8816636bcccd7aa0497225b98d2a7cb9b824bf92fb77e1cdbe",
+      "bytes": 12279,
+      "lines": 207,
+      "kind": "text"
+    },
+    {
+      "path": "weft/penult.md",
+      "git_blob": "baf665a582b9858d51803944373949ac1f9eae37",
+      "git_mode": "100644",
+      "sha256": "c939c1a0e0b13495d30add83368c18f20ea25750e43676a9baff740afc204ea8",
+      "bytes": 6181,
+      "lines": 68,
+      "kind": "text"
+    },
+    {
+      "path": "weft/perception.md",
+      "git_blob": "451ce5ae30acfcf21170c2c61dbe0500e77fad4c",
+      "git_mode": "100644",
+      "sha256": "2f06054a375fb95de10f350b52191e20f96e5c838276c5a1de67e6f61358c2a0",
+      "bytes": 9614,
+      "lines": 137,
+      "kind": "text"
+    },
+    {
+      "path": "weft/process.md",
+      "git_blob": "b33283b985e8eb91689536e7ba9713c7aa90471b",
+      "git_mode": "100644",
+      "sha256": "0db8e6788042cf6beb09d686606f60a766e4dc0c7b4015b81037a82418b8381a",
+      "bytes": 4698,
+      "lines": 46,
+      "kind": "text"
+    },
+    {
+      "path": "weft/prove.md",
+      "git_blob": "a0414b00a6f877cd55414b8a99663428c6f826d8",
+      "git_mode": "100644",
+      "sha256": "60a5a1e5700eedff6b779faa6269497b7bf399ded1a36c5c6c8f36239bf2e2fa",
+      "bytes": 11991,
+      "lines": 188,
+      "kind": "text"
+    },
+    {
+      "path": "weft/provocol.md",
+      "git_blob": "d1d9adf1e4f5ef3be7ab97a38333dbc206c51a5c",
+      "git_mode": "100644",
+      "sha256": "c7d1424d88995b52dbc1370b237995791f1f309dc497e115a594d2955d16d6cf",
+      "bytes": 10122,
+      "lines": 161,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/aywa/dashboard_layout.wgsl",
+      "git_blob": "4483e990a1482ba4b56ee1708dc39e810e8016a5",
+      "git_mode": "100644",
+      "sha256": "3336b07c32352b2e71c123cef27bb87c56120085f56a3eb419091cb9e4799f58",
+      "bytes": 12178,
+      "lines": 302,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/aywa/github_harvester.py",
+      "git_blob": "7d14c3fcc1e3a17fe2fc67b867ff923af242b25c",
+      "git_mode": "100644",
+      "sha256": "e63daede8c0256bd06838a017f4bb05974560a2bc979a5e581cb12c4439432ea",
+      "bytes": 1037,
+      "lines": 38,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/aywa/index.html",
+      "git_blob": "fab02ee915eee6a921bc03d0bd9af63103ee3c44",
+      "git_mode": "100644",
+      "sha256": "dbd013430152f9f7da041d27ccc98bb9ecc7e0c5972a250707bc492dbe7a3225",
+      "bytes": 4647,
+      "lines": 80,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/aywa/moissanite_telemetry.bin",
+      "git_blob": "7b80397b7876b891ea0877e7f5f699f85f01eb48",
+      "git_mode": "100644",
+      "sha256": "46fbcf526128045d23692ca7e277d15d66c218e80db7c194c283ce8de30ea244",
+      "bytes": 64,
+      "lines": 4,
+      "kind": "binary"
+    },
+    {
+      "path": "weft/runtime/aywa/moissanite_telemetry.json",
+      "git_blob": "8d508fbc26abc3c7ce2586ee915b097fff405739",
+      "git_mode": "100644",
+      "sha256": "3c663ba2be946121a6ed8ad9af38bd7d59c130fb778dfc5a758848d95d0e8646",
+      "bytes": 4549,
+      "lines": 208,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/aywa/site_selftest.py",
+      "git_blob": "5676672a2b85bb502a353e47548a91ba11d29bcb",
+      "git_mode": "100644",
+      "sha256": "4a003ab29a09d94d61d99a36bf68234f582566ed0c0fc2477bb2afdb47b2f783",
+      "bytes": 7333,
+      "lines": 168,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/aywa/sym2p_codec.py",
+      "git_blob": "d19b1c0b07d404d3d80284ada704ed8c24691c38",
+      "git_mode": "100644",
+      "sha256": "ea28f31d886a1928d979e7016a01412c1020c1af776a0fe13f8f1ae882949909",
+      "bytes": 628,
+      "lines": 27,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/aywa/telemetry.jsonl",
+      "git_blob": "60eff479e73dd8d85ef3a7b7e91525d415121783",
+      "git_mode": "100644",
+      "sha256": "e5e9a118c7db96d612f8331869e58ec1bf017e454785beffa465a96a9f73d203",
+      "bytes": 132,
+      "lines": 1,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/aywa/test_aesthetic_mixer.mjs",
+      "git_blob": "9576933ecd7074c43fdc4e3f15b848588222e260",
+      "git_mode": "100644",
+      "sha256": "6737e4856a3761e38eb639a6a8f631590a0ec6e51afe9390f675b80c8f7b1d50",
+      "bytes": 1330,
+      "lines": 26,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/aywa/test_cell_layout.mjs",
+      "git_blob": "b75533abcc0e8fefd3f790a52740cc929cd818dd",
+      "git_mode": "100644",
+      "sha256": "78ae410f69985393b1a05e1d3e168ddd0ebf3b1242435b01fac6ae3d8058e072",
+      "bytes": 5923,
+      "lines": 145,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/aywa/test_glyph_font.mjs",
+      "git_blob": "ac8437b4163a3e39fd33505b06e1df7976419472",
+      "git_mode": "100644",
+      "sha256": "17eb4812194d829d47c7e19b68f4316c97034cb08743d611142fd2d917774fcf",
+      "bytes": 2046,
+      "lines": 55,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/aywa/test_simplex_pad.mjs",
+      "git_blob": "a64f308b3841051173d1bd0446a98bb39385551f",
+      "git_mode": "100644",
+      "sha256": "95f4a6f5f1bcf172e3babbf0e63c5ddb7ff3d51f21c555d8514b32c8a37a541c",
+      "bytes": 1601,
+      "lines": 39,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/aywa/test_sym2p_codec.py",
+      "git_blob": "8219af8cd3951148b50322d56cdd80087f3f143a",
+      "git_mode": "100644",
+      "sha256": "0023d3c8558ce6901a94e845e98ba57d005728736294e05fdba062d0de2d5684",
+      "bytes": 4201,
+      "lines": 96,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/aywa/test_sym2p_parse.mjs",
+      "git_blob": "7ba2f243c361e0e473fb463f293e01b8a098230f",
+      "git_mode": "100644",
+      "sha256": "c7d5491a5dbb7536ffa5290ba6ac42b8b0e7a3ba4adeb89e9e4cc32c70d60a1e",
+      "bytes": 3303,
+      "lines": 78,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/aywa/test_weft_atlas.mjs",
+      "git_blob": "45f59b366a4749d937ac3022321cec58d6ae4a82",
+      "git_mode": "100644",
+      "sha256": "29439c2e1fb6bf3c2d641ba7895cf70ebb4c6c2bd237352f53e63152e764ac69",
+      "bytes": 1162,
+      "lines": 37,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/aywa/test_weft_loom_pack.mjs",
+      "git_blob": "da27529c6222da9e9f68ea754645276fc550a9f9",
+      "git_mode": "100644",
+      "sha256": "6fae0e9f2a5d3572dd757366419dcfc99f2e20c738abfbf32628074dac74cd8b",
+      "bytes": 2475,
+      "lines": 47,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/aywa/weft_daemon.py",
+      "git_blob": "dec13df392444b32b98ca25aec7164f1ff399be5",
+      "git_mode": "100644",
+      "sha256": "179b115b5953fc198c33d1e4dcb4f3d7780a9c96842267bd59f9ccc3a3ea85d6",
+      "bytes": 2413,
+      "lines": 70,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/core/selftest.py",
+      "git_blob": "254247afa149c6b301797450419d141afd08aeef",
+      "git_mode": "100644",
+      "sha256": "e602471c680497cc030b9a0b074a5c0c701441eb86af530135e41a9a2fd1c9a3",
+      "bytes": 8319,
+      "lines": 211,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/core/weft_ic_vm.py",
+      "git_blob": "ca1ac1432ef795074465fc677ef1925486e78810",
+      "git_mode": "100644",
+      "sha256": "c878b8718d8e6db7612b8927fc89e22c0b39bba4d014ba91fbf9b22d711daef8",
+      "bytes": 942,
+      "lines": 41,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/core/weft_plasm.py",
+      "git_blob": "8bc09889db70f86c86248643f1e895b4b6aa8d7f",
+      "git_mode": "100644",
+      "sha256": "818b99392e5c1950edc2acb3dbad31c4142da66959115b18a063ffed39308096",
+      "bytes": 1557,
+      "lines": 61,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/gateway/README.md",
+      "git_blob": "6ff8f539732bf21c061ead399f7d4521ee395766",
+      "git_mode": "100644",
+      "sha256": "f9c946f0a705277bbc3d17a10d753b26be091c1a12922e1b1e256db4b3e08cb8",
+      "bytes": 1134,
+      "lines": 19,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/gateway/__init__.py",
+      "git_blob": "5e3f84e2fa8b62afe68c1ca21e8554ba6271f803",
+      "git_mode": "100644",
+      "sha256": "8397bfd9ef7078154b045f6f12e659a31f7078223042ca44bba1b8cf13b8706b",
+      "bytes": 523,
+      "lines": 21,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/gateway/gateway.py",
+      "git_blob": "0d379ce79f0a795dc0a395f3cb36a7a2230610a7",
+      "git_mode": "100644",
+      "sha256": "a2950a4201bdd0d27e69acf8728607300b67fa1ce024464a5e9d067794d76ed4",
+      "bytes": 10104,
+      "lines": 246,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/gateway/keccak256.py",
+      "git_blob": "54667e631f3c1ad4c3d7f94139b536979a514ca8",
+      "git_mode": "100644",
+      "sha256": "bedb80c8f2781eba5f1c7d63eae0851d0d7c78353cd75e404217099cb75bbcde",
+      "bytes": 2801,
+      "lines": 83,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/gateway/test_gateway.py",
+      "git_blob": "b6968c2936d0549bbf08b5db80b601614e7ade77",
+      "git_mode": "100644",
+      "sha256": "5546905fe669a07adc765b70b65f2ca50a15b8091411cc3b54a373c397198306",
+      "bytes": 4172,
+      "lines": 87,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/ic/README.md",
+      "git_blob": "04f3bfa13a397944ee66097cacc447c97998f7c3",
+      "git_mode": "100644",
+      "sha256": "2b9716e6786eb01ff25dab0b599eec3af6a6e202ac62916a4ea6edc061448d72",
+      "bytes": 1558,
+      "lines": 22,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/ic/__init__.py",
+      "git_blob": "d973f13138e9d6246f3af8c6f46fc78a705f7bbf",
+      "git_mode": "100644",
+      "sha256": "ed39a414f80e4421681ef0899600c7697b6afc8123c501dc8c2569bb90053a38",
+      "bytes": 503,
+      "lines": 20,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/ic/bcp_codec.py",
+      "git_blob": "5df5f98cf017fdf8fccc15bce3d3f4ffd2373ef4",
+      "git_mode": "100644",
+      "sha256": "6f71c32fa1e2a849644c2a8679f2750dddd6f08dfd28437e339c2697e81297ae",
+      "bytes": 3939,
+      "lines": 106,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/ic/ic_vm.py",
+      "git_blob": "d09be72a3ac647d515d78883da66e6f4c04d0977",
+      "git_mode": "100644",
+      "sha256": "7c72027f7878a804a8177576a9604ac25be9b5fc23a6b4eccd9d4ce813fed438",
+      "bytes": 11913,
+      "lines": 295,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/ic/test_ic_vm.py",
+      "git_blob": "918215c022ec6fb13372f781030d7ef4a3da18ff",
+      "git_mode": "100644",
+      "sha256": "608980c08f7993d01b10c74f91d9ce473c3cbab97c8be95b2d1be0121e57b1e7",
+      "bytes": 4882,
+      "lines": 109,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/invariants/README.md",
+      "git_blob": "ff331b5eaf639f584bcbad7e17ef88fd989eccef",
+      "git_mode": "100644",
+      "sha256": "e4bd12205fa8c3b7211e7ec6ea32b36e339823edbe2a55527efcd3fa5b1bd7f2",
+      "bytes": 1326,
+      "lines": 20,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/invariants/__init__.py",
+      "git_blob": "3bc116a7b205939a77cb3e5e528056b2d4ed68d7",
+      "git_mode": "100644",
+      "sha256": "26bda4d9f25a3805369b7f94e59f3c46050ed6d903117d968c8625f957056059",
+      "bytes": 695,
+      "lines": 28,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/invariants/invariants.py",
+      "git_blob": "a1a064767592bba9ac5255f5bafb47f09cdfcd1c",
+      "git_mode": "100644",
+      "sha256": "dfe84dfff0ca649ff204560fac4fbf4ec00fd4075e2062c06cbaaa53987b391a",
+      "bytes": 8981,
+      "lines": 252,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/invariants/test_invariants.py",
+      "git_blob": "6b3706239d9ecaff1497b9e22a20da18ecc4f63e",
+      "git_mode": "100644",
+      "sha256": "b05812b52d26a2f0887e60c8100b93131a8ec9d0f85c5c4e6cf49fad9045412e",
+      "bytes": 3391,
+      "lines": 76,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/invariants/test_invariants_c.c",
+      "git_blob": "93627c005fe0b73875d1ed2bbbf6a290e4c6c5b8",
+      "git_mode": "100644",
+      "sha256": "53404a237186886b02f5a3dc9a20249ff274c2dfbbf6cc10c293360b5015c105",
+      "bytes": 2824,
+      "lines": 83,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/invariants/vectors.json",
+      "git_blob": "9e478180b4f12ebec97ecbbb20c7511db9747518",
+      "git_mode": "100644",
+      "sha256": "fdc37eaa42c1ea68e6d330b453fd480eabc62571d16f362730f84b78829afb0e",
+      "bytes": 4158,
+      "lines": 195,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/invariants/weft_invariants.h",
+      "git_blob": "09463ea15f2fe4e2260ccdc589274541579a3065",
+      "git_mode": "100644",
+      "sha256": "bd2d2e2cfd03c44f53387730af90fa034f33e892e74b1a9da0fce9e2f9f15cab",
+      "bytes": 3674,
+      "lines": 114,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/ledger/ProvenanceRegistry.sol",
+      "git_blob": "c8a7a89a3091c7dd0fda4834e9c1d7fde3e22b1f",
+      "git_mode": "100644",
+      "sha256": "d5c5156556dc4728eeb1ca9db19c2ff16d16bc8ba0aeaf900e300b0b8f7f0f1f",
+      "bytes": 3558,
+      "lines": 84,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/ledger/README.md",
+      "git_blob": "655536526e2cc6766eb7ada80bcfa0482bc2c8d9",
+      "git_mode": "100644",
+      "sha256": "6c0a57bf134495e8c1f610211b066194e603058ee1c20e777807b72adb8165d3",
+      "bytes": 1483,
+      "lines": 19,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/ledger/TensionGovernor.sol",
+      "git_blob": "4e832af6675f624c50798e9d164289bffcd30122",
+      "git_mode": "100644",
+      "sha256": "a142da7c458bb27be583876a1188a2b0ee6525047578b7c24c41457088355658",
+      "bytes": 4899,
+      "lines": 122,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/ledger/WeftTokenTissue.sol",
+      "git_blob": "f6af90fd5f26de808e9a53d56430a247f1d89295",
+      "git_mode": "100644",
+      "sha256": "73feb25a8abbe420021e12d65f5d94208f5e0361891ea1627916c8e5b3ddd32d",
+      "bytes": 4867,
+      "lines": 121,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/mac/README.md",
+      "git_blob": "a50c2041c4b30fd4df33dd23365874747ba49067",
+      "git_mode": "100644",
+      "sha256": "73c714441412f57d04d569cf76a84c4bd425a397434ec2685c6e5c81a2089986",
+      "bytes": 315,
+      "lines": 8,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/mac/darwin_sysctl.py",
+      "git_blob": "f62ed564def7857d8ef4e2d4fe2138a45489e6f4",
+      "git_mode": "100644",
+      "sha256": "e5e533bdc204889616008b9547ac8a074b3d7d7de6c562d19576491d45e056e2",
+      "bytes": 780,
+      "lines": 27,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/mac/metal_loom.py",
+      "git_blob": "e091f8d19cd8efae43466b3d9a2f4ae4bfa50796",
+      "git_mode": "100644",
+      "sha256": "b5df8132c3459a2a7f32fd5c6e27167780eb25fc4319905988cda03a0e09dee7",
+      "bytes": 1124,
+      "lines": 39,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/plasm/README.md",
+      "git_blob": "fd3888bfcbeb36040801c7462b5c22eb9294ec21",
+      "git_mode": "100644",
+      "sha256": "f49a00adca243b721fdb64721878c608cc74ce496f0ceef3a26874bf7056c19c",
+      "bytes": 1593,
+      "lines": 18,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/plasm/__init__.py",
+      "git_blob": "431ca34c315748c92a0f322f227f854e12e3d4dc",
+      "git_mode": "100644",
+      "sha256": "39f49acb551704549dcabacc5a5a6d85c62c7b30c34cf2943c5af336111a801b",
+      "bytes": 1092,
+      "lines": 42,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/plasm/plasm.py",
+      "git_blob": "6b498461320acfe2cbea6edab448c8e3533575e3",
+      "git_mode": "100644",
+      "sha256": "57c0673329acf498b147d3cd593635848fc0900b2e1cae02b7d428844fc0d680",
+      "bytes": 20179,
+      "lines": 473,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/plasm/test_plasm.py",
+      "git_blob": "a6b70ab515384824bb72840567d626374c831d1d",
+      "git_mode": "100644",
+      "sha256": "52540013b43e1d319732885985100d941131d3ab19b0830aaf7ebe72dd7d9be3",
+      "bytes": 4809,
+      "lines": 98,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/telemetry/README.md",
+      "git_blob": "e2a01755d605464c7dfb48ad884c21d1f791483d",
+      "git_mode": "100644",
+      "sha256": "a3403f931c35b781eac36a6211097b83ad61c78bf005d05655b75cc1a81dd339",
+      "bytes": 1341,
+      "lines": 21,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/telemetry/__init__.py",
+      "git_blob": "e15d33daaf547dd8b6e9878ab651e07dc380162b",
+      "git_mode": "100644",
+      "sha256": "2f8ed2e4be788076ff6087cc2adfe0f40b5fc602690ea46a853a5ca92f7ab057",
+      "bytes": 1000,
+      "lines": 42,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/telemetry/frame64.py",
+      "git_blob": "c3bc17c5d19857ad9dcd60714bbe58405ee0eac6",
+      "git_mode": "100644",
+      "sha256": "b7c6152a0603b47e993a0e699584312efd819e39e5c58ea5a52e37365eedc7ae",
+      "bytes": 2198,
+      "lines": 70,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/telemetry/harvester.py",
+      "git_blob": "2cc06cef115230e80da3b299b4d541cadb8eb36d",
+      "git_mode": "100644",
+      "sha256": "f75d40355802dca84f6ee14242587431377903efe282c0bd61c96f85eb1c4a24",
+      "bytes": 9068,
+      "lines": 185,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/telemetry/host_metrics.py",
+      "git_blob": "d21b565d3f93d02ed73c064124552f939b9f8dbc",
+      "git_mode": "100644",
+      "sha256": "08b66a6b50c47bd61eec9bd227a3dea299194e3b518fedb9b47a0ee8f2f2db2d",
+      "bytes": 4523,
+      "lines": 131,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/telemetry/sym2p_codec.py",
+      "git_blob": "a36bf27aecfa25dfff3493715744244f6b269c29",
+      "git_mode": "100644",
+      "sha256": "9b8a47305b7ce8694e7817fbf207726d7b562f216d2fe62344f686bb8c551663",
+      "bytes": 3316,
+      "lines": 89,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/telemetry/test_telemetry.py",
+      "git_blob": "69c82aef33b5a69b2ba7f93a5c8169bc82be6d64",
+      "git_mode": "100644",
+      "sha256": "9d27f5aa175518deb716619cfe2e25658a8d9b7cbb83b655b2a5ab578fc9ac2c",
+      "bytes": 3575,
+      "lines": 80,
+      "kind": "text"
+    },
+    {
+      "path": "weft/runtime/telemetry/vectors.json",
+      "git_blob": "e97ba6cce9791832cea22b8a64667104ff2a4795",
+      "git_mode": "100644",
+      "sha256": "157e98e2287678409c6938908dc38c915da66a7f1315eb9fb509d7a465f9025a",
+      "bytes": 332,
+      "lines": 18,
+      "kind": "text"
+    },
+    {
+      "path": "weft/self.md",
+      "git_blob": "4ec6e4239a34e7d0cbc6cf1ffa7647cafa36294e",
+      "git_mode": "100644",
+      "sha256": "f088b44cfa3cb5981ce71470be659dc2e8f143aae98dc4d4d7dc0c61107f4d2c",
+      "bytes": 21454,
+      "lines": 343,
+      "kind": "text"
+    },
+    {
+      "path": "weft/soc.md",
+      "git_blob": "9a9f4b7cacaac77d9411a100a331f8050ea133e1",
+      "git_mode": "100644",
+      "sha256": "3b77c77b4cbdd31f08b27084a63bf1782b2bf1ceb93684840887132ede4ba390",
+      "bytes": 18762,
+      "lines": 315,
+      "kind": "text"
+    },
+    {
+      "path": "weft/spread.md",
+      "git_blob": "4e6c85122eccc55824c5efadf5c04518a08de108",
+      "git_mode": "100644",
+      "sha256": "66fdc426e6874a010e8d7a450ccf3a45edc867b0b4b5254ade72af4eb6e8a5ee",
+      "bytes": 6790,
+      "lines": 64,
+      "kind": "text"
+    },
+    {
+      "path": "weft/terrafab-calc.md",
+      "git_blob": "e0cbd58dd110d39449138bb69695b2a0254317ad",
+      "git_mode": "100644",
+      "sha256": "9c8dc4da177e89ab360d1b73133dcb27457aaad8277aeb855b03601c655c6158",
+      "bytes": 10782,
+      "lines": 166,
+      "kind": "text"
+    },
+    {
+      "path": "weft/terrafab.md",
+      "git_blob": "367876a6a195369e678f04437d36700921732bcc",
+      "git_mode": "100644",
+      "sha256": "eaa16517934cf619b8599e90c649c1d07cbe9c6d15b5f5b528af71f097e1908d",
+      "bytes": 32977,
+      "lines": 363,
+      "kind": "text"
+    },
+    {
+      "path": "weft/terraweft.md",
+      "git_blob": "fc06909b0df152fd5a6e915134c78508a9675a78",
+      "git_mode": "100644",
+      "sha256": "d7433f1443529ecf45d550bef9b6cc109f27bd62d6714275f6892459829e104b",
+      "bytes": 6421,
+      "lines": 67,
+      "kind": "text"
+    },
+    {
+      "path": "weft/test.md",
+      "git_blob": "e553e162b7e54ace0ace54c598781af6c1512259",
+      "git_mode": "100644",
+      "sha256": "fc0622c56886156db5e896a66213498e4607edfdf0980e88d028b6df68c7d642",
+      "bytes": 17579,
+      "lines": 311,
+      "kind": "text"
+    },
+    {
+      "path": "weft/testenviron.md",
+      "git_blob": "883d8b538805efa05df3b454963eaa1f57543ece",
+      "git_mode": "100644",
+      "sha256": "5847cdb6d581fb77dc00947dce60083b8f38740df6eec2792e2e27624584f84f",
+      "bytes": 9330,
+      "lines": 152,
+      "kind": "text"
+    },
+    {
+      "path": "weft/tune.md",
+      "git_blob": "3b492eafd0fb80914e970c0edd58c5bb76195c9c",
+      "git_mode": "100644",
+      "sha256": "8829af226d223b9658210f0a72abe31ded554a61fbe3fd92e236ec916542e80e",
+      "bytes": 18222,
+      "lines": 210,
+      "kind": "text"
+    },
+    {
+      "path": "weft/ult.md",
+      "git_blob": "bfa65a90ef712a2b2dca2cb46c932779b94b21bd",
+      "git_mode": "100644",
+      "sha256": "8252c0df0cc04a943080c97b19314fd3ce282239ceb73e0602ec94a148aa8be9",
+      "bytes": 11643,
+      "lines": 198,
+      "kind": "text"
+    },
+    {
+      "path": "weft/whitepaper.md",
+      "git_blob": "dea84dbd713e4424e35e390fb386cb39850939e2",
+      "git_mode": "100644",
+      "sha256": "ac1f7eb0fa08e97637defe0deb63b356b928869191ef02aff7e7287e2f58798c",
+      "bytes": 21531,
+      "lines": 259,
+      "kind": "text"
+    },
+    {
+      "path": "weft/whoa.md",
+      "git_blob": "cd07dfab089afcae00dd8b0dfa85df29f478c6e6",
+      "git_mode": "100644",
+      "sha256": "9317aa748c4b5f9e39a8ba3b469489af302a9cf101c01ca1a860712e87a49b49",
+      "bytes": 4431,
+      "lines": 56,
+      "kind": "text"
+    },
+    {
+      "path": "weft/wrap.md",
+      "git_blob": "f1f696f348d5dbd0f194c65d9c7e7f75d6cbcbff",
+      "git_mode": "100644",
+      "sha256": "b99fc85ec1be8c41e118e70e30089d057a900a0d87f627034235e2ad37179de2",
+      "bytes": 4193,
+      "lines": 40,
+      "kind": "text"
+    },
+    {
+      "path": "weft/xtra.md",
+      "git_blob": "d2660d4e241a2e95651161286a8b0b1423fb1dca",
+      "git_mode": "100644",
+      "sha256": "19546860bf61c7546ae3459e7a6c34b291e4da196413f6fd9fc67a53e2bf1d81",
+      "bytes": 24468,
+      "lines": 259,
+      "kind": "text"
+    }
+  ],
+  "exact_duplicate_groups": [
+    [
+      "docs/assets/shaders/dashboard_layout.wgsl",
+      "weft/runtime/aywa/dashboard_layout.wgsl"
+    ],
+    [
+      "docs/data/moissanite_telemetry.bin",
+      "weft/runtime/aywa/moissanite_telemetry.bin"
+    ],
+    [
+      "docs/data/moissanite_telemetry.json",
+      "weft/runtime/aywa/moissanite_telemetry.json"
+    ],
+    [
+      "docs/data/telemetry.jsonl",
+      "weft/runtime/aywa/telemetry.jsonl"
+    ],
+    [
+      "docs/widgets/01-sdf-laya-kinetic-typography.html",
+      "weft/browser-sources/widgets/01-sdf-laya-kinetic-typography.html"
+    ],
+    [
+      "docs/widgets/01-sdf-laya-kinetic-typography.jsx",
+      "weft/browser-sources/widgets/01-sdf-laya-kinetic-typography.jsx"
+    ],
+    [
+      "docs/widgets/02-mind-palace-spatial-memory.html",
+      "weft/browser-sources/widgets/02-mind-palace-spatial-memory.html"
+    ],
+    [
+      "docs/widgets/02-mind-palace-spatial-memory.jsx",
+      "weft/browser-sources/widgets/02-mind-palace-spatial-memory.jsx"
+    ],
+    [
+      "docs/widgets/03-morphogenetic-bioelectric-field.html",
+      "weft/browser-sources/widgets/03-morphogenetic-bioelectric-field.html"
+    ],
+    [
+      "docs/widgets/03-morphogenetic-bioelectric-field.jsx",
+      "weft/browser-sources/widgets/03-morphogenetic-bioelectric-field.jsx"
+    ],
+    [
+      "docs/widgets/04-neural-cellular-automata.html",
+      "weft/browser-sources/widgets/04-neural-cellular-automata.html"
+    ],
+    [
+      "docs/widgets/04-neural-cellular-automata.jsx",
+      "weft/browser-sources/widgets/04-neural-cellular-automata.jsx"
+    ],
+    [
+      "docs/widgets/05-interaction-combinator-net.html",
+      "weft/browser-sources/widgets/05-interaction-combinator-net.html"
+    ],
+    [
+      "docs/widgets/05-interaction-combinator-net.jsx",
+      "weft/browser-sources/widgets/05-interaction-combinator-net.jsx"
+    ]
+  ]
+}

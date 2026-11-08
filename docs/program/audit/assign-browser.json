@@ -1,0 +1,332 @@
+[
+  {
+    "path": "docs/.nojekyll",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0,
+    "lines": 0
+  },
+  {
+    "path": "docs/assets/js/aesthetic-mixer.js",
+    "sha256": "b5f57baf0c773c69edd8e04e40681153acdbc082cb5f2500e7bb4fb4cf8405ca",
+    "bytes": 2906,
+    "lines": 98
+  },
+  {
+    "path": "docs/assets/js/cell-layout.js",
+    "sha256": "b8b5b545e49ed2be1499653788cc2a38b46ba37a9b661b2f246e195fbbbcf7ae",
+    "bytes": 7734,
+    "lines": 209
+  },
+  {
+    "path": "docs/assets/js/glyph-font.js",
+    "sha256": "55abce258adaacf76d550ba62956dd3d625a4084b67920908a26c167410ce4c4",
+    "bytes": 6128,
+    "lines": 125
+  },
+  {
+    "path": "docs/assets/js/simplex-pad.js",
+    "sha256": "071c2d6980f5e43c6f932692764295c957fc2dbc4b0bbbc51f761849a38a2722",
+    "bytes": 5501,
+    "lines": 133
+  },
+  {
+    "path": "docs/assets/js/sym2p-parse.js",
+    "sha256": "e90a32b1d913a3d9d610a4511afadbc1880776644fedcfebfecda7aa7e2387e7",
+    "bytes": 2029,
+    "lines": 50
+  },
+  {
+    "path": "docs/assets/js/weft-atlas.js",
+    "sha256": "5c883c5cc127d41ad45b657212552287af92a89c82ce353aa201b9efc649c5fb",
+    "bytes": 22522,
+    "lines": 364
+  },
+  {
+    "path": "docs/assets/js/weft-loom.js",
+    "sha256": "f00d9dc9db294139211560b1a6052a3c8dcaffa852df798a2cc4be993b18e105",
+    "bytes": 24297,
+    "lines": 617
+  },
+  {
+    "path": "docs/assets/shaders/dashboard_layout.wgsl",
+    "sha256": "3336b07c32352b2e71c123cef27bb87c56120085f56a3eb419091cb9e4799f58",
+    "bytes": 12178,
+    "lines": 302
+  },
+  {
+    "path": "docs/assets/workers/telemetry-worker.js",
+    "sha256": "138f36481aebef99370bdd026872cad205b06b0d07abd5baad4006d6c583ed0a",
+    "bytes": 1962,
+    "lines": 62
+  },
+  {
+    "path": "docs/data/moissanite_telemetry.bin",
+    "sha256": "46fbcf526128045d23692ca7e277d15d66c218e80db7c194c283ce8de30ea244",
+    "bytes": 64,
+    "lines": 4
+  },
+  {
+    "path": "docs/data/moissanite_telemetry.json",
+    "sha256": "3c663ba2be946121a6ed8ad9af38bd7d59c130fb778dfc5a758848d95d0e8646",
+    "bytes": 4549,
+    "lines": 208
+  },
+  {
+    "path": "docs/data/telemetry.jsonl",
+    "sha256": "e5e9a118c7db96d612f8331869e58ec1bf017e454785beffa465a96a9f73d203",
+    "bytes": 132,
+    "lines": 1
+  },
+  {
+    "path": "docs/index.html",
+    "sha256": "22b285716dc3573daec63a2aa71d7c531c31045327c896669650f6c667547c06",
+    "bytes": 54309,
+    "lines": 1123
+  },
+  {
+    "path": "docs/seed-manifest.json",
+    "sha256": "82851eba553b4192fde68a7236f7a5032750c4e3f9b0dfe50ad1e6fad14bdbfa",
+    "bytes": 956,
+    "lines": 30
+  },
+  {
+    "path": "docs/widgets/01-sdf-laya-kinetic-typography.html",
+    "sha256": "0aa7ab5c52aea8664e4052b226eaf3d7be51d7666bf86b8093636c9094379799",
+    "bytes": 42872,
+    "lines": 1187
+  },
+  {
+    "path": "docs/widgets/01-sdf-laya-kinetic-typography.jsx",
+    "sha256": "0ed410b4e89b4697176d2269188ac7699be9672411863bfae1f3ffd6d6eee018",
+    "bytes": 11288,
+    "lines": 225
+  },
+  {
+    "path": "docs/widgets/02-mind-palace-spatial-memory.html",
+    "sha256": "f5c3a06010a6bbc1fd5d25ab3ac0a3f2cb9e0a8397974a11a05cc80368c7caa8",
+    "bytes": 263963,
+    "lines": 1609
+  },
+  {
+    "path": "docs/widgets/02-mind-palace-spatial-memory.jsx",
+    "sha256": "f4fc5464bfb9ef49c67d96dac3e3930d17f859f0fd617ed8f83975355867b0f2",
+    "bytes": 18866,
+    "lines": 389
+  },
+  {
+    "path": "docs/widgets/03-morphogenetic-bioelectric-field.html",
+    "sha256": "aff25bb5b24c413d9be8f8004933a365432e3d129d20e3cff12962cf602e783f",
+    "bytes": 48112,
+    "lines": 1292
+  },
+  {
+    "path": "docs/widgets/03-morphogenetic-bioelectric-field.jsx",
+    "sha256": "96fd518bf797936f0d56645c41f4f6b5f871f2f8b5f526f629076e6dcd41a121",
+    "bytes": 16703,
+    "lines": 328
+  },
+  {
+    "path": "docs/widgets/04-neural-cellular-automata.html",
+    "sha256": "b473e06024aeb45ca25a6fd27617efa0320a3d879e845a57c3ee97c5938cdb89",
+    "bytes": 126921,
+    "lines": 1637
+  },
+  {
+    "path": "docs/widgets/04-neural-cellular-automata.jsx",
+    "sha256": "ba8f858c1129ff9bc3f1fe2e43455bf367949957d55914c4921cdba7827fa4c4",
+    "bytes": 23994,
+    "lines": 503
+  },
+  {
+    "path": "docs/widgets/05-interaction-combinator-net.html",
+    "sha256": "fffa7e4b793c7b652b29c111a9e2d40f8a8d8de83ae55b7f48eab72a3358cde9",
+    "bytes": 57664,
+    "lines": 1532
+  },
+  {
+    "path": "docs/widgets/05-interaction-combinator-net.jsx",
+    "sha256": "a1704c531ee8b8c6c6ebc5ec859f433a2b3580bc494677d58f72b335d084c995",
+    "bytes": 22773,
+    "lines": 453
+  },
+  {
+    "path": "docs/widgets/index.html",
+    "sha256": "26b63241e335bd5cb31ada49cfb9005d4436f0c0566058fb6c3bb18422d1b699",
+    "bytes": 3457,
+    "lines": 53
+  },
+  {
+    "path": "scripts/snapshot_site.mjs",
+    "sha256": "8d3b3e610003597956cb5c4b94e91efdaf7f21f96404850431520048974533a6",
+    "bytes": 5351,
+    "lines": 106
+  },
+  {
+    "path": "scripts/sync_pages_seed.py",
+    "sha256": "d33df03d06c43fb6fa8495fce7ef353746acb06c20e772e84da6cfd3485a7c87",
+    "bytes": 4825,
+    "lines": 140
+  },
+  {
+    "path": "weft/browser-sources/widgets/01-sdf-laya-kinetic-typography.html",
+    "sha256": "0aa7ab5c52aea8664e4052b226eaf3d7be51d7666bf86b8093636c9094379799",
+    "bytes": 42872,
+    "lines": 1187
+  },
+  {
+    "path": "weft/browser-sources/widgets/01-sdf-laya-kinetic-typography.jsx",
+    "sha256": "0ed410b4e89b4697176d2269188ac7699be9672411863bfae1f3ffd6d6eee018",
+    "bytes": 11288,
+    "lines": 225
+  },
+  {
+    "path": "weft/browser-sources/widgets/02-mind-palace-spatial-memory.html",
+    "sha256": "f5c3a06010a6bbc1fd5d25ab3ac0a3f2cb9e0a8397974a11a05cc80368c7caa8",
+    "bytes": 263963,
+    "lines": 1609
+  },
+  {
+    "path": "weft/browser-sources/widgets/02-mind-palace-spatial-memory.jsx",
+    "sha256": "f4fc5464bfb9ef49c67d96dac3e3930d17f859f0fd617ed8f83975355867b0f2",
+    "bytes": 18866,
+    "lines": 389
+  },
+  {
+    "path": "weft/browser-sources/widgets/03-morphogenetic-bioelectric-field.html",
+    "sha256": "aff25bb5b24c413d9be8f8004933a365432e3d129d20e3cff12962cf602e783f",
+    "bytes": 48112,
+    "lines": 1292
+  },
+  {
+    "path": "weft/browser-sources/widgets/03-morphogenetic-bioelectric-field.jsx",
+    "sha256": "96fd518bf797936f0d56645c41f4f6b5f871f2f8b5f526f629076e6dcd41a121",
+    "bytes": 16703,
+    "lines": 328
+  },
+  {
+    "path": "weft/browser-sources/widgets/04-neural-cellular-automata.html",
+    "sha256": "b473e06024aeb45ca25a6fd27617efa0320a3d879e845a57c3ee97c5938cdb89",
+    "bytes": 126921,
+    "lines": 1637
+  },
+  {
+    "path": "weft/browser-sources/widgets/04-neural-cellular-automata.jsx",
+    "sha256": "ba8f858c1129ff9bc3f1fe2e43455bf367949957d55914c4921cdba7827fa4c4",
+    "bytes": 23994,
+    "lines": 503
+  },
+  {
+    "path": "weft/browser-sources/widgets/05-interaction-combinator-net.html",
+    "sha256": "fffa7e4b793c7b652b29c111a9e2d40f8a8d8de83ae55b7f48eab72a3358cde9",
+    "bytes": 57664,
+    "lines": 1532
+  },
+  {
+    "path": "weft/browser-sources/widgets/05-interaction-combinator-net.jsx",
+    "sha256": "a1704c531ee8b8c6c6ebc5ec859f433a2b3580bc494677d58f72b335d084c995",
+    "bytes": 22773,
+    "lines": 453
+  },
+  {
+    "path": "weft/runtime/aywa/dashboard_layout.wgsl",
+    "sha256": "3336b07c32352b2e71c123cef27bb87c56120085f56a3eb419091cb9e4799f58",
+    "bytes": 12178,
+    "lines": 302
+  },
+  {
+    "path": "weft/runtime/aywa/github_harvester.py",
+    "sha256": "e63daede8c0256bd06838a017f4bb05974560a2bc979a5e581cb12c4439432ea",
+    "bytes": 1037,
+    "lines": 38
+  },
+  {
+    "path": "weft/runtime/aywa/index.html",
+    "sha256": "dbd013430152f9f7da041d27ccc98bb9ecc7e0c5972a250707bc492dbe7a3225",
+    "bytes": 4647,
+    "lines": 80
+  },
+  {
+    "path": "weft/runtime/aywa/moissanite_telemetry.bin",
+    "sha256": "46fbcf526128045d23692ca7e277d15d66c218e80db7c194c283ce8de30ea244",
+    "bytes": 64,
+    "lines": 4
+  },
+  {
+    "path": "weft/runtime/aywa/moissanite_telemetry.json",
+    "sha256": "3c663ba2be946121a6ed8ad9af38bd7d59c130fb778dfc5a758848d95d0e8646",
+    "bytes": 4549,
+    "lines": 208
+  },
+  {
+    "path": "weft/runtime/aywa/site_selftest.py",
+    "sha256": "4a003ab29a09d94d61d99a36bf68234f582566ed0c0fc2477bb2afdb47b2f783",
+    "bytes": 7333,
+    "lines": 168
+  },
+  {
+    "path": "weft/runtime/aywa/sym2p_codec.py",
+    "sha256": "ea28f31d886a1928d979e7016a01412c1020c1af776a0fe13f8f1ae882949909",
+    "bytes": 628,
+    "lines": 27
+  },
+  {
+    "path": "weft/runtime/aywa/telemetry.jsonl",
+    "sha256": "e5e9a118c7db96d612f8331869e58ec1bf017e454785beffa465a96a9f73d203",
+    "bytes": 132,
+    "lines": 1
+  },
+  {
+    "path": "weft/runtime/aywa/test_aesthetic_mixer.mjs",
+    "sha256": "6737e4856a3761e38eb639a6a8f631590a0ec6e51afe9390f675b80c8f7b1d50",
+    "bytes": 1330,
+    "lines": 26
+  },
+  {
+    "path": "weft/runtime/aywa/test_cell_layout.mjs",
+    "sha256": "78ae410f69985393b1a05e1d3e168ddd0ebf3b1242435b01fac6ae3d8058e072",
+    "bytes": 5923,
+    "lines": 145
+  },
+  {
+    "path": "weft/runtime/aywa/test_glyph_font.mjs",
+    "sha256": "17eb4812194d829d47c7e19b68f4316c97034cb08743d611142fd2d917774fcf",
+    "bytes": 2046,
+    "lines": 55
+  },
+  {
+    "path": "weft/runtime/aywa/test_simplex_pad.mjs",
+    "sha256": "95f4a6f5f1bcf172e3babbf0e63c5ddb7ff3d51f21c555d8514b32c8a37a541c",
+    "bytes": 1601,
+    "lines": 39
+  },
+  {
+    "path": "weft/runtime/aywa/test_sym2p_codec.py",
+    "sha256": "0023d3c8558ce6901a94e845e98ba57d005728736294e05fdba062d0de2d5684",
+    "bytes": 4201,
+    "lines": 96
+  },
+  {
+    "path": "weft/runtime/aywa/test_sym2p_parse.mjs",
+    "sha256": "c7d5491a5dbb7536ffa5290ba6ac42b8b0e7a3ba4adeb89e9e4cc32c70d60a1e",
+    "bytes": 3303,
+    "lines": 78
+  },
+  {
+    "path": "weft/runtime/aywa/test_weft_atlas.mjs",
+    "sha256": "29439c2e1fb6bf3c2d641ba7895cf70ebb4c6c2bd237352f53e63152e764ac69",
+    "bytes": 1162,
+    "lines": 37
+  },
+  {
+    "path": "weft/runtime/aywa/test_weft_loom_pack.mjs",
+    "sha256": "6fae0e9f2a5d3572dd757366419dcfc99f2e20c738abfbf32628074dac74cd8b",
+    "bytes": 2475,
+    "lines": 47
+  },
+  {
+    "path": "weft/runtime/aywa/weft_daemon.py",
+    "sha256": "179b115b5953fc198c33d1e4dcb4f3d7780a9c96842267bd59f9ccc3a3ea85d6",
+    "bytes": 2413,
+    "lines": 70
+  }
+]

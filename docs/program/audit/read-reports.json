@@ -1,0 +1,442 @@
+[
+  {
+    "path": "docs/corpus/sources/A-design.md",
+    "sha256": "bdc03e05705d6cbb358c6afb54a1631cb577700bd52b627b185a1bd344ca07b2",
+    "status": "read",
+    "summary": "Historical review of19design excerpts,36grouped fragments,12candidate systems and43browser requirements. Valuable semantic decomposition, but current-status statements refer to f67d9dc and several repairs since landed.",
+    "components": [
+      "procedural web",
+      "adaptive web",
+      "telemetry",
+      "style profiles",
+      "browser auth",
+      "NCA"
+    ],
+    "evidence": [
+      {
+        "start_line": 1,
+        "end_line": 25,
+        "finding": "Report explicitly pins older main f67d9dc and maps19excerpts to thread2 chronology; chronology alone does not establish preferred design."
+      },
+      {
+        "start_line": 27,
+        "end_line": 160,
+        "finding": "Per-file and fragment maps preserve16/32/48/64-byte layouts, multiple JS engines, hue/Gini/harvester/deployment variants."
+      },
+      {
+        "start_line": 162,
+        "end_line": 240,
+        "finding": "Mechanisms include procedural rendering, wire telemetry, local model, reading response, repository persistence, style blending and future IC/NCA UI; foreign model/performance claims remain unverified."
+      },
+      {
+        "start_line": 245,
+        "end_line": 314,
+        "finding": "Twelve systems separate renderer,codec,ingest,build,mixer,auth,text,classifier,sync,NCA,sandboxes and native fusion."
+      },
+      {
+        "start_line": 316,
+        "end_line": 422,
+        "finding": "43-item requirements matrix is historical; current renderer fixes cannot be judged by its YES/NO flags."
+      },
+      {
+        "start_line": 426,
+        "end_line": 479,
+        "finding": "Historical code gaps and unspecified semantics are useful extraction inputs; no newly approved deployment/auth instructions follow."
+      }
+    ],
+    "variant_notes": [
+      "Old report says decoder numeric-base bug, linear hue, missing labels/controls, absent live mode and suspended identifiers; current code has repaired these wholly or partly. Current C6 still has mixed live/fixture semantics.",
+      "Pages deployment is superseded by current private-repo/Cloudflare decisions; no Pages enablement is required for local build.",
+      "Model size estimate210\u2013420MB is ideal weight-bit arithmetic, not measured total browser artifact footprint; external Laya checkpoint/runtime evidence must be separately pinned."
+    ],
+    "next_actions": [
+      "Retain report unchanged with dated status addendum; map requirements to current files and empirical tests.",
+      "Develop accessible DOM/keyboard layer with canvas renderer, opt-in local model benchmark and bounded uniform actions; keep source-controlled style persistence and auth as separate designs.",
+      "Specify tension/Gini/Resonance/Capture units and meaning before presenting as organizational health."
+    ],
+    "uncertainties": [
+      "Third-party asset requests disprove fully offline/zero-network claims but do not alone prove behavioral telemetry exfiltration.",
+      "A touch command does not overwrite existing file content; the historical deployment risk depends on fresh staging and omitted data copies."
+    ]
+  },
+  {
+    "path": "docs/corpus/sources/B-top1.md",
+    "sha256": "7f2baf0582b540f0c2dae51a1b2ab71372bd35114bc6a7388840068f6a5fa2e8",
+    "status": "read",
+    "summary": "Historical nine-file architecture/ledger/native/hardware review with21fragment rows and15candidate systems; highlights generation regressions and unverifiable completion claims.",
+    "components": [
+      "C1 native matrix runtime",
+      "C4 ledger",
+      "C5 gateway",
+      "mesh",
+      "OS",
+      "custom hardware",
+      "intent prior"
+    ],
+    "evidence": [
+      {
+        "start_line": 1,
+        "end_line": 100,
+        "finding": "Scope spans transcript-derived README/almalga/launch/imprint/hardware plus team synthesis/lock; source genre is distinct from executable proof."
+      },
+      {
+        "start_line": 103,
+        "end_line": 145,
+        "finding": "Tracks triadV1/V2/V3 and harnessH1/H2/H3; later snippets regress APIs and can replace telemetry with randomness."
+      },
+      {
+        "start_line": 150,
+        "end_line": 225,
+        "finding": "Separates accounting, dual signatures, watermark retention, speculative search, novelty, shared-memory, networking and hardware claims; notes scalar-vs-vector and CPU/OS incompatibilities."
+      },
+      {
+        "start_line": 226,
+        "end_line": 316,
+        "finding": "Invalid proof/benchmark and deployment assertions are retained as historical claims; current hardware/legal/organizational actions are not authorized by these excerpts."
+      },
+      {
+        "start_line": 321,
+        "end_line": 441,
+        "finding": "Fifteen proposed systems plus missing artifacts supply phase candidates; source correspondence and inherited report recommendations require current reconciliation."
+      }
+    ],
+    "variant_notes": [
+      "Current code now includes TensionGovernor, governed mint allocation, dispute existence checks, C2 finite/baseline gate, frozen-row watermark and target/novelty candidate scoring; historical NOT EXTRACTED/fixed-supply assertions are stale.",
+      "Current I4 actual256x256/1024/64x1024 differs from the report-described extracted4x64x512/4/8x512; PR47 preserves both profiles.",
+      "Reports recommend V1 canonical/deprecating others; current plan instead retains variants and chooses implementations by explicit contract evidence."
+    ],
+    "next_actions": [
+      "Reuse15component boundaries with prerequisite gates: numeric/state contracts before model cells, local EVM before gateway, authenticated consentful mesh before remote execution, emulator before OS/hardware.",
+      "Treat multi-GPU distance and haptic control as separate measurable experiments; neither proof latency nor physical control follows from scalar predicates.",
+      "Keep voluntary testamentary policy/predictive-choice models separate from survival-of-person claims per PROGRAM.md; retain archival philosophy without importing fabricated receipts."
+    ],
+    "uncertainties": [
+      "Original claim of exact source fidelity144turns/191blocks cannot be established from this report alone.",
+      "Real-world company/collaboration claims need independent evidence; no outreach belongs to current scope."
+    ]
+  },
+  {
+    "path": "docs/corpus/sources/C-top2.md",
+    "sha256": "5e875d7b227a13aebe1b40b434adeb9d1301400b3a1f7eaea44d8cb4724d71a9",
+    "status": "read",
+    "summary": "Historical12-file native/whitepaper/deployment review distinguishes mock runtime narration from executable artifacts and identifies16candidate subsystems.",
+    "components": [
+      "native harness",
+      "formal invariants",
+      "ledger monitoring",
+      "haptic interface",
+      "intent and governance research"
+    ],
+    "evidence": [
+      {
+        "start_line": 1,
+        "end_line": 49,
+        "finding": "Historical transcripts include explicit assistant admission that earlier deployment/server claims were conversational fiction."
+      },
+      {
+        "start_line": 54,
+        "end_line": 86,
+        "finding": "Fragments span incompatible matrix harnesses, scalar IC toy, simulated SMC actuator, broken event monitor, mock tests and an invalid Solidity-to-Stylus deployment premise."
+      },
+      {
+        "start_line": 90,
+        "end_line": 129,
+        "finding": "Maps matrix/thermal/tension concepts, frozen intent and governance with unsupported physical/performance claims."
+      },
+      {
+        "start_line": 131,
+        "end_line": 146,
+        "finding": "Reports real Keccak recalculation and locates key-shaped/hardware/broadcast material without reproducing it."
+      },
+      {
+        "start_line": 150,
+        "end_line": 247,
+        "finding": "Sixteen subsystem/document candidates and21open questions include replay, syscall/Metal distinctions, resource metrics and alternative token-free rewards."
+      }
+    ],
+    "variant_notes": [
+      "C1/C3/C4/C5 now implement more than historical report: explicit embedding/frozen mask, target selection, extended nodes and full triad; zero-copy/biological/formal claims still require separate evidence.",
+      "Report labels macOS string fictional; current owner explicitly reports Golden Gate27.0.1. Preserve that as user-reported/unverified instead of inferring a different platform.",
+      "Historical nothing-executed admission does not negate later real repository tests or deployments; evidence must be dated to each snapshot."
+    ],
+    "next_actions": [
+      "Keep numerical tension, measured temperature, abstract budget and token values separate with units and adapters.",
+      "Implement local event replay/indexer only after actual ABI/topic/state tests; no fabricated receipt becomes an execution record.",
+      "Use ordinary user-space cancellation/rollback experiments for Edge Snap before any privileged OS work; haptic UI can be simulated without fan writes."
+    ],
+    "uncertainties": [
+      "Hardware/version facts need actual Mac baseline; no Apple hardware read in this audit.",
+      "Consciousness/emergence extrapolations and zero-cost economics remain philosophical hypotheses outside executable evidence."
+    ]
+  },
+  {
+    "path": "docs/corpus/sources/D-top3.md",
+    "sha256": "709cff23794ad4d9cfcba368e43737f13aaeda1eb1a6edbdae3a87334e674a30",
+    "status": "read",
+    "summary": "Historical16-file specification/IC/formal-method/haptic/mesh/profile review with18fragment rows and11systems; chronology documents dual-language versus single-calculus debate.",
+    "components": [
+      "C3 language and reducer",
+      "C2 formal specification",
+      "mesh",
+      "haptic governor",
+      "profile memory",
+      "protocol viewer"
+    ],
+    "evidence": [
+      {
+        "start_line": 13,
+        "end_line": 37,
+        "finding": "Fifteen excerpts map to thread1 while more.md has separate provenance and CUDA/NCCL/x86 context."
+      },
+      {
+        "start_line": 41,
+        "end_line": 140,
+        "finding": "System narratives and fragments include portless economic toys, real numeric-check attempt, Lean sketch, Bend sketch, WebSocket-like TCP and simulated migration receipts."
+      },
+      {
+        "start_line": 146,
+        "end_line": 221,
+        "finding": "Distinguishes graph-confluence language from implementation safety, scalar budgets from real payment, and hardcoded profile coefficients from learned preference."
+      },
+      {
+        "start_line": 245,
+        "end_line": 358,
+        "finding": "Proposes11systems and22questions including grammar, reference semantics, wire encoding, replay/consent, platform separation and code/proof correspondence."
+      }
+    ],
+    "variant_notes": [
+      "Current C3 has VLV/SUP/FRC and BCP extraction, but semantic/failure issues remain; historical claim that current core is correct Lafont rules is too strong without a topology/confluence proof.",
+      "Report recommends discarding BLDE as superseded; preserve the transcript decision but retain a verification-language option: one runtime calculus need not forbid an external proof assistant.",
+      "Native binary viewer and org dashboard are distinct data products even if they share UI; do not automatically call Aywa a replacement for tensor inspection."
+    ],
+    "next_actions": [
+      "Write a calculus contract separating grammar/typing, reduction rules, scheduler, effects and proof obligations; only then choose implementation language/backends.",
+      "Design local tensor viewer with valid WebSocket framing, authorization and bounded snapshots if its user value is established.",
+      "Treat profile/continuity as consented, inspectable, revocable policy data; archival wrap instructions do not control present agents."
+    ],
+    "uncertainties": [
+      "Haptic alpha inversion could be naming/rigidity interpretation rather than arithmetic alone; settle control meaning and actuator limits before implementation.",
+      "Historical model/platform and external project references need independent current evidence."
+    ]
+  },
+  {
+    "path": "docs/corpus/sources/E-thread1-main.md",
+    "sha256": "abef6f8f9fbaf8df02b4c3fb8066dbd2478de850819aa68ab71c0398407dd1f2",
+    "status": "read",
+    "summary": "Historical whole-thread1 report maps72turns,37software-fragment rows, chronological branches and17candidate subsystem labels, including omissions and regressions in late amalgamations.",
+    "components": [
+      "source provenance",
+      "native runtime variants",
+      "IC variants",
+      "formal verification",
+      "ledger",
+      "hardware and governance"
+    ],
+    "evidence": [
+      {
+        "start_line": 17,
+        "end_line": 83,
+        "finding": "Turn map distinguishes user short steering, assistant proposals, web-result artifacts and claimed-execution narration; references source twins and supplement."
+      },
+      {
+        "start_line": 85,
+        "end_line": 119,
+        "finding": "Chronology identifies independent harness,contracts,IC,telemetry and prose lineages; latest is not a single coherent implementation."
+      },
+      {
+        "start_line": 123,
+        "end_line": 198,
+        "finding": "37fragment entries and defect notes preserve type/ABI/toolchain/memory differences and mock-versus-real behavior."
+      },
+      {
+        "start_line": 204,
+        "end_line": 278,
+        "finding": "Mechanisms/contradictions include selection,watermark,token-free economics,formal claims,mesh and profile inheritance."
+      },
+      {
+        "start_line": 280,
+        "end_line": 308,
+        "finding": "Final candidate table is a reconstructed consolidation; original report documents its own interrupted synthesis and relies on other reports for questions."
+      }
+    ],
+    "variant_notes": [
+      "Current source has later C1/C2/C3/C4/C5 extraction repairs absent from these status cells.",
+      "Full raw-thread reading remains independently necessary because this report groups/omits trivial blocks and its final system table was reconstructed.",
+      "Browser print() is normally window.print(), not necessarily ReferenceError as fragment17 claims; this is an example of report assertions needing code/runtime verification."
+    ],
+    "next_actions": [
+      "Use turn/corpus correspondence as provenance lookup, but attach exact current hashes and include original fragments in index.",
+      "Version harness/kernel/proof/wire contracts separately; do not designate latest composite as canonical automatically.",
+      "Preserve user reversals and assistant retractions as decision context without treating assistant completion narratives as tests."
+    ],
+    "uncertainties": [
+      "Raw source snapshot completeness and missing-turn identity require the independent source-reader evidence.",
+      "Claims about physical impossibility, innate emergence and economic enforcement remain unvalidated."
+    ]
+  },
+  {
+    "path": "docs/corpus/sources/F-thread2-design.md",
+    "sha256": "7e8b5d44a8958a22f74c6475fd09d686ddddff3190f3865bd7f8ccf5ec388310",
+    "status": "read",
+    "summary": "Historical design-thread report maps43turns,38selected fragments,10systems and widget/prose mismatches; strongest finding is that later monoliths drop working data paths.",
+    "components": [
+      "procedural web",
+      "local adaptive UI",
+      "telemetry",
+      "style mixing",
+      "widget education",
+      "browser contribution"
+    ],
+    "evidence": [
+      {
+        "start_line": 17,
+        "end_line": 68,
+        "finding": "Tracks concept\u2192browser reality check\u219216/32/48/32-byte layouts\u2192OAuth/text monoliths and identifies final-page regression; widget names mismatch actual components."
+      },
+      {
+        "start_line": 70,
+        "end_line": 155,
+        "finding": "38fragment rows preserve code/protocol variants and defects; raw capture versus markdown fence counts are not automatically equivalent completeness measures."
+      },
+      {
+        "start_line": 157,
+        "end_line": 282,
+        "finding": "Separates graphics theory, model external claims, read adaptation, field semantics, profiles and contribution trust."
+      },
+      {
+        "start_line": 286,
+        "end_line": 393,
+        "finding": "Ten boundaries plus18questions support current web build decomposition; historical missing features and deployment assumptions require current evidence."
+      }
+    ],
+    "variant_notes": [
+      "Current mixer/codec/glyph/layout repairs and widget-title corrections invalidate several old status flags; full browser reader owns current checks.",
+      "Laya exists in external evidence from previous tranche, but checkpoint/API/model-assets/M1 performance must remain distinct from transcript latency/package claims.",
+      "43turns and47fenced blocks versus51pre elements signals conversion questions, not proof of exactly4lost software fragments without source comparison."
+    ],
+    "next_actions": [
+      "Use current shader/DOM composition as first deliverable and keep model-driven UI as opt-in bounded-policy experiment.",
+      "Package true educational widgets with accurate names and local dependencies; trained NCA requires a separate dataset/weights/training/holdout-damage experiment.",
+      "Define metrics and style ownership before shared mutation/writeback; build contribution workflow around explicit user action and review."
+    ],
+    "uncertainties": [
+      "Report calls all-f32 uniform alignment std140; actual WGSL host-shareable layout must be verified per address-space rules instead of relying on that simplification.",
+      "External model/research cost claims need pinned citations and reproduction."
+    ]
+  },
+  {
+    "path": "docs/corpus/sources/G-splicers.md",
+    "sha256": "44e90799fc3b08102314dd9a2c37cbb84e68393f51a33907e4dbaed2a57dfddd",
+    "status": "read",
+    "summary": "Historical genesis report follows nine prototype generations across 29 turns. It preserves process-cell, tool-capability, novelty, memory, autonomy and mesh designs that successive composites repeatedly drop.",
+    "components": [
+      "Plasm",
+      "cell lifecycle",
+      "tool membrane",
+      "novelty selection",
+      "genotype consolidation",
+      "PLL",
+      "haptic interface",
+      "mesh",
+      "hardware bridge"
+    ],
+    "evidence": [
+      {
+        "start_line": 19,
+        "end_line": 83,
+        "finding": "Nine chronological prototypes change bus shapes, memory depth, tool injection and selection objective; the final mesh generation is not a complete superset."
+      },
+      {
+        "start_line": 85,
+        "end_line": 158,
+        "finding": "Fragment map records real SCM_RIGHTS transport, fixed-sleep process races, fatal later fd-return/control-flow regressions and broken persistence."
+      },
+      {
+        "start_line": 162,
+        "end_line": 257,
+        "finding": "First principles, autonomy/PLL, statistical negotiation and weight-space visions exceed random-matrix prototypes; novelty scales and tension units are undefined."
+      },
+      {
+        "start_line": 259,
+        "end_line": 350,
+        "finding": "Nine candidate systems and document/gap inventory support independent capability, task-objective, memory, hardware and governance workstreams."
+      }
+    ],
+    "variant_notes": [
+      "Current C1 is a small in-process laboratory with frozen rows, normalized novelty and target error; it does not implement historic process broker, consensus, trained-model communication or persistent learning.",
+      "Current C3 FRC/VLV extraction supersedes historical absence, but does not establish formal fractal compression or semantics.",
+      "Keep source names and all prototype variants; the report suggestion to rename or collapse sources is not current authorization."
+    ],
+    "next_actions": [
+      "Implement a narrowly scoped capability broker only after isolation policy, request schema, bounded blocking and denial/teardown tests are specified.",
+      "Separate a task-bearing convergence experiment from normalization/novelty ablations and memory retrieval/consolidation experiments.",
+      "Specify persistent checkpoint/delta schemas, reproducible random streams and input/order logs before signed replay or mesh.",
+      "Treat heterogeneous hidden-state exchange and consensus as learned-adapter/research questions; distinguish central winner selection from negotiation."
+    ],
+    "uncertainties": [
+      "External Astra, jev-ui, Inkling and hardware claims remain citation/reproduction work.",
+      "W += eta*delta is algebraically an EMA toward W+delta; the report overstates its categorical contrast with EMA. Usage-dependent Hebbian pruning is nonetheless absent.",
+      "Report duplicate/body equivalence does not imply byte-identical complete source files."
+    ]
+  },
+  {
+    "path": "docs/corpus/sources/H-missing-turns.md",
+    "sha256": "5f35156d690766fdba2199dec60dc57786b6236baa33767393a815d6a51d6312",
+    "status": "read",
+    "summary": "Historical supplement report maps 43 duplicated turn sections, 17 Python blocks and 11 systems, preserving unanswered contributor analytics and broader membrane/governance requirements.",
+    "components": [
+      "source provenance",
+      "tool membrane",
+      "runtime lifecycle",
+      "PLL",
+      "mesh leasing",
+      "contributor analytics",
+      "IC extension",
+      "prior art"
+    ],
+    "evidence": [
+      {
+        "start_line": 18,
+        "end_line": 63,
+        "finding": "Supplement content is already represented by sibling threads; reported counts differ from old header. Current runtime descriptions and supersession judgments refer to an older snapshot."
+      },
+      {
+        "start_line": 69,
+        "end_line": 152,
+        "finding": "Seventeen AST-parseable Python fragments have semantic races, ineffective masks, mistaken port targets and allocation/control-flow failures; syntax validity is not operational validity."
+      },
+      {
+        "start_line": 194,
+        "end_line": 254,
+        "finding": "Distinguishes soft economic dampening, hard capability boundary, arbitrary tension thresholds, signed replay, real-model receptor compatibility and cellular first principles."
+      },
+      {
+        "start_line": 256,
+        "end_line": 325,
+        "finding": "Mechanism/name table separates actual random matrices, fd transfer, scalar decay and unauthenticated transport from promised isolation, learning and provenance; attribution origin is itself disputed."
+      },
+      {
+        "start_line": 329,
+        "end_line": 436,
+        "finding": "Eleven systems include an unimplemented tool membrane, governance log and unanswered repo contributor analytics; abstract spec, implementation and future microkernel are separate outputs."
+      }
+    ],
+    "variant_notes": [
+      "Current C3 has FRC/VLV and a flat BCP VM, current ledger includes TensionGovernor, and Mac files now delegate to C1. Old missing-component and independent-implementation claims are stale.",
+      "Current C1 dimensions and hippocampus shape differ from report old wrappers; no historical bus layout should be silently treated as the current I4 ABI.",
+      "SCM_RIGHTS conveys capability but same-user ambient authority means the historical cell is not an isolated object-capability system.",
+      "Weft name provenance requires dated source comparison; same-name project discovery is not proof of conceptual derivation."
+    ],
+    "next_actions": [
+      "Keep supplement intact with provenance relationships rather than deleting duplicate source material.",
+      "Split contributor capture into measurable contribution concentration and explicit human interpretation; avoid silently treating raw LoC as contributor quality.",
+      "Build local task, isolation and replay primitives before migration economics, authenticated distributed memory or hardware OS experiments.",
+      "Create precise autonomy policy and dual-approval transition semantics separately from both numerical tension and token ownership."
+    ],
+    "uncertainties": [
+      "Independent original-thread reads must validate source equivalence and historical source-line assertions.",
+      "Claims that prototype sources are runnable were mostly inferred from AST parsing and small NumPy simulations, not full program execution.",
+      "The report historical absence claims are not current test results; formal IC correctness and platform confinement remain unproven."
+    ]
+  }
+]

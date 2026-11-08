@@ -1,0 +1,255 @@
+{
+  "integration_commit": "0007f281123f17dcd93a1f4c90a8b17e31d97524",
+  "source_commit": "a721b12579caba4e04dc31b16731cc2657079207",
+  "environment": {
+    "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+    "python": "Python 3.12.14",
+    "node": "v24.19.0",
+    "chromium": "Chromium 154.0.8037.57 built on Debian GNU/Linux 13 (trixie)",
+    "OMP_NUM_THREADS": "2",
+    "WEFT_BROWSER_EXECUTABLE": "/usr/bin/chromium"
+  },
+  "results": [
+    {
+      "command": [
+        "/workspace/.venvs/weft-audit/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "weft/runtime/invariants",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.138,
+      "stdout": "",
+      "stderr": "....\n----------------------------------------------------------------------\nRan 4 tests in 0.067s\n\nOK\n"
+    },
+    {
+      "command": [
+        "/workspace/.venvs/weft-audit/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "weft/runtime/plasm",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.365,
+      "stdout": "",
+      "stderr": ".........\n----------------------------------------------------------------------\nRan 9 tests in 0.240s\n\nOK\n"
+    },
+    {
+      "command": [
+        "/workspace/.venvs/weft-audit/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "weft/runtime/ic",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.245,
+      "stdout": "",
+      "stderr": "...............\n----------------------------------------------------------------------\nRan 15 tests in 0.111s\n\nOK\n"
+    },
+    {
+      "command": [
+        "/workspace/.venvs/weft-audit/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "weft/runtime/telemetry",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.075,
+      "stdout": "",
+      "stderr": "....\n----------------------------------------------------------------------\nRan 4 tests in 0.001s\n\nOK\n"
+    },
+    {
+      "command": [
+        "/workspace/.venvs/weft-audit/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "weft/runtime/gateway",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.066,
+      "stdout": "",
+      "stderr": ".....\n----------------------------------------------------------------------\nRan 5 tests in 0.001s\n\nOK\n"
+    },
+    {
+      "command": [
+        "/workspace/.venvs/weft-audit/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "weft/runtime/aywa",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.078,
+      "stdout": "",
+      "stderr": "..........\n----------------------------------------------------------------------\nRan 10 tests in 0.002s\n\nOK\n"
+    },
+    {
+      "command": [
+        "node",
+        "--test",
+        "weft/runtime/aywa/test_aesthetic_mixer.mjs",
+        "weft/runtime/aywa/test_cell_layout.mjs",
+        "weft/runtime/aywa/test_glyph_font.mjs",
+        "weft/runtime/aywa/test_simplex_pad.mjs",
+        "weft/runtime/aywa/test_sym2p_parse.mjs",
+        "weft/runtime/aywa/test_weft_atlas.mjs",
+        "weft/runtime/aywa/test_weft_loom_pack.mjs"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.222,
+      "stdout": "\u2714 circular mean hue wraps across 0.0/1.0 boundary (0.95 and 0.05 -> 0.0 red, not 0.50 cyan) (0.78193ms)\n\u2714 AestheticMixer class uses circular mean hue and normalizes weights (0.241475ms)\n\u2714 golden angle is 137.507... degrees (2.105297ms)\n\u2714 cell area is proportional to commits at every region size (falsifier for #37 item 4) (13.961764ms)\n\u2714 cells are square: one side length, independent of viewport aspect (falsifier for #37 item 1) (4.534163ms)\n\u2714 every repository appears exactly once and no footprints overlap (falsifier for #37 item 2) (4.244667ms)\n\u2714 the whole cluster, labels included, fits inside the region with padding (3.142403ms)\n\u2714 cells grow with the region and stay readable on a phone (3.251647ms)\n\u2714 layout is deterministic (1.521406ms)\n\u2714 the largest cell sits nearest the centre (phyllotaxis order) (1.098888ms)\n\u2714 a region too small to hold the labels degrades without throwing (1.463049ms)\n\u2714 threads form one minimum spanning tree per layer (1.315966ms)\n\u2714 hit testing returns the cell under a point and -1 elsewhere (1.04632ms)\n\u2714 a 5x7 glyph needs 35 bits, so it is packed into two u32 words (corpus single-u32 packing cannot work) (0.954772ms)\n\u2714 packed glyphs decode back to the source bitmap (0.299673ms)\n\u2714 every repository-name character has a non-empty glyph; distinct characters have distinct glyphs (1.715659ms)\n\u2714 labels pack four ASCII codes per u32, little-endian, uppercased (0.268325ms)\n\u2714 vertices have unit barycentric coordinates (1.232991ms)\n\u2714 the centroid is the equal blend (0.180322ms)\n\u2714 weights -> point -> weights round-trips anywhere on the simplex (0.316498ms)\n\u2714 points outside the triangle snap to a valid blend (non-negative, sums to 1) (0.308025ms)\n\u2714 projectToSimplex normalises and falls back to the first preset for all-zero input (1.744563ms)\n\u2714 sequence is a decimal packet number, role/action are hex bytes (2.128884ms)\n\u2714 signed and exponent metrics survive (0.844425ms)\n\u2714 hash verification matches the Python encoder (9.40827ms)\n\u2714 missing hash is not valid (0.246933ms)\n\u2714 tampered payload fails hash (1.054582ms)\n\u2714 published seed line parses and verifies (0.727839ms)\n\u2714 verifySym2pLine returns a boolean (not { ok }) (0.633296ms)\n\u2714 consumer gate accepts correctly signed fixture and golden lines (0.828891ms)\n\u2714 consumer gate rejects missing or mismatched hash (0.709981ms)\n\u2714 treating verify result as verified.ok wrongly rejects valid packets (0.548979ms)\n\u2714 weft-atlas exports all 6 spatial loci covering Aywa web design and the 3 implementation horizons (1.157026ms)\n\u2714 weft-atlas exports all 4 evolutionary horizons and all 7 modular codebases (C1-C7) (0.916213ms)\n\u2714 weft-atlas exports all 5 Aywa design modules (D1-D5), 5 widgets, ecosystem repos, and glossary (0.237578ms)\n\u2714 struct Cell in the shader is four 16-byte vectors (64 bytes), matching packCellRecords (1.193211ms)\n\u2714 packCellRecords writes centre, half side, value, layer and label where the shader reads them (7.984522ms)\n\u2714 every fixture layer has a hue and every locus maps to known layers (0.27171ms)\n\u2139 tests 38\n\u2139 suites 0\n\u2139 pass 38\n\u2139 fail 0\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 184.379735\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/workspace/.venvs/weft-audit/bin/python",
+        "weft/runtime/aywa/weft_daemon.py",
+        "--self-test"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.047,
+      "stdout": "{\n  \"status\": \"PASS\",\n  \"hardware\": {\n    \"source\": \"linux-procfs\",\n    \"ncpu\": 5,\n    \"mem_gb\": 17.59,\n    \"load_1m\": 0.0,\n    \"cpu_strain\": 0.0,\n    \"estimated_load_thermal_c\": 38.5,\n    \"est_core_temp_c\": 38.5,\n    \"thermal_is_estimate\": true\n  },\n  \"moissanite_source\": \"fixture\",\n  \"moissanite_nodes\": 19,\n  \"org_tension\": 0.2053,\n  \"gini_index\": 0.2167,\n  \"shm_frame_64b_head\": [\n    19.0,\n    0.1334,\n    385.0,\n    0.2167,\n    0.18,\n    0.55,\n    0.22,\n    0.12\n  ]\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/workspace/.venvs/weft-audit/bin/python",
+        "weft/runtime/aywa/site_selftest.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.052,
+      "stdout": "{\n  \"status\": \"PASS\",\n  \"docs_root\": \"/workspace/weft-integration-check/docs\",\n  \"widgets_incorporated\": {\n    \"matched_html_widgets\": [\n      \"01-sdf-laya-kinetic-typography.html\",\n      \"02-mind-palace-spatial-memory.html\",\n      \"03-morphogenetic-bioelectric-field.html\",\n      \"04-neural-cellular-automata.html\",\n      \"05-interaction-combinator-net.html\"\n    ],\n    \"count\": 5\n  },\n  \"sym2p_metrics\": {\n    \"active_nodes\": 19.0,\n    \"tension\": 0.2053,\n    \"gini\": 0.2167\n  },\n  \"staged_allowlist\": [\n    \"index.html\",\n    \".nojekyll\",\n    \"seed-manifest.json\",\n    \"assets/\",\n    \"data/\",\n    \"widgets/\"\n  ]\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/workspace/.venvs/weft-audit/bin/python",
+        "weft/runtime/core/selftest.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.36,
+      "stdout": "{\n  \"overall_status\": \"PASS\",\n  \"weight_safety_checks\": {\n    \"status\": \"PASS\",\n    \"cases\": [\n      {\n        \"name\": \"baseline_distance_with_matching_sizes\",\n        \"compared_sizes\": 0.0,\n        \"baseline_distance\": 200.0,\n        \"compared_sizes_trap_would_hide_move\": true,\n        \"uses_baseline_distance_not_compared_sizes\": true,\n        \"status\": \"PASS\"\n      },\n      {\n        \"name\": \"reject_nan_candidate\",\n        \"accepted\": false,\n        \"status\": \"PASS\"\n      },\n      {\n        \"name\": \"reject_negative_remaining_budget\",\n        \"accepted\": false,\n        \"remaining_budget\": -1.5,\n        \"status\": \"PASS\"\n      },\n      {\n        \"name\": \"remaining_budget_precondition\",\n        \"exhausted_accepted\": false,\n        \"nonfinite_accepted\": false,\n        \"status\": \"PASS\"\n      },\n      {\n        \"name\": \"accept_invariant_safe_update\",\n        \"accepted\": true,\n        \"status\": \"PASS\"\n      }\n    ]\n  },\n  \"plasm_substrate\": {\n    \"status\": \"PASS\",\n    \"device\": \"cpu\",\n    \"arena_bytes\": 540688,\n    \"core_rows_frozen\": 64,\n    \"initial_watermark_alignment\": 1.0,\n    \"final_watermark_alignment\": 1.0,\n    \"final_core_row_drift\": 0.0,\n    \"initial_target_error\": 1.657278,\n    \"final_target_error\": 1.140474,\n    \"elapsed_ms\": 7.49,\n    \"final_weights_sha256\": \"0x22a5616e875de714b82b0b7df44a800e66e40d71f22a176eb13fa64e34019bd1\",\n    \"generations\": [\n      {\n        \"generation\": 1,\n        \"winner\": \"ALPHA\",\n        \"score_alpha\": 0.7331,\n        \"score_beta\": 0.6867,\n        \"winner_score\": 0.7331,\n        \"parent_target_error\": 1.657278,\n        \"winner_target_error\": 1.458373,\n        \"invariant_safe\": true,\n        \"gate_reason\": \"ok\",\n        \"frobenius_drift\": 0.103937,\n        \"core_row_drift\": 0.0,\n        \"watermark_retained\": true,\n        \"watermark_alignment\": 1.0,\n        \"watermark_l2_drift\": 0.0,\n        \"tension\": 20.2598,\n        \"homeostatic\": true,\n        \"remaining_budget\": 97.5\n      },\n      {\n        \"generation\": 2,\n        \"winner\": \"ALPHA\",\n        \"score_alpha\": 0.8246,\n        \"score_beta\": 0.7685,\n        \"winner_score\": 0.8246,\n        \"parent_target_error\": 1.458373,\n        \"winner_target_error\": 1.286693,\n        \"invariant_safe\": true,\n        \"gate_reason\": \"ok\",\n        \"frobenius_drift\": 0.161859,\n        \"core_row_drift\": 0.0,\n        \"watermark_retained\": true,\n        \"watermark_alignment\": 1.0,\n        \"watermark_l2_drift\": 0.0,\n        \"tension\": 20.4046,\n        \"homeostatic\": true,\n        \"remaining_budget\": 95.0\n      },\n      {\n        \"generation\": 3,\n        \"winner\": \"ALPHA\",\n        \"score_alpha\": 0.9242,\n        \"score_beta\": 0.861,\n        \"winner_score\": 0.9242,\n        \"parent_target_error\": 1.286693,\n        \"winner_target_error\": 1.140474,\n        \"invariant_safe\": true,\n        \"gate_reason\": \"ok\",\n        \"frobenius_drift\": 0.210234,\n        \"core_row_drift\": 0.0,\n        \"watermark_retained\": true,\n        \"watermark_alignment\": 1.0,\n        \"watermark_l2_drift\": 0.0,\n        \"tension\": 20.5256,\n        \"homeostatic\": true,\n        \"remaining_budget\": 92.5\n      }\n    ]\n  },\n  \"interaction_combinator_vm\": {\n    \"status\": \"PASS\",\n    \"capacity\": 1024,\n    \"reductions_executed\": 3,\n    \"active_nodes_remaining\": 7,\n    \"initial_graph_sha256\": \"0x7a0e2ea523254f5cc00e0d0af5be5483f2bae621df35cb7bb48075b0b7175d53\",\n    \"final_graph_sha256\": \"0x9fadf160c0398ee80ee40ef816102bf1746e6d77b5a787abd632a219ffd44b54\",\n    \"bcp_byte_length\": 152,\n    \"trace_commitment_sha256\": \"0x03efabbd63c607e5d9db95c05fd2df6bc3f2284947189397018757efb61ae0de\",\n    \"steps\": [\n      {\n        \"step\": 1,\n        \"op\": \"COMMUTE(4,5,6,7)\",\n        \"a\": 2,\n        \"b\": 3\n      },\n      {\n        \"step\": 2,\n        \"op\": \"ANNIHILATE(tagA=1,tagB=1,label=0)\",\n        \"a\": 8,\n        \"b\": 9\n      },\n      {\n        \"step\": 3,\n        \"op\": \"ERA_PROPAGATE(11,12)\",\n        \"a\": 10,\n        \"b\": 4\n      }\n    ]\n  },\n  \"moissanite_telemetry\": {\n    \"active_nodes\": 19,\n    \"org_tension\": 0.2053,\n    \"gini_index\": 0.2167,\n    \"binary_frame_bytes\": 64,\n    \"darwin_hardware\": {\n      \"source\": \"linux-procfs\",\n      \"ncpu\": 5,\n      \"mem_gb\": 17.59,\n      \"load_1m\": 0.08,\n      \"cpu_strain\": 0.016,\n      \"estimated_load_thermal_c\": 39.06,\n      \"est_core_temp_c\": 39.06,\n      \"thermal_is_estimate\": true\n    }\n  },\n  \"corpus_audit\": {\n    \"markdown_files_checked\": 70,\n    \"total_fenced_code_blocks\": 374,\n    \"python_blocks_ast_verified\": 92,\n    \"interactive_widgets_count\": 5,\n    \"odd_fences\": [],\n    \"caution_artifacts\": [],\n    \"followup_artifacts\": [],\n    \"python_syntax_errors\": [],\n    \"status\": \"PASS\"\n  },\n  \"pages_seed\": {\n    \"status\": \"PASS\",\n    \"docs_root\": \"/workspace/weft-integration-check/docs\",\n    \"widgets_incorporated\": {\n      \"matched_html_widgets\": [\n        \"01-sdf-laya-kinetic-typography.html\",\n        \"02-mind-palace-spatial-memory.html\",\n        \"03-morphogenetic-bioelectric-field.html\",\n        \"04-neural-cellular-automata.html\",\n        \"05-interaction-combinator-net.html\"\n      ],\n      \"count\": 5\n    },\n    \"sym2p_metrics\": {\n      \"active_nodes\": 19.0,\n      \"tension\": 0.2053,\n      \"gini\": 0.2167\n    },\n    \"staged_allowlist\": [\n      \"index.html\",\n      \".nojekyll\",\n      \"seed-manifest.json\",\n      \"assets/\",\n      \"data/\",\n      \"widgets/\"\n    ]\n  }\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/workspace/.venvs/weft-audit/bin/python",
+        "weft/runtime/mac/darwin_sysctl.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.044,
+      "stdout": "{\n  \"source\": \"linux-procfs\",\n  \"ncpu\": 5,\n  \"mem_gb\": 17.59,\n  \"load_1m\": 0.08,\n  \"cpu_strain\": 0.016,\n  \"estimated_load_thermal_c\": 39.06,\n  \"est_core_temp_c\": 39.06,\n  \"thermal_is_estimate\": true\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/workspace/.venvs/weft-audit/bin/python",
+        "weft/runtime/mac/metal_loom.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.193,
+      "stdout": "{\n  \"status\": \"PASS\",\n  \"device\": \"cpu\",\n  \"arena_bytes\": 540688,\n  \"core_rows_frozen\": 64,\n  \"initial_watermark_alignment\": 1.0,\n  \"final_watermark_alignment\": 1.0,\n  \"final_core_row_drift\": 0.0,\n  \"initial_target_error\": 1.657278,\n  \"final_target_error\": 1.140386,\n  \"elapsed_ms\": 4.41,\n  \"final_weights_sha256\": \"0x0d619ec4e73cff5a0ce06a58f6c7926357831f8e1813d39119b8c7b4908fcbe6\",\n  \"generations\": [\n    {\n      \"generation\": 1,\n      \"winner\": \"ALPHA\",\n      \"score_alpha\": 0.7336,\n      \"score_beta\": 0.6866,\n      \"winner_score\": 0.7336,\n      \"parent_target_error\": 1.657278,\n      \"winner_target_error\": 1.457328,\n      \"invariant_safe\": true,\n      \"gate_reason\": \"ok\",\n      \"frobenius_drift\": 0.103693,\n      \"core_row_drift\": 0.0,\n      \"watermark_retained\": true,\n      \"watermark_alignment\": 1.0,\n      \"watermark_l2_drift\": 0.0,\n      \"tension\": 20.2592,\n      \"homeostatic\": true,\n      \"remaining_budget\": 97.5\n    },\n    {\n      \"generation\": 2,\n      \"winner\": \"ALPHA\",\n      \"score_alpha\": 0.8242,\n      \"score_beta\": 0.7649,\n      \"winner_score\": 0.8242,\n      \"parent_target_error\": 1.457328,\n      \"winner_target_error\": 1.287263,\n      \"invariant_safe\": true,\n      \"gate_reason\": \"ok\",\n      \"frobenius_drift\": 0.16138,\n      \"core_row_drift\": 0.0,\n      \"watermark_retained\": true,\n      \"watermark_alignment\": 1.0,\n      \"watermark_l2_drift\": 0.0,\n      \"tension\": 20.4035,\n      \"homeostatic\": true,\n      \"remaining_budget\": 95.0\n    },\n    {\n      \"generation\": 3,\n      \"winner\": \"ALPHA\",\n      \"score_alpha\": 0.9243,\n      \"score_beta\": 0.8572,\n      \"winner_score\": 0.9243,\n      \"parent_target_error\": 1.287263,\n      \"winner_target_error\": 1.140386,\n      \"invariant_safe\": true,\n      \"gate_reason\": \"ok\",\n      \"frobenius_drift\": 0.209933,\n      \"core_row_drift\": 0.0,\n      \"watermark_retained\": true,\n      \"watermark_alignment\": 1.0,\n      \"watermark_l2_drift\": 0.0,\n      \"tension\": 20.5248,\n      \"homeostatic\": true,\n      \"remaining_budget\": 92.5\n    }\n  ],\n  \"dim\": 256,\n  \"r_invariant\": 10.0,\n  \"initial_budget\": 20.0\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/workspace/.venvs/weft-audit/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts",
+        "-p",
+        "test_corpus_audit.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.066,
+      "stdout": "",
+      "stderr": ".......\n----------------------------------------------------------------------\nRan 7 tests in 0.001s\n\nOK\n"
+    },
+    {
+      "command": [
+        "/workspace/.venvs/weft-audit/bin/python",
+        "scripts/corpus_audit.py",
+        "check"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.394,
+      "stdout": "{\"source_commit\": \"a721b12579caba4e04dc31b16731cc2657079207\", \"files\": 183, \"bytes\": 4694627, \"duplicate_groups\": 14, \"markdown_fenced_blocks\": 382}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/workspace/.venvs/weft-audit/bin/python",
+        "scripts/test_telemetry_browser.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 3.047,
+      "stdout": "",
+      "stderr": "test_worker_refresh_rejection_and_recovery (__main__.TelemetryBrowserTests.test_worker_refresh_rejection_and_recovery) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 2.926s\n\nOK\n"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.006,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "status",
+        "--porcelain"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.006,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "scope": "Local integration of PR46,47,48,53,54 and initial PR55 commit; Linux CPU and Chromium only. No Mac/model/deployment claims.",
+  "composition_base": "94b9064f9d09509a46c9e9d9ba219707f9551bb9",
+  "cherry_pick_order": [
+    "f0f057d1232d522c368570d96e5cd799ee49e9ed",
+    "e6a2ed2b09a212ee334fa93706b3333d9f2c9049",
+    "a721b12579caba4e04dc31b16731cc2657079207",
+    "ad9eb1a1c9fde1bac689108e723e3c50b5a3c9a3",
+    "a9b798bd6254f1e4ef8d344b9ad183a9fcc0be73",
+    "1f6c6c824b46f12a4f4169c6c2818f89a67f02cf"
+  ],
+  "counts": {
+    "runtime_python_tests": 47,
+    "audit_python_tests": 7,
+    "node_tests": 38,
+    "browser_test_methods": 1,
+    "browser_path_subtests": 2,
+    "commands_passed": 17
+  }
+}

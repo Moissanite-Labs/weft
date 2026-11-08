@@ -1,0 +1,254 @@
+[
+  {
+    "path": ".github/workflows/ci.yml",
+    "sha256": "9548eeff42e222770a11a2f25227e08baed3167443bd5205ad0e9b92d61357c3",
+    "bytes": 2566,
+    "lines": 68
+  },
+  {
+    "path": ".github/workflows/pages-seed-deploy.yml",
+    "sha256": "c492ff75359939739161fbe7ec89891f2779ab71abf62c829870d3166734275f",
+    "bytes": 1304,
+    "lines": 45
+  },
+  {
+    "path": ".gitignore",
+    "sha256": "32dae3052f331ee34d628ef535709b301259a45df7c7522c4d35dcf49873f00b",
+    "bytes": 13,
+    "lines": 1
+  },
+  {
+    "path": "weft/runtime/core/selftest.py",
+    "sha256": "e602471c680497cc030b9a0b074a5c0c701441eb86af530135e41a9a2fd1c9a3",
+    "bytes": 8319,
+    "lines": 211
+  },
+  {
+    "path": "weft/runtime/core/weft_ic_vm.py",
+    "sha256": "c878b8718d8e6db7612b8927fc89e22c0b39bba4d014ba91fbf9b22d711daef8",
+    "bytes": 942,
+    "lines": 41
+  },
+  {
+    "path": "weft/runtime/core/weft_plasm.py",
+    "sha256": "818b99392e5c1950edc2acb3dbad31c4142da66959115b18a063ffed39308096",
+    "bytes": 1557,
+    "lines": 61
+  },
+  {
+    "path": "weft/runtime/gateway/README.md",
+    "sha256": "f9c946f0a705277bbc3d17a10d753b26be091c1a12922e1b1e256db4b3e08cb8",
+    "bytes": 1134,
+    "lines": 19
+  },
+  {
+    "path": "weft/runtime/gateway/__init__.py",
+    "sha256": "8397bfd9ef7078154b045f6f12e659a31f7078223042ca44bba1b8cf13b8706b",
+    "bytes": 523,
+    "lines": 21
+  },
+  {
+    "path": "weft/runtime/gateway/gateway.py",
+    "sha256": "a2950a4201bdd0d27e69acf8728607300b67fa1ce024464a5e9d067794d76ed4",
+    "bytes": 10104,
+    "lines": 246
+  },
+  {
+    "path": "weft/runtime/gateway/keccak256.py",
+    "sha256": "bedb80c8f2781eba5f1c7d63eae0851d0d7c78353cd75e404217099cb75bbcde",
+    "bytes": 2801,
+    "lines": 83
+  },
+  {
+    "path": "weft/runtime/gateway/test_gateway.py",
+    "sha256": "5546905fe669a07adc765b70b65f2ca50a15b8091411cc3b54a373c397198306",
+    "bytes": 4172,
+    "lines": 87
+  },
+  {
+    "path": "weft/runtime/ic/README.md",
+    "sha256": "2b9716e6786eb01ff25dab0b599eec3af6a6e202ac62916a4ea6edc061448d72",
+    "bytes": 1558,
+    "lines": 22
+  },
+  {
+    "path": "weft/runtime/ic/__init__.py",
+    "sha256": "ed39a414f80e4421681ef0899600c7697b6afc8123c501dc8c2569bb90053a38",
+    "bytes": 503,
+    "lines": 20
+  },
+  {
+    "path": "weft/runtime/ic/bcp_codec.py",
+    "sha256": "6f71c32fa1e2a849644c2a8679f2750dddd6f08dfd28437e339c2697e81297ae",
+    "bytes": 3939,
+    "lines": 106
+  },
+  {
+    "path": "weft/runtime/ic/ic_vm.py",
+    "sha256": "7c72027f7878a804a8177576a9604ac25be9b5fc23a6b4eccd9d4ce813fed438",
+    "bytes": 11913,
+    "lines": 295
+  },
+  {
+    "path": "weft/runtime/ic/test_ic_vm.py",
+    "sha256": "608980c08f7993d01b10c74f91d9ce473c3cbab97c8be95b2d1be0121e57b1e7",
+    "bytes": 4882,
+    "lines": 109
+  },
+  {
+    "path": "weft/runtime/invariants/README.md",
+    "sha256": "e4bd12205fa8c3b7211e7ec6ea32b36e339823edbe2a55527efcd3fa5b1bd7f2",
+    "bytes": 1326,
+    "lines": 20
+  },
+  {
+    "path": "weft/runtime/invariants/__init__.py",
+    "sha256": "26bda4d9f25a3805369b7f94e59f3c46050ed6d903117d968c8625f957056059",
+    "bytes": 695,
+    "lines": 28
+  },
+  {
+    "path": "weft/runtime/invariants/invariants.py",
+    "sha256": "dfe84dfff0ca649ff204560fac4fbf4ec00fd4075e2062c06cbaaa53987b391a",
+    "bytes": 8981,
+    "lines": 252
+  },
+  {
+    "path": "weft/runtime/invariants/test_invariants.py",
+    "sha256": "b05812b52d26a2f0887e60c8100b93131a8ec9d0f85c5c4e6cf49fad9045412e",
+    "bytes": 3391,
+    "lines": 76
+  },
+  {
+    "path": "weft/runtime/invariants/test_invariants_c.c",
+    "sha256": "53404a237186886b02f5a3dc9a20249ff274c2dfbbf6cc10c293360b5015c105",
+    "bytes": 2824,
+    "lines": 83
+  },
+  {
+    "path": "weft/runtime/invariants/vectors.json",
+    "sha256": "fdc37eaa42c1ea68e6d330b453fd480eabc62571d16f362730f84b78829afb0e",
+    "bytes": 4158,
+    "lines": 195
+  },
+  {
+    "path": "weft/runtime/invariants/weft_invariants.h",
+    "sha256": "bd2d2e2cfd03c44f53387730af90fa034f33e892e74b1a9da0fce9e2f9f15cab",
+    "bytes": 3674,
+    "lines": 114
+  },
+  {
+    "path": "weft/runtime/ledger/ProvenanceRegistry.sol",
+    "sha256": "d5c5156556dc4728eeb1ca9db19c2ff16d16bc8ba0aeaf900e300b0b8f7f0f1f",
+    "bytes": 3558,
+    "lines": 84
+  },
+  {
+    "path": "weft/runtime/ledger/README.md",
+    "sha256": "6c0a57bf134495e8c1f610211b066194e603058ee1c20e777807b72adb8165d3",
+    "bytes": 1483,
+    "lines": 19
+  },
+  {
+    "path": "weft/runtime/ledger/TensionGovernor.sol",
+    "sha256": "a142da7c458bb27be583876a1188a2b0ee6525047578b7c24c41457088355658",
+    "bytes": 4899,
+    "lines": 122
+  },
+  {
+    "path": "weft/runtime/ledger/WeftTokenTissue.sol",
+    "sha256": "73feb25a8abbe420021e12d65f5d94208f5e0361891ea1627916c8e5b3ddd32d",
+    "bytes": 4867,
+    "lines": 121
+  },
+  {
+    "path": "weft/runtime/mac/README.md",
+    "sha256": "73c714441412f57d04d569cf76a84c4bd425a397434ec2685c6e5c81a2089986",
+    "bytes": 315,
+    "lines": 8
+  },
+  {
+    "path": "weft/runtime/mac/darwin_sysctl.py",
+    "sha256": "e5e533bdc204889616008b9547ac8a074b3d7d7de6c562d19576491d45e056e2",
+    "bytes": 780,
+    "lines": 27
+  },
+  {
+    "path": "weft/runtime/mac/metal_loom.py",
+    "sha256": "b5df8132c3459a2a7f32fd5c6e27167780eb25fc4319905988cda03a0e09dee7",
+    "bytes": 1124,
+    "lines": 39
+  },
+  {
+    "path": "weft/runtime/plasm/README.md",
+    "sha256": "f49a00adca243b721fdb64721878c608cc74ce496f0ceef3a26874bf7056c19c",
+    "bytes": 1593,
+    "lines": 18
+  },
+  {
+    "path": "weft/runtime/plasm/__init__.py",
+    "sha256": "39f49acb551704549dcabacc5a5a6d85c62c7b30c34cf2943c5af336111a801b",
+    "bytes": 1092,
+    "lines": 42
+  },
+  {
+    "path": "weft/runtime/plasm/plasm.py",
+    "sha256": "57c0673329acf498b147d3cd593635848fc0900b2e1cae02b7d428844fc0d680",
+    "bytes": 20179,
+    "lines": 473
+  },
+  {
+    "path": "weft/runtime/plasm/test_plasm.py",
+    "sha256": "52540013b43e1d319732885985100d941131d3ab19b0830aaf7ebe72dd7d9be3",
+    "bytes": 4809,
+    "lines": 98
+  },
+  {
+    "path": "weft/runtime/telemetry/README.md",
+    "sha256": "a3403f931c35b781eac36a6211097b83ad61c78bf005d05655b75cc1a81dd339",
+    "bytes": 1341,
+    "lines": 21
+  },
+  {
+    "path": "weft/runtime/telemetry/__init__.py",
+    "sha256": "2f8ed2e4be788076ff6087cc2adfe0f40b5fc602690ea46a853a5ca92f7ab057",
+    "bytes": 1000,
+    "lines": 42
+  },
+  {
+    "path": "weft/runtime/telemetry/frame64.py",
+    "sha256": "b7c6152a0603b47e993a0e699584312efd819e39e5c58ea5a52e37365eedc7ae",
+    "bytes": 2198,
+    "lines": 70
+  },
+  {
+    "path": "weft/runtime/telemetry/harvester.py",
+    "sha256": "f75d40355802dca84f6ee14242587431377903efe282c0bd61c96f85eb1c4a24",
+    "bytes": 9068,
+    "lines": 185
+  },
+  {
+    "path": "weft/runtime/telemetry/host_metrics.py",
+    "sha256": "08b66a6b50c47bd61eec9bd227a3dea299194e3b518fedb9b47a0ee8f2f2db2d",
+    "bytes": 4523,
+    "lines": 131
+  },
+  {
+    "path": "weft/runtime/telemetry/sym2p_codec.py",
+    "sha256": "9b8a47305b7ce8694e7817fbf207726d7b562f216d2fe62344f686bb8c551663",
+    "bytes": 3316,
+    "lines": 89
+  },
+  {
+    "path": "weft/runtime/telemetry/test_telemetry.py",
+    "sha256": "9d27f5aa175518deb716619cfe2e25658a8d9b7cbb83b655b2a5ab578fc9ac2c",
+    "bytes": 3575,
+    "lines": 80
+  },
+  {
+    "path": "weft/runtime/telemetry/vectors.json",
+    "sha256": "157e98e2287678409c6938908dc38c915da66a7f1315eb9fb509d7a465f9025a",
+    "bytes": 332,
+    "lines": 18
+  }
+]

@@ -43,3 +43,11 @@ Source line ranges below are navigation aids from the existing inventories; many
 For the next pass, give each extracted fragment a stable record: source file and revision, transcript/turn or source block, language/toolchain, inputs/outputs, parent variants, relationship type, behavioral differences, runnable command, evidence date and unresolved decision. Match apparent duplicates by content and context before declaring equivalence. Record repaired extraction separately from the original, including the reason for each semantic change.
 
 A retirement decision needs the preserved source, replacement coverage, migration/compatibility effect, comparison evidence and owner review. A branch can remain reference or research without becoming an immediate implementation obligation. A disagreement stays explicit until evidence or an owner decision resolves it. This register starts that work by system; fragment-level completeness is a subsequent task, not a claim made by this document.
+
+## Complete-source comparison addendum (#49)
+
+The [full audit](audit/README.md) now records every file at source snapshot `a721b12579caba4e04dc31b16731cc2657079207`; the [build program](build-program.md) maps the mechanisms into phases. This adds source coverage, not a proof that every fragment is runnable or every semantic lineage is resolved.
+
+Within `weft/README.md`, the first contract tape includes token `approve` at95–99 and registry `verifyAttribution` at240–251; the later integrated tape1062–1297 drops them, with further guard/admin-transfer differences. These are behavioral regressions/alternatives to compare, not automatic replacements. Preserve V1/V2/V3 and the token-free branch until the local-EVM/reference comparisons choose specific mechanisms.
+
+The five widget filenames retain aspirational names, but full module inspection establishes different actual seeds: procedural Canvas2D waves; SVG SDF/CSG; a conceptual reflex/cognition pipeline; coordinate-target-guided cellular rules; and a force graph with illustrative metrics. See [browser evidence](audit/notes-browser.md) and PR53. HTML and paired generated JSX are equivalent module content; publication copies are exact duplicates. Neither relation makes the widgets implementations of Laya, spatial memory, trained NCA or the IC reducer.

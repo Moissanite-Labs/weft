@@ -1,0 +1,1143 @@
+[
+  {
+    "path": "weft/design/alive.md",
+    "sha256": "c610368b87d0e7bfb57afb392e807be1db901f70e821f14e1510351aec3b5005",
+    "status": "read",
+    "read_ranges": [
+      [
+        1,
+        183
+      ]
+    ],
+    "summary": "Laya decision probabilities drive procedural UI; user explicitly proposes rewarding organic reading, while model latency/calibration/privacy claims are unverified assistant assertions.",
+    "components": [
+      "attention telemetry",
+      "Laya inference",
+      "SDF feedback"
+    ],
+    "evidence": [
+      {
+        "start_line": 88,
+        "end_line": 110,
+        "finding": "User proposes reading rewards; rolling five-second scroll/jitter/dwell features are proposed proxies, not measurements of cognition."
+      },
+      {
+        "start_line": 117,
+        "end_line": 175,
+        "finding": "Illustrative LayaWebAgent/options API, probability mapping and sub-50ms/locked60FPS assertions require current API and device verification."
+      }
+    ],
+    "variant_notes": [
+      "Preserve model-driven variant separately from heuristic widget; emotion inference is a hypothesis."
+    ],
+    "next_actions": [
+      "Implement consented local feature capture and heuristic baseline; compare actual pinned Laya against labeled tasks, calibration and latency; keep controls and text stable."
+    ],
+    "uncertainties": [
+      "No checkpoint/runtime execution evidence; scrolling does not establish comprehension."
+    ]
+  },
+  {
+    "path": "weft/design/anew.md",
+    "sha256": "bc3fa71a5b4cf66d7336a55aed164ef91fd78c6a1ec4c560c5021f9895d312ea",
+    "status": "read",
+    "read_ranges": [
+      [
+        1,
+        136
+      ]
+    ],
+    "summary": "Vision for fluid cells, adaptive layouts and static distribution; source conflates browser and native shared-memory capabilities.",
+    "components": [
+      "procedural web",
+      "evolving applications",
+      "static distribution"
+    ],
+    "evidence": [
+      {
+        "start_line": 13,
+        "end_line": 47,
+        "finding": "Table jumps from SDF rendering to online model training and browser access to native SharedMemory; these are distinct implementation tracks."
+      },
+      {
+        "start_line": 64,
+        "end_line": 129,
+        "finding": "User asks about ordinary hosting; static asset architecture is valid in principle, but zero-cost ten-million-user and instantaneous model-load assertions are unsupported."
+      }
+    ],
+    "variant_notes": [
+      "DOM replacement, NCA generation and model adaptation are separate options, not consequences of choosing WebGPU."
+    ],
+    "next_actions": [
+      "Build static accessible SDF experience first; measure model download/cache/runtime budgets separately; define explicit native-browser bridge only if needed."
+    ],
+    "uncertainties": [
+      "No evidence for zero cloud cost, sub50ms, absolute privacy or complete self-healing app."
+    ]
+  },
+  {
+    "path": "weft/design/arrival.md",
+    "sha256": "c0072f412b7da7f6792a589ce65a5dc2b651a05f8618a16dcc90212219d1ef19",
+    "status": "read",
+    "read_ranges": [
+      [
+        1,
+        100
+      ]
+    ],
+    "summary": "Educational foundation for SVG, procedural rendering and GPU throughput.",
+    "components": [
+      "procedural graphics",
+      "hardware literacy"
+    ],
+    "evidence": [
+      {
+        "start_line": 5,
+        "end_line": 37,
+        "finding": "Distinguishes vector SVG from ray-tracing/procedural generation and raster snapshots."
+      },
+      {
+        "start_line": 53,
+        "end_line": 96,
+        "finding": "CPU/GPU throughput, SIMD and memory-latency explanation provides teaching material but overgeneralizes CPU sequentialism and GPU no-idle behavior."
+      }
+    ],
+    "variant_notes": [
+      "Vector assets, raster assets and procedural shaders remain complementary rendering choices."
+    ],
+    "next_actions": [
+      "Create measured SVG/canvas/WebGPU examples showing resolution, bandwidth and energy tradeoffs."
+    ],
+    "uncertainties": [
+      "Hardware figures are examples, not M1 measurements."
+    ]
+  },
+  {
+    "path": "weft/design/art.md",
+    "sha256": "07efb4b8866ff34e82ecf75b06009bc81a1411ae1978619f3b3576ca4e8bdbee",
+    "status": "read",
+    "read_ranges": [
+      [
+        1,
+        116
+      ]
+    ],
+    "summary": "Procedural UI uniforms and SDF geometry tutorial with circle/box/boolean/smooth-union mechanisms.",
+    "components": [
+      "SDF geometry",
+      "animation uniforms"
+    ],
+    "evidence": [
+      {
+        "start_line": 17,
+        "end_line": 41,
+        "finding": "First rounded-box pseudocode is illustrative; uniform-driven morphing is a feasible present-browser technique."
+      },
+      {
+        "start_line": 64,
+        "end_line": 112,
+        "finding": "Circle, full box distance and union/subtract/intersection formulas define reusable graphics primitives."
+      }
+    ],
+    "variant_notes": [
+      "Simplified initial box expression differs from complete signed-box equation later."
+    ],
+    "next_actions": [
+      "Extract tested primitive library and visual examples; verify hit regions, antialiasing, frame cost and accessible parallel controls."
+    ],
+    "uncertainties": [
+      "Claims practically-free animation and infinite resolution neglect fill-rate/precision budgets."
+    ]
+  },
+  {
+    "path": "weft/design/aywa.md",
+    "sha256": "34649d4c51cacfbbd31195e35cfd1cd7e7a78c032da57b2d1128ffb13415480a",
+    "status": "read",
+    "read_ranges": [
+      [
+        1,
+        128
+      ]
+    ],
+    "summary": "Proposed static deployment and sixteen-character label expansion; snippets do not implement the claimed packing contract.",
+    "components": [
+      "label encoding",
+      "static build",
+      "publication"
+    ],
+    "evidence": [
+      {
+        "start_line": 17,
+        "end_line": 57,
+        "finding": "Historical GitHub Pages workflow copies index and empty telemetry/profile files; it is not current authorization or a live ingestion implementation."
+      },
+      {
+        "start_line": 65,
+        "end_line": 117,
+        "finding": "WGSL TextLinePack has four u32 words and renders four glyphs without byte unpacking; JS supplies sixteen u32 character codes, so claimed 16-character agreement is absent."
+      }
+    ],
+    "variant_notes": [
+      "Retain this label-packing variant separately from current glyph implementation; former Pages proposal is superseded."
+    ],
+    "next_actions": [
+      "Use one declared encoding/stride and byte fixtures; exercise long labels and truncation; retain current publication allow-list."
+    ],
+    "uncertainties": [
+      "Production/secure/operational claims have no test output in file."
+    ]
+  },
+  {
+    "path": "weft/design/baryonic.md",
+    "sha256": "fb7963539e79dbc77e44110c2b32141c6de34e9411bbe9538c24edcb11917495",
+    "status": "read",
+    "read_ranges": [
+      [
+        1,
+        106
+      ]
+    ],
+    "summary": "Normalized multi-profile aesthetic mixture with fallback for zero sum; intended circular hue blend is implemented as linear angle averaging.",
+    "components": [
+      "aesthetic mixing",
+      "profile interoperability"
+    ],
+    "evidence": [
+      {
+        "start_line": 31,
+        "end_line": 85,
+        "finding": "Nonnegative finite weights are not validated; zero sum mutates base weight; weighted hue angles do not compute a circular mean."
+      },
+      {
+        "start_line": 90,
+        "end_line": 104,
+        "finding": "Source explicitly desires shortest-path hue behavior and interoperable multi-profile export."
+      }
+    ],
+    "variant_notes": [
+      "Two-profile LERP in combine.md and normalized many-profile variant here have different contracts; preserve both lineage."
+    ],
+    "next_actions": [
+      "Test zero/negative/nonfinite weights and wraparound hue; define antipodal cancellation policy; validate/export profile schema."
+    ],
+    "uncertainties": [
+      "No execution evidence in source; runtime repaired mixer must be checked separately."
+    ]
+  },
+  {
+    "path": "weft/design/bio.md",
+    "sha256": "3d6482b4bd851adb939d2967067cd4d5d5f962a566e59384327800aae1a14909",
+    "status": "read",
+    "read_ranges": [
+      [
+        1,
+        146
+      ]
+    ],
+    "summary": "Biological mind-palace pedagogy connects event telemetry, model decisions, uniforms and shaders; user asks for animation demonstrating the same mechanism.",
+    "components": [
+      "educational anatomy",
+      "procedural visualization"
+    ],
+    "evidence": [
+      {
+        "start_line": 45,
+        "end_line": 96,
+        "finding": "User frames body as mind palace; assistant equates model categories with brain areas too literally."
+      },
+      {
+        "start_line": 102,
+        "end_line": 144,
+        "finding": "User explicitly requests combined concept animation; proposed SDF neural core, sinusoidal pathways and color mixing illustrate control flow."
+      }
+    ],
+    "variant_notes": [
+      "Keep analogy and labels but distinguish interactive illustration from biological or model validation."
+    ],
+    "next_actions": [
+      "Produce explanatory visual with live inspectable telemetry-to-uniform path, bounded motion and fake/model state labeled."
+    ],
+    "uncertainties": [
+      "Referenced interactive embed is not present as executable code in this file."
+    ]
+  },
+  {
+    "path": "weft/design/build.md",
+    "sha256": "e3040b9fea69d324a09c2737d9cd944ab7c64017194e131ee3b464e34a8657cf",
+    "status": "read",
+    "read_ranges": [
+      [
+        1,
+        177
+      ]
+    ],
+    "summary": "Organizational telemetry-to-geometry pipeline for ownership, labels, concentration, resonance and contributor capture.",
+    "components": [
+      "organization metrics",
+      "telemetry schema",
+      "semantic rendering"
+    ],
+    "evidence": [
+      {
+        "start_line": 11,
+        "end_line": 17,
+        "finding": "Defines five desired metrics and visual semantics, including contributor capture using other public activity."
+      },
+      {
+        "start_line": 25,
+        "end_line": 65,
+        "finding": "Runner uses hardcoded LOC, labels, distribution, resonance and capture while emitting a real hash; hash does not turn fixtures into measurements."
+      },
+      {
+        "start_line": 104,
+        "end_line": 167,
+        "finding": "32-byte shader variant maps global values into repeated cells; categorical colors and width commentary require semantics review."
+      }
+    ],
+    "variant_notes": [
+      "Eight-float32 packet differs from other sixteen-float and twelve-float pipelines; keep versioned layouts."
+    ],
+    "next_actions": [
+      "Specify each metric denominator/window/provenance/unavailable state; implement pagination; compare meaningful visual encoding against fixtures."
+    ],
+    "uncertainties": [
+      "Capture/resonance are not validated organizational health measures; privacy/interpretation decisions remain."
+    ]
+  },
+  {
+    "path": "weft/design/combine.md",
+    "sha256": "1ce81f025b65823a16cf9101b4e04ce66b5ece36843289c48809152098de14fb",
+    "status": "read",
+    "read_ranges": [
+      [
+        1,
+        111
+      ]
+    ],
+    "summary": "Shareable SYM-2P style profiles with two-vector interpolation and local persistence/export.",
+    "components": [
+      "theme profiles",
+      "aesthetic mixing",
+      "local persistence"
+    ],
+    "evidence": [
+      {
+        "start_line": 25,
+        "end_line": 32,
+        "finding": "Profile lines include identity and scalar traits but placeholder hashes, not complete valid fixtures."
+      },
+      {
+        "start_line": 40,
+        "end_line": 82,
+        "finding": "Twelve-float48-byte renderer with ordinary LERP including hue; owner_ratio is referenced but missing from supplied state."
+      },
+      {
+        "start_line": 100,
+        "end_line": 109,
+        "finding": "Copy/paste, localStorage and exported profile affordances are valuable standalone use cases."
+      }
+    ],
+    "variant_notes": [
+      "Style identity and publisher authenticity distinct; plain hash and id are not signatures."
+    ],
+    "next_actions": [
+      "Ship validated copy/paste import/export with schema/version, range checks and deterministic blend; test offline persistence."
+    ],
+    "uncertainties": [
+      "No implemented exporter or authenticated sharing in this file."
+    ]
+  },
+  {
+    "path": "weft/design/converge.md",
+    "sha256": "854d163fe759e69270f3292e494f71776f79dcd65486233e60e3d347c1498190",
+    "status": "read",
+    "read_ranges": [
+      [
+        1,
+        57
+      ]
+    ],
+    "summary": "Proposes coupling native Apple telemetry/competing cells to browser SDF outputs and eventual ledger settlement of attention.",
+    "components": [
+      "native-browser bridge",
+      "A/B adaptation",
+      "ledger research"
+    ],
+    "evidence": [
+      {
+        "start_line": 13,
+        "end_line": 37,
+        "finding": "Maps native multiprocess/shared-memory components into UI; attention is proposed as loss without a validated objective."
+      },
+      {
+        "start_line": 39,
+        "end_line": 55,
+        "finding": "On-chain friction/reading rewards and native-to-WebGPU output mapping remain proposed extensions."
+      }
+    ],
+    "variant_notes": [
+      "Native processes and browser workers are separate boundaries; on-chain reward is optional downstream research."
+    ],
+    "next_actions": [
+      "First define typed native-browser adapter and recorded trace replay; run opt-in offline A/B study with rollback before reward mechanisms."
+    ],
+    "uncertainties": [
+      "No browser-native transport, valid cognitive objective, causal alignment or settlement evidence."
+    ]
+  },
+  {
+    "path": "weft/design/core.md",
+    "sha256": "684c970e368aef28dc61747aee32d8e501b287a21b549c3427279a610fb08a0f",
+    "status": "read",
+    "read_ranges": [
+      [
+        1,
+        429
+      ]
+    ],
+    "summary": "Monolithic WebGPU dashboard combines procedural alphabet, circular style mixing and proposed GitHub device flow; completeness claims contradict mock arrays and incomplete integration.",
+    "components": [
+      "renderer variants",
+      "glyph engine",
+      "OAuth identity"
+    ],
+    "evidence": [
+      {
+        "start_line": 7,
+        "end_line": 7,
+        "finding": "Claims no mock arrays/placeholders."
+      },
+      {
+        "start_line": 135,
+        "end_line": 189,
+        "finding": "Five-by-seven glyph grid is packed into one u32 and four-character storage layout; code point60 means blank rather than ASCII32."
+      },
+      {
+        "start_line": 248,
+        "end_line": 264,
+        "finding": "Explicit mock repo labels and telemetry remain; OAuth proxy lacks scheme and client identity is unexplained."
+      },
+      {
+        "start_line": 334,
+        "end_line": 384,
+        "finding": "Missing slider-nodes element is dereferenced; token flow posts to github.com root through proxy, stores tokens in localStorage and lacks expiry handling."
+      }
+    ],
+    "variant_notes": [
+      "More complete circular hue math than baryonic.md, but not evidence this monolith supersedes others."
+    ],
+    "next_actions": [
+      "Use extracted renderer as repair target; segregate auth and style persistence; verify glyph encoding and browser error-free boot; do not reuse public credential proxies."
+    ],
+    "uncertainties": [
+      "No test or M1 run evidence; sine background pattern has no cryptographic binding."
+    ]
+  },
+  {
+    "path": "weft/design/craft.md",
+    "sha256": "9cde24ad11e96a294aa830151a7eca6b62cd16c0c634c6098c10daad48e113c5",
+    "status": "read",
+    "read_ranges": [
+      [
+        1,
+        797
+      ]
+    ],
+    "summary": "Extended dialogue moves from protocol-as-interface vision through explicit user skepticism to concrete browser APIs, build/ingest workflow and first dashboard variants.",
+    "components": [
+      "protocol visualization",
+      "browser workers",
+      "static pipeline",
+      "organization dashboard"
+    ],
+    "evidence": [
+      {
+        "start_line": 54,
+        "end_line": 99,
+        "finding": "User challenges hardware overclaim; assistant retracts native raw-memory access and maps concept to SharedArrayBuffer, workers and WebGPU."
+      },
+      {
+        "start_line": 112,
+        "end_line": 147,
+        "finding": "Role byte mappings are proposed with placeholder citation, not authoritative ABIOS specification evidence."
+      },
+      {
+        "start_line": 244,
+        "end_line": 310,
+        "finding": "Quantization/shader/cache workflow is illustrative: model path/tool CLI unverified, shader copied not validated, no explicit fingerprint/service worker."
+      },
+      {
+        "start_line": 320,
+        "end_line": 428,
+        "finding": "User requests evolving organization dashboard; proposed ingest and15-minute publication vs claimed immediate120FPS response are different clocks."
+      },
+      {
+        "start_line": 451,
+        "end_line": 555,
+        "finding": "Shader uses hardcoded aspect/grid and simulated cell pulses; scalability claims exceed finite grid."
+      },
+      {
+        "start_line": 676,
+        "end_line": 790,
+        "finding": "Runtime slices payload, does not verify hash; fallback merely banner; frame allocations and worker threshold unmeasured."
+      }
+    ],
+    "variant_notes": [
+      "Separate16-byte role packet from16-byte org packet; separate polling/ingest/render clocks; browser translation is correction to earlier native claim."
+    ],
+    "next_actions": [
+      "Verify canonical wire schema; implement data freshness and measured semantics; build GPU/Canvas and offline fallback; validate actual quantization compatibility/cost before pipeline."
+    ],
+    "uncertainties": [
+      "No evidence browser role orchestration, native shared-memory access or self-healing documentation exists."
+    ]
+  },
+  {
+    "path": "weft/design/create.md",
+    "sha256": "eccd23dac6e85faa9fa1d299846ab5e9208a2acf7c3b007c8c75bd075920eef2",
+    "status": "read",
+    "read_ranges": [
+      [
+        1,
+        106
+      ]
+    ],
+    "summary": "NCA research overview and proposed application to self-healing layouts, with explicit acknowledgment of text and training challenges.",
+    "components": [
+      "NCA",
+      "evolving layout",
+      "research dependencies"
+    ],
+    "evidence": [
+      {
+        "start_line": 7,
+        "end_line": 28,
+        "finding": "Defines3x3local neighborhood and16-channel cell state, growth/damage goals; biological equivalence and constant scalability claims overreach."
+      },
+      {
+        "start_line": 58,
+        "end_line": 90,
+        "finding": "User asks whether implemented; references Distill, Houdini and NCAtorch, then identifies text/functional UI and training barriers."
+      }
+    ],
+    "variant_notes": [
+      "A shared tiny network applied across cells differs from one independent model per pixel; visual growth is not app functionality."
+    ],
+    "next_actions": [
+      "Reproduce Distill growth/persistence/damage baseline at64x64 with fixed seeds and held-out damage; browser-port weights only after parity; keep text/actions semantic."
+    ],
+    "uncertainties": [
+      "External links and reported parameter/size claims unverified in this reading; no trained weights in file."
+    ]
+  },
+  {
+    "path": "weft/design/custom.md",
+    "sha256": "8454d1b5b81914253c91b5dd822f5df1061b208148d870efcc7508748dd50345",
+    "status": "read",
+    "read_ranges": [
+      [
+        1,
+        175
+      ]
+    ],
+    "summary": "Proposes deriving four aesthetic traits from developers repositories then mapping them to a48-byte shader packet.",
+    "components": [
+      "style extraction",
+      "personalization",
+      "identity mapping"
+    ],
+    "evidence": [
+      {
+        "start_line": 29,
+        "end_line": 42,
+        "finding": "Rounding,density,hue,contrast feature definitions; cryptographic Git identity extraction is asserted without an implementation."
+      },
+      {
+        "start_line": 44,
+        "end_line": 158,
+        "finding": "Concrete packet and shader sketch; viewport/index assumptions remain fixed."
+      },
+      {
+        "start_line": 170,
+        "end_line": 173,
+        "finding": "Parser and preview are offered as next work, confirming extraction not implemented here."
+      }
+    ],
+    "variant_notes": [
+      "Inferred tastes vs explicitly chosen profile are different provenance types; do not identify by unverified Git signature."
+    ],
+    "next_actions": [
+      "Start user-selected profile controls; prototype deterministic CSS/theme parser with source citations and user correction; measure preference fidelity."
+    ],
+    "uncertainties": [
+      "Code formatting is not validated cognitive preference; no identity binding or extraction tests."
+    ]
+  },
+  {
+    "path": "weft/design/discovery.md",
+    "sha256": "e5301acbfd47b70652cfbf9693dc6c47cf4e7cc9887b9a20e42ae84acec091f5",
+    "status": "read",
+    "read_ranges": [
+      [
+        1,
+        644
+      ]
+    ],
+    "summary": "Profile ledger, local barycentric mix/export, and proposed bidirectional repository writeback form a stigmergic interface concept.",
+    "components": [
+      "profile ledger",
+      "collaborative ecology",
+      "auth/writeback"
+    ],
+    "evidence": [
+      {
+        "start_line": 186,
+        "end_line": 220,
+        "finding": "Runtime uses mock rows with placeholder hashes and fragile regex parsing."
+      },
+      {
+        "start_line": 272,
+        "end_line": 275,
+        "finding": "Export displays an alert with literal hash and claims copied without clipboard operation."
+      },
+      {
+        "start_line": 377,
+        "end_line": 479,
+        "finding": "User asks whether commit feedback affects ecosystem; source proposes global cascade and main-branch append but malformed API URL and no concurrency retry."
+      },
+      {
+        "start_line": 492,
+        "end_line": 623,
+        "finding": "User asks static-host auth; source uses third-party CORS token proxy,localStorage,wrong GitHub endpoints and direct main mutation."
+      }
+    ],
+    "variant_notes": [
+      "Read-only theme browsing, local export and global shared adaptation must be independently staged; data hash is not auth/encryption."
+    ],
+    "next_actions": [
+      "Deliver local validated profiles first; define opt-in shared influence, identities/moderation/conflict semantics; use reviewed auth architecture and PR-based proposals if writeback desired."
+    ],
+    "uncertainties": [
+      "No actual shared profile fetch or cascade demonstrated; influence aggregation policy absent."
+    ]
+  },
+  {
+    "path": "weft/design/done.md",
+    "sha256": "9de4d32f331c06e9a9d701795a13c77fd92e554c1651fa165cc2539f9a2c773c",
+    "status": "read",
+    "read_ranges": [
+      [
+        1,
+        131
+      ]
+    ],
+    "summary": "Unified WGSL shader seed with generated triangle and repeated repository cells.",
+    "components": [
+      "WebGPU renderer",
+      "viewport coverage"
+    ],
+    "evidence": [
+      {
+        "start_line": 34,
+        "end_line": 48,
+        "finding": "Comment requires vertices(-1,-1),(3,-1),(-1,3); expression produces(-1,-1),(1,-1),(-1,1), covering only half viewport."
+      },
+      {
+        "start_line": 70,
+        "end_line": 109,
+        "finding": "Hardcoded16:9 and4-column indexing; cell pulse randomized by hash rather than per-repo data."
+      }
+    ],
+    "variant_notes": [
+      "Historical16-byte uniform layout; preserves known shader defects as source lineage."
+    ],
+    "next_actions": [
+      "Check current extracted renderer repairs; add full viewport/image comparison and dynamic count/aspect acceptance."
+    ],
+    "uncertainties": [
+      "WGSL mod/smoothstep behavior and actual compilation not tested here."
+    ]
+  },
+  {
+    "path": "weft/design/eh.md",
+    "sha256": "1c64582a9fc5c92ae1cc4c1bcc5be241f97e4078171264acd28bca7438bc5760",
+    "status": "read",
+    "read_ranges": [
+      [
+        1,
+        323
+      ]
+    ],
+    "summary": "Browser anchor with DPR sizing/resize,15-second telemetry polling and renderer wiring; source explains intended full-screen triangle and field inventory.",
+    "components": [
+      "browser harness",
+      "telemetry refresh",
+      "fallback"
+    ],
+    "evidence": [
+      {
+        "start_line": 84,
+        "end_line": 176,
+        "finding": "Adapter checked and DPR resize provided; unverified first-line regex ingest, no digest validation or freshness gate."
+      },
+      {
+        "start_line": 218,
+        "end_line": 220,
+        "finding": "fallbackToCanvas2D only hides canvas and shows banner; no Canvas2D renderer."
+      },
+      {
+        "start_line": 235,
+        "end_line": 305,
+        "finding": "Explains intended large triangle and claims hash enforces append-only security; neither follows supplied implementation."
+      }
+    ],
+    "variant_notes": [
+      "15second polling differs craft30seconds; external shader expected; current browser baseline is a separate extraction."
+    ],
+    "next_actions": [
+      "Exercise startup/noGPU/device loss/resize and update cycles; expose observed timestamp and payload validity."
+    ],
+    "uncertainties": [
+      "M1Max target in prose is not evidence of actual device verification."
+    ]
+  },
+  {
+    "path": "weft/design/feeed.md",
+    "sha256": "03015700898d30be31a171452c77ac536b2530fe5058967c6d09f3e6585fe932",
+    "status": "read",
+    "read_ranges": [
+      [
+        1,
+        1013
+      ]
+    ],
+    "summary": "Source combines polling/SSE options,noise visualization,Gini computation,procedural digits and tri-module harvester/style/watermark monolith.",
+    "components": [
+      "live updates",
+      "semantic metrics",
+      "procedural glyphs",
+      "visual provenance"
+    ],
+    "evidence": [
+      {
+        "start_line": 9,
+        "end_line": 12,
+        "finding": "Polling and push paths distinguished but freshness ignores upstream15minute ingestion/build/CDN delay."
+      },
+      {
+        "start_line": 53,
+        "end_line": 74,
+        "finding": "Trusts changed remote hash without computing it; sets accepted hash before validating payload."
+      },
+      {
+        "start_line": 198,
+        "end_line": 230,
+        "finding": "Gini filters zero contributors,returns0for singleton and labels it safety; example0.83 exceeds finite-n5max0.8."
+      },
+      {
+        "start_line": 369,
+        "end_line": 399,
+        "finding": "5x7requires35bits but digit stored in32bit word; edge indices can exceed grid."
+      },
+      {
+        "start_line": 632,
+        "end_line": 680,
+        "finding": "Live harvester has malformed GitHub URLs,onepage,latestrepo-onlyGini,syntheticfallback andfixedseq1."
+      },
+      {
+        "start_line": 843,
+        "end_line": 885,
+        "finding": "Trigonometric background called cryptographic watermark has no secret,digest/signature or verifier."
+      }
+    ],
+    "variant_notes": [
+      "Numeric glyph and alphabet variants;32byte layouts have differing fields; preserve changes and evaluate individual fragments."
+    ],
+    "next_actions": [
+      "Define observable metrics separately from bus factor; repair pagination/window/empty/202response; use honest ambient visual terminology; stage actual authenticated provenance independently."
+    ],
+    "uncertainties": [
+      "No execution evidence; final dashboard has no linked ingest despite fusion assertion."
+    ]
+  },
+  {
+    "path": "weft/design/feel.md",
+    "sha256": "41f9fb760d607f9f0f4b418cd175150ec7a6bdf37a271f5c25def18072a4cc63",
+    "status": "read",
+    "read_ranges": [
+      [
+        1,
+        134
+      ]
+    ],
+    "summary": "User articulates post-app intent-and-taste steering; assistant extrapolates online learning and cites cloud training/model claims.",
+    "components": [
+      "intent interface",
+      "adaptation",
+      "System1/System2 split"
+    ],
+    "evidence": [
+      {
+        "start_line": 7,
+        "end_line": 27,
+        "finding": "Acknowledges existing widget is CPU typed-array/local-rule simulation, not trained NCA."
+      },
+      {
+        "start_line": 33,
+        "end_line": 86,
+        "finding": "User explicitly seeks less reliance on buttons/apps/text; assistant proposes latent-intent canvas and online adaptation without concrete objective."
+      },
+      {
+        "start_line": 92,
+        "end_line": 128,
+        "finding": "Tinker/Inkling figures and cloud-trained local-cell deployment are external claims; active MoEparameters do not equal total resident memory."
+      }
+    ],
+    "variant_notes": [
+      "User strategic intent is durable; particular provider,subconscious inference and abolishing all semantic controls are assistant proposals."
+    ],
+    "next_actions": [
+      "Prototype one bounded intent-to-action task with observable state,editable taste,undo and explicit action confirmation; evaluate adaptation against fixed heuristic baseline."
+    ],
+    "uncertainties": [
+      "Provider availability,benchmarks,costs and permissioned cloud training unverified; no model should infer all intent from motion."
+    ]
+  },
+  {
+    "path": "weft/browser-sources/missing-turns-supplement.md",
+    "sha256": "0fa844948c87d2b1e5bc952bfcbe98a67a289379a8e1774e2969f97ac35848e0",
+    "status": "read",
+    "read_ranges": [
+      [
+        1,
+        4656
+      ]
+    ],
+    "summary": "Recovered historical conversations preserve explicit author requirements and a sequence of incompatible adaptive-runtime, mesh, economic and graph-rewrite sketches. Author repeatedly demands realism, existing-OS MVP, preserved diversity, accessible language documentation and formal verification; assistant production/completion claims conflict with the supplied snippets and later explicit retraction. Includes the original organizational-metric definitions.",
+    "components": [
+      "ASL Warp/Weft/Heedle/Tapestry architecture",
+      "Tension Grid and human accountability",
+      "cellular specialist harnesses",
+      "shared tensor buses",
+      "mitosis/A-B convergence",
+      "dynamic descriptor capabilities",
+      "novelty archive",
+      "memory and dialectic channels",
+      "plasticity and consolidation",
+      "intelligent decay",
+      "host telemetry",
+      "distributed tensor mesh",
+      "migration and simulated leasing",
+      "interaction combinator language",
+      "fractal graph variant",
+      "formal verification",
+      "provenance and attribution",
+      "organizational metrics"
+    ],
+    "evidence": [
+      {
+        "start_line": 1,
+        "end_line": 17,
+        "finding": "Supplement provenance identifies recovered turns and extraction context; it supplements other source files rather than proving runtime execution."
+      },
+      {
+        "start_line": 133,
+        "end_line": 139,
+        "finding": "Original user asks for synthesis of weaving and Splicer ideas into agentic adaptive software."
+      },
+      {
+        "start_line": 193,
+        "end_line": 268,
+        "finding": "Original user requests theoretical ASL. Assistant proposes Warp invariants, Weft specialists, Heedle intent/dialogue and ephemeral Tapestry execution; useful vocabulary, not a completed architecture."
+      },
+      {
+        "start_line": 284,
+        "end_line": 337,
+        "finding": "Tension Grid introduces soft resistance, automatic counter-weaving and hard isolation; resource penalties and model confidence are not substitutes for enforced permissions."
+      },
+      {
+        "start_line": 355,
+        "end_line": 420,
+        "finding": "User asks for tradeoffs; response explicitly identifies audit/replay difficulty, nondeterminism, resource exhaustion, lost work and human cognitive fatigue."
+      },
+      {
+        "start_line": 427,
+        "end_line": 498,
+        "finding": "User couples human involvement to accountability logs. Proposed low/shared/high tension thresholds, dual signatures, autonomy percentages and delta replay need operational definitions and complete event inputs."
+      },
+      {
+        "start_line": 548,
+        "end_line": 609,
+        "finding": "Named related work and model weight-editing claims are research leads, including DARPA IDAS, Fast/Swift, AutoGen, Wasm, SysEDA and dataflow graphs; source does not independently verify them."
+      },
+      {
+        "start_line": 652,
+        "end_line": 658,
+        "finding": "Norm-bounded weight movement is presented as protection; numeric distance alone does not prove semantic correctness or safety."
+      },
+      {
+        "start_line": 684,
+        "end_line": 692,
+        "finding": "User describes applications becoming behaviors, an OS harness, sensor streams and adaptive weights."
+      },
+      {
+        "start_line": 791,
+        "end_line": 792,
+        "finding": "Original author states the central apps-to-behaviors and weights-as-applications/harness-as-OS intent."
+      },
+      {
+        "start_line": 881,
+        "end_line": 923,
+        "finding": "User explicitly challenges extrapolation and hype. Assistant narrows scope toward bounded training and existing code but still supplies unverified feasibility assertions."
+      },
+      {
+        "start_line": 985,
+        "end_line": 996,
+        "finding": "Assistant claim of retaining all preceding material is not an artifact-backed completeness guarantee; present audit must use source coverage."
+      },
+      {
+        "start_line": 1008,
+        "end_line": 1012,
+        "finding": "User specifies specialist model cells, roles, mini-harnesses, councils/discussion and customization; this motivates modular interfaces and explicit cooperation semantics."
+      },
+      {
+        "start_line": 1060,
+        "end_line": 1073,
+        "finding": "Self-rewriting cell membranes and raw vector consensus are proposed. Latent compatibility and permission enforcement remain undefined."
+      },
+      {
+        "start_line": 1110,
+        "end_line": 1163,
+        "finding": "User requests first-principles approach; later proposal changes to a locked core with externally verified child adapters, an architectural alternative to freely mutable membranes."
+      },
+      {
+        "start_line": 1216,
+        "end_line": 1274,
+        "finding": "User explicitly prioritizes a POC/MVP on existing operating systems. Initial shared-memory implementation copies CPU arrays on read/write, despite zero-copy framing."
+      },
+      {
+        "start_line": 1295,
+        "end_line": 1423,
+        "finding": "Single-bus random-weight process uses scalar-sum hashes for change detection and norm-to-zero monitoring, without immutable behavioral baseline, synchronization or enforced network/filesystem denial."
+      },
+      {
+        "start_line": 1446,
+        "end_line": 1504,
+        "finding": "User requests mitosis plus A/B testing and convergence; bus expands from one plane to three candidate planes."
+      },
+      {
+        "start_line": 1518,
+        "end_line": 1624,
+        "finding": "A/B candidates initialize independent random base matrices despite inheritance wording; fixed sleep can read unready output, and promotion retains only output before both cells terminate."
+      },
+      {
+        "start_line": 1668,
+        "end_line": 1743,
+        "finding": "Dynamic Tool Membrane is chosen; SCM_RIGHTS transfers Unix file descriptors, a useful capability mechanism whose surrounding isolation and authorization are not implemented."
+      },
+      {
+        "start_line": 1751,
+        "end_line": 1878,
+        "finding": "Tool request uses a random projection and request string, unauthenticated fixed socket and blocking receive. Governor may terminate child immediately after descriptor send; absence of a pathname does not revoke other OS access."
+      },
+      {
+        "start_line": 1894,
+        "end_line": 1973,
+        "finding": "User demands novelty to avoid homogenization; next bus changes to three64x512 planes, an incompatible layout with earlier128x4096 variants."
+      },
+      {
+        "start_line": 1979,
+        "end_line": 2150,
+        "finding": "Candidates may execute tool effects before selection. Fitness and novelty use unlike unnormalized scales; cleanup indentation runs only under one selection branch."
+      },
+      {
+        "start_line": 2164,
+        "end_line": 2212,
+        "finding": "User asks for model-perspective improvements then all of memory, communication and plasticity. Proposal includes HNSW memory and a peer-KV dialectic channel, neither implemented by subsequent mean-vector archive."
+      },
+      {
+        "start_line": 2238,
+        "end_line": 2301,
+        "finding": "Stratified bus defines focal3x64x512, status1x16 and archive32x512; rolling archive is not persistent retrieval memory."
+      },
+      {
+        "start_line": 2307,
+        "end_line": 2374,
+        "finding": "Plasticity mask is normalized softmax of random base-weight norms and remains positive; rank-two perturbations do not establish selectively frozen semantic invariants."
+      },
+      {
+        "start_line": 2380,
+        "end_line": 2460,
+        "finding": "Governor selects inverse output norm plus archive novelty, with race-prone sleeps and branch-specific cleanup; this is not validated task improvement."
+      },
+      {
+        "start_line": 2477,
+        "end_line": 2718,
+        "finding": "User requests live I/O and terminal UI. Resulting variant feeds random input, drops novelty/memory/tool behavior, and prints a sparkline under a jev-ui label without integrating that framework."
+      },
+      {
+        "start_line": 2733,
+        "end_line": 2794,
+        "finding": "Future path includes homeostasis, tool accretion and C/Rust microkernel; these are separate longer-term hypotheses, not dependencies of the author-requested existing-OS MVP."
+      },
+      {
+        "start_line": 2800,
+        "end_line": 2869,
+        "finding": "User chooses intelligent consolidation/decay. This version accidentally overwrites the sympathetic ndarray with scalars, breaking later writes and returning repeated scalar state."
+      },
+      {
+        "start_line": 2933,
+        "end_line": 3058,
+        "finding": "Disk delta artifacts and weighted consolidation appear, but indentation breaks branches, globally scaled decay can exceed stable bounds near zero tension, and shutdown deletes the claimed persistent checkpoint."
+      },
+      {
+        "start_line": 3078,
+        "end_line": 3305,
+        "finding": "User requests manifesto. It assembles values and mechanisms but claims isolation, semantic protection and deterministic replay unsupported by process creation, norm masks or stored deltas alone."
+      },
+      {
+        "start_line": 3307,
+        "end_line": 3497,
+        "finding": "Next production-core variant fixes scalar status writes but returns an FD array where open expects an integer. Claimed Windows compatibility lacks an alternative to AF_UNIX/SCM_RIGHTS."
+      },
+      {
+        "start_line": 3519,
+        "end_line": 3654,
+        "finding": "Resources initialize only if checkpoint is absent; evaluation occurs within connection-accept loop, consolidation is branch-specific, and shutdown removes master weights. Completion statements do not constitute executed evidence."
+      },
+      {
+        "start_line": 3670,
+        "end_line": 3722,
+        "finding": "User asks for mesh plus hardware ingestion. Assistant proposes raw512D memory transfer over RoCE/UDP and CPU/page/cache/IO/thermal metrics; weights do not learn useful scheduling simply because metrics enter tensors."
+      },
+      {
+        "start_line": 3763,
+        "end_line": 3810,
+        "finding": "Mesh variant uses focal3x64x512/status1x16/archive16x512 and CPU/CUDA copy paths; on M1 it selects CPU rather than MPS."
+      },
+      {
+        "start_line": 3825,
+        "end_line": 3900,
+        "finding": "FD-array mismatch remains in mesh version; effectful tool action still happens before candidate selection."
+      },
+      {
+        "start_line": 3936,
+        "end_line": 3957,
+        "finding": "UDP listener binds every interface and accepts any2048-byte payload into memory without authentication, finite checks, version/model identity or locking. Raw tensor transfer is not implemented RoCE or cross-model learned-behavior transfer."
+      },
+      {
+        "start_line": 3959,
+        "end_line": 3984,
+        "finding": "Telemetry uses CPU percent, memory percent and cumulative disk bytes, not rates/latencies/thermals/page faults. Early return inside coefficient loop populates only one additional dimension."
+      },
+      {
+        "start_line": 4007,
+        "end_line": 4083,
+        "finding": "Evaluation occurs inside per-connection loop; consolidation only follows Beta and is undone when no mesh peer exists. Decay remains unbounded near zero tension, cleanup is nested under file deletion and master checkpoint is removed."
+      },
+      {
+        "start_line": 4095,
+        "end_line": 4103,
+        "finding": "Verification section declares complete deployment and replacement of codebases without execution logs; code evidence above contradicts claimed complete synthesis."
+      },
+      {
+        "start_line": 4109,
+        "end_line": 4125,
+        "finding": "Later source references EVM triad and inbound migration implementation elsewhere, claiming token profit and hardware readiness; these references require cross-file reconciliation and separate economic verification."
+      },
+      {
+        "start_line": 4153,
+        "end_line": 4166,
+        "finding": "Local cluster simulation names M1 Max64GB/macOS Golden Gate27.0.1 and imports m1_max_harness. Hardware labels are a claimed target, not proof of available APIs or successful device execution."
+      },
+      {
+        "start_line": 4192,
+        "end_line": 4230,
+        "finding": "Receiver reads a raw1MiB weight matrix, prints provenance validation but performs none, increments a local float by45 and sends one-byte ACK. It does not run the received weights or settle a token payment."
+      },
+      {
+        "start_line": 4233,
+        "end_line": 4267,
+        "finding": "Local simulation creates a receiver thread, overrides an external harness checkpoint and sets a synthetic starvation budget. Destination-port contract and harness cleanup require checking the imported implementation; assigning a spawn context does not configure that implementation."
+      },
+      {
+        "start_line": 4272,
+        "end_line": 4297,
+        "finding": "Assertions of execution, validation, sub0.5ms Darwin reads and complete compilation are narrative claims absent measurements in this file."
+      },
+      {
+        "start_line": 4303,
+        "end_line": 4326,
+        "finding": "Weaver interpretation is metaphorical; an ECDSA signing key is not a biometric validator and human sovereignty needs explicit capability/approval semantics."
+      },
+      {
+        "start_line": 4332,
+        "end_line": 4348,
+        "finding": "Original user requests a fully autonomous post-economic world and end-to-end formal verification. Captured search snippets contain no implementation or proof; these are distinct research directions."
+      },
+      {
+        "start_line": 4352,
+        "end_line": 4378,
+        "finding": "User insists that a singular interaction-combinator language needs documentation and must be accessible/replicable before claims are true; search results do not satisfy this requirement."
+      },
+      {
+        "start_line": 4382,
+        "end_line": 4409,
+        "finding": "User asks whether Weft came from other work. Historical assistant retracts prior certainty, calls kernel/blockchain/biological extensions speculative and identifies a different Weft project/Luca Berton reference. Treat as attribution lead requiring primary-source verification, not definitive lineage or license evidence."
+      },
+      {
+        "start_line": 4422,
+        "end_line": 4457,
+        "finding": "Abstracted fractalization adds FRC as a fifth node and claims whole-subgraph low-rank compression, constant-memory recursion and production integration; no such encoding or proof is supplied."
+      },
+      {
+        "start_line": 4480,
+        "end_line": 4568,
+        "finding": "Actual fractal interpreter is serial Python dict/list processing with ordered CON/ERA, CON/FRC and CON/VLV cases, unused DUP and auxiliary ports, no symmetric rule normalization, no graph-isomorphism or bounded-memory proof. FRC creates additional pairs each step."
+      },
+      {
+        "start_line": 4570,
+        "end_line": 4613,
+        "finding": "Fractal waveform is synthetic sine plus randomness; device flag is unused and no GPU tensor computation, host telemetry, LoRA or watermarking is present. Millions-per-second and zero-allocation verification claims are unsupported."
+      },
+      {
+        "start_line": 4624,
+        "end_line": 4636,
+        "finding": "User asks for more symmetric rewrite rules and full-context transfer. Captured results/error contain no implementation or reusable orientation artifact."
+      },
+      {
+        "start_line": 4648,
+        "end_line": 4656,
+        "finding": "Original user defines ownership LOC, shared labels, contribution concentration, quality connected to issues/fixes and code, and cross-project contributor capture; no answer generated. These definitions should anchor metric design and preserve local/custom-git scope."
+      }
+    ],
+    "variant_notes": [
+      "Runtime lineage: one128x4096 bus; three128x4096 candidate planes; three64x512 planes; focal/status/archive with32,16,8 entries; mesh archive16. These are distinct layouts requiring explicit protocol versions.",
+      "Model-cell kernels are random dense matrices and low-rank perturbations, not loaded task-trained experts. Fixed inference, random evolutionary search, gradient training and online adaptation must remain separate capability classes.",
+      "Mutable membranes versus locked core/external validation; unconditional vector exchange versus typed versioned bridges; novelty selection versus later norm-only selection; activity-specific decay versus global shrinkage are substantive unresolved alternatives.",
+      "Later amalgamations drop earlier requested mechanisms. Track each requirement independently rather than assuming the latest longest snippet is a superset.",
+      "CPU/CUDA snippets fall back to CPU on Apple Silicon. Fractal snippet chooses MPS only as an unused string. Darwin and imported M1 implementations live elsewhere and need their own tests.",
+      "Author-requested language accessibility, rigorous verification, anti-homogenization, first-principles realism and existing-OS MVP should be retained alongside aspirational biological and post-economic vision.",
+      "Another project using Weft and assistant admissions create a provenance question; preserve evidence and verify original repositories/licenses before asserting copying or depending on that project."
+    ],
+    "next_actions": [
+      "Implement bounded existing-OS CPU baseline first: explicit model/task/input/output contracts, seeded shared baseline, monotonic epochs and completion signals, no effects from unselected candidates, independent task evaluator and rollback.",
+      "Define a versioned capability request protocol with requester identity, scope, timeout, budget, grant/revoke lifecycle and externally enforced process rights; validate denied access as well as successful descriptor transfer.",
+      "Create event trace capturing human decisions, model/candidate IDs, inputs, RNG state, metrics, proposed/committed actions, configuration and environment. Define autonomy attribution before publishing percentages or replay guarantees.",
+      "Benchmark novelty, memory, LoRA mutation, consolidation and forgetting independently against no-adaptation baseline. Preserve archive diversity only subject to task correctness and bounded resources; prove decay bounds and restart persistence.",
+      "Use one typed host-telemetry adapter on M1 with unsupported/error states; sample actual rates and time deltas. CPU smoke results do not validate MPS, Darwin SMC, browser or privileged hardware assumptions.",
+      "Keep cross-node mesh in loopback experiments until framing, type/model compatibility, finite validation, authentication, timeout, size/rate limits and concurrency tests pass; compare structured transport with raw tensors rather than assuming superiority.",
+      "Specify migration state beyond weights, receiver execution/recovery/acknowledgement and rollback; label local float-token increments simulation. Economics and ledger settlement require separate validation and governance research.",
+      "Write interaction-net grammar, port/agent invariants and complete supported rewrite rules with reference CPU interpreter and examples. Test symmetry, graph integrity, termination/resource bounds and semantic preservation before GPU parallelization.",
+      "Publish a bounded-assumption whitepaper separating metaphors, mechanism specifications, experiment results and unsolved claims; verify named related work and other Weft provenance using primary sources.",
+      "Use author metric definitions to specify denominators, time windows, identities, missingness, attribution and local-git adapters; distinguish repository health hypotheses from directly measured quantities."
+    ],
+    "uncertainties": [
+      "No snippets were executed in this reading shard; defects are source-level findings and should be reproduced in isolated tests before changing preserved historical variants.",
+      "External paper/model/API/product claims and another Weft project/license were not independently verified; source references are research leads.",
+      "This file omits referenced main-source turns and imported harness files. Cross-file readers must reconcile implementation status; absence here is not proof of absence everywhere.",
+      "No validated semantic relationship maps output norm, novelty distance, tension, biological fitness, model alignment, human attention or economic value.",
+      "No evidence in this file establishes M1 device performance, direct native-browser shared memory, GPU graph parallelism, safe self-modification, real token revenue or comprehensive formal proof."
+    ]
+  }
+]

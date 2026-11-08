@@ -1,0 +1,190 @@
+[
+  {
+    "path": "weft/browser-sources/thread1-splicers-genesis-90133B.md",
+    "sha256": "d2b8fdd0348894340795b8a9549512151146f281d1fa970d966061983b420838",
+    "status": "read",
+    "summary": "Genesis conversation develops the Agentic Software Loom from a weaving metaphor into explicit cellular model/harness, shared-memory, A/B novelty, capability tools, memory, consolidation/decay and mesh proposals. Runnable-looking Python iterations contain substantial semantic and lifecycle gaps; source claims are not execution evidence.",
+    "components": [
+      "intent and authority",
+      "cell harness",
+      "tensor bus",
+      "A/B evolution and novelty",
+      "capability tools",
+      "memory",
+      "adapter consolidation and decay",
+      "telemetry",
+      "mesh",
+      "microkernel"
+    ],
+    "evidence": [
+      {
+        "start_line": 425,
+        "end_line": 503,
+        "finding": "User requires accountability logs tied to autonomy and human involvement; proposed percentages and hashes need actual event semantics and replay inputs."
+      },
+      {
+        "start_line": 789,
+        "end_line": 878,
+        "finding": "User says weights as applications/OS as harness; proposal includes deterministic external-action handlers independent of weight geometry."
+      },
+      {
+        "start_line": 1006,
+        "end_line": 1213,
+        "finding": "User asks models-as-cells and first principles; assistant develops resource budgets, shared latent bus, membrane and genotype/phenotype metaphor."
+      },
+      {
+        "start_line": 1214,
+        "end_line": 1665,
+        "finding": "Existing-OS POC followed by A/B variant uses ordinary processes, copied shared-memory reads, random matrices, fixed sleeps and zero-target norm."
+      },
+      {
+        "start_line": 1666,
+        "end_line": 2161,
+        "finding": "SCM_RIGHTS capability concept then novelty variant; missing actual sandbox/policy, blocking IPC and branch-dependent cleanup contradict production assertions."
+      },
+      {
+        "start_line": 2162,
+        "end_line": 2730,
+        "finding": "HNSW/Dialectic KV/plasticity proposals become recency arrays, mean bias, random rank2 masks; next display version drops novelty and labels print sparklines Jev."
+      },
+      {
+        "start_line": 2798,
+        "end_line": 3075,
+        "finding": "Intelligent decay implementation overwrites sympathetic array with scalars, has unbound/indented state paths and deletes master checkpoint; uniform zero decay is not usage-sensitive learning."
+      },
+      {
+        "start_line": 3076,
+        "end_line": 3667,
+        "finding": "Manifesto consolidates contracts but reference implementation still lacks isolation, returns an FD array instead of scalar, can block waiting for random intent and can omit winning consolidation."
+      },
+      {
+        "start_line": 3668,
+        "end_line": 4103,
+        "finding": "Mesh/host-metrics variant binds unauthenticated UDP on all interfaces and directly injects received floats into memory; psutil projection returns inside fill loop and conflates cumulative bytes with I/O rate."
+      }
+    ],
+    "variant_notes": [
+      "Single [128,4096] bus \u2192 three-track [3,128,4096] \u2192 [3,64,512]. Stratified status [1,16], archives depths32/16/8 vary; incompatible with current ctypes I4.",
+      "A/B output-only promotion, novelty scoring, memory bias, consolidation and telemetry versions add and drop behavior independently. No newest-wins ordering.",
+      "Microkernel proposal is future target; Python host process is not bare-metal isolation."
+    ],
+    "next_actions": [
+      "Record capability/authority and replay contracts before extraction.",
+      "Build readiness/epoch/ownership protocol and crash cleanup tests; compare true task outcomes, not zero-vector convergence.",
+      "Evaluate quality-constrained novelty and usage-sensitive decay on a controlled workload.",
+      "Validate external research leads against primary sources.",
+      "Keep mesh research gated; design authenticated bounded loopback simulation before peer integration."
+    ],
+    "uncertainties": [
+      "No code from this source was executed during reading.",
+      "External GPT-6/Astra/MIT, Jev, Inkling/Tinker research claims are unverified in this audit.",
+      "Captured formatting defects may mix export damage with originally defective code; preserve exact source and separately repair extracted implementations."
+    ],
+    "reviewed_ranges": [
+      [
+        1,
+        4103
+      ]
+    ],
+    "reader": "read_threads_design"
+  },
+  {
+    "path": "weft/browser-sources/thread2-design-main-6C083A.md",
+    "sha256": "2286dfc9f2e903bc769793d75a31f5d3640a124f5216871e1bcb73d74681ddb7",
+    "status": "read",
+    "summary": "Design conversation evolves procedural SDF graphics into local model-responsive reading, educational mind-palace, NCA, organization telemetry, modular aesthetic sharing and repository writeback. User repeatedly asks for integrated capabilities and challenges hyperbole; multiple claimed-complete HTML/WGSL/auth versions remain incompatible sketches with mock data and concrete faults.",
+    "components": [
+      "procedural renderer",
+      "local decision model",
+      "reading adaptation",
+      "educational mind palace",
+      "NCA",
+      "organization telemetry",
+      "style slices and mixing",
+      "shared registry and auth",
+      "live synchronization",
+      "glyph renderer",
+      "integrity and identity"
+    ],
+    "evidence": [
+      {
+        "start_line": 111,
+        "end_line": 421,
+        "finding": "User requests procedural UI animation, browser Laya and positive reading feedback; pipeline requires actual model API/performance and observable-behavior interpretation."
+      },
+      {
+        "start_line": 422,
+        "end_line": 717,
+        "finding": "Author wants experiential technical learning and per-pixel models; source admits widget is CPU neighborhood rules, distinct from trained NCA."
+      },
+      {
+        "start_line": 718,
+        "end_line": 1140,
+        "finding": "Post-application behavior and native/browser fusion are proposed; author challenges hardware claims and assistant corrects to browser SAB/Workers/WebGPU."
+      },
+      {
+        "start_line": 1141,
+        "end_line": 2301,
+        "finding": "Wire-role mapping, scheduled ingest and16-byte renderer variants; unsupported protocol security/scaling claims and incomplete shader/runtime/fallback paths."
+      },
+      {
+        "start_line": 2302,
+        "end_line": 2495,
+        "finding": "User explicitly requests maintainer/external LOC, labels, concentration, fix-linked quality/local git, and cross-project participation; response supplies mock metrics and32-byte visualization."
+      },
+      {
+        "start_line": 2496,
+        "end_line": 3280,
+        "finding": "Author requests OSS-derived taste, modular share/browse/fold and compositional mixing within the page; binary then normalized then circular-mean variants culminate in mocked48-byte deck."
+      },
+      {
+        "start_line": 3281,
+        "end_line": 3551,
+        "finding": "Proposed repository writeback/auth loop uses malformed endpoints, public CORS proxy, localStorage tokens and direct-main writes; no functioning or safe auth evidence."
+      },
+      {
+        "start_line": 3552,
+        "end_line": 3821,
+        "finding": "Live polling/SSE and Gini/noise mappings; consumer interval omits producer delay, hash is unverified, equality does not establish bus factor/safety."
+      },
+      {
+        "start_line": 3822,
+        "end_line": 4569,
+        "finding": "Numeric5x7 glyphs cannot fit oneu32; trig visual watermark is decorative; integrated harvester/frontend still lack a functioning live data bridge."
+      },
+      {
+        "start_line": 4570,
+        "end_line": 5135,
+        "finding": "No-placeholders monolith still has fixed arrays, incomplete alphabet/auth, missing DOM control; alleged16-character expansion uses invalidvec4<u>,4-char loop and sparse JS data."
+      }
+    ],
+    "variant_notes": [
+      "Procedural SDF/manual uniforms, heuristic CA, trained NCA, model inference, online training and native Plasm are separate mechanisms.",
+      "Uniform variants16/32/48bytes and text storage formats evolve inconsistently; later monoliths omit prior features.",
+      "Binary LERP \u2192 arithmetic angle average falsely called circular \u2192 sin/cos circular mean; current implementation must specify zero/antipodal cases.",
+      "Profile exchange locally, reviewed shared repository writes, OAuth broker, polling and SSE are independent delivery choices."
+    ],
+    "next_actions": [
+      "Ship a measured accessible procedural browser foundation independent of model or chain prerequisites.",
+      "Specify provenance-aware collector/metrics and per-repo visualization before adding inferred contributor quality.",
+      "Implement strict local style import/export/browse/mixing, then reviewable shared registry/auth as a later boundary.",
+      "Build faithful mind-palace explainer tracing measured data to visual output.",
+      "Benchmark pinned Laya/heuristic alternatives on actual Chrome/M1 before claiming cognition or latency.",
+      "Run trained NCA growth/persistence/damage tests separately from heuristic demos.",
+      "Keep typography, visual pattern, payload integrity and publisher identity independently testable."
+    ],
+    "uncertainties": [
+      "No browser code or external source was executed/fetched during this reading.",
+      "Some malformed endpoints/arrays could reflect export damage; exact original is preserved and must be compared with recovered artifacts.",
+      "Turns25and28 have explicit failed response placeholders; later turns recover some requested content, not necessarily all.",
+      "Current runtime repairs are reviewed by other audit assignments; source defects do not prove defects remain in current code."
+    ],
+    "reviewed_ranges": [
+      [
+        1,
+        5135
+      ]
+    ],
+    "reader": "read_threads_design"
+  }
+]

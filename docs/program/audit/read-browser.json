@@ -1,0 +1,1687 @@
+[
+  {
+    "path": "docs/.nojekyll",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "status": "empty-inspected",
+    "summary": "Empty static-site marker; not itself evidence GitHub Pages is enabled.",
+    "components": [
+      "publication"
+    ],
+    "evidence": [],
+    "variant_notes": [],
+    "next_actions": [
+      "Retain allow-listed publication boundary."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "docs/assets/js/aesthetic-mixer.js",
+    "sha256": "b5f57baf0c773c69edd8e04e40681153acdbc082cb5f2500e7bb4fb4cf8405ca",
+    "status": "read",
+    "summary": "Interpolates rounding, density and contrast linearly and hue by circular mean; normalizes nonnegative preset weights.",
+    "components": [
+      "aesthetic-mixer"
+    ],
+    "evidence": [
+      {
+        "start_line": 13,
+        "end_line": 67,
+        "finding": "Empty and zero-weight fallbacks; circular hue uses sin/cos and atan2."
+      },
+      {
+        "start_line": 71,
+        "end_line": 98,
+        "finding": "Stateful three-preset wrapper exposes nonnegative weights."
+      }
+    ],
+    "variant_notes": [
+      "Three fixed preset wrapper and generic pure mixer are distinct layers."
+    ],
+    "next_actions": [
+      "Define finite-input and opposite-hue policy before treating arbitrary model output as valid."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "docs/assets/js/cell-layout.js",
+    "sha256": "b8b5b545e49ed2be1499653788cc2a38b46ba37a9b661b2f246e195fbbbcf7ae",
+    "status": "read",
+    "summary": "Deterministic area-proportional golden-angle cell packing, scale fitting, layer spanning trees and footprint hit testing.",
+    "components": [
+      "cell-layout"
+    ],
+    "evidence": [
+      {
+        "start_line": 58,
+        "end_line": 111,
+        "finding": "Cells grow as square root of weight and search rays until footprints do not overlap."
+      },
+      {
+        "start_line": 120,
+        "end_line": 172,
+        "finding": "Bisection fits labels and cells; fits=false fallback may exceed tiny viewports."
+      },
+      {
+        "start_line": 178,
+        "end_line": 209,
+        "finding": "Prim tree per layer and inclusive rectangular hit regions."
+      }
+    ],
+    "variant_notes": [
+      "CPU geometry replaces fixed shader tiling; not graph optimization by a trained model."
+    ],
+    "next_actions": [
+      "Retain data-to-area invariants and test label-only/small-region fallbacks.",
+      "Expose layout failure in UI and benchmark high cell counts."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "docs/assets/js/glyph-font.js",
+    "sha256": "55abce258adaacf76d550ba62956dd3d625a4084b67920908a26c167410ce4c4",
+    "status": "read",
+    "summary": "Shared CPU/GPU 5x7 ASCII bitmap font uses two u32 words, avoiding the source proposal's 35-bit overflow.",
+    "components": [
+      "shader-typography"
+    ],
+    "evidence": [
+      {
+        "start_line": 1,
+        "end_line": 14,
+        "finding": "Explicit corrected two-word packing."
+      },
+      {
+        "start_line": 74,
+        "end_line": 125,
+        "finding": "Pack/decode glyphs, ASCII fallback and four-character-per-u32 labels."
+      }
+    ],
+    "variant_notes": [
+      "Constrained bitmap font is not an arbitrary SDF text engine."
+    ],
+    "next_actions": [
+      "Add localization/legibility strategy and benchmark glyph rendering; retain semantic DOM equivalents."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "docs/assets/js/simplex-pad.js",
+    "sha256": "071c2d6980f5e43c6f932692764295c957fc2dbc4b0bbbc51f761849a38a2722",
+    "status": "read",
+    "summary": "SVG triangle and keyboard control map barycentric coordinates to normalized aesthetic weights.",
+    "components": [
+      "aesthetic-mixer"
+    ],
+    "evidence": [
+      {
+        "start_line": 13,
+        "end_line": 40,
+        "finding": "Projection clamps negatives and renormalizes; not Euclidean nearest-point projection."
+      },
+      {
+        "start_line": 51,
+        "end_line": 133,
+        "finding": "SVG slider with pointer capture, arrow movement and aria-valuetext; no disposal API."
+      }
+    ],
+    "variant_notes": [],
+    "next_actions": [
+      "Expose lifecycle cleanup and finite-value contract before reusable mounting.",
+      "Verify keyboard and assistive-technology behavior in a browser."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "docs/assets/js/sym2p-parse.js",
+    "sha256": "e90a32b1d913a3d9d610a4511afadbc1880776644fedcfebfecda7aa7e2387e7",
+    "status": "read",
+    "summary": "Browser parser reads positional header and metric pairs; verification hashes bracketed payload only.",
+    "components": [
+      "telemetry-protocol"
+    ],
+    "evidence": [
+      {
+        "start_line": 12,
+        "end_line": 32,
+        "finding": "Header uses permissive parseInt and metrics regex without full-line schema validation."
+      },
+      {
+        "start_line": 40,
+        "end_line": 50,
+        "finding": "64-character hash authenticates payload integrity but not role, sequence or publisher identity."
+      }
+    ],
+    "variant_notes": [
+      "Current parser supports scientific notation; does not establish replay or authenticated producer semantics."
+    ],
+    "next_actions": [
+      "Define strict whole-frame grammar and finite metric bounds.",
+      "Preserve distinction between integrity and publisher authentication."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "docs/assets/js/weft-atlas.js",
+    "sha256": "5c883c5cc127d41ad45b657212552287af92a89c82ce353aa201b9efc649c5fb",
+    "status": "read",
+    "summary": "Hardcoded architectural atlas mixing six loci, four horizons, seven codebases, five design modules, 23 ecosystem rows and implementation claims.",
+    "components": [
+      "architectural-atlas"
+    ],
+    "evidence": [
+      {
+        "start_line": 30,
+        "end_line": 99,
+        "finding": "Apple verified/complete and future hardware status are assertions, not measured device results."
+      },
+      {
+        "start_line": 103,
+        "end_line": 183,
+        "finding": "Test counts, layout and interface descriptions can drift from executable contracts."
+      },
+      {
+        "start_line": 186,
+        "end_line": 210,
+        "finding": "23 hardcoded ecosystem descriptions and numeric activity values, distinct from 19-repository fixture."
+      },
+      {
+        "start_line": 213,
+        "end_line": 364,
+        "finding": "Design modules and glossary mingle aspiration with current evidence; several named source files absent."
+      }
+    ],
+    "variant_notes": [
+      "Four-horizon narrative differs from principal's six-track planning.",
+      "Current I4 corrections proposed separately in PR47."
+    ],
+    "next_actions": [
+      "Generate maturity labels from a versioned evidence register; preserve historical proposal lineage.",
+      "Link architecture claims to exact code/test/environment records."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "docs/assets/js/weft-loom.js",
+    "sha256": "f00d9dc9db294139211560b1a6052a3c8dcaffa852df798a2cc4be993b18e105",
+    "status": "read",
+    "summary": "Current browser engine combines fixture repositories, telemetry polling, deterministic layout, reading heuristic, shader rendering and Canvas2D fallback.",
+    "components": [
+      "renderer",
+      "telemetry",
+      "reading-cadence"
+    ],
+    "evidence": [
+      {
+        "start_line": 178,
+        "end_line": 256,
+        "finding": "Fixed seed URL and worker-relative polling URL; PR46 separately repairs poll URL and visible failures."
+      },
+      {
+        "start_line": 261,
+        "end_line": 335,
+        "finding": "Reading calm and lineage confidence are scroll-speed heuristics, not learned inference."
+      },
+      {
+        "start_line": 338,
+        "end_line": 418,
+        "finding": "Per-frame arrays allocate and I1 tension slot blends Gini with tension."
+      },
+      {
+        "start_line": 421,
+        "end_line": 617,
+        "finding": "WebGPU uses five buffers; lost-device handler only warns; fallback never disposes observers, timers or loops."
+      }
+    ],
+    "variant_notes": [
+      "64B telemetry is one buffer, not total renderer state; SharedArrayBuffer is written by worker but main uses messages."
+    ],
+    "next_actions": [
+      "Merge/review bounded PR46; distinguish measured raw telemetry from visual derived variables (#45).",
+      "Package lifecycle start/stop/dispose and configurable data URLs.",
+      "Test WebGPU init/device-loss fallback, accessibility parity and actual M1 performance."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "docs/assets/shaders/dashboard_layout.wgsl",
+    "sha256": "3336b07c32352b2e71c123cef27bb87c56120085f56a3eb419091cb9e4799f58",
+    "status": "read",
+    "summary": "Full-screen analytic loom shader renders SDF cells, layer threads, bitmap names/counts, Gini strokes and tension grain.",
+    "components": [
+      "renderer",
+      "shader-typography"
+    ],
+    "evidence": [
+      {
+        "start_line": 21,
+        "end_line": 59,
+        "finding": "I1 plus View, Cell, Thread, font bindings define actual GPU contract."
+      },
+      {
+        "start_line": 143,
+        "end_line": 193,
+        "finding": "Count digits cap at four; weave is analytic procedural animation."
+      },
+      {
+        "start_line": 194,
+        "end_line": 302,
+        "finding": "Per-pixel thread/cell/text loops; pointer smooth union and cluster bounds culling."
+      }
+    ],
+    "variant_notes": [
+      "SDF geometry and bitmap text are implemented; arbitrary vector glyph/MSDF atlas remains separate future module."
+    ],
+    "next_actions": [
+      "Maintain semantic parity with Canvas fallback, including counts over 9,999.",
+      "Benchmark actual pixel/cell workload and verify zero-motion/device-loss behavior."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "docs/assets/workers/telemetry-worker.js",
+    "sha256": "138f36481aebef99370bdd026872cad205b06b0d07abd5baad4006d6c583ed0a",
+    "status": "read",
+    "summary": "Worker verifies payload hash then sends telemetry messages and optionally writes shared floats.",
+    "components": [
+      "telemetry"
+    ],
+    "evidence": [
+      {
+        "start_line": 10,
+        "end_line": 24,
+        "finding": "SAB metrics are not atomic snapshot/versioned and message copy remains transport."
+      },
+      {
+        "start_line": 26,
+        "end_line": 62,
+        "finding": "Relative URLs resolve at worker path; missing/HTTP failure silent; no stale/replay rule."
+      }
+    ],
+    "variant_notes": [
+      "Pinned baseline precedes PR46."
+    ],
+    "next_actions": [
+      "Use PR46 repair plus strict protocol/time/source metadata and replay policy."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "docs/data/moissanite_telemetry.bin",
+    "sha256": "46fbcf526128045d23692ca7e277d15d66c218e80db7c194c283ce8de30ea244",
+    "status": "binary-inspected",
+    "summary": "64-byte little-endian16-float fixture inspected by unpacking; corresponds to JSON vector including epoch-like slot 2.",
+    "components": [
+      "telemetry-fixture"
+    ],
+    "evidence": [],
+    "variant_notes": [],
+    "next_actions": [
+      "Retain byte-level vector correspondence and explicit slot meanings."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "docs/data/moissanite_telemetry.json",
+    "sha256": "3c663ba2be946121a6ed8ad9af38bd7d59c130fb778dfc5a758848d95d0e8646",
+    "status": "read",
+    "summary": "Explicitly labeled fixed fixture snapshot for 19 repositories,16 floats and one hashed packet.",
+    "components": [
+      "telemetry-fixture"
+    ],
+    "evidence": [
+      {
+        "start_line": 1,
+        "end_line": 38,
+        "finding": "Fixture label and fixed timestamp vector."
+      },
+      {
+        "start_line": 39,
+        "end_line": 208,
+        "finding": "19 invented/example activity, tension and role rows."
+      }
+    ],
+    "variant_notes": [],
+    "next_actions": [
+      "Keep fixture mode visible; do not turn numeric values into live project status."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "docs/data/telemetry.jsonl",
+    "sha256": "e5e9a118c7db96d612f8331869e58ec1bf017e454785beffa465a96a9f73d203",
+    "status": "read",
+    "summary": "One fixed sequence 1 SYM-2P frame with payload SHA256 and fixture metrics.",
+    "components": [
+      "telemetry-fixture"
+    ],
+    "evidence": [
+      {
+        "start_line": 1,
+        "end_line": 1,
+        "finding": "Single packet; no continuous capture or timestamp metadata."
+      }
+    ],
+    "variant_notes": [],
+    "next_actions": [
+      "Provide captured measured records only with producer/source/time and explicit schema."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "docs/index.html",
+    "sha256": "22b285716dc3573daec63a2aa71d7c531c31045327c896669650f6c667547c06",
+    "status": "read",
+    "summary": "Six-tab architectural atlas, procedural field, simplex control, embedded widgets and illustrative invariant/economic sliders.",
+    "components": [
+      "architectural-atlas",
+      "renderer",
+      "aesthetic-mixer"
+    ],
+    "evidence": [
+      {
+        "start_line": 1,
+        "end_line": 438,
+        "finding": "Responsive CSS with reduced-motion handling and fixed full-screen canvas."
+      },
+      {
+        "start_line": 439,
+        "end_line": 656,
+        "finding": "Fixture labels and semantic module list coexist with unsupported verified Apple/zero-copy/status claims."
+      },
+      {
+        "start_line": 658,
+        "end_line": 808,
+        "finding": "Bare-metal/RTL/governance claims are prose; sliders do not execute hardware or Solidity."
+      },
+      {
+        "start_line": 854,
+        "end_line": 1123,
+        "finding": "DOM rendering, fixture fetch, per-frame uniformInspector innerHTML, tabs and local illustrative arithmetic."
+      }
+    ],
+    "variant_notes": [
+      "This is a hybrid DOM/GPU page; not zero-DOM or learned app.",
+      "C2 simulator is separate arithmetic from Python/C implementations, C4 slider is not EVM verification."
+    ],
+    "next_actions": [
+      "Generate status from evidence and reconcile revised I4 (PR47).",
+      "Keep DOM accessibility bridge; measure UI work per frame and avoid unnecessary innerHTML rebuilds.",
+      "Add bookmarkable loci, focus behavior, small-screen and offline behavior tests."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "docs/seed-manifest.json",
+    "sha256": "82851eba553b4192fde68a7236f7a5032750c4e3f9b0dfe50ad1e6fad14bdbfa",
+    "status": "read",
+    "summary": "Lists runtime-derived telemetry, shader, ten widget files and publication allow-list.",
+    "components": [
+      "publication"
+    ],
+    "evidence": [
+      {
+        "start_line": 1,
+        "end_line": 30,
+        "finding": "Internal program/corpus/whitepapers are excluded by allow-list."
+      }
+    ],
+    "variant_notes": [],
+    "next_actions": [
+      "Retain versioned provenance and verify all copies."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "docs/widgets/01-sdf-laya-kinetic-typography.html",
+    "sha256": "0aa7ab5c52aea8664e4052b226eaf3d7be51d7666bf86b8093636c9094379799",
+    "status": "read",
+    "summary": "Captured HTML bundle for procedural Canvas2D wave sandbox with play/speed/frequency and sine radial or matrix modes.",
+    "components": [
+      "procedural-wave-demo",
+      "captured-widget-export"
+    ],
+    "evidence": [
+      {
+        "start_line": 1,
+        "end_line": 29,
+        "finding": "Shared CSP/injected scripts depend on parent handshake; intercept errors/window.open and load Google-hosted modules/fonts."
+      },
+      {
+        "start_line": 30,
+        "end_line": 255,
+        "finding": "Module equals paired generated JSX byte-for-byte after stripping boundary whitespace."
+      },
+      {
+        "start_line": 256,
+        "end_line": 1186,
+        "finding": "Tailwind4.1.11 styles and external theme stylesheet; reviewed base CSS plus complete exact diffs."
+      },
+      {
+        "start_line": 1187,
+        "end_line": 1187,
+        "finding": "Captured DOM reviewed; repeated primitive coordinates/data inspected as generated state, not independent implementation."
+      }
+    ],
+    "variant_notes": [
+      "Neither SDF/Laya typography nor barycentric design explorer. Existing gallery and atlas are inaccurate."
+    ],
+    "next_actions": [
+      "Rebuild maintained self-hosted demo from clear source and explicit dependencies.",
+      "Remove capture-host handshake/error interception only in derived maintained package, preserve original export."
+    ],
+    "uncertainties": [
+      "External imported module bodies and remote styles/fonts are not in this repository; no guarantee of offline operation."
+    ],
+    "reading_method": "Full paired module read and exact-equality comparison; shared wrapper/scripts read once and exact-equality verified; base CSS full read plus complete diffs; DOM markup read with generated numeric repetitions independently checked."
+  },
+  {
+    "path": "docs/widgets/01-sdf-laya-kinetic-typography.jsx",
+    "sha256": "0ed410b4e89b4697176d2269188ac7699be9672411863bfae1f3ffd6d6eee018",
+    "status": "read",
+    "summary": "Procedural Canvas2D wave sandbox with play/speed/frequency and sine radial or matrix modes.",
+    "components": [
+      "procedural-wave-demo"
+    ],
+    "evidence": [
+      {
+        "start_line": 46,
+        "end_line": 108,
+        "finding": "ShaderSandbox uses 48\u00d727 Canvas2D intensity cells; no shaders, typography or learned model."
+      },
+      {
+        "start_line": 109,
+        "end_line": 225,
+        "finding": "React/Radix controls and self-mounting entrypoint."
+      }
+    ],
+    "variant_notes": [
+      "Neither SDF/Laya typography nor barycentric design explorer. Existing gallery and atlas are inaccurate.",
+      "Despite .jsx extension, stored content is generated JavaScript jsx/jsxs calls with CDN imports, polyfill and React root mounting, not original hand-authored component JSX."
+    ],
+    "next_actions": [
+      "Correct descriptor to procedural waves; retain original filename as provenance.",
+      "Extract pure wave function and benchmark CPU/canvas implementation before WebGPU port."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "docs/widgets/02-mind-palace-spatial-memory.html",
+    "sha256": "f5c3a06010a6bbc1fd5d25ab3ac0a3f2cb9e0a8397974a11a05cc80368c7caa8",
+    "status": "read",
+    "summary": "Captured HTML bundle for sVG signed-distance/constructive-solid-geometry visualizer for a circle and box with an interactive distance probe.",
+    "components": [
+      "sdf-csg-demo",
+      "captured-widget-export"
+    ],
+    "evidence": [
+      {
+        "start_line": 1,
+        "end_line": 29,
+        "finding": "Shared CSP/injected scripts depend on parent handshake; intercept errors/window.open and load Google-hosted modules/fonts."
+      },
+      {
+        "start_line": 30,
+        "end_line": 419,
+        "finding": "Module equals paired generated JSX byte-for-byte after stripping boundary whitespace."
+      },
+      {
+        "start_line": 420,
+        "end_line": 1608,
+        "finding": "Tailwind4.1.11 styles and external theme stylesheet; reviewed base CSS plus complete exact diffs."
+      },
+      {
+        "start_line": 1609,
+        "end_line": 1609,
+        "finding": "Captured DOM reviewed; repeated primitive coordinates/data inspected as generated state, not independent implementation."
+      }
+    ],
+    "variant_notes": [
+      "Spatial memory/mind-palace engine remains an unimplemented distinct component."
+    ],
+    "next_actions": [
+      "Rebuild maintained self-hosted demo from clear source and explicit dependencies.",
+      "Remove capture-host handshake/error interception only in derived maintained package, preserve original export."
+    ],
+    "uncertainties": [
+      "External imported module bodies and remote styles/fonts are not in this repository; no guarantee of offline operation."
+    ],
+    "reading_method": "Full paired module read and exact-equality comparison; shared wrapper/scripts read once and exact-equality verified; base CSS full read plus complete diffs; DOM markup read with generated numeric repetitions independently checked.",
+    "generated_data_inspection": "All 1,372 sampled SVG circle coordinates, radii and RGBA values independently verified against the default circle/box SDF formulas; remaining three circle nodes and all other markup read."
+  },
+  {
+    "path": "docs/widgets/02-mind-palace-spatial-memory.jsx",
+    "sha256": "f4fc5464bfb9ef49c67d96dac3e3930d17f859f0fd617ed8f83975355867b0f2",
+    "status": "read",
+    "summary": "SVG signed-distance/constructive-solid-geometry visualizer for a circle and box with an interactive distance probe.",
+    "components": [
+      "sdf-csg-demo"
+    ],
+    "evidence": [
+      {
+        "start_line": 38,
+        "end_line": 102,
+        "finding": "Analytical circle/box fields and union/subtract/intersect/smooth-min operations."
+      },
+      {
+        "start_line": 104,
+        "end_line": 205,
+        "finding": "49\u00d728 sampled dots; isoline callback returns null."
+      },
+      {
+        "start_line": 206,
+        "end_line": 389,
+        "finding": "Probe and controls; no infinite canvas, persistent loci, memory or graph inspector."
+      }
+    ],
+    "variant_notes": [
+      "Spatial memory/mind-palace engine remains an unimplemented distinct component.",
+      "Despite .jsx extension, stored content is generated JavaScript jsx/jsxs calls with CDN imports, polyfill and React root mounting, not original hand-authored component JSX."
+    ],
+    "next_actions": [
+      "Correct descriptor to SDF/CSG probe; retain pedagogical distance/boolean operations.",
+      "Turn SDF primitives into reusable pure modules with geometry tests and GPU parity."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "docs/widgets/03-morphogenetic-bioelectric-field.html",
+    "sha256": "aff25bb5b24c413d9be8f8004933a365432e3d129d20e3cff12962cf602e783f",
+    "status": "read",
+    "summary": "Captured HTML bundle for animated five-node Canvas2D diagram connecting telemetry, reflex/cognitive systems, uniforms and GPU.",
+    "components": [
+      "dual-process-flow-demo",
+      "captured-widget-export"
+    ],
+    "evidence": [
+      {
+        "start_line": 1,
+        "end_line": 29,
+        "finding": "Shared CSP/injected scripts depend on parent handshake; intercept errors/window.open and load Google-hosted modules/fonts."
+      },
+      {
+        "start_line": 30,
+        "end_line": 358,
+        "finding": "Module equals paired generated JSX byte-for-byte after stripping boundary whitespace."
+      },
+      {
+        "start_line": 359,
+        "end_line": 1291,
+        "finding": "Tailwind4.1.11 styles and external theme stylesheet; reviewed base CSS plus complete exact diffs."
+      },
+      {
+        "start_line": 1292,
+        "end_line": 1292,
+        "finding": "Captured DOM reviewed; repeated primitive coordinates/data inspected as generated state, not independent implementation."
+      }
+    ],
+    "variant_notes": [
+      "No bioelectric field solver, live sovereignty matrix, hardware monitor or model inference."
+    ],
+    "next_actions": [
+      "Rebuild maintained self-hosted demo from clear source and explicit dependencies.",
+      "Remove capture-host handshake/error interception only in derived maintained package, preserve original export."
+    ],
+    "uncertainties": [
+      "External imported module bodies and remote styles/fonts are not in this repository; no guarantee of offline operation."
+    ],
+    "reading_method": "Full paired module read and exact-equality comparison; shared wrapper/scripts read once and exact-equality verified; base CSS full read plus complete diffs; DOM markup read with generated numeric repetitions independently checked."
+  },
+  {
+    "path": "docs/widgets/03-morphogenetic-bioelectric-field.jsx",
+    "sha256": "96fd518bf797936f0d56645c41f4f6b5f871f2f8b5f526f629076e6dcd41a121",
+    "status": "read",
+    "summary": "Animated five-node Canvas2D diagram connecting telemetry, reflex/cognitive systems, uniforms and GPU.",
+    "components": [
+      "dual-process-flow-demo"
+    ],
+    "evidence": [
+      {
+        "start_line": 42,
+        "end_line": 49,
+        "finding": "Fixed conceptual node graph."
+      },
+      {
+        "start_line": 82,
+        "end_line": 211,
+        "finding": "Animation and particles driven by sliders/time."
+      },
+      {
+        "start_line": 212,
+        "end_line": 328,
+        "finding": "Synergy, latency and GPU load are arithmetic from sliders, not measurements."
+      }
+    ],
+    "variant_notes": [
+      "No bioelectric field solver, live sovereignty matrix, hardware monitor or model inference.",
+      "Despite .jsx extension, stored content is generated JavaScript jsx/jsxs calls with CDN imports, polyfill and React root mounting, not original hand-authored component JSX."
+    ],
+    "next_actions": [
+      "Correct descriptor and explicitly mark illustrative metrics.",
+      "Use diagram as explanatory UI; future real values require instrumentation contract."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "docs/widgets/04-neural-cellular-automata.html",
+    "sha256": "b473e06024aeb45ca25a6fd27617efa0320a3d879e845a57c3ee97c5938cdb89",
+    "status": "read",
+    "summary": "Captured HTML bundle for hand-coded56\u00d732 eight-channel target-guided cellular automaton with damage, seeding and regeneration.",
+    "components": [
+      "cellular-automaton-demo",
+      "captured-widget-export"
+    ],
+    "evidence": [
+      {
+        "start_line": 1,
+        "end_line": 29,
+        "finding": "Shared CSP/injected scripts depend on parent handshake; intercept errors/window.open and load Google-hosted modules/fonts."
+      },
+      {
+        "start_line": 30,
+        "end_line": 533,
+        "finding": "Module equals paired generated JSX byte-for-byte after stripping boundary whitespace."
+      },
+      {
+        "start_line": 534,
+        "end_line": 1636,
+        "finding": "Tailwind4.1.11 styles and external theme stylesheet; reviewed base CSS plus complete exact diffs."
+      },
+      {
+        "start_line": 1637,
+        "end_line": 1637,
+        "finding": "Captured DOM reviewed; repeated primitive coordinates/data inspected as generated state, not independent implementation."
+      }
+    ],
+    "variant_notes": [
+      "Coordinate oracle makes regeneration different from a learned local-rule NCA; eight channels are not eight trained models."
+    ],
+    "next_actions": [
+      "Rebuild maintained self-hosted demo from clear source and explicit dependencies.",
+      "Remove capture-host handshake/error interception only in derived maintained package, preserve original export."
+    ],
+    "uncertainties": [
+      "External imported module bodies and remote styles/fonts are not in this repository; no guarantee of offline operation."
+    ],
+    "reading_method": "Full paired module read and exact-equality comparison; shared wrapper/scripts read once and exact-equality verified; base CSS full read plus complete diffs; DOM markup read with generated numeric repetitions independently checked.",
+    "generated_data_inspection": "All 373 ghost-cell SVG rectangles independently verified against56\u00d732 target disk mask, positions, dimensions and fixed attributes; remaining markup read."
+  },
+  {
+    "path": "docs/widgets/04-neural-cellular-automata.jsx",
+    "sha256": "ba8f858c1129ff9bc3f1fe2e43455bf367949957d55914c4921cdba7827fa4c4",
+    "status": "read",
+    "summary": "Hand-coded 56\u00d732 eight-channel target-guided cellular automaton with damage, seeding and regeneration.",
+    "components": [
+      "cellular-automaton-demo"
+    ],
+    "evidence": [
+      {
+        "start_line": 43,
+        "end_line": 72,
+        "finding": "Global coordinate-indexed target disk and RGB fields."
+      },
+      {
+        "start_line": 126,
+        "end_line": 213,
+        "finding": "Local neighbor diffusion plus direct target lookup; no learned update network or training."
+      },
+      {
+        "start_line": 214,
+        "end_line": 503,
+        "finding": "Damage/seed modes and SVG cells; stability usespartialRGB difference and flux is slider product."
+      }
+    ],
+    "variant_notes": [
+      "Coordinate oracle makes regeneration different from a learned local-rule NCA; eight channels are not eight trained models.",
+      "Despite .jsx extension, stored content is generated JavaScript jsx/jsxs calls with CDN imports, polyfill and React root mounting, not original hand-authored component JSX."
+    ],
+    "next_actions": [
+      "Retain hand-coded baseline; build separate learned translation-equivariant NCA experiment with training/data/checkpoint.",
+      "Evaluate long-horizon persistence, held-out damage/recovery, seed generalization and rule-ablation metrics."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "docs/widgets/05-interaction-combinator-net.html",
+    "sha256": "fffa7e4b793c7b652b29c111a9e2d40f8a8d8de83ae55b7f48eab72a3358cde9",
+    "status": "read",
+    "summary": "Captured HTML bundle for sVG force-directed five-node concept graph with illustrative tension/budget/reduction indicators.",
+    "components": [
+      "interaction-net-concept-demo",
+      "captured-widget-export"
+    ],
+    "evidence": [
+      {
+        "start_line": 1,
+        "end_line": 29,
+        "finding": "Shared CSP/injected scripts depend on parent handshake; intercept errors/window.open and load Google-hosted modules/fonts."
+      },
+      {
+        "start_line": 30,
+        "end_line": 483,
+        "finding": "Module equals paired generated JSX byte-for-byte after stripping boundary whitespace."
+      },
+      {
+        "start_line": 484,
+        "end_line": 1531,
+        "finding": "Tailwind4.1.11 styles and external theme stylesheet; reviewed base CSS plus complete exact diffs."
+      },
+      {
+        "start_line": 1532,
+        "end_line": 1532,
+        "finding": "Captured DOM reviewed; repeated primitive coordinates/data inspected as generated state, not independent implementation."
+      }
+    ],
+    "variant_notes": [
+      "No active-pair rewrite, mitosis, hippocampal novelty, apoptosis, ownership proof or actual power measurement."
+    ],
+    "next_actions": [
+      "Rebuild maintained self-hosted demo from clear source and explicit dependencies.",
+      "Remove capture-host handshake/error interception only in derived maintained package, preserve original export."
+    ],
+    "uncertainties": [
+      "External imported module bodies and remote styles/fonts are not in this repository; no guarantee of offline operation."
+    ],
+    "reading_method": "Full paired module read and exact-equality comparison; shared wrapper/scripts read once and exact-equality verified; base CSS full read plus complete diffs; DOM markup read with generated numeric repetitions independently checked."
+  },
+  {
+    "path": "docs/widgets/05-interaction-combinator-net.jsx",
+    "sha256": "a1704c531ee8b8c6c6ebc5ec859f433a2b3580bc494677d58f72b335d084c995",
+    "status": "read",
+    "summary": "SVG force-directed five-node concept graph with illustrative tension/budget/reduction indicators.",
+    "components": [
+      "interaction-net-concept-demo"
+    ],
+    "evidence": [
+      {
+        "start_line": 75,
+        "end_line": 92,
+        "finding": "Five fixed named agent/code/net nodes and five fixed edges."
+      },
+      {
+        "start_line": 108,
+        "end_line": 197,
+        "finding": "Spring/repulsion movement; hashes random four-hex-digit; reductions/sec and W budget are algebraic display values."
+      },
+      {
+        "start_line": 198,
+        "end_line": 453,
+        "finding": "Graph rendering and sliders; attribution select changes display weighting, not cryptographic enforcement."
+      }
+    ],
+    "variant_notes": [
+      "No active-pair rewrite, mitosis, hippocampal novelty, apoptosis, ownership proof or actual power measurement.",
+      "Despite .jsx extension, stored content is generated JavaScript jsx/jsxs calls with CDN imports, polyfill and React root mounting, not original hand-authored component JSX."
+    ],
+    "next_actions": [
+      "Correct descriptor; mark mock provenance and metrics explicitly.",
+      "Build separate renderer driven by actual C3 graph/rewrite trace and deterministic step/replay."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "docs/widgets/index.html",
+    "sha256": "26b63241e335bd5cb31ada49cfb9005d4436f0c0566058fb6c3bb18422d1b699",
+    "status": "read",
+    "summary": "Gallery embeds all five exact browser-captured React demos with corrected descriptive titles.",
+    "components": [
+      "widget-gallery"
+    ],
+    "evidence": [
+      {
+        "start_line": 20,
+        "end_line": 51,
+        "finding": "Frames lack sandbox restriction and depend on each captured app's external modules."
+      }
+    ],
+    "variant_notes": [],
+    "next_actions": [
+      "Rebuild self-hosted widgets from maintained sources with explicit frame policy."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "scripts/snapshot_site.mjs",
+    "sha256": "8d3b3e610003597956cb5c4b94e91efdaf7f21f96404850431520048974533a6",
+    "status": "read",
+    "summary": "Playwright screenshots with optional SwiftShader WebGPU readback overlay, three viewports and fallback mode.",
+    "components": [
+      "browser-validation"
+    ],
+    "evidence": [
+      {
+        "start_line": 1,
+        "end_line": 76,
+        "finding": "Screenshot hook substitutes persistent COPY_SRC texture and overlays readback pixels."
+      },
+      {
+        "start_line": 78,
+        "end_line": 106,
+        "finding": "Launch, viewports, console logs and screenshot metrics; not performance or nativeGPU proof."
+      }
+    ],
+    "variant_notes": [],
+    "next_actions": [
+      "Keep render hook evidence separate from unmodified end-to-end execution.",
+      "Add full-flow browser checks; pin dependencies and capture renderer/device provenance."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "scripts/sync_pages_seed.py",
+    "sha256": "d33df03d06c43fb6fa8495fce7ef353746acb06c20e772e84da6cfd3485a7c87",
+    "status": "read",
+    "summary": "Regenerates fixture telemetry, copies canonical shader/widgets, and stages allow-listed public bundle.",
+    "components": [
+      "publication"
+    ],
+    "evidence": [
+      {
+        "start_line": 35,
+        "end_line": 49,
+        "finding": "Explicit public and forbidden internal names."
+      },
+      {
+        "start_line": 67,
+        "end_line": 97,
+        "finding": "Stage deletes destination recursively before recreating; caller must provide disposable path."
+      },
+      {
+        "start_line": 100,
+        "end_line": 140,
+        "finding": "Sync generates fixtures and overwrites copies before optional staging."
+      }
+    ],
+    "variant_notes": [],
+    "next_actions": [
+      "Separate deterministic build from fixture generation when live feed added.",
+      "Use disposable staging directories; test immutable sources and resulting allow-list."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/browser-sources/widgets/01-sdf-laya-kinetic-typography.html",
+    "sha256": "0aa7ab5c52aea8664e4052b226eaf3d7be51d7666bf86b8093636c9094379799",
+    "status": "duplicate-reviewed",
+    "duplicate_of": "docs/widgets/01-sdf-laya-kinetic-typography.html",
+    "summary": "Canonical archived browser-source placement; docs copy is publication artifact. Exact full-byte duplicate of reviewed docs/widgets/01-sdf-laya-kinetic-typography.html.",
+    "components": [
+      "procedural-wave-demo",
+      "captured-widget-export"
+    ],
+    "evidence": [
+      {
+        "start_line": 1,
+        "end_line": 29,
+        "finding": "Shared CSP/injected scripts depend on parent handshake; intercept errors/window.open and load Google-hosted modules/fonts."
+      },
+      {
+        "start_line": 30,
+        "end_line": 255,
+        "finding": "Module equals paired generated JSX byte-for-byte after stripping boundary whitespace."
+      },
+      {
+        "start_line": 256,
+        "end_line": 1186,
+        "finding": "Tailwind4.1.11 styles and external theme stylesheet; reviewed base CSS plus complete exact diffs."
+      },
+      {
+        "start_line": 1187,
+        "end_line": 1187,
+        "finding": "Captured DOM reviewed; repeated primitive coordinates/data inspected as generated state, not independent implementation."
+      }
+    ],
+    "variant_notes": [
+      "Neither SDF/Laya typography nor barycentric design explorer. Existing gallery and atlas are inaccurate."
+    ],
+    "next_actions": [
+      "Rebuild maintained self-hosted demo from clear source and explicit dependencies.",
+      "Remove capture-host handshake/error interception only in derived maintained package, preserve original export."
+    ],
+    "uncertainties": [
+      "External imported module bodies and remote styles/fonts are not in this repository; no guarantee of offline operation."
+    ]
+  },
+  {
+    "path": "weft/browser-sources/widgets/01-sdf-laya-kinetic-typography.jsx",
+    "sha256": "0ed410b4e89b4697176d2269188ac7699be9672411863bfae1f3ffd6d6eee018",
+    "status": "duplicate-reviewed",
+    "duplicate_of": "docs/widgets/01-sdf-laya-kinetic-typography.jsx",
+    "summary": "Canonical archived browser-source placement; docs copy is publication artifact. Exact full-byte duplicate of reviewed docs/widgets/01-sdf-laya-kinetic-typography.jsx.",
+    "components": [
+      "procedural-wave-demo"
+    ],
+    "evidence": [
+      {
+        "start_line": 46,
+        "end_line": 108,
+        "finding": "ShaderSandbox uses 48\u00d727 Canvas2D intensity cells; no shaders, typography or learned model."
+      },
+      {
+        "start_line": 109,
+        "end_line": 225,
+        "finding": "React/Radix controls and self-mounting entrypoint."
+      }
+    ],
+    "variant_notes": [
+      "Neither SDF/Laya typography nor barycentric design explorer. Existing gallery and atlas are inaccurate.",
+      "Despite .jsx extension, stored content is generated JavaScript jsx/jsxs calls with CDN imports, polyfill and React root mounting, not original hand-authored component JSX."
+    ],
+    "next_actions": [
+      "Correct descriptor to procedural waves; retain original filename as provenance.",
+      "Extract pure wave function and benchmark CPU/canvas implementation before WebGPU port."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/browser-sources/widgets/02-mind-palace-spatial-memory.html",
+    "sha256": "f5c3a06010a6bbc1fd5d25ab3ac0a3f2cb9e0a8397974a11a05cc80368c7caa8",
+    "status": "duplicate-reviewed",
+    "duplicate_of": "docs/widgets/02-mind-palace-spatial-memory.html",
+    "summary": "Canonical archived browser-source placement; docs copy is publication artifact. Exact full-byte duplicate of reviewed docs/widgets/02-mind-palace-spatial-memory.html.",
+    "components": [
+      "sdf-csg-demo",
+      "captured-widget-export"
+    ],
+    "evidence": [
+      {
+        "start_line": 1,
+        "end_line": 29,
+        "finding": "Shared CSP/injected scripts depend on parent handshake; intercept errors/window.open and load Google-hosted modules/fonts."
+      },
+      {
+        "start_line": 30,
+        "end_line": 419,
+        "finding": "Module equals paired generated JSX byte-for-byte after stripping boundary whitespace."
+      },
+      {
+        "start_line": 420,
+        "end_line": 1608,
+        "finding": "Tailwind4.1.11 styles and external theme stylesheet; reviewed base CSS plus complete exact diffs."
+      },
+      {
+        "start_line": 1609,
+        "end_line": 1609,
+        "finding": "Captured DOM reviewed; repeated primitive coordinates/data inspected as generated state, not independent implementation."
+      }
+    ],
+    "variant_notes": [
+      "Spatial memory/mind-palace engine remains an unimplemented distinct component."
+    ],
+    "next_actions": [
+      "Rebuild maintained self-hosted demo from clear source and explicit dependencies.",
+      "Remove capture-host handshake/error interception only in derived maintained package, preserve original export."
+    ],
+    "uncertainties": [
+      "External imported module bodies and remote styles/fonts are not in this repository; no guarantee of offline operation."
+    ]
+  },
+  {
+    "path": "weft/browser-sources/widgets/02-mind-palace-spatial-memory.jsx",
+    "sha256": "f4fc5464bfb9ef49c67d96dac3e3930d17f859f0fd617ed8f83975355867b0f2",
+    "status": "duplicate-reviewed",
+    "duplicate_of": "docs/widgets/02-mind-palace-spatial-memory.jsx",
+    "summary": "Canonical archived browser-source placement; docs copy is publication artifact. Exact full-byte duplicate of reviewed docs/widgets/02-mind-palace-spatial-memory.jsx.",
+    "components": [
+      "sdf-csg-demo"
+    ],
+    "evidence": [
+      {
+        "start_line": 38,
+        "end_line": 102,
+        "finding": "Analytical circle/box fields and union/subtract/intersect/smooth-min operations."
+      },
+      {
+        "start_line": 104,
+        "end_line": 205,
+        "finding": "49\u00d728 sampled dots; isoline callback returns null."
+      },
+      {
+        "start_line": 206,
+        "end_line": 389,
+        "finding": "Probe and controls; no infinite canvas, persistent loci, memory or graph inspector."
+      }
+    ],
+    "variant_notes": [
+      "Spatial memory/mind-palace engine remains an unimplemented distinct component.",
+      "Despite .jsx extension, stored content is generated JavaScript jsx/jsxs calls with CDN imports, polyfill and React root mounting, not original hand-authored component JSX."
+    ],
+    "next_actions": [
+      "Correct descriptor to SDF/CSG probe; retain pedagogical distance/boolean operations.",
+      "Turn SDF primitives into reusable pure modules with geometry tests and GPU parity."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/browser-sources/widgets/03-morphogenetic-bioelectric-field.html",
+    "sha256": "aff25bb5b24c413d9be8f8004933a365432e3d129d20e3cff12962cf602e783f",
+    "status": "duplicate-reviewed",
+    "duplicate_of": "docs/widgets/03-morphogenetic-bioelectric-field.html",
+    "summary": "Canonical archived browser-source placement; docs copy is publication artifact. Exact full-byte duplicate of reviewed docs/widgets/03-morphogenetic-bioelectric-field.html.",
+    "components": [
+      "dual-process-flow-demo",
+      "captured-widget-export"
+    ],
+    "evidence": [
+      {
+        "start_line": 1,
+        "end_line": 29,
+        "finding": "Shared CSP/injected scripts depend on parent handshake; intercept errors/window.open and load Google-hosted modules/fonts."
+      },
+      {
+        "start_line": 30,
+        "end_line": 358,
+        "finding": "Module equals paired generated JSX byte-for-byte after stripping boundary whitespace."
+      },
+      {
+        "start_line": 359,
+        "end_line": 1291,
+        "finding": "Tailwind4.1.11 styles and external theme stylesheet; reviewed base CSS plus complete exact diffs."
+      },
+      {
+        "start_line": 1292,
+        "end_line": 1292,
+        "finding": "Captured DOM reviewed; repeated primitive coordinates/data inspected as generated state, not independent implementation."
+      }
+    ],
+    "variant_notes": [
+      "No bioelectric field solver, live sovereignty matrix, hardware monitor or model inference."
+    ],
+    "next_actions": [
+      "Rebuild maintained self-hosted demo from clear source and explicit dependencies.",
+      "Remove capture-host handshake/error interception only in derived maintained package, preserve original export."
+    ],
+    "uncertainties": [
+      "External imported module bodies and remote styles/fonts are not in this repository; no guarantee of offline operation."
+    ]
+  },
+  {
+    "path": "weft/browser-sources/widgets/03-morphogenetic-bioelectric-field.jsx",
+    "sha256": "96fd518bf797936f0d56645c41f4f6b5f871f2f8b5f526f629076e6dcd41a121",
+    "status": "duplicate-reviewed",
+    "duplicate_of": "docs/widgets/03-morphogenetic-bioelectric-field.jsx",
+    "summary": "Canonical archived browser-source placement; docs copy is publication artifact. Exact full-byte duplicate of reviewed docs/widgets/03-morphogenetic-bioelectric-field.jsx.",
+    "components": [
+      "dual-process-flow-demo"
+    ],
+    "evidence": [
+      {
+        "start_line": 42,
+        "end_line": 49,
+        "finding": "Fixed conceptual node graph."
+      },
+      {
+        "start_line": 82,
+        "end_line": 211,
+        "finding": "Animation and particles driven by sliders/time."
+      },
+      {
+        "start_line": 212,
+        "end_line": 328,
+        "finding": "Synergy, latency and GPU load are arithmetic from sliders, not measurements."
+      }
+    ],
+    "variant_notes": [
+      "No bioelectric field solver, live sovereignty matrix, hardware monitor or model inference.",
+      "Despite .jsx extension, stored content is generated JavaScript jsx/jsxs calls with CDN imports, polyfill and React root mounting, not original hand-authored component JSX."
+    ],
+    "next_actions": [
+      "Correct descriptor and explicitly mark illustrative metrics.",
+      "Use diagram as explanatory UI; future real values require instrumentation contract."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/browser-sources/widgets/04-neural-cellular-automata.html",
+    "sha256": "b473e06024aeb45ca25a6fd27617efa0320a3d879e845a57c3ee97c5938cdb89",
+    "status": "duplicate-reviewed",
+    "duplicate_of": "docs/widgets/04-neural-cellular-automata.html",
+    "summary": "Canonical archived browser-source placement; docs copy is publication artifact. Exact full-byte duplicate of reviewed docs/widgets/04-neural-cellular-automata.html.",
+    "components": [
+      "cellular-automaton-demo",
+      "captured-widget-export"
+    ],
+    "evidence": [
+      {
+        "start_line": 1,
+        "end_line": 29,
+        "finding": "Shared CSP/injected scripts depend on parent handshake; intercept errors/window.open and load Google-hosted modules/fonts."
+      },
+      {
+        "start_line": 30,
+        "end_line": 533,
+        "finding": "Module equals paired generated JSX byte-for-byte after stripping boundary whitespace."
+      },
+      {
+        "start_line": 534,
+        "end_line": 1636,
+        "finding": "Tailwind4.1.11 styles and external theme stylesheet; reviewed base CSS plus complete exact diffs."
+      },
+      {
+        "start_line": 1637,
+        "end_line": 1637,
+        "finding": "Captured DOM reviewed; repeated primitive coordinates/data inspected as generated state, not independent implementation."
+      }
+    ],
+    "variant_notes": [
+      "Coordinate oracle makes regeneration different from a learned local-rule NCA; eight channels are not eight trained models."
+    ],
+    "next_actions": [
+      "Rebuild maintained self-hosted demo from clear source and explicit dependencies.",
+      "Remove capture-host handshake/error interception only in derived maintained package, preserve original export."
+    ],
+    "uncertainties": [
+      "External imported module bodies and remote styles/fonts are not in this repository; no guarantee of offline operation."
+    ]
+  },
+  {
+    "path": "weft/browser-sources/widgets/04-neural-cellular-automata.jsx",
+    "sha256": "ba8f858c1129ff9bc3f1fe2e43455bf367949957d55914c4921cdba7827fa4c4",
+    "status": "duplicate-reviewed",
+    "duplicate_of": "docs/widgets/04-neural-cellular-automata.jsx",
+    "summary": "Canonical archived browser-source placement; docs copy is publication artifact. Exact full-byte duplicate of reviewed docs/widgets/04-neural-cellular-automata.jsx.",
+    "components": [
+      "cellular-automaton-demo"
+    ],
+    "evidence": [
+      {
+        "start_line": 43,
+        "end_line": 72,
+        "finding": "Global coordinate-indexed target disk and RGB fields."
+      },
+      {
+        "start_line": 126,
+        "end_line": 213,
+        "finding": "Local neighbor diffusion plus direct target lookup; no learned update network or training."
+      },
+      {
+        "start_line": 214,
+        "end_line": 503,
+        "finding": "Damage/seed modes and SVG cells; stability usespartialRGB difference and flux is slider product."
+      }
+    ],
+    "variant_notes": [
+      "Coordinate oracle makes regeneration different from a learned local-rule NCA; eight channels are not eight trained models.",
+      "Despite .jsx extension, stored content is generated JavaScript jsx/jsxs calls with CDN imports, polyfill and React root mounting, not original hand-authored component JSX."
+    ],
+    "next_actions": [
+      "Retain hand-coded baseline; build separate learned translation-equivariant NCA experiment with training/data/checkpoint.",
+      "Evaluate long-horizon persistence, held-out damage/recovery, seed generalization and rule-ablation metrics."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/browser-sources/widgets/05-interaction-combinator-net.html",
+    "sha256": "fffa7e4b793c7b652b29c111a9e2d40f8a8d8de83ae55b7f48eab72a3358cde9",
+    "status": "duplicate-reviewed",
+    "duplicate_of": "docs/widgets/05-interaction-combinator-net.html",
+    "summary": "Canonical archived browser-source placement; docs copy is publication artifact. Exact full-byte duplicate of reviewed docs/widgets/05-interaction-combinator-net.html.",
+    "components": [
+      "interaction-net-concept-demo",
+      "captured-widget-export"
+    ],
+    "evidence": [
+      {
+        "start_line": 1,
+        "end_line": 29,
+        "finding": "Shared CSP/injected scripts depend on parent handshake; intercept errors/window.open and load Google-hosted modules/fonts."
+      },
+      {
+        "start_line": 30,
+        "end_line": 483,
+        "finding": "Module equals paired generated JSX byte-for-byte after stripping boundary whitespace."
+      },
+      {
+        "start_line": 484,
+        "end_line": 1531,
+        "finding": "Tailwind4.1.11 styles and external theme stylesheet; reviewed base CSS plus complete exact diffs."
+      },
+      {
+        "start_line": 1532,
+        "end_line": 1532,
+        "finding": "Captured DOM reviewed; repeated primitive coordinates/data inspected as generated state, not independent implementation."
+      }
+    ],
+    "variant_notes": [
+      "No active-pair rewrite, mitosis, hippocampal novelty, apoptosis, ownership proof or actual power measurement."
+    ],
+    "next_actions": [
+      "Rebuild maintained self-hosted demo from clear source and explicit dependencies.",
+      "Remove capture-host handshake/error interception only in derived maintained package, preserve original export."
+    ],
+    "uncertainties": [
+      "External imported module bodies and remote styles/fonts are not in this repository; no guarantee of offline operation."
+    ]
+  },
+  {
+    "path": "weft/browser-sources/widgets/05-interaction-combinator-net.jsx",
+    "sha256": "a1704c531ee8b8c6c6ebc5ec859f433a2b3580bc494677d58f72b335d084c995",
+    "status": "duplicate-reviewed",
+    "duplicate_of": "docs/widgets/05-interaction-combinator-net.jsx",
+    "summary": "Canonical archived browser-source placement; docs copy is publication artifact. Exact full-byte duplicate of reviewed docs/widgets/05-interaction-combinator-net.jsx.",
+    "components": [
+      "interaction-net-concept-demo"
+    ],
+    "evidence": [
+      {
+        "start_line": 75,
+        "end_line": 92,
+        "finding": "Five fixed named agent/code/net nodes and five fixed edges."
+      },
+      {
+        "start_line": 108,
+        "end_line": 197,
+        "finding": "Spring/repulsion movement; hashes random four-hex-digit; reductions/sec and W budget are algebraic display values."
+      },
+      {
+        "start_line": 198,
+        "end_line": 453,
+        "finding": "Graph rendering and sliders; attribution select changes display weighting, not cryptographic enforcement."
+      }
+    ],
+    "variant_notes": [
+      "No active-pair rewrite, mitosis, hippocampal novelty, apoptosis, ownership proof or actual power measurement.",
+      "Despite .jsx extension, stored content is generated JavaScript jsx/jsxs calls with CDN imports, polyfill and React root mounting, not original hand-authored component JSX."
+    ],
+    "next_actions": [
+      "Correct descriptor; mark mock provenance and metrics explicitly.",
+      "Build separate renderer driven by actual C3 graph/rewrite trace and deterministic step/replay."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/aywa/dashboard_layout.wgsl",
+    "sha256": "3336b07c32352b2e71c123cef27bb87c56120085f56a3eb419091cb9e4799f58",
+    "status": "duplicate-reviewed",
+    "duplicate_of": "docs/assets/shaders/dashboard_layout.wgsl",
+    "summary": "Runtime seed source; docs copy is published snapshot. Exact full-byte duplicate of reviewed docs/assets/shaders/dashboard_layout.wgsl.",
+    "components": [
+      "renderer",
+      "shader-typography"
+    ],
+    "evidence": [
+      {
+        "start_line": 21,
+        "end_line": 59,
+        "finding": "I1 plus View, Cell, Thread, font bindings define actual GPU contract."
+      },
+      {
+        "start_line": 143,
+        "end_line": 193,
+        "finding": "Count digits cap at four; weave is analytic procedural animation."
+      },
+      {
+        "start_line": 194,
+        "end_line": 302,
+        "finding": "Per-pixel thread/cell/text loops; pointer smooth union and cluster bounds culling."
+      }
+    ],
+    "variant_notes": [
+      "SDF geometry and bitmap text are implemented; arbitrary vector glyph/MSDF atlas remains separate future module."
+    ],
+    "next_actions": [
+      "Maintain semantic parity with Canvas fallback, including counts over 9,999.",
+      "Benchmark actual pixel/cell workload and verify zero-motion/device-loss behavior."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/aywa/github_harvester.py",
+    "sha256": "e63daede8c0256bd06838a017f4bb05974560a2bc979a5e581cb12c4439432ea",
+    "status": "read",
+    "summary": "Compatibility wrapper delegates organization fixture/live harvesting to C6.",
+    "components": [
+      "telemetry"
+    ],
+    "evidence": [
+      {
+        "start_line": 15,
+        "end_line": 38,
+        "finding": "Root path setup and imports; no independent implementation."
+      }
+    ],
+    "variant_notes": [],
+    "next_actions": [
+      "Keep compatibility smoke test and prevent wrapper drift."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/aywa/index.html",
+    "sha256": "dbd013430152f9f7da041d27ccc98bb9ecc7e0c5972a250707bc492dbe7a3225",
+    "status": "read",
+    "summary": "Older standalone Canvas2D fixed-grid demo with eight static label rows and one JSON fetch.",
+    "components": [
+      "legacy-renderer"
+    ],
+    "evidence": [
+      {
+        "start_line": 20,
+        "end_line": 44,
+        "finding": "Hardcoded matrix and default numeric telemetry; initialization claims Apple/WebGPU bridge."
+      },
+      {
+        "start_line": 47,
+        "end_line": 78,
+        "finding": "Actually Canvas2D with fixed pixel placement, per-frame resize and no telemetry polling."
+      }
+    ],
+    "variant_notes": [
+      "Distinct from docs/index.html current responsive WebGPU/Canvas engine."
+    ],
+    "next_actions": [
+      "Preserve historical seed identity; label as legacy simulator if exposed."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/aywa/moissanite_telemetry.bin",
+    "sha256": "46fbcf526128045d23692ca7e277d15d66c218e80db7c194c283ce8de30ea244",
+    "status": "duplicate-reviewed",
+    "duplicate_of": "docs/data/moissanite_telemetry.bin",
+    "summary": "Runtime seed source; docs copy is published snapshot. Exact full-byte duplicate of reviewed docs/data/moissanite_telemetry.bin.",
+    "components": [
+      "telemetry-fixture"
+    ],
+    "evidence": [],
+    "variant_notes": [],
+    "next_actions": [
+      "Retain byte-level vector correspondence and explicit slot meanings."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/aywa/moissanite_telemetry.json",
+    "sha256": "3c663ba2be946121a6ed8ad9af38bd7d59c130fb778dfc5a758848d95d0e8646",
+    "status": "duplicate-reviewed",
+    "duplicate_of": "docs/data/moissanite_telemetry.json",
+    "summary": "Runtime seed source; docs copy is published snapshot. Exact full-byte duplicate of reviewed docs/data/moissanite_telemetry.json.",
+    "components": [
+      "telemetry-fixture"
+    ],
+    "evidence": [
+      {
+        "start_line": 1,
+        "end_line": 38,
+        "finding": "Fixture label and fixed timestamp vector."
+      },
+      {
+        "start_line": 39,
+        "end_line": 208,
+        "finding": "19 invented/example activity, tension and role rows."
+      }
+    ],
+    "variant_notes": [],
+    "next_actions": [
+      "Keep fixture mode visible; do not turn numeric values into live project status."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/aywa/site_selftest.py",
+    "sha256": "4a003ab29a09d94d61d99a36bf68234f582566ed0c0fc2477bb2afdb47b2f783",
+    "status": "read",
+    "summary": "Structural file/copy/hash/shader-token/publication checks; verifies presence, not browser or Solidity execution.",
+    "components": [
+      "browser-validation",
+      "publication"
+    ],
+    "evidence": [
+      {
+        "start_line": 43,
+        "end_line": 70,
+        "finding": "Checks canonical HTML copy byte equality only (not JSX)."
+      },
+      {
+        "start_line": 73,
+        "end_line": 155,
+        "finding": "File existence, fixture schema, hash, shader strings, allow-list and ledger file presence."
+      }
+    ],
+    "variant_notes": [],
+    "next_actions": [
+      "Retain fast checks but link real browser and EVM test reports separately.",
+      "Extend source-copy correspondence to JSX via manifest."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/aywa/sym2p_codec.py",
+    "sha256": "ea28f31d886a1928d979e7016a01412c1020c1af776a0fe13f8f1ae882949909",
+    "status": "read",
+    "summary": "Compatibility exports C6 SYM-2P codec API.",
+    "components": [
+      "telemetry-protocol"
+    ],
+    "evidence": [
+      {
+        "start_line": 9,
+        "end_line": 27,
+        "finding": "Imports shared implementation rather than independent parser."
+      }
+    ],
+    "variant_notes": [],
+    "next_actions": [
+      "Keep compatibility test path; use one authoritative codec."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/aywa/telemetry.jsonl",
+    "sha256": "e5e9a118c7db96d612f8331869e58ec1bf017e454785beffa465a96a9f73d203",
+    "status": "duplicate-reviewed",
+    "duplicate_of": "docs/data/telemetry.jsonl",
+    "summary": "Runtime seed source; docs copy is published snapshot. Exact full-byte duplicate of reviewed docs/data/telemetry.jsonl.",
+    "components": [
+      "telemetry-fixture"
+    ],
+    "evidence": [
+      {
+        "start_line": 1,
+        "end_line": 1,
+        "finding": "Single packet; no continuous capture or timestamp metadata."
+      }
+    ],
+    "variant_notes": [],
+    "next_actions": [
+      "Provide captured measured records only with producer/source/time and explicit schema."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/aywa/test_aesthetic_mixer.mjs",
+    "sha256": "6737e4856a3761e38eb639a6a8f631590a0ec6e51afe9390f675b80c8f7b1d50",
+    "status": "read",
+    "summary": "Two circular-hue and normalization regressions.",
+    "components": [
+      "aesthetic-mixer"
+    ],
+    "evidence": [
+      {
+        "start_line": 1,
+        "end_line": 26,
+        "finding": "Two circular-hue and normalization regressions."
+      }
+    ],
+    "variant_notes": [],
+    "next_actions": [
+      "Add opposite-hue/finite-input contracts."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/aywa/test_cell_layout.mjs",
+    "sha256": "78ae410f69985393b1a05e1d3e168ddd0ebf3b1242435b01fac6ae3d8058e072",
+    "status": "read",
+    "summary": "Fixture-based area, squareness, no-overlap, fit, deterministic, small-region, tree and hit-test checks.",
+    "components": [
+      "cell-layout"
+    ],
+    "evidence": [
+      {
+        "start_line": 1,
+        "end_line": 145,
+        "finding": "Fixture-based area, squareness, no-overlap, fit, deterministic, small-region, tree and hit-test checks."
+      }
+    ],
+    "variant_notes": [],
+    "next_actions": [
+      "Add broader generated topologies and meaningful MST optimality beyond two-node layer."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/aywa/test_glyph_font.mjs",
+    "sha256": "17eb4812194d829d47c7e19b68f4316c97034cb08743d611142fd2d917774fcf",
+    "status": "read",
+    "summary": "Bit-size, bitmap roundtrip, glyph uniqueness and label-byte checks.",
+    "components": [
+      "shader-typography"
+    ],
+    "evidence": [
+      {
+        "start_line": 1,
+        "end_line": 55,
+        "finding": "Bit-size, bitmap roundtrip, glyph uniqueness and label-byte checks."
+      }
+    ],
+    "variant_notes": [],
+    "next_actions": [
+      "Preserve independent glyph expectations and GPU readback parity."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/aywa/test_simplex_pad.mjs",
+    "sha256": "95f4a6f5f1bcf172e3babbf0e63c5ddb7ff3d51f21c555d8514b32c8a37a541c",
+    "status": "read",
+    "summary": "Pure barycentric roundtrip, outside clamp and fallback checks.",
+    "components": [
+      "aesthetic-mixer"
+    ],
+    "evidence": [
+      {
+        "start_line": 1,
+        "end_line": 39,
+        "finding": "Pure barycentric roundtrip, outside clamp and fallback checks."
+      }
+    ],
+    "variant_notes": [],
+    "next_actions": [
+      "Add real keyboard/pointer accessibility verification."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/aywa/test_sym2p_codec.py",
+    "sha256": "0023d3c8558ce6901a94e845e98ba57d005728736294e05fdba062d0de2d5684",
+    "status": "read",
+    "summary": "Ten Python framing/range/metric/hash/seed tests and shared golden packet.",
+    "components": [
+      "telemetry-protocol"
+    ],
+    "evidence": [
+      {
+        "start_line": 1,
+        "end_line": 96,
+        "finding": "Ten Python framing/range/metric/hash/seed tests and shared golden packet."
+      }
+    ],
+    "variant_notes": [],
+    "next_actions": [
+      "Broaden malformed whole-frame, nonfinite, duplicate metric and replay cases."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/aywa/test_sym2p_parse.mjs",
+    "sha256": "c7d5491a5dbb7536ffa5290ba6ac42b8b0e7a3ba4adeb89e9e4cc32c70d60a1e",
+    "status": "read",
+    "summary": "Ten Node golden/hash tests including boolean contract regression.",
+    "components": [
+      "telemetry-protocol"
+    ],
+    "evidence": [
+      {
+        "start_line": 1,
+        "end_line": 78,
+        "finding": "Ten Node golden/hash tests including boolean contract regression."
+      }
+    ],
+    "variant_notes": [],
+    "next_actions": [
+      "Run real consumers; wrapper mirrors implementation and cannot detect URL/worker failures."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/aywa/test_weft_atlas.mjs",
+    "sha256": "29439c2e1fb6bf3c2d641ba7895cf70ebb4c6c2bd237352f53e63152e764ac69",
+    "status": "read",
+    "summary": "Three static export/count checks.",
+    "components": [
+      "architectural-atlas"
+    ],
+    "evidence": [
+      {
+        "start_line": 1,
+        "end_line": 37,
+        "finding": "Three static export/count checks."
+      }
+    ],
+    "variant_notes": [],
+    "next_actions": [
+      "Replace status confidence from counts with linkable evidence and source existence checks."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/aywa/test_weft_loom_pack.mjs",
+    "sha256": "6fae0e9f2a5d3572dd757366419dcfc99f2e20c738abfbf32628074dac74cd8b",
+    "status": "read",
+    "summary": "Three cell-record byte/layout/layer mapping checks.",
+    "components": [
+      "renderer"
+    ],
+    "evidence": [
+      {
+        "start_line": 1,
+        "end_line": 47,
+        "finding": "Three cell-record byte/layout/layer mapping checks."
+      }
+    ],
+    "variant_notes": [],
+    "next_actions": [
+      "Add actual shader readback and rendering edge cases."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/aywa/weft_daemon.py",
+    "sha256": "179b115b5953fc198c33d1e4dcb4f3d7780a9c96842267bd59f9ccc3a3ea85d6",
+    "status": "read",
+    "summary": "One-shot bridge combines host metrics with fixture/live organization telemetry and emits binary frame.",
+    "components": [
+      "telemetry"
+    ],
+    "evidence": [
+      {
+        "start_line": 33,
+        "end_line": 53,
+        "finding": "Replaces slot 1 with65/35 organization/CPU mixture and slot 2 with heat/load formula despite system_time elsewhere."
+      },
+      {
+        "start_line": 55,
+        "end_line": 70,
+        "finding": "PASS is construction status, not continuous daemon or measured hardware truth."
+      }
+    ],
+    "variant_notes": [
+      "Current function is not a running always-on daemon."
+    ],
+    "next_actions": [
+      "Define slot units and provenance; move heat/load to typed extension (#45).",
+      "Separate measured temperatures, estimates and fallback 38.5; add continuous lifecycle only after contract."
+    ],
+    "uncertainties": []
+  }
+]

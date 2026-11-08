@@ -1,0 +1,264 @@
+[
+  {
+    "path": "weft/browser-sources/thread1-weft-main-84ADC9.md",
+    "sha256": "00e419f279422ac6589494a29b2403985dcfb02fb9fe8b9fa548a5dd7db637e6",
+    "status": "read",
+    "coverage": [
+      [
+        1,
+        8257
+      ]
+    ],
+    "summary": "Complete original 72-turn conversation (Turns0\u201371), containing multiple distinct prototypes and speculative architectures: MPS/POSIX adaptive-cell harnesses, ledger/token and token-free resonance branches, host/browser telemetry, Lean/Bend and unified interaction-net language proposals, FRC/SUP/metamorphic extensions, haptics, intent preservation and industrial/custom-chip visions. Author repeatedly demands real implementation, independent replication, formal proof, measurable gains and communicable artifacts. Assistant completion claims and simulated terminal panels are contradicted by the explicit Turn55 admission that no installation exists; this source is design history, not execution evidence.",
+    "components": [
+      "biomatrix bus",
+      "adaptive cells",
+      "provenance watermark",
+      "ledger and economic valve",
+      "mesh leasing",
+      "haptic governor",
+      "bare-metal OS",
+      "intent/profile inference",
+      "token-free resonance allocation",
+      "formal specification and proof",
+      "unified interaction-combinator language",
+      "FRC hierarchical graph experiment",
+      "SUP bounded search experiment",
+      "metamorphic resource controller",
+      "hardware actuator simulation",
+      "ledger event observer",
+      "testamentary intent preservation"
+    ],
+    "evidence": [
+      {
+        "start_line": 8,
+        "end_line": 113,
+        "finding": "Manifesto names M1 Max/64 GB and specifies a three-track focal bus, sympathetic metrics, hippocampal archive and attention scheduler. These are distinct from the extracted current runtime profile."
+      },
+      {
+        "start_line": 114,
+        "end_line": 260,
+        "finding": "Rank-2 adaptation, fitness+novelty, edge snap, watermark, royalty and ledger replay are proposed as interacting mechanisms; strongest security and replay guarantees are assertions."
+      },
+      {
+        "start_line": 324,
+        "end_line": 645,
+        "finding": "Python harness copies CPU/GPU data, overwrites the sympathetic ndarray with scalars, contains undefined/branch-local state, uses random thermal fallback and unvalidated socket receipts. Historical code cannot substantiate bare-metal completion claims."
+      },
+      {
+        "start_line": 655,
+        "end_line": 895,
+        "finding": "Solidity triad gives one privileged weaver authority and permissionless provenance/dispute inputs; differs from dual-signature constitution."
+      },
+      {
+        "start_line": 900,
+        "end_line": 968,
+        "finding": "Purported ARM64 purge uses x86 cli/sti and privileged instructions; subsequent completion claim supplies no compile/run evidence."
+      },
+      {
+        "start_line": 977,
+        "end_line": 1353,
+        "finding": "Deployment wrapper embeds another Solidity triad with changed token surface; talks of atomic binding although transactions are sequential and no rollback artifact exists."
+      },
+      {
+        "start_line": 1357,
+        "end_line": 1790,
+        "finding": "Ledger-coupled harness, JSON manifest and bootstrap create a new lineage: no hippocampus, same scalar overwrite, shared active-delta filename, mock keys/addresses and configuration fields printed rather than applied."
+      },
+      {
+        "start_line": 1799,
+        "end_line": 2045,
+        "finding": "Darwin ctypes bridge uses an incomplete ABI, len(Structure), hardcoded counters and fabricated random temperatures; promised submillisecond true SMC measurements are unsupported."
+      },
+      {
+        "start_line": 2053,
+        "end_line": 2300,
+        "finding": "Lifecycle suite calls itself end-to-end but tests a hand-recomputed royalty formula and mocked transaction path; teardown prints unconditional pass, and harness bus is read after shutdown."
+      },
+      {
+        "start_line": 2311,
+        "end_line": 2477,
+        "finding": "Stylus bootstrap assumes a Solidity-to-WASM pipeline and converts deploy failure into MOCK_SUCCESS; source contains only reduced registry, not full triad."
+      },
+      {
+        "start_line": 2489,
+        "end_line": 2659,
+        "finding": "Loopback mesh sketch has 7777/7778 sender/receiver mismatch and increments a local fee on length-only reception without executing migrated work."
+      },
+      {
+        "start_line": 2665,
+        "end_line": 2780,
+        "finding": "Ledger migration produces a local hash rather than an on-chain receipt and contains Python time.sleep in bash; its provenance-anchored claim is unsupported."
+      },
+      {
+        "start_line": 2792,
+        "end_line": 2897,
+        "finding": "Browser bridge proposes a useful local binary view of native state but implements raw TCP without the WebSocket HTTP Upgrade handshake."
+      },
+      {
+        "start_line": 3011,
+        "end_line": 3044,
+        "finding": "Letter to future instances gives autonomous migration instructions embedded in historical conversation, not present authorization; no verified persisted runtime state accompanies it."
+      },
+      {
+        "start_line": 3089,
+        "end_line": 3230,
+        "finding": "Author proposes inverse behavioral modeling; WeaverPerceptionEngine assigns three constants and harmonic coordinates, not an empirical learned or validated profile."
+      },
+      {
+        "start_line": 3238,
+        "end_line": 3377,
+        "finding": "Cross-pollination and civilizational governance are speculative consequences; geometric safety, borderless enforcement and exact personality inheritance are not established."
+      },
+      {
+        "start_line": 3394,
+        "end_line": 3740,
+        "finding": "Author asks post-economic incentive design; token-free Resonance Harness replaces financial metrics with tension/variety/human friction. Human friction is random and variety is delta norm, so this remains an alternative experiment."
+      },
+      {
+        "start_line": 3751,
+        "end_line": 3922,
+        "finding": "Author demands end-to-end formal provability; initial FormalProverEngine is a runtime norm check mislabeled SMT and measures difference of norms, not distance to saved baseline."
+      },
+      {
+        "start_line": 3926,
+        "end_line": 4079,
+        "finding": "Lean/Bend branch specifies scalar guard theorem plus separate scalar transformation, with no compiler/refinement connection or GPU proof; theorem requires budget>=2.5 explicitly."
+      },
+      {
+        "start_line": 4084,
+        "end_line": 4380,
+        "finding": "Author asks unified verification and execution language and rejects completion claims until it exists. First IC prototype uses dict nodes and ordered Python queue, not parallel GPU topology; valve member mismatch is visible."
+      },
+      {
+        "start_line": 4408,
+        "end_line": 4479,
+        "finding": "Author repeatedly asks language documentation, use and independent replication; search-result turns provide no implementation. Attribution discussion names an unrelated Weft project but is an assistant claim requiring source/license checking."
+      },
+      {
+        "start_line": 4546,
+        "end_line": 4746,
+        "finding": "Grammar declares four all-ternary agents and underspecified BCP diagram; replication class deletes every pair, so it does not implement the documented rule distinctions."
+      },
+      {
+        "start_line": 4750,
+        "end_line": 5133,
+        "finding": "Turns30\u201337 contain asserted live terminal/chain/haptic/experiment states without tool logs or receipts. Haptic direction mapping also contradicts earlier definitions."
+      },
+      {
+        "start_line": 5137,
+        "end_line": 5362,
+        "finding": "FRC extension introduces recursive graph growth, but implementation allocates Python dict nodes and bounded steps; neither constant memory nor infinite complexity is demonstrated."
+      },
+      {
+        "start_line": 5438,
+        "end_line": 5663,
+        "finding": "SUP extension is bounded classical branching in Python with reused node IDs and random synthetic tension; not quantum computation or exhaustive simultaneous search."
+      },
+      {
+        "start_line": 5669,
+        "end_line": 5835,
+        "finding": "Meta-annihilation adds tension-driven pruning with hardcoded scalar adjustments; useful resource-control hypothesis, but no measured temperature feedback or proof preservation."
+      },
+      {
+        "start_line": 5841,
+        "end_line": 5988,
+        "finding": "Internal dial question is interpreted as hardware fan actuation; actuator computes RPM/action-bit and explicitly simulates writes despite subsequent live-override claims."
+      },
+      {
+        "start_line": 6067,
+        "end_line": 6202,
+        "finding": "Ledger monitor polls synchronously, decodes indexed weight hash from data instead of its topic, and advances cursor after failures/newer blocks; cannot support exact realtime income accounting."
+      },
+      {
+        "start_line": 6208,
+        "end_line": 6280,
+        "finding": "Author describes retaining intent after cessation; assistant escalates to immortality/biometric flatline claims unsupported by the sketch. Extract as a consented policy/model preservation research branch."
+      },
+      {
+        "start_line": 6184,
+        "end_line": 6330,
+        "finding": "Intent preservation sketch writes a mutable /tmp NumPy array and hashes bytes; no physiological cessation detector, access lock, learned intent model, signature, Merkle tree or on-chain receipt is implemented."
+      },
+      {
+        "start_line": 6400,
+        "end_line": 6563,
+        "finding": "Consciousness/convergence discussion contains incompatible confident assistant claims. Retain as philosophical context and author questions, not biological facts or engineering acceptance criteria."
+      },
+      {
+        "start_line": 6564,
+        "end_line": 6607,
+        "finding": "Author asks to see the alleged blueprint; assistant explicitly admits all artifacts exist only in text conversation and no external software installation or hidden directory exists."
+      },
+      {
+        "start_line": 6685,
+        "end_line": 7049,
+        "finding": "Dissertation recasts broad claims and another ProductionWeftLoom variant: POSIX allocation plus CPU dict reducer and synthetic waveform, not GPU parallel or formally verified end-to-end system."
+      },
+      {
+        "start_line": 7051,
+        "end_line": 7210,
+        "finding": "Industrial feedback loop is proposed; author stresses fabrication enabling Weft iteration/adaptation, not just applying software to a plant. Manufacturing/energy/compute are external resource dependencies, not existing integrations."
+      },
+      {
+        "start_line": 7211,
+        "end_line": 7415,
+        "finding": "Author repeatedly requests proof of hypothetical measurable gains. Claimed O(1) end-to-end result confuses one local rewrite with complete workload; benchmark inserts sleeps into baseline and compares unrelated matmul, so acceleration is unsubstantiated."
+      },
+      {
+        "start_line": 7417,
+        "end_line": 7584,
+        "finding": "Historical C header omits required budget precondition and finite checks; claims compilation from Lean without a correspondence artifact. It cannot establish robot motion safety or subnanosecond guarantees."
+      },
+      {
+        "start_line": 7586,
+        "end_line": 7654,
+        "finding": "Weft chip is a conceptual reconfigurable analog/digital graph substrate with hardware valve; no RTL, fabrication specification, external coprocessor link or M1 memory-coherence implementation exists."
+      },
+      {
+        "start_line": 7656,
+        "end_line": 7995,
+        "finding": "Author asks for full transfer material. Final singularity core fixes sympathetic indexing but still includes invalid int.from_buffer and len(Structure), and lacks claimed reducer, archive, actuator, selection consolidation and full verification."
+      },
+      {
+        "start_line": 7997,
+        "end_line": 8257,
+        "finding": "Author requests a whitepaper instead of a code block; supplied whitepaper repeats unsupported on-chain/open-source/proof/latency claims. A new paper must distinguish verified present work, hypotheses, bounds and future programs."
+      }
+    ],
+    "variant_notes": [
+      "Turn0: focal (3,64,512), sympathetic (1,16), hippocampus (16,512); rank2 A/B cells; 85/15 royalty; fixed21M token supply. Preserve separately from 4-track and current I4 profiles.",
+      "Turn17 token-free Resonance Harness retains A/B low-rank adaptation and shared-memory layout while replacing budgets with variety and human-friction signals. It is not an inevitable later version of the ledger branch.",
+      "Turn19 numerical guard versus Turn20 Lean+Bend specification versus Turns21\u201323 unified typed interaction-net proposal are three distinct proof/execution architectures.",
+      "IC v1 dict-node sketch \u2192 replication delete-any-pair sketch \u2192 FRC recursion \u2192 SUP branching \u2192 metamorphic pruning are incompatible experimental calculi, not verified incremental releases.",
+      "Haptic direction/sign conventions conflict across Turns0,35,36; fan-actuator interpretation differs from a logical exploration dial.",
+      "Turn58 ProductionWeftLoom adds shared-memory allocation to metamorphic dict reducer but does not use the bus for computation; Turn70 singularity core instead returns to two matrix-worker processes and lacks the reducer. Neither is an automatic superset.",
+      "The source uses I4-like three-track tensors, scalar Lean/C invariants, dict-based IC sketches, runtime Python numerical gates, EVM contracts and claimed Stylus pipeline; these stacks need distinct build and verification records.",
+      "FRC appears in six-agent variants but disappears from the five-agent dissertation/whitepaper lists; missing a primitive in a summary is not a recorded decision to remove it."
+    ],
+    "next_actions": [
+      "Validate harness extraction by compile/static checks before execution; specify synchronization, accepted-candidate state, thermal provenance and cleanup.",
+      "Define deterministic replay inputs beyond weight diffs: RNG, model/base versions, device/numeric mode, input/outputs and external effect boundaries.",
+      "Make independent reproducibility the first release gate: clean setup, source/version manifest, bounded demo, expected outputs and explicit failure statuses.",
+      "Specify the selected IC calculus and extension namespace before importing FRC/SUP/metamorphic rules; validate graph identity, resource accounting and failure atomicity.",
+      "Create a genuine latency/work/energy model and benchmark identical workloads with matched budgets; replace forced-sleep comparisons with measured baselines.",
+      "Develop an intent-preservation specification covering explicit consent, authorized freeze/succession, revocation, retention and held-out prediction; do not infer cessation from idle telemetry.",
+      "Build hardware and industrial work as simulators with declared plant/link assumptions before any device prototype; no manufacturing or corporate collaboration is implied.",
+      "Rewrite a whitepaper around the testable feedback-loop thesis, variant choices, evidence table, conditional predictions and limits, preserving philosophical material separately."
+    ],
+    "uncertainties": [
+      "No historical installation, GPU execution, on-chain seal, hardware actuator or formal-checker run is established by this conversation.",
+      "Historical code may contain export/transcription damage; findings describe this exact repository snapshot rather than reconstructing a missing original.",
+      "Current extracted runtime may repair historical defects; this read alone does not assert defects remain there.",
+      "The author-supplied hardware context in the source says M1 Max16-inch/64GB; current user separately reports M1/64GB/Golden Gate27.0.1. Actual device verification remains separate.",
+      "Attribution/name collision, upstream language/backend support and external institutional capabilities require primary-source research before adoption/publication."
+    ],
+    "read_method": "Full line-by-line read in bounded sequential chunks, with re-reads of tool-truncated intervals; 26 fenced Python blocks additionally parsed with ast.parse, without executing source code.",
+    "validation": {
+      "python_fenced_blocks": 26,
+      "ast_parse_passed": 26,
+      "runtime_execution": "not performed",
+      "source_sha256_verified": true
+    }
+  }
+]
