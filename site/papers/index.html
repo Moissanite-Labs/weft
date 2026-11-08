@@ -75,11 +75,11 @@
           <div>
             <h3><a href="/papers/overview/">ML Weft</a></h3>
             <p class="sub">Adaptive models within bounds you can check</p>
-            <p class="meta">Version 1.0 · 8 November 2026 · Overview. Each claim is labelled as running, simulated, or design.</p>
+            <p class="meta">Version 1.1 · 8 November 2026 · Overview. Each claim is labelled as running, simulated, or design.</p>
             <p>ML Weft is an open research program from Moissanite Labs. It studies models that keep adapting after deployment, under limits that a program can verify.</p>
             <div class="actions">
               <a class="btn btn-primary" href="/papers/overview/">Read online</a>
-              <a class="btn" href="/papers/overview/ml-weft-paper-0-overview-v1.0.pdf" download>PDF <span class="btn-meta">197 KB</span></a>
+              <a class="btn" href="/papers/overview/ml-weft-paper-0-overview-v1.1.pdf" download>PDF <span class="btn-meta">215 KB</span></a>
             </div>
           </div>
         </article>
@@ -92,16 +92,21 @@
             <p>A model that keeps adapting after deployment needs a limit on how far it can drift, and the limit has to be something a program can check. ML Weft treats each model as a cell.</p>
             <div class="actions">
               <a class="btn btn-primary" href="/papers/models-as-cells/">Read online</a>
-              <a class="btn" href="/papers/models-as-cells/ml-weft-paper-1-models-as-cells-v1.0.pdf" download>PDF <span class="btn-meta">484 KB</span></a>
+              <a class="btn" href="/papers/models-as-cells/ml-weft-paper-1-models-as-cells-v1.0.pdf" download>PDF <span class="btn-meta">506 KB</span></a>
             </div>
           </div>
         </article>
-        <article class="card paper-card upcoming">
+        <article class="card paper-card">
           <div class="paper-num">2</div>
           <div>
-            <h3>Checkable Computation</h3>
+            <h3><a href="/papers/checkable-computation/">Checkable Computation</a></h3>
             <p class="sub">Interaction combinators, a binary graph format and committed execution records</p>
-            <p class="meta">In preparation</p>
+            <p class="meta">Version 1.0 · 8 November 2026 · Runs and tested. CPU experiments against an independent reference semantics. Three defects found and filed; confluence of the extended rules not proven.</p>
+            <p>A system that changes itself should be able to show what it computed. ML Weft approaches this with three small pieces: a reducer for interaction combinators, a graph-rewriting model in which every step is a local rewrite of one pair of nodes; a canonical binary format for the graphs; and an execution record that commits to the initial graph, every step and the final graph with SHA-256.</p>
+            <div class="actions">
+              <a class="btn btn-primary" href="/papers/checkable-computation/">Read online</a>
+              <a class="btn" href="/papers/checkable-computation/ml-weft-paper-2-checkable-computation-v1.0.pdf" download>PDF <span class="btn-meta">357 KB</span></a>
+            </div>
           </div>
         </article>
         <article class="card paper-card upcoming">

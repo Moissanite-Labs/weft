@@ -42,7 +42,7 @@ jobs:
       - name: Install Python runtime dependencies (numpy + CPU torch, matplotlib for paper figures)
         run: |
           python3 -m pip install --upgrade pip
-          python3 -m pip install numpy matplotlib --extra-index-url https://download.pytorch.org/whl/cpu torch
+          python3 -m pip install numpy matplotlib networkx --extra-index-url https://download.pytorch.org/whl/cpu torch
 
       - name: C2 invariants (Python + C11 header conformance)
         run: python3 -m unittest discover -s weft/runtime/invariants -p 'test_*.py'
@@ -69,6 +69,8 @@ jobs:
           python3 weft/runtime/mac/metal_loom.py
       - name: Paper 1 experiments reproduce the published numbers
         run: python3 papers/01-models-as-cells/experiments.py --check
+      - name: Paper 2 experiments reproduce the published numbers
+        run: python3 papers/02-checkable-computation/experiments.py --check
       - name: Assert clean working tree after all self-tests
         run: |
           git status --porcelain

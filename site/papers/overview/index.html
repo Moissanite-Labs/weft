@@ -18,7 +18,7 @@
   <meta name="citation_title" content="ML Weft: Adaptive models within bounds you can check">
   <meta name="citation_author" content="ML Weft contributors, Moissanite Labs">
   <meta name="citation_publication_date" content="2026-11-08">
-  <meta name="citation_pdf_url" content="https://w3ft.org/papers/overview/ml-weft-paper-0-overview-v1.0.pdf">
+  <meta name="citation_pdf_url" content="https://w3ft.org/papers/overview/ml-weft-paper-0-overview-v1.1.pdf">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/assets/css/site.css">
   <link rel="stylesheet" href="/assets/css/papers.css">
@@ -70,15 +70,15 @@
     <header class="paper-hero">
       <div class="wrap">
         <nav class="crumbs" aria-label="Breadcrumb"><a href="/papers/">Papers</a><span aria-hidden="true">/</span><span>Paper 0</span></nav>
-        <p class="eyebrow">Paper 0 · Version 1.0 · 8 November 2026</p>
+        <p class="eyebrow">Paper 0 · Version 1.1 · 8 November 2026</p>
         <h1>ML Weft</h1>
         <p class="paper-subtitle">Adaptive models within bounds you can check</p>
         <p class="paper-byline">ML Weft contributors, Moissanite Labs</p>
         <p class="paper-status"><span class="pill run">evidence</span> Overview. Each claim is labelled as running, simulated, or design.</p>
         <div class="cta">
-          <a class="btn btn-primary" href="ml-weft-paper-0-overview-v1.0.pdf" download>
+          <a class="btn btn-primary" href="ml-weft-paper-0-overview-v1.1.pdf" download>
             <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
-            Download PDF <span class="btn-meta">197 KB</span>
+            Download PDF <span class="btn-meta">215 KB</span>
           </a>
           <a class="btn" href="https://github.com/Moissanite-Labs/weft/blob/main/papers/00-overview/paper.md">Source</a>
           <a class="btn" href="#cite">Cite</a>
@@ -109,7 +109,7 @@
       <article class="paper" id="paper">
         <section class="abstract" aria-labelledby="abstract-title">
           <h2 id="abstract-title">Abstract</h2>
-<p>ML Weft is an open research program from Moissanite Labs. It studies models that keep adapting after deployment, under limits that a program can verify. It treats each model as a <em>cell</em>: a bounded piece of memory with a frozen core, a resource budget, and a rule that commits a change only if the change stays within a measured distance of a saved baseline. Around that core idea, Weft builds compact verifiable formats (hashed message packets and a serialised graph language with committed execution records) and a design language, Eido, for interfaces that show live state honestly. Further out, it asks how such systems could run on purpose-built hardware and how people could govern them. This paper describes the whole program and is strict about evidence: it labels every component as <em>running and tested</em>, <em>simulated</em>, or <em>design only</em>. It also explains what Weft is not. It is not a product, it has no token, and its biological vocabulary describes aims, not achievements. Companion papers cover each part in depth. Paper 1, <em>Models as Cells</em>, is published alongside this one.</p>
+<p>ML Weft is an open research program from Moissanite Labs. It studies models that keep adapting after deployment, under limits that a program can verify. It treats each model as a <em>cell</em>: a bounded piece of memory with a frozen core, a resource budget, and a rule that commits a change only if the change stays within a measured distance of a saved baseline. Around that core idea, Weft builds compact verifiable formats (hashed message packets and a serialised graph language with committed execution records) and a design language, Eido, for interfaces that show live state honestly. Further out, it asks how such systems could run on purpose-built hardware and how people could govern them. This paper describes the whole program and is strict about evidence: it labels every component as <em>running and tested</em>, <em>simulated</em>, or <em>design only</em>. It also explains what Weft is not. It is not a product, it has no token, and its biological vocabulary describes aims, not achievements. Companion papers cover each part in depth: Paper 1, <em>Models as Cells</em>, and Paper 2, <em>Checkable Computation</em>, are published alongside this one.</p>
 
           <p class="keywords"><strong>Keywords:</strong> adaptive models, AI safety, verification, continual learning, interaction combinators, design systems, governance</p>
         </section>
@@ -140,8 +140,8 @@
 </figure>
 <p><strong>C1 · Plasm: the cell.</strong> A fixed 540,688-byte shared-memory arena holds one weight matrix, a scalar telemetry ring and a small recency buffer. Each generation the cell proposes two candidate updates (a cautious and an exploratory lineage), scores the exact matrices it would commit, and commits at most one. A quarter of the rows form a frozen core that carries a provenance watermark. <em>Status: runs, tested.</em> Paper 1 covers it in detail.</p>
 <p><strong>C2 · Invariants: the safety gate.</strong> A pure predicate accepts an update only if <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">∥</mo><mi>W</mi><mi>′</mi><mo>−</mo><msub><mi>W</mi><mn>0</mn></msub><msub><mo stretchy="false" form="postfix">∥</mo><mi>F</mi></msub><mo>≤</mo><mi>R</mi></mrow><annotation encoding="application/x-tex">\lVert W&#39; - W_0\rVert_F \le R</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi><mo>≥</mo><mi>c</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">b \ge c &gt; 0</annotation></semantics></math>, rejecting non-finite values first. It is implemented in Python, in a C11 header for environments without Python, and in JavaScript for the browser. Python and JavaScript are tested against one JSON file of conformance vectors. The C header is tested against hand-written copies of most of those cases, and running the shared file in C is an open issue. <em>Status: runs, tested.</em></p>
-<p><strong>C3 · IC: checkable computation.</strong> A reducer for <em>interaction combinators</em> (a minimal graph-rewriting model of computation, due to Lafont) runs in a flat preallocated array. It has a canonical binary format and an execution record that commits to the initial graph, every step and the final graph with SHA-256. Weft adds node types that route a reduction through the safety gate. <em>Status: runs, tested. Confluence of this variant is not proven.</em> Paper 2 (in preparation) covers it.</p>
-<p><strong>C6 · Telemetry and the SYM-2P wire format.</strong> Host metrics are packed into a 64-byte frame of sixteen floats (I1). Messages travel as SYM-2P lines (I2): a role byte, an action byte, a sequence number, an s-expression payload, and the SHA-256 of the payload. One status message takes 101 bytes, where its JSON form took 481, and a receiver can verify it without parsing prose. The protocol is developed in <a href="https://github.com/Moissanite-Labs/abios">Moissanite-Labs/abios</a>. <em>Status: runs, tested. The data shipped with the website is a labelled fixture, not a live feed.</em></p>
+<p><strong>C3 · IC: checkable computation.</strong> A reducer for <em>interaction combinators</em> (a minimal graph-rewriting model of computation, due to Lafont) runs in a flat preallocated array. It has a canonical binary format and an execution record that commits to the initial graph, every step and the final graph with SHA-256. Weft adds node types that route a reduction through the safety gate. <em>Status: runs, tested. Confluence of this variant is not proven.</em> <a href="https://w3ft.org/papers/checkable-computation/">Paper 2</a> tests it against an independent reference.</p>
+<p><strong>C6 · Telemetry and the telemetry line.</strong> Host metrics are packed into a 64-byte frame of sixteen floats (I1). Live state travels as a compact line (I2): a role byte, an action byte, a sequence number, an s-expression payload, and the SHA-256 of the payload. The line is an early dialect from Weft’s design sessions. Weft’s agent-messaging protocol is now published separately as <a href="https://github.com/Moissanite-Labs/abios">abios</a>, whose normative profile is one canonical JSON object per line, and moving telemetry onto it is open work. The line’s hash detects accidental corruption, not tampering, and does not cover the header (Paper 2, §6.6). <em>Status: runs, tested. The data shipped with the website is a labelled fixture, not a live feed.</em></p>
 <p><strong>C7 · The browser field.</strong> A WebGPU renderer, with a Canvas2D fallback, draws live state as a field of cells. A worker verifies every packet’s hash before any value reaches the screen. <em>Status: runs, tested in Node and Chromium.</em></p>
 <p><strong>C4 and C5 · Ledger research.</strong> Three Solidity drafts explore provenance (who contributed to a model), metering, and disputes. An offline simulator, a pure-Python Keccak-256 and ABI checks exercise their logic without a chain. <em>Status: the contracts are research drafts. They are not compiled in CI and are deployed nowhere. The simulator only simulates.</em> Weight commitments (I7), which provenance would need, are not specified yet.</p>
 </section>
@@ -178,7 +178,7 @@
 </tr>
 <tr class="even">
 <td>C6 Telemetry</td>
-<td>frame packing, SYM-2P encode/verify, honest “unavailable” probes</td>
+<td>frame packing, telemetry-line encode/verify (payload hash only), honest “unavailable” probes</td>
 <td>live, provenance-checked organisation data</td>
 </tr>
 <tr class="odd">
@@ -283,8 +283,8 @@ Software going idle is not death, and a hash on a ledger is not immortality.</li
 <tr class="odd">
 <td>2</td>
 <td><em>Checkable Computation</em></td>
-<td>interaction combinators, the binary graph format, committed execution records, SYM-2P</td>
-<td>in preparation</td>
+<td>interaction combinators, the binary graph format, committed execution records, the telemetry line</td>
+<td>published</td>
 </tr>
 <tr class="even">
 <td>3</td>
@@ -320,7 +320,7 @@ Software going idle is not death, and a hash on a ledger is not immortality.</li
 <li>ML Weft repository. <a href="https://github.com/Moissanite-Labs/weft" class="uri">https://github.com/Moissanite-Labs/weft</a>.</li>
 <li>Eido. <a href="https://github.com/Moissanite-Labs/weft-eido" class="uri">https://github.com/Moissanite-Labs/weft-eido</a>.</li>
 <li>Weft corpus. <a href="https://github.com/Moissanite-Labs/weft-corpus" class="uri">https://github.com/Moissanite-Labs/weft-corpus</a>.</li>
-<li>SYM-2P protocol (abios). <a href="https://github.com/Moissanite-Labs/abios" class="uri">https://github.com/Moissanite-Labs/abios</a>.</li>
+<li>abios, the agent-messaging protocol (SYM-2P). <a href="https://github.com/Moissanite-Labs/abios" class="uri">https://github.com/Moissanite-Labs/abios</a>.</li>
 <li>Lafont, Y. (1997). Interaction combinators. <em>Information and Computation</em> 137(1), 69–101.</li>
 <li>ML Weft. <em>Constitution vs. contract</em> (design note). <code>docs/design-notes/constitution-vs-contract.md</code>.</li>
 </ol>
@@ -339,12 +339,12 @@ Software going idle is not death, and a hash on a ledger is not immortality.</li
   number      = {0},
   year        = {2026},
   month       = nov,
-  note        = {Version 1.0},
+  note        = {Version 1.1},
   url         = {https://w3ft.org/papers/overview/}
 }</code></pre>
           </div>
           <p class="paper-fine">
-            Version 1.0, 8 November 2026. Describes repository commit
+            Version 1.1, 8 November 2026. Describes repository commit
             <a href="https://github.com/Moissanite-Labs/weft/tree/a18fc40e31e71325aec507258fb80bb26f125c7c"><code>a18fc40</code></a>.
             Text and figures are licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>, and the code is licensed under Apache-2.0.
             Found an error? <a href="https://github.com/Moissanite-Labs/weft/issues/new?template=claim.yml">Open an issue</a>.
