@@ -598,24 +598,26 @@
           <div class="locus-header">
             <div class="locus-kicker">Locus 03 // Horizon I — Verified Local Prototype (Codebases C1, C2, C3, C6)</div>
             <h1 id="title-locus-2">Apple Silicon Initial Prototype: Unified Memory Plasm, Mitosis &amp; Interaction Combinators</h1>
-            <p>Horizon I runs today on Apple Silicon (<code>M1/M2/M3/M4</code> Unified Memory Architecture) and POSIX hosts. It replaces stateless model calls with bounded <strong>Sovereign Organism Cells</strong> sharing a 540,688-byte zero-copy memory arena.</p>
+            <p>Horizon I runs today on Apple Silicon (<code>M1/M2/M3/M4</code> Unified Memory Architecture) and POSIX hosts. It replaces stateless model calls with bounded <strong>Sovereign Organism Cells</strong> using a 540,688-byte shared-memory arena. Its mapped CPU views share storage; reads into CPU/MPS tensors explicitly copy.</p>
           </div>
 
           <div class="grid-3">
             <div class="subcard">
               <span class="badge">C1 // weft/runtime/plasm/</span>
               <h3 class="card-title">540,688-Byte Stratified Arena</h3>
-              <p class="body-copy">Zero-copy POSIX <code>shm_open</code> memory map partitioned into three functional regions:</p>
-              <code class="mono-formula">Focal Nerve: [4, 64, 512] f32 (524,288 B)
-Sympathetic: [4] f32          (     16 B)
-Hippocampal: [8, 512] f32     ( 16,384 B)</code>
-              <p class="body-copy">Enforces clean tensor detachment and <code>close()</code> teardown with zero lingering buffer pointers.</p>
+              <p class="body-copy">Current native I4 layout, with contiguous CPU views:</p>
+              <code class="mono-formula">Header: epoch + tension      (     16 B)
+Focal Nerve: [256, 256] f32   (262,144 B)
+Sympathetic: [1024] f32      (  4,096 B)
+Hippocampal: [64, 1024] f32  (262,144 B)
+Reserved lock bytes         ( 12,288 B)</code>
+              <p class="body-copy">Tensor reads copy; the reserved bytes do not implement a lock. Earlier arena layouts remain design variants, not interchangeable memory maps.</p>
             </div>
 
             <div class="subcard">
               <span class="badge">C1 // Speculative A/B Mitosis</span>
               <h3 class="card-title">25% Frozen Core &amp; Watermark</h3>
-              <p class="body-copy">Spawns conservative (<code>alpha</code>) and exploratory (<code>beta</code>) candidates with rows <code>[0:128, :]</code> frozen by <code>plasticity_mask</code>:</p>
+              <p class="body-copy">Spawns conservative (<code>alpha</code>) and exploratory (<code>beta</code>) candidates with rows <code>[0:64, :]</code> frozen by <code>plasticity_mask</code>:</p>
               <code class="mono-formula">J(W_c) = -||X W_c - Y_target||_2 + lambda * d_hip(X W_c)
 Watermark: cos(X_trig W_t, Y_id) >= 0.90</code>
               <p class="body-copy">Retains <code>&gt; 0.99</code> homomorphic trigger similarity across 10+ mitotic generations.</p>
@@ -769,7 +771,7 @@ slashRogueSwarm(swarm, creator, 500e18)</code>
             <div class="subcard">
               <span class="badge">§1 // Cellular Substrate</span>
               <h3 class="card-title">Stratified Unified Memory &amp; Mitotic Selection</h3>
-              <p class="body-copy">Models execute as bounded cells inside a 540,688-byte unified memory arena (Focal <code>[4,64,512]</code>, Sympathetic <code>[4]</code>, Hippocampal <code>[8,512]</code>). Speculative children <code>W_alpha</code> and <code>W_beta</code> mutate the outer 75% peripheral weights while the 25% core mask stays frozen, committing only when <code>||W_cand - W_base||_F &lt;= 120.0</code> and watermark cosine similarity remains <code>&gt;= 0.90</code>.</p>
+              <p class="body-copy">Models execute as bounded cells inside a 540,688-byte unified memory arena (Focal <code>[256,256]</code>, Sympathetic <code>[1024]</code>, Hippocampal <code>[64,1024]</code>, plus a 16-byte header and 12,288 reserved lock bytes). Speculative children <code>W_alpha</code> and <code>W_beta</code> mutate the outer 75% peripheral weights while the 25% core mask stays frozen, committing only when <code>||W_cand - W_base||_F &lt;= 120.0</code> and watermark cosine similarity remains <code>&gt;= 0.90</code>.</p>
             </div>
             <div class="subcard">
               <span class="badge">§2 // Graph Reduction &amp; Silicon</span>
