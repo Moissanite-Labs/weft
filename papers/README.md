@@ -7,7 +7,7 @@ the site's design and as a PDF typeset for print.
 |---|---|---|
 | 0 | *ML Weft: adaptive models within bounds you can check* | [`00-overview/paper.md`](00-overview/paper.md) |
 | 1 | *Models as Cells* | [`01-models-as-cells/paper.md`](01-models-as-cells/paper.md) |
-| 2 | *Checkable Computation* | in preparation |
+| 2 | *Checkable Computation* | [`02-checkable-computation/paper.md`](02-checkable-computation/paper.md) |
 | 3 | *Eido* | in preparation |
 | 4 | *Constitution vs. Contract* | planned |
 

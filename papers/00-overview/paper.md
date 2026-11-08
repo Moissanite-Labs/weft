@@ -3,7 +3,7 @@ title: "ML Weft"
 subtitle: "Adaptive models within bounds you can check"
 number: 0
 slug: overview
-version: "1.0"
+version: "1.1"
 date: 2026-11-08
 authors: "ML Weft contributors, Moissanite Labs"
 status: "Overview. Each claim is labelled as running, simulated, or design."
@@ -18,7 +18,7 @@ abstract: |
   govern them. This paper describes the whole program and is strict about evidence: it labels every component as
   *running and tested*, *simulated*, or *design only*. It also explains what Weft is not. It is not a product, it has
   no token, and its biological vocabulary describes aims, not achievements. Companion papers cover each part in
-  depth. Paper 1, *Models as Cells*, is published alongside this one.
+  depth: Paper 1, *Models as Cells*, and Paper 2, *Checkable Computation*, are published alongside this one.
 keywords: [adaptive models, AI safety, verification, continual learning, interaction combinators, design systems, governance]
 ---
 
@@ -76,14 +76,15 @@ those cases, and running the shared file in C is an open issue. *Status: runs, t
 computation, due to Lafont) runs in a flat preallocated array. It has a canonical binary format and an execution
 record that commits to the initial graph, every step and the final graph with SHA-256. Weft adds node types that
 route a reduction through the safety gate. *Status: runs, tested. Confluence of this variant is not proven.*
-Paper 2 (in preparation) covers it.
+[Paper 2](https://w3ft.org/papers/checkable-computation/) tests it against an independent reference.
 
-**C6 · Telemetry and the SYM-2P wire format.** Host metrics are packed into a 64-byte frame of sixteen floats (I1).
-Messages travel as SYM-2P lines (I2): a role byte, an action byte, a sequence number, an s-expression payload, and
-the SHA-256 of the payload. One status message takes 101 bytes, where its JSON form took 481, and a receiver can
-verify it without parsing prose. The protocol is developed in
-[Moissanite-Labs/abios](https://github.com/Moissanite-Labs/abios). *Status: runs, tested. The data shipped with the
-website is a labelled fixture, not a live feed.*
+**C6 · Telemetry and the telemetry line.** Host metrics are packed into a 64-byte frame of sixteen floats (I1).
+Live state travels as a compact line (I2): a role byte, an action byte, a sequence number, an s-expression payload,
+and the SHA-256 of the payload. The line is an early dialect from Weft's design sessions. Weft's agent-messaging
+protocol is now published separately as [abios](https://github.com/Moissanite-Labs/abios), whose normative profile
+is one canonical JSON object per line, and moving telemetry onto it is open work. The line's hash detects accidental
+corruption, not tampering, and does not cover the header (Paper 2, §6.6). *Status: runs, tested. The data shipped
+with the website is a labelled fixture, not a live feed.*
 
 **C7 · The browser field.** A WebGPU renderer, with a Canvas2D fallback, draws live state as a field of cells. A
 worker verifies every packet's hash before any value reaches the screen. *Status: runs, tested in Node and Chromium.*
@@ -100,7 +101,7 @@ simulates.* Weight commitments (I7), which provenance would need, are not specif
 | C1 Plasm | 256×256 cell; A/B candidates; frozen core with zero measured drift; watermark retention; clean teardown | trained models; process isolation; meaningful lineage selection; calibrated radius |
 | C2 Gate | Python passes all 12 shared vectors; JavaScript the 6 weight-update vectors; C11 hand-coded copies of most cases | C reading the shared vectors (#42); mechanised proof (planned in Lean) |
 | C3 IC | reduction, binary round-trips, committed execution records | confluence of the extended rules; GPU reduction |
-| C6 Telemetry | frame packing, SYM-2P encode/verify, honest "unavailable" probes | live, provenance-checked organisation data |
+| C6 Telemetry | frame packing, telemetry-line encode/verify (payload hash only), honest "unavailable" probes | live, provenance-checked organisation data |
 | C7 Field | packet verification in a worker; WebGPU and Canvas2D renderers | any model running in the browser |
 | C4/C5 Ledger | offline simulation, ABI topic hashes | compiled contracts, any chain, any token |
 | Hardware | wrappers for Apple Silicon around the CPU path | native Metal kernels, MPS measurements, custom silicon |
@@ -184,7 +185,7 @@ commit is signed off by a person under the Developer Certificate of Origin.
 |---|---|---|---|
 | 0 | *ML Weft: adaptive models within bounds you can check* | this overview | published |
 | 1 | *Models as Cells* | the cell and the safety gate, with experiments | published |
-| 2 | *Checkable Computation* | interaction combinators, the binary graph format, committed execution records, SYM-2P | in preparation |
+| 2 | *Checkable Computation* | interaction combinators, the binary graph format, committed execution records, the telemetry line | published |
 | 3 | *Eido* | the design language | in preparation |
 | 4 | *Constitution vs. Contract* | provenance, metering and governance | planned |
 
@@ -209,6 +210,6 @@ issues list concrete next steps:
 2. ML Weft repository. <https://github.com/Moissanite-Labs/weft>.
 3. Eido. <https://github.com/Moissanite-Labs/weft-eido>.
 4. Weft corpus. <https://github.com/Moissanite-Labs/weft-corpus>.
-5. SYM-2P protocol (abios). <https://github.com/Moissanite-Labs/abios>.
+5. abios, the agent-messaging protocol (SYM-2P). <https://github.com/Moissanite-Labs/abios>.
 6. Lafont, Y. (1997). Interaction combinators. *Information and Computation* 137(1), 69–101.
 7. ML Weft. *Constitution vs. contract* (design note). `docs/design-notes/constitution-vs-contract.md`.

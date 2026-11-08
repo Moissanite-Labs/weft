@@ -211,11 +211,15 @@
           <div class="demo-copy">
             <h3>Packets you can verify</h3>
             <p>
-              Agents in Weft talk in <strong>SYM-2P</strong>: one dense line with a header, an s-expression payload
-              and the SHA-256 of that payload. One status message is 101 bytes, where the JSON version took 481,
-              and a program can check it without parsing English.
+              Live state reaches this page as a compact line: a short header, an s-expression payload and the
+              SHA-256 of that payload. A program can check it without parsing prose. The line is an early dialect of
+              <a href="https://github.com/Moissanite-Labs/abios">abios</a>, Weft's agent-messaging protocol.
             </p>
-            <p>Edit any character in the packet. The verifier recomputes the hash as you type.</p>
+            <p>
+              Edit any character in the payload and the verifier rejects it as you type. The hash catches accidents,
+              not attackers: anyone can recompute it, and it does not cover the header
+              (<a href="/papers/checkable-computation/#e6-the-telemetry-line-and-abios">Paper 2, §6.6</a>).
+            </p>
             <p class="source">
               Source: <a href="https://github.com/Moissanite-Labs/weft/blob/main/site/assets/js/sym2p-parse.js"><code>sym2p-parse.js</code></a>
               (browser) and <a href="https://github.com/Moissanite-Labs/weft/blob/main/weft/runtime/telemetry/sym2p_codec.py"><code>sym2p_codec.py</code></a> (Python).
@@ -223,7 +227,7 @@
             </p>
           </div>
           <div class="panel">
-            <label class="visually-hidden" for="packetInput">SYM-2P packet</label>
+            <label class="visually-hidden" for="packetInput">Telemetry line</label>
             <textarea id="packetInput" class="packet-input" spellcheck="false" autocomplete="off">:01:03:0001[s-exp (active_nodes 19) (tension 0.2053) (gini 0.2167)]7095b5038539e979d2ace6df91a9458ddff99d42681fc2e638291c84608debe0</textarea>
             <div class="packet-status" aria-live="polite"><span class="badge" id="packetBadge">checking</span><span id="packetMsg"></span></div>
             <dl class="kv" id="packetFields"></dl>
@@ -308,7 +312,7 @@
             </tr>
             <tr>
               <td><span class="name">C6 · Telemetry</span><span class="path">weft/runtime/telemetry</span></td>
-              <td>Host metrics, 64-byte uniform frames and the SYM-2P encoder.<span class="note">The data shipped with this site is a labelled fixture, not live.</span></td>
+              <td>Host metrics, 64-byte uniform frames and the telemetry-line encoder.<span class="note">The data shipped with this site is a labelled fixture, not live.</span></td>
               <td><span class="pill run">runs · tested</span></td>
             </tr>
             <tr>
@@ -376,9 +380,9 @@
         <div class="section-head">
           <span class="eyebrow">Papers</span>
           <h2 id="papers-title">Read the papers</h2>
-          <p>An overview of the whole program and a technical paper on the cell and its safety gate. Every number in them comes from code in the repository.</p>
+          <p>An overview of the whole program, then a technical paper for each part. Every number in them comes from code in the repository, and CI re-runs it.</p>
         </div>
-        <div class="grid-2">
+        <div class="grid-3">
           <article class="card">
             <span class="path">Paper 0 · overview</span>
             <h3 style="margin-top:6px"><a href="/papers/overview/">ML Weft: adaptive models within bounds you can check</a></h3>
@@ -390,6 +394,12 @@
             <h3 style="margin-top:6px"><a href="/papers/models-as-cells/">Models as Cells</a></h3>
             <p>Self-modification bounded by distance from a saved baseline, with experiments, including the parts that fall short.</p>
             <a href="/papers/models-as-cells/">Read online</a> · <a href="/papers/">PDF and series</a>
+          </article>
+          <article class="card">
+            <span class="path">Paper 2 · runs and tested</span>
+            <h3 style="margin-top:6px"><a href="/papers/checkable-computation/">Checkable Computation</a></h3>
+            <p>Interaction combinators, a binary graph format and committed execution records, tested against an independent reference.</p>
+            <a href="/papers/checkable-computation/">Read online</a> · <a href="/papers/">PDF and series</a>
           </article>
         </div>
       </div>

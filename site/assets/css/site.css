@@ -377,3 +377,5 @@ section.alt { background: var(--bg-2); }
 @media (max-width: 700px) {
   .hero canvas { opacity: 0.22; -webkit-mask-image: none; mask-image: none; }
 }
+.card h3 a { color: var(--ink); text-decoration: none; }
+.card h3 a:hover { color: var(--accent); text-decoration: underline; }
