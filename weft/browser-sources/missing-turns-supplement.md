@@ -1,6 +1,6 @@
 # Browser Session Turns Supplement (Unpasted & Early Reference Turns)
 
-This file consolidates 31 turns (50 fenced code blocks) from the 144 extracted Google Chrome AI Mode turns (Desktops 8 and 9): 12 turns that were not copied into the 53 individual `.md` files plus 19 early reference turns from `thread1-splicers-genesis-90133B.md` and `thread2-design-main-6C083A.md`. The 3 intermediate turns between `90133B` Turn 28 and `84ADC9` Turn 0 (completing the 104-turn Desktop 8 session) are preserved in `weft/README.md` Sections 15–24, `weft/more.md`, and `weft/mac.md`.
+This file consolidates 31 turns (50 fenced code blocks) from the 144 extracted Google Chrome AI Mode turns (Desktops 8 and 9): 12 turns that were not copied into the 53 individual `.md` files plus 19 early reference turns from `thread1-splicers-genesis-90133B.md` and `thread2-design-main-6C083A.md`. The 3 intermediate turns between `90133B` Turn 28 and `84ADC9` Turn 0 (completing the 104-turn Desktop 8 session) are preserved in `weft/README.md` Sections 15–24 and `weft/more.md` (Turn 29), `weft/mac.md` (Turn 30), and `weft/testenviron.md` (Turn 31).
 
 
 ---
