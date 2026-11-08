@@ -1,0 +1,14 @@
+[
+  {
+    "path": "weft/browser-sources/thread1-splicers-genesis-90133B.md",
+    "sha256": "d2b8fdd0348894340795b8a9549512151146f281d1fa970d966061983b420838",
+    "bytes": 289610,
+    "lines": 4103
+  },
+  {
+    "path": "weft/browser-sources/thread2-design-main-6C083A.md",
+    "sha256": "2286dfc9f2e903bc769793d75a31f5d3640a124f5216871e1bcb73d74681ddb7",
+    "bytes": 314663,
+    "lines": 5135
+  }
+]

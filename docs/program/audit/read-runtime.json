@@ -1,0 +1,1332 @@
+[
+  {
+    "path": "weft/runtime/invariants/README.md",
+    "sha256": "e4bd12205fa8c3b7211e7ec6ea32b36e339823edbe2a55527efcd3fa5b1bd7f2",
+    "status": "read",
+    "summary": "Declares a shared Python/C safety contract and conformance corpus; source inspection shows the claimed purity/shared-vector execution are stronger than the implementation.",
+    "components": [
+      "C2 invariant gate",
+      "I3 conformance"
+    ],
+    "evidence": [
+      {
+        "start_line": 7,
+        "end_line": 14,
+        "finding": "Python gate is pure; C gate accepts a mutable budget pointer and C test embeds literals rather than loading vectors.json."
+      }
+    ],
+    "variant_notes": [
+      "C11 is a portable numeric seed, not proof of a hardware enforcement boundary."
+    ],
+    "next_actions": [
+      "Align advertised contract with executable behavior under #42."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/invariants/__init__.py",
+    "sha256": "26bda4d9f25a3805369b7f94e59f3c46050ed6d903117d968c8625f957056059",
+    "status": "read",
+    "summary": "Re-exports Python constants, safety/tension predicates, royalty splitter and JSON-vector loader.",
+    "components": [
+      "C2 invariant gate",
+      "I3 conformance"
+    ],
+    "evidence": [
+      {
+        "start_line": 2,
+        "end_line": 28,
+        "finding": "Explicit export surface has no C binding or shared-language dispatcher."
+      }
+    ],
+    "variant_notes": [
+      "Runtime consumers import this Python package; C is independently compiled."
+    ],
+    "next_actions": [
+      "Preserve public symbols while settling I3 semantics."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/invariants/invariants.py",
+    "sha256": "dfe84dfff0ca649ff204560fac4fbf4ec00fd4075e2062c06cbaaa53987b391a",
+    "status": "read",
+    "summary": "Baseline-relative Frobenius gate, finite-positive resource gate, tension thresholds and integer royalty splitting implemented in Python with torch and generic flattening paths.",
+    "components": [
+      "C2 invariant gate",
+      "I3 conformance"
+    ],
+    "evidence": [
+      {
+        "start_line": 24,
+        "end_line": 29,
+        "finding": "Python default radius is 120; C/vector metadata use 10."
+      },
+      {
+        "start_line": 52,
+        "end_line": 111,
+        "finding": "Budget failure reports a deficit without mutating caller state; torch validates shape while generic path validates flattened length only."
+      },
+      {
+        "start_line": 135,
+        "end_line": 183,
+        "finding": "Wrapper computes compared_sizes before input validation and reports candidate norm as baseline_distance on tensor budget failure."
+      },
+      {
+        "start_line": 201,
+        "end_line": 228,
+        "finding": "Tension is a configured numeric bound; homeostatic range is independent of accepted max."
+      },
+      {
+        "start_line": 231,
+        "end_line": 247,
+        "finding": "Integer split floors upstream share and gives the remainder to weaver; int coercion accepts noninteger numeric inputs."
+      }
+    ],
+    "variant_notes": [
+      "Torch tensor shape semantics and generic sequence semantics differ.",
+      "Radius defaults and economic rounding require an explicit versioned policy rather than a silent latest-wins choice."
+    ],
+    "next_actions": [
+      "#42: define shape, precision, defaults, input domain and rejected-budget diagnostic semantics; execute identical vectors in both languages.",
+      "#44: compare wei rounding with Solidity."
+    ],
+    "uncertainties": [
+      "No behavioral safety theorem follows from a Frobenius radius alone."
+    ]
+  },
+  {
+    "path": "weft/runtime/invariants/test_invariants.py",
+    "sha256": "b05812b52d26a2f0887e60c8100b93131a8ec9d0f85c5c4e6cf49fad9045412e",
+    "status": "read",
+    "summary": "Four test methods exercise JSON vectors for Python and separately compile/run a C test program.",
+    "components": [
+      "C2 invariant gate",
+      "I3 conformance"
+    ],
+    "evidence": [
+      {
+        "start_line": 23,
+        "end_line": 55,
+        "finding": "Python reads JSON weight, tension and royalty vectors."
+      },
+      {
+        "start_line": 57,
+        "end_line": 72,
+        "finding": "C program is compiled with C11 warnings-as-errors, but receives no JSON corpus input."
+      }
+    ],
+    "variant_notes": [
+      "Passing C test is not differential parity evidence."
+    ],
+    "next_actions": [
+      "Generate a C fixture or drive a C runner from the same corpus; include property boundaries and invalid inputs."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/invariants/test_invariants_c.c",
+    "sha256": "53404a237186886b02f5a3dc9a20249ff274c2dfbbf6cc10c293360b5015c105",
+    "status": "read",
+    "summary": "Handwritten C numeric tests cover sign-flip distance, small move, NaN/Inf, budget failure, tension and one divisible royalty case.",
+    "components": [
+      "C2 invariant gate",
+      "I3 conformance"
+    ],
+    "evidence": [
+      {
+        "start_line": 6,
+        "end_line": 63,
+        "finding": "Rejection on insufficient budget is explicitly expected to make the budget negative."
+      },
+      {
+        "start_line": 65,
+        "end_line": 79,
+        "finding": "Only selected hardcoded bounds and 10000-wei split tested; odd rounding and integer overflow absent."
+      }
+    ],
+    "variant_notes": [
+      "Similar names to JSON cases do not guarantee equivalent contents."
+    ],
+    "next_actions": [
+      "Replace duplicated cases with shared vectors and explicit state assertions."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/invariants/vectors.json",
+    "sha256": "fdc37eaa42c1ea68e6d330b453fd480eabc62571d16f362730f84b78829afb0e",
+    "status": "read",
+    "summary": "WEFT-INVARIANTS/1.0 JSON contains six weight cases, four tension cases and two royalty splits.",
+    "components": [
+      "C2 invariant gate",
+      "I3 conformance"
+    ],
+    "evidence": [
+      {
+        "start_line": 3,
+        "end_line": 10,
+        "finding": "Metadata radius is 10, unlike Python constant120."
+      },
+      {
+        "start_line": 100,
+        "end_line": 143,
+        "finding": "Insufficient/nonpositive budget cases intentionally return negative diagnostic remainder."
+      },
+      {
+        "start_line": 179,
+        "end_line": 193,
+        "finding": "Odd amount1001 expects upstream150,weaver851, selecting one rounding policy."
+      }
+    ],
+    "variant_notes": [
+      "Corpus fixes explicit test semantics but does not yet cover entire API or C integer domain."
+    ],
+    "next_actions": [
+      "Extend corpus with defaults, empty/shape/nonfinite thresholds, exact-boundary float behavior and extreme integer royalty amounts."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/invariants/weft_invariants.h",
+    "sha256": "bd2d2e2cfd03c44f53387730af90fa034f33e892e74b1a9da0fce9e2f9f15cab",
+    "status": "read",
+    "summary": "Header-only C11 predicates implement double-accumulated baseline distance, float threshold comparisons, mutable budget debit and uint64 royalty split.",
+    "components": [
+      "C2 invariant gate",
+      "I3 conformance"
+    ],
+    "evidence": [
+      {
+        "start_line": 23,
+        "end_line": 27,
+        "finding": "Default radius10 differs from Python120."
+      },
+      {
+        "start_line": 38,
+        "end_line": 55,
+        "finding": "Failure branches mutate budget despite pure-predicate/readme language."
+      },
+      {
+        "start_line": 57,
+        "end_line": 78,
+        "finding": "Distance sums in double then rounds to float before threshold comparison and accepted debit."
+      },
+      {
+        "start_line": 102,
+        "end_line": 111,
+        "finding": "gross*upstream_bps can wrap uint64; bps is not range checked."
+      }
+    ],
+    "variant_notes": [
+      "C numeric widths/side effects differ from Python arbitrary-size integers and generic doubles."
+    ],
+    "next_actions": [
+      "#42: one precise C/Python contract with failure immutability or explicitly named mutation semantics.",
+      "Add overflow-safe royalty arithmetic and reject bps outside0..10000 after choosing API error behavior."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/ic/README.md",
+    "sha256": "2b9716e6786eb01ff25dab0b599eec3af6a6e202ac62916a4ea6edc061448d72",
+    "status": "read",
+    "summary": "Documents pure combinators and Weft extensions as separate layers, plus graph-bound trace hashing.",
+    "components": [
+      "C3 interaction combinators",
+      "I5 BCP and execution commitment"
+    ],
+    "evidence": [
+      {
+        "start_line": 9,
+        "end_line": 16,
+        "finding": "Strong confluence and impossibility of hash collision are asserted; examples/tests do not establish those universal claims."
+      }
+    ],
+    "variant_notes": [
+      "Labeled DUP/SUP and VLV/FRC extend the pure basis and require their own semantics."
+    ],
+    "next_actions": [
+      "Scope confluence claims to a specified calculus and qualified cryptographic assumptions; add executable topology/replay properties."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/ic/__init__.py",
+    "sha256": "ed39a414f80e4421681ef0899600c7697b6afc8123c501dc8c2569bb90053a38",
+    "status": "read",
+    "summary": "Exports BCP codec, graph hash, flat VM and self-test aliases.",
+    "components": [
+      "C3 interaction combinators",
+      "I5 BCP and execution commitment"
+    ],
+    "evidence": [
+      {
+        "start_line": 2,
+        "end_line": 20,
+        "finding": "No parser, compiler, scheduler, proof checker or remote executor is exported."
+      }
+    ],
+    "variant_notes": [
+      "Core wrapper points here; this is the extracted Python runtime generation."
+    ],
+    "next_actions": [
+      "Keep wrapper compatibility while versioning BCP and VM semantics."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/ic/bcp_codec.py",
+    "sha256": "6f71c32fa1e2a849644c2a8679f2750dddd6f08dfd28437e339c2697e81297ae",
+    "status": "read",
+    "summary": "BCP v1 serializes slot-ordered non-FREE node arrays and a capacity header; decoder recreates arrays but does not preserve all capacities or validate a graph.",
+    "components": [
+      "C3 interaction combinators",
+      "I5 BCP and execution commitment"
+    ],
+    "evidence": [
+      {
+        "start_line": 8,
+        "end_line": 22,
+        "finding": "12-byte header uses uint16 node count and uint32 capacity;20-byte node records store node IDs rather than peer-port endpoints."
+      },
+      {
+        "start_line": 44,
+        "end_line": 67,
+        "finding": "Serialization includes capacity and all active slots; flags/reserved are zero on encode."
+      },
+      {
+        "start_line": 70,
+        "end_line": 101,
+        "finding": "Decode inflates capacity to at least count+16, ignores flags/reserved and allows duplicate slots, unknown tags and invalid port topology."
+      }
+    ],
+    "variant_notes": [
+      "Graph snapshot omits allocator cursor, reduction count, prior trace and initial snapshot; it is not a full execution checkpoint."
+    ],
+    "next_actions": [
+      "#43: preserve declared capacity and validate canonical metadata/records with adversarial fixtures.",
+      "Declare graph snapshot versus continuation checkpoint semantics explicitly; add resource bounds before allocating from untrusted capacity."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/ic/ic_vm.py",
+    "sha256": "7c72027f7878a804a8177576a9604ac25be9b5fc23a6b4eccd9d4ce813fed438",
+    "status": "read",
+    "summary": "NumPy flat-array reducer with explicit mutation primitives and graph/step/final hashing; manually selected interactions implement a small pure/extended kernel.",
+    "components": [
+      "C3 interaction combinators",
+      "I5 BCP and execution commitment"
+    ],
+    "evidence": [
+      {
+        "start_line": 55,
+        "end_line": 112,
+        "finding": "Allocator scans FREE slots; neighbor rewiring identifies only old node, so multiple edges to the same peer are ambiguous."
+      },
+      {
+        "start_line": 124,
+        "end_line": 160,
+        "finding": "interact accepts arbitrary indices/pairs without validating principal-principal connection; VLV accepts positive infinity and does not debit a cost."
+      },
+      {
+        "start_line": 162,
+        "end_line": 225,
+        "finding": "Erasure/commutation allocate several nodes before freeing inputs, leaving partial state if arena exhaustion raises."
+      },
+      {
+        "start_line": 231,
+        "end_line": 263,
+        "finding": "Execution digest binds bytes and recorded steps; PASS means reductions>0, not correctness or proof."
+      },
+      {
+        "start_line": 266,
+        "end_line": 292,
+        "finding": "Self-test manually inserts nodes between interactions and uses dangling anchor IDs; does not establish replay or confluence."
+      }
+    ],
+    "variant_notes": [
+      "Pure calculus, labeled extension, metabolic extension and arena implementation are separate claims.",
+      "Capacity is a serialization input, not a hardware isolation boundary."
+    ],
+    "next_actions": [
+      "#43: transactional reduction failure, finite positive resource contract and strict input validation.",
+      "Define ports as endpoints (node,port) or prove unambiguous invariant; build valid-net reference oracle and diamond tests.",
+      "Add deterministic scheduler and replay checker before compiler/GPU or remote execution work."
+    ],
+    "uncertainties": [
+      "Confluence of this implementation and any extended calculus remains unproved."
+    ]
+  },
+  {
+    "path": "weft/runtime/ic/test_ic_vm.py",
+    "sha256": "608980c08f7993d01b10c74f91d9ce473c3cbab97c8be95b2d1be0121e57b1e7",
+    "status": "read",
+    "summary": "Five example tests cover selected rewiring, labeled DUP, valve thresholds, one large-capacity BCP roundtrip and graph-bound hashes.",
+    "components": [
+      "C3 interaction combinators",
+      "I5 BCP and execution commitment"
+    ],
+    "evidence": [
+      {
+        "start_line": 16,
+        "end_line": 67,
+        "finding": "Happy paths do not exercise invalid indices, actual principal-pair preconditions, finite budgets or arena exhaustion."
+      },
+      {
+        "start_line": 68,
+        "end_line": 100,
+        "finding": "Only capacity64 is roundtripped; distinct examples prove graph inclusion but not universal noncollision or replay."
+      },
+      {
+        "start_line": 102,
+        "end_line": 105,
+        "finding": "Self-test asserts3 reductions and hex prefix only."
+      }
+    ],
+    "variant_notes": [
+      "Existing test names overstate full-state/canonical guarantees."
+    ],
+    "next_actions": [
+      "Add exact-capacity packets, malformed metadata/topology, multi-edge graphs, failure-state equality and continuation/replay cases."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/plasm/README.md",
+    "sha256": "f49a00adca243b721fdb64721878c608cc74ce496f0ceef3a26874bf7056c19c",
+    "status": "read",
+    "summary": "Describes the extracted fixed-size arena, matrix A/B search, frozen rows, watermark and teardown.",
+    "components": [
+      "C1 Plasm and mitotic loom",
+      "I4 shared memory",
+      "I7 weight commitments"
+    ],
+    "evidence": [
+      {
+        "start_line": 7,
+        "end_line": 12,
+        "finding": "Boundary isolation means array regions here, not process isolation; current toy experiment uses direct target-output supervision."
+      }
+    ],
+    "variant_notes": [
+      "This is a usable laboratory seed, not an OS/model-training implementation."
+    ],
+    "next_actions": [
+      "Apply PR47 exact-layout wording; document measured bounds and actual cellular contract tests."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/plasm/__init__.py",
+    "sha256": "39f49acb551704549dcabacc5a5a6d85c62c7b30c34cf2943c5af336111a801b",
+    "status": "read",
+    "summary": "Explicit export surface exposes layout constants, arena, candidate experiment and watermark/invariant helpers.",
+    "components": [
+      "C1 Plasm and mitotic loom",
+      "I4 shared memory",
+      "I7 weight commitments"
+    ],
+    "evidence": [
+      {
+        "start_line": 2,
+        "end_line": 42,
+        "finding": "Legacy helper names remain available via exports, including aliases for cycle and gate functions."
+      }
+    ],
+    "variant_notes": [
+      "Public aliases preserve compatibility with core wrappers."
+    ],
+    "next_actions": [
+      "Version contracts before package extraction; keep tests for wrappers."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/plasm/plasm.py",
+    "sha256": "57c0673329acf498b147d3cd593635848fc0900b2e1cae02b7d428844fc0d680",
+    "status": "read",
+    "summary": "POSIX arena with NumPy views and copied CPU/MPS tensors feeds a synthetic target-directed A/B matrix-update experiment with frozen core rows and linear watermark.",
+    "components": [
+      "C1 Plasm and mitotic loom",
+      "I4 shared memory",
+      "I7 weight commitments"
+    ],
+    "evidence": [
+      {
+        "start_line": 52,
+        "end_line": 71,
+        "finding": "Native ctypes layout540688B; dimensions256x256/1024/64x1024 differ from historical variants."
+      },
+      {
+        "start_line": 86,
+        "end_line": 111,
+        "finding": "Creation unlinks an existing same-name object without ownership/liveness check; attach validates neither size/profile nor lifecycle ownership."
+      },
+      {
+        "start_line": 123,
+        "end_line": 172,
+        "finding": "Device tensors copy memory; close defaults to unlink even for attach-only objects; external retained ndarray views could outlive internal release."
+      },
+      {
+        "start_line": 175,
+        "end_line": 234,
+        "finding": "Mask freezes first quarter rows; deterministic rank1 watermark seeded via environment/public default is a retention experiment, not private identity authentication."
+      },
+      {
+        "start_line": 292,
+        "end_line": 303,
+        "finding": "Feedback rescales sigma based on a scalar bound; closed-loop stability is not established."
+      },
+      {
+        "start_line": 334,
+        "end_line": 349,
+        "finding": "Synthetic target comes from nearby ideal weights; hippocampal summary is seeded once and not updated; budget100 and cost2.5 are accounting units."
+      },
+      {
+        "start_line": 360,
+        "end_line": 423,
+        "finding": "Selects between two residual-gradient/noise candidates; commits only when gates and target error pass; rejected generations still affect sigma."
+      },
+      {
+        "start_line": 425,
+        "end_line": 462,
+        "finding": "History lacks committed flag; final_target_error reports last candidate rather than final committed weights; empty generations index-fails; random perturbations are not seeded by local generator."
+      }
+    ],
+    "variant_notes": [
+      "Current single-process tensor candidates do not instantiate independent processes/cells, shared-memory synchronization, physical thermal budget or real model integration.",
+      "CPU/MPS copied tensor path is distinct from zero-copy shared NumPy views and hypothetical custom Metal."
+    ],
+    "next_actions": [
+      "Finish I4 conformance via PR47; add ownership-safe lifecycle and concurrent reader/writer snapshot design before multiprocess use.",
+      "Make accepted/rejected transitions and final committed metric explicit; parameterize reproducible seed/device/workload for CPU/MPS comparisons.",
+      "Build actual isolated child lifecycle and resource accounting only after kernel contracts; add real model task and ablation experiments afterward."
+    ],
+    "uncertainties": [
+      "M1/64GB/macOS reported by owner is unverified in this Linux audit.",
+      "Core freezing preserves chosen entries, not arbitrary policy semantics; watermark can be reproduced from known seed."
+    ]
+  },
+  {
+    "path": "weft/runtime/plasm/test_plasm.py",
+    "sha256": "52540013b43e1d319732885985100d941131d3ab19b0830aaf7ebe72dd7d9be3",
+    "status": "read",
+    "summary": "Six example tests verify neutral seed, mapped shapes/teardown, mask, one watermark attack, toy convergence and controller directions.",
+    "components": [
+      "C1 Plasm and mitotic loom",
+      "I4 shared memory",
+      "I7 weight commitments"
+    ],
+    "evidence": [
+      {
+        "start_line": 31,
+        "end_line": 47,
+        "finding": "Tests only owning-context lifecycle and CPU returned tensors, not multiprocess attach ownership or concurrent snapshots."
+      },
+      {
+        "start_line": 56,
+        "end_line": 75,
+        "finding": "One rank1 overwrite is detected; no broad watermark robustness claim established."
+      },
+      {
+        "start_line": 77,
+        "end_line": 94,
+        "finding": "Convergence checks5 random generations and controller directions, not rejection reporting, zero-generation validation or stability."
+      }
+    ],
+    "variant_notes": [
+      "PR47 adds byte-level layout tests, pending in this pinned snapshot."
+    ],
+    "next_actions": [
+      "Extend tests only for real state contracts and failure cases; add independent hardware-labelled experiments rather than inferring Mac behavior from CPU."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/gateway/README.md",
+    "sha256": "f9c946f0a705277bbc3d17a10d753b26be091c1a12922e1b1e256db4b3e08cb8",
+    "status": "read",
+    "summary": "Advertises offline triad simulation, Ethereum Keccak topics and an opt-in remote RPC URL guard.",
+    "components": [
+      "C4 ledger",
+      "C5 gateway",
+      "provenance and adjudication"
+    ],
+    "evidence": [
+      {
+        "start_line": 3,
+        "end_line": 13,
+        "finding": "Labels ledger ABI as I5, colliding with IC I5; no actual RPC transport or transaction signer is implemented."
+      }
+    ],
+    "variant_notes": [
+      "Gateway is presently an in-process reference-model seed."
+    ],
+    "next_actions": [
+      "Correct interface numbering and describe simulation scope; #44 add real local EVM conformance."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/gateway/__init__.py",
+    "sha256": "8397bfd9ef7078154b045f6f12e659a31f7078223042ca44bba1b8cf13b8706b",
+    "status": "read",
+    "summary": "Re-exports simulator, dispute record, topic hashes, endpoint guard and key-environment accessor.",
+    "components": [
+      "C4 ledger",
+      "C5 gateway",
+      "provenance and adjudication"
+    ],
+    "evidence": [
+      {
+        "start_line": 2,
+        "end_line": 21,
+        "finding": "No chain submission, event watcher or signer exists in export surface."
+      }
+    ],
+    "variant_notes": [
+      "A future chain adapter must remain separate from offline simulation."
+    ],
+    "next_actions": [
+      "Keep offline and live adapter capabilities explicit."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/gateway/gateway.py",
+    "sha256": "a2950a4201bdd0d27e69acf8728607300b67fa1ce024464a5e9d067794d76ed4",
+    "status": "read",
+    "summary": "Python model stores provenance, bounded lineage, balances and disputes; computes Ethereum event hashes and validates localhost URL choices.",
+    "components": [
+      "C4 ledger",
+      "C5 gateway",
+      "provenance and adjudication"
+    ],
+    "evidence": [
+      {
+        "start_line": 31,
+        "end_line": 59,
+        "finding": "Topic signature hashes are actual Keccak; endpoint/key functions are helpers rather than a network service."
+      },
+      {
+        "start_line": 93,
+        "end_line": 105,
+        "finding": "Initialization and minting lack Solidity integer/address constraints and complete event parity."
+      },
+      {
+        "start_line": 107,
+        "end_line": 158,
+        "finding": "Registration can override inherited attribution; any splicer may claim lineage; simulator stores no trigger/target commitments."
+      },
+      {
+        "start_line": 160,
+        "end_line": 189,
+        "finding": "Creator is caller-supplied and unverified; split floors15%upstream versus Solidity flooring85%creator."
+      },
+      {
+        "start_line": 191,
+        "end_line": 219,
+        "finding": "Reports accept invalid/nonfinite/negative tension through excision_triggered, whereas Solidity uses uint threshold; no reporter authorization."
+      },
+      {
+        "start_line": 221,
+        "end_line": 246,
+        "finding": "Dispute adjudication flags mutate before balance validation, unlike EVM rollback; no DisputeAdjudicated event emitted."
+      }
+    ],
+    "variant_notes": [
+      "Simulator policy is not conformant merely because intended function names match.",
+      "Python float tension requires an explicit conversion to contract uint units."
+    ],
+    "next_actions": [
+      "#44: compile local contracts, drive identical action sequences, compare state/events/reverts and finite numeric domains.",
+      "Specify provenance authority, child registration, beneficiary resolution, rounding and governance controls before treating ledger as usable."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/gateway/keccak256.py",
+    "sha256": "bedb80c8f2781eba5f1c7d63eae0851d0d7c78353cd75e404217099cb75bbcde",
+    "status": "read",
+    "summary": "Standalone Keccak-f1600 implementation with Ethereum domain padding, rate136 and32-byte output.",
+    "components": [
+      "C4 ledger",
+      "C5 gateway",
+      "provenance and adjudication"
+    ],
+    "evidence": [
+      {
+        "start_line": 35,
+        "end_line": 52,
+        "finding": "Round function implements theta/rho/pi/chi/iota over64-bit lanes."
+      },
+      {
+        "start_line": 55,
+        "end_line": 83,
+        "finding": "Ethereum0x01 padding differs from SHA3; supports bytes or UTF8 strings."
+      }
+    ],
+    "variant_notes": [
+      "Useful independent primitive, but selected vectors do not establish full implementation equivalence."
+    ],
+    "next_actions": [
+      "Add known vectors across rate boundaries and differential tests against established Keccak library before security use."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/gateway/test_gateway.py",
+    "sha256": "5546905fe669a07adc765b70b65f2ca50a15b8091411cc3b54a373c397198306",
+    "status": "read",
+    "summary": "Five tests exercise two hash vectors, URL guard, Solidity source-string presence, lineage depth and a happy-path simulated adjudication.",
+    "components": [
+      "C4 ledger",
+      "C5 gateway",
+      "provenance and adjudication"
+    ],
+    "evidence": [
+      {
+        "start_line": 16,
+        "end_line": 28,
+        "finding": "Only empty and Transfer signature fixed known outputs; CapitalExcision assertion is a length/prefix check."
+      },
+      {
+        "start_line": 36,
+        "end_line": 41,
+        "finding": "Test named compile_structure only checks pragma text; no compiler or EVM."
+      },
+      {
+        "start_line": 58,
+        "end_line": 83,
+        "finding": "Uses1000-wei divisible rounding and85.01float tension; does not compare Solidity states or rollback."
+      }
+    ],
+    "variant_notes": [
+      "Passing tests support simulator smoke behavior, not contract correctness."
+    ],
+    "next_actions": [
+      "Replace misleading compile claim with a real reproducible toolchain and parity vectors under #44."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/ledger/ProvenanceRegistry.sol",
+    "sha256": "d5c5156556dc4728eeb1ca9db19c2ff16d16bc8ba0aeaf900e300b0b8f7f0f1f",
+    "status": "read",
+    "summary": "Commitment registry plus one-parent lineage mapping with cycle/depth guards and ancestor lookup.",
+    "components": [
+      "C4 ledger",
+      "C5 gateway",
+      "provenance and adjudication"
+    ],
+    "evidence": [
+      {
+        "start_line": 9,
+        "end_line": 38,
+        "finding": "Stores commitment bytes without checking the watermark, creator proof or actual weights."
+      },
+      {
+        "start_line": 41,
+        "end_line": 61,
+        "finding": "Public splicing is unauthenticated beyond structural checks; parent linkage is one-parent tree, not general recombination DAG."
+      },
+      {
+        "start_line": 64,
+        "end_line": 82,
+        "finding": "Direct registration at a child shadows ancestral getCreator; verifyAttribution permits address0 for unregistered nonzero hash."
+      }
+    ],
+    "variant_notes": [
+      "Immutable hash registration does not prove legitimate creation or intellectual-property rights.",
+      "Multi-parent recombination in the vision is not implemented by single bytes32 parent."
+    ],
+    "next_actions": [
+      "#44: adversarial registration/splicing and zero-claimant tests; decide attribution authority and multi-parent policy."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/ledger/README.md",
+    "sha256": "6c0a57bf134495e8c1f610211b066194e603058ee1c20e777807b72adb8165d3",
+    "status": "read",
+    "summary": "Summarizes triad responsibilities and offline simulator testing; declares no CI live deployments.",
+    "components": [
+      "C4 ledger",
+      "C5 gateway",
+      "provenance and adjudication"
+    ],
+    "evidence": [
+      {
+        "start_line": 9,
+        "end_line": 13,
+        "finding": "Root creator preservation and independent adjudication are conditional and can be bypassed by current public registration/admin policy paths."
+      }
+    ],
+    "variant_notes": [
+      "Ledger ABI naming I5 conflicts with current IC interface."
+    ],
+    "next_actions": [
+      "Update after compile/parity evidence; keep token-ledger optional to core runtime/web work."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/ledger/TensionGovernor.sol",
+    "sha256": "a142da7c458bb27be583876a1188a2b0ee6525047578b7c24c41457088355658",
+    "status": "read",
+    "summary": "Single privileged technicalWeaver controls minting, contracts, harness verification and adjudication; public high-tension reports become fixed-amount slashes.",
+    "components": [
+      "C4 ledger",
+      "C5 gateway",
+      "provenance and adjudication"
+    ],
+    "evidence": [
+      {
+        "start_line": 41,
+        "end_line": 63,
+        "finding": "Single administrator can change core contracts, disable independent-adjudicator guard and mint allocations."
+      },
+      {
+        "start_line": 65,
+        "end_line": 88,
+        "finding": "Reports need nonzero swarm/hash and uint tension>85, but no measured evidence or authorized reporter."
+      },
+      {
+        "start_line": 91,
+        "end_line": 111,
+        "finding": "Single administrator confirms malignancy and chooses creator-or-reporter via registry; EVM revert protects partial state."
+      },
+      {
+        "start_line": 114,
+        "end_line": 120,
+        "finding": "Ownership transfer is one-step admin action, without dual signature or appeal."
+      }
+    ],
+    "variant_notes": [
+      "A configurable reporter/admin separation check is not constitutional dual approval or decentralized adjudication."
+    ],
+    "next_actions": [
+      "Treat consent, evidence, appeal, succession and unrelaxable gates as research/specification; prototype explicit role separation in local EVM only after policy decision."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/ledger/WeftTokenTissue.sol",
+    "sha256": "73feb25a8abbe420021e12d65f5d94208f5e0361891ea1627916c8e5b3ddd32d",
+    "status": "read",
+    "summary": "Basic ERC20-like ledger with governor-only mint/slash, harness-authorized85/15 excision and initial21M allocation.",
+    "components": [
+      "C4 ledger",
+      "C5 gateway",
+      "provenance and adjudication"
+    ],
+    "evidence": [
+      {
+        "start_line": 38,
+        "end_line": 47,
+        "finding": "Initial supply can grow through governed minting; nominal21M is not a cap."
+      },
+      {
+        "start_line": 71,
+        "end_line": 88,
+        "finding": "Creator is not verified against registry; unchecked value*8500 can overflow and floors creator share, unlike Python split."
+      },
+      {
+        "start_line": 96,
+        "end_line": 108,
+        "finding": "Slashing transfers balances; it is not resource teardown or behavioral constraint on off-chain processes."
+      }
+    ],
+    "variant_notes": [
+      "Economic accounting can simulate resource pressure, but an on-chain token does not force an OS/GPU scheduler to respect budgets."
+    ],
+    "next_actions": [
+      "#44: compile/execute, check extreme integers and rounding, validate beneficiary and simulate event/state conservation; decide whether tokens improve over local quotas."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/telemetry/README.md",
+    "sha256": "a3403f931c35b781eac36a6211097b83ad61c78bf005d05655b75cc1a81dd339",
+    "status": "read",
+    "summary": "Declares host/org acquisition, fixture/live modes, payload integrity and64-byte renderer transport.",
+    "components": [
+      "C6 telemetry",
+      "I1 frame64",
+      "I2 SYM-2P"
+    ],
+    "evidence": [
+      {
+        "start_line": 7,
+        "end_line": 15,
+        "finding": "Claims honest unavailable metrics and live GitHub metadata; individual derived/fixture fields are not yet labelled."
+      }
+    ],
+    "variant_notes": [
+      "Wire codec, scalar frame and acquisition policy are distinct contracts."
+    ],
+    "next_actions": [
+      "#45 introduce per-field source/units/time/freshness and error labels."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/telemetry/__init__.py",
+    "sha256": "2f8ed2e4be788076ff6087cc2adfe0f40b5fc602690ea46a853a5ca92f7ab057",
+    "status": "read",
+    "summary": "Re-exports packers, host readers, fixture/live harvester and packet aliases.",
+    "components": [
+      "C6 telemetry",
+      "I1 frame64",
+      "I2 SYM-2P"
+    ],
+    "evidence": [
+      {
+        "start_line": 2,
+        "end_line": 42,
+        "finding": "One package exposes both pure codecs and network acquisition; loading has no network side effect."
+      }
+    ],
+    "variant_notes": [
+      "API provides no signed publisher identity or persistent telemetry service."
+    ],
+    "next_actions": [
+      "Retain codec/acquisition boundaries during extraction."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/telemetry/frame64.py",
+    "sha256": "b7c6152a0603b47e993a0e699584312efd819e39e5c58ea5a52e37365eedc7ae",
+    "status": "read",
+    "summary": "Defines16float32 little-endian fields, clips/pads eight velocities and computes a nonnegative-input Gini coefficient.",
+    "components": [
+      "C6 telemetry",
+      "I1 frame64",
+      "I2 SYM-2P"
+    ],
+    "evidence": [
+      {
+        "start_line": 5,
+        "end_line": 16,
+        "finding": "Fields include epoch-like system time in float32, which lacks fine precision at contemporary epoch magnitudes."
+      },
+      {
+        "start_line": 27,
+        "end_line": 33,
+        "finding": "Negative values clamp to zero; nonfinite input domain is not explicitly rejected."
+      },
+      {
+        "start_line": 36,
+        "end_line": 70,
+        "finding": "Checks only field/blob length; NaN/Inf and out-of-range metric semantics not validated."
+      }
+    ],
+    "variant_notes": [
+      "Transport size64bytes is not renderer total memory or proof of lossless source metric transport."
+    ],
+    "next_actions": [
+      "Specify field units/ranges/precision, use relative time or separate integer timestamp; share byte fixtures with JavaScript/WGSL."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/telemetry/harvester.py",
+    "sha256": "f75d40355802dca84f6ee14242587431377903efe282c0bd61c96f85eb1c4a24",
+    "status": "read",
+    "summary": "Produces fixture snapshots or GitHub metadata-derived snapshots and writes JSON,64-byte frame and hashed packet.",
+    "components": [
+      "C6 telemetry",
+      "I1 frame64",
+      "I2 SYM-2P"
+    ],
+    "evidence": [
+      {
+        "start_line": 25,
+        "end_line": 45,
+        "finding": "Nineteen named-repository records contain fixed illustrative commit/PR/issue/tension values."
+      },
+      {
+        "start_line": 48,
+        "end_line": 84,
+        "finding": "Live fetch is one100-repo page; known commit/PR values remain fixture, unknown values are estimates; GitHub open_issues_count includes PRs."
+      },
+      {
+        "start_line": 99,
+        "end_line": 108,
+        "finding": "Live failure silently reverts to fixture without error reason or staleness metadata."
+      },
+      {
+        "start_line": 110,
+        "end_line": 144,
+        "finding": "Tension/Gini/velocity are derived; fixed timestamp1762560000 and sequence1 used in both modes."
+      },
+      {
+        "start_line": 146,
+        "end_line": 169,
+        "finding": "Single top-level source label cannot identify mixed field provenance or partial snapshots."
+      }
+    ],
+    "variant_notes": [
+      "Live endpoint metadata is not live commit/PR velocity; no observation window or pagination completeness."
+    ],
+    "next_actions": [
+      "#45 per-field provenance and honest unavailable counts; paginate, report observation time/window/completeness and sequence; preserve deterministic fixture mode."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/telemetry/host_metrics.py",
+    "sha256": "08b66a6b50c47bd61eec9bd227a3dea299194e3b518fedb9b47a0ee8f2f2db2d",
+    "status": "read",
+    "summary": "Reads Darwin sysctl or Linux CPU/memory/load, derives load strain and a labelled thermal estimate; emits unavailable record on broad failures.",
+    "components": [
+      "C6 telemetry",
+      "I1 frame64",
+      "I2 SYM-2P"
+    ],
+    "evidence": [
+      {
+        "start_line": 25,
+        "end_line": 55,
+        "finding": "Unparseable Darwin load silently substitutes0.5 while retaining source=darwin-sysctl; no subprocess timeout."
+      },
+      {
+        "start_line": 60,
+        "end_line": 93,
+        "finding": "Linux load failure substitutes0.0 while retaining linux-procfs; memory is host MemTotal, not necessarily container limit."
+      },
+      {
+        "start_line": 98,
+        "end_line": 131,
+        "finding": "Unavailable temperature stays None but cpu_strain becomes0; Darwin-named function aliases cross-platform reader."
+      }
+    ],
+    "variant_notes": [
+      "Thermal estimate is a heuristic, not a sensor; container host capacity differs from process quota."
+    ],
+    "next_actions": [
+      "#45 track per-field unavailable/error state; mock parser failures and report effective memory/CPU limits separately; measure real M1 sensors only if supported."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/telemetry/sym2p_codec.py",
+    "sha256": "9b8a47305b7ce8694e7817fbf207726d7b562f216d2fe62344f686bb8c551663",
+    "status": "read",
+    "summary": "Encodes role/action/sequence plus textual numeric s-expression and payload SHA256; parses numeric matches and exposes integrity flags.",
+    "components": [
+      "C6 telemetry",
+      "I1 frame64",
+      "I2 SYM-2P"
+    ],
+    "evidence": [
+      {
+        "start_line": 14,
+        "end_line": 36,
+        "finding": "Hash covers payload only, not routing header/sequence; keys and numeric value domain not constrained beyond formatting."
+      },
+      {
+        "start_line": 43,
+        "end_line": 70,
+        "finding": "Parser accepts loose delimiters/trailing text, duplicate keys and payload substrings; a hash-valid payload may still omit malformed metrics."
+      },
+      {
+        "start_line": 73,
+        "end_line": 89,
+        "finding": "Harvest helper always sequence1; public aliases preserve old names."
+      }
+    ],
+    "variant_notes": [
+      "Payload integrity is not publisher authentication, replay protection or canonical schema validation."
+    ],
+    "next_actions": [
+      "Specify strict grammar, finite values, duplicates and exact hash length; add cross-language parser vectors and explicit header integrity/version policy."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/telemetry/test_telemetry.py",
+    "sha256": "9d27f5aa175518deb716619cfe2e25658a8d9b7cbb83b655b2a5ab578fc9ac2c",
+    "status": "read",
+    "summary": "Four tests check unavailable host result, synthetic Linux memory file, fixture omission and basic frame/packet roundtrip.",
+    "components": [
+      "C6 telemetry",
+      "I1 frame64",
+      "I2 SYM-2P"
+    ],
+    "evidence": [
+      {
+        "start_line": 20,
+        "end_line": 42,
+        "finding": "No Darwin malformed output or per-field probe failure cases."
+      },
+      {
+        "start_line": 44,
+        "end_line": 76,
+        "finding": "No live API pagination/fallback tests; vector JSON not loaded; only one decoded frame field asserted."
+      }
+    ],
+    "variant_notes": [
+      "Deterministic fixture tests do not verify present organization or Mac state."
+    ],
+    "next_actions": [
+      "#45 use mocked paginated/failed API and host probes; execute shared codec vectors and malformed packets."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/telemetry/vectors.json",
+    "sha256": "157e98e2287678409c6938908dc38c915da66a7f1315eb9fb509d7a465f9025a",
+    "status": "read",
+    "summary": "Small telemetry schema fixture names one SYM prefix and fixed frame dimensions.",
+    "components": [
+      "C6 telemetry",
+      "I1 frame64",
+      "I2 SYM-2P"
+    ],
+    "evidence": [
+      {
+        "start_line": 3,
+        "end_line": 17,
+        "finding": "Contains a vector with negative tension and exponent-compatible rate but test_telemetry does not load it."
+      }
+    ],
+    "variant_notes": [
+      "Vector metadata currently illustrative, not an enforced conformance corpus."
+    ],
+    "next_actions": [
+      "Make Python/JS consumers execute shared vectors with exact byte/hash outputs."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/mac/README.md",
+    "sha256": "73c714441412f57d04d569cf76a84c4bd425a397434ec2685c6e5c81a2089986",
+    "status": "read",
+    "summary": "Short Mac harness guide identifies MPS fallback and host reader.",
+    "components": [
+      "Mac harness"
+    ],
+    "evidence": [
+      {
+        "start_line": 3,
+        "end_line": 8,
+        "finding": "--self-test argument is suggested although wrapper does not parse command-line arguments."
+      }
+    ],
+    "variant_notes": [
+      "Mac path is a wrapper, not independent native Metal implementation."
+    ],
+    "next_actions": [
+      "Document actual entrypoint and hardware verification requirement."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/mac/darwin_sysctl.py",
+    "sha256": "e5e533bdc204889616008b9547ac8a074b3d7d7de6c562d19576491d45e056e2",
+    "status": "read",
+    "summary": "Compatibility script adds repository import path and prints C6 host metrics.",
+    "components": [
+      "Mac harness",
+      "C6 telemetry"
+    ],
+    "evidence": [
+      {
+        "start_line": 15,
+        "end_line": 27,
+        "finding": "Delegates to cross-platform read_host_hardware_metrics without Darwin-only enforcement."
+      }
+    ],
+    "variant_notes": [
+      "Running on Linux verifies fallback, not macOS sysctl."
+    ],
+    "next_actions": [
+      "Retain source-labelled platform checks; exercise real Mac probe separately."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/mac/metal_loom.py",
+    "sha256": "b5df8132c3459a2a7f32fd5c6e27167780eb25fc4319905988cda03a0e09dee7",
+    "status": "read",
+    "summary": "Compatibility wrapper invokes C1 A/B experiment and appends caller arguments to the report.",
+    "components": [
+      "Mac harness",
+      "C1 Plasm"
+    ],
+    "evidence": [
+      {
+        "start_line": 25,
+        "end_line": 35,
+        "finding": "Only generations forwarded; dim,r_invariant,initial_budget are echoed despite not controlling experiment."
+      }
+    ],
+    "variant_notes": [
+      "Reported radius10/budget20 conflict with actual C1 radius120/budget100."
+    ],
+    "next_actions": [
+      "Make parameters functional or reject unsupported values; report actual execution configuration; add meaningful nondefault regression."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/core/weft_plasm.py",
+    "sha256": "818b99392e5c1950edc2acb3dbad31c4142da66959115b18a063ffed39308096",
+    "status": "read",
+    "summary": "Legacy standalone entrypoint re-exports extracted C1 API and prints a four-generation experiment.",
+    "components": [
+      "C1 compatibility"
+    ],
+    "evidence": [
+      {
+        "start_line": 14,
+        "end_line": 61,
+        "finding": "No separate implementation survives here; path bootstrap enables direct execution."
+      }
+    ],
+    "variant_notes": [
+      "Preserve as compatibility lineage, not a competing current runtime."
+    ],
+    "next_actions": [
+      "Test alias parity; packaging can later remove path injection with migration guidance."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/core/weft_ic_vm.py",
+    "sha256": "c878b8718d8e6db7612b8927fc89e22c0b39bba4d014ba91fbf9b22d711daef8",
+    "status": "read",
+    "summary": "Legacy standalone entrypoint re-exports extracted C3 and prints the scripted combinator self-test.",
+    "components": [
+      "C3 compatibility"
+    ],
+    "evidence": [
+      {
+        "start_line": 14,
+        "end_line": 41,
+        "finding": "No independent VM implementation in core wrapper."
+      }
+    ],
+    "variant_notes": [
+      "Wrapper and extracted runtime are one current implementation, unlike corpus variants."
+    ],
+    "next_actions": [
+      "Keep wrapper tests and precise self-test scope."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": "weft/runtime/core/selftest.py",
+    "sha256": "e602471c680497cc030b9a0b074a5c0c701441eb86af530135e41a9a2fd1c9a3",
+    "status": "read",
+    "summary": "Aggregates numeric gate examples, Plasm/IC smoke checks, host/fixture telemetry, site staging and syntax/fence corpus checks.",
+    "components": [
+      "Verification infrastructure"
+    ],
+    "evidence": [
+      {
+        "start_line": 33,
+        "end_line": 109,
+        "finding": "Numeric examples demonstrate baseline-distance and budget behavior, not semantic safety."
+      },
+      {
+        "start_line": 125,
+        "end_line": 163,
+        "finding": "Corpus audit only counts/checks markdown fences and Python AST under weft; it is not a full file reading or behavioral validation."
+      },
+      {
+        "start_line": 166,
+        "end_line": 208,
+        "finding": "PASS aggregates selected smoke statuses; hardware unavailable does not fail, so Linux PASS does not establish MPS or live WebGPU."
+      }
+    ],
+    "variant_notes": [
+      "Master self-test description is broader than executed evidence."
+    ],
+    "next_actions": [
+      "Report test class/environment/limits; retain full source audit separately; add portable integration gates without relabelling syntax as functionality."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": ".github/workflows/ci.yml",
+    "sha256": "9548eeff42e222770a11a2f25227e08baed3167443bd5205ad0e9b92d61357c3",
+    "status": "read",
+    "summary": "Ubuntu Python3.12/Node20 CI runs extracted runtime tests, C compiler through unittest, browser-unit tests and smoke/staging checks.",
+    "components": [
+      "Verification infrastructure"
+    ],
+    "evidence": [
+      {
+        "start_line": 14,
+        "end_line": 32,
+        "finding": "CPU Ubuntu environment installs unpinned numpy/torch using an extra package index."
+      },
+      {
+        "start_line": 34,
+        "end_line": 68,
+        "finding": "No macOS/MPS, real browser at this snapshot, EVM compile, Wasm/Metal/Rust or performance checks; tracked tree cleanliness asserted."
+      }
+    ],
+    "variant_notes": [
+      "PR46 adds real browser regression but remains separate from this pinned snapshot."
+    ],
+    "next_actions": [
+      "Pin reproducible development/runtime constraints; add evidence-labelled Mac/manual and local EVM jobs as components mature."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": ".github/workflows/pages-seed-deploy.yml",
+    "sha256": "c492ff75359939739161fbe7ec89891f2779ab71abf62c829870d3166734275f",
+    "status": "read",
+    "summary": "Manual-only workflow stages allow-listed static bundle, self-tests and uploads artifact; no actual deploy action.",
+    "components": [
+      "Publication/build infrastructure"
+    ],
+    "evidence": [
+      {
+        "start_line": 4,
+        "end_line": 13,
+        "finding": "Dispatch-only with read contents permissions."
+      },
+      {
+        "start_line": 32,
+        "end_line": 45,
+        "finding": "Artifact named Pages seed but upload is not publication; includes allow-list check."
+      }
+    ],
+    "variant_notes": [
+      "Historical Pages naming differs from current Cloudflare destination."
+    ],
+    "next_actions": [
+      "Keep publication approval distinct from artifact build; update naming when next touching release pipeline."
+    ],
+    "uncertainties": []
+  },
+  {
+    "path": ".gitignore",
+    "sha256": "32dae3052f331ee34d628ef535709b301259a45df7c7522c4d35dcf49873f00b",
+    "status": "read",
+    "summary": "Ignores Python __pycache__ directories.",
+    "components": [
+      "Repository hygiene"
+    ],
+    "evidence": [
+      {
+        "start_line": 1,
+        "end_line": 1,
+        "finding": "Only pattern is __pycache__/."
+      }
+    ],
+    "variant_notes": [],
+    "next_actions": [
+      "Keep experiment artifacts out of source unless intentionally recorded."
+    ],
+    "uncertainties": []
+  }
+]

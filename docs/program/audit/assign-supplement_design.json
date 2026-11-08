@@ -1,0 +1,122 @@
+[
+  {
+    "path": "weft/browser-sources/missing-turns-supplement.md",
+    "sha256": "0fa844948c87d2b1e5bc952bfcbe98a67a289379a8e1774e2969f97ac35848e0",
+    "bytes": 340811,
+    "lines": 4656
+  },
+  {
+    "path": "weft/design/alive.md",
+    "sha256": "c610368b87d0e7bfb57afb392e807be1db901f70e821f14e1510351aec3b5005",
+    "bytes": 10601,
+    "lines": 183
+  },
+  {
+    "path": "weft/design/anew.md",
+    "sha256": "bc3fa71a5b4cf66d7336a55aed164ef91fd78c6a1ec4c560c5021f9895d312ea",
+    "bytes": 11771,
+    "lines": 136
+  },
+  {
+    "path": "weft/design/arrival.md",
+    "sha256": "c0072f412b7da7f6792a589ce65a5dc2b651a05f8618a16dcc90212219d1ef19",
+    "bytes": 8558,
+    "lines": 100
+  },
+  {
+    "path": "weft/design/art.md",
+    "sha256": "07efb4b8866ff34e82ecf75b06009bc81a1411ae1978619f3b3576ca4e8bdbee",
+    "bytes": 8806,
+    "lines": 116
+  },
+  {
+    "path": "weft/design/aywa.md",
+    "sha256": "34649d4c51cacfbbd31195e35cfd1cd7e7a78c032da57b2d1128ffb13415480a",
+    "bytes": 6644,
+    "lines": 128
+  },
+  {
+    "path": "weft/design/baryonic.md",
+    "sha256": "fb7963539e79dbc77e44110c2b32141c6de34e9411bbe9538c24edcb11917495",
+    "bytes": 6960,
+    "lines": 106
+  },
+  {
+    "path": "weft/design/bio.md",
+    "sha256": "3d6482b4bd851adb939d2967067cd4d5d5f962a566e59384327800aae1a14909",
+    "bytes": 13068,
+    "lines": 146
+  },
+  {
+    "path": "weft/design/build.md",
+    "sha256": "e3040b9fea69d324a09c2737d9cd944ab7c64017194e131ee3b464e34a8657cf",
+    "bytes": 9561,
+    "lines": 177
+  },
+  {
+    "path": "weft/design/combine.md",
+    "sha256": "1ce81f025b65823a16cf9101b4e04ce66b5ece36843289c48809152098de14fb",
+    "bytes": 6632,
+    "lines": 111
+  },
+  {
+    "path": "weft/design/converge.md",
+    "sha256": "854d163fe759e69270f3292e494f71776f79dcd65486233e60e3d347c1498190",
+    "bytes": 5855,
+    "lines": 57
+  },
+  {
+    "path": "weft/design/core.md",
+    "sha256": "684c970e368aef28dc61747aee32d8e501b287a21b549c3427279a610fb08a0f",
+    "bytes": 23834,
+    "lines": 429
+  },
+  {
+    "path": "weft/design/craft.md",
+    "sha256": "9cde24ad11e96a294aa830151a7eca6b62cd16c0c634c6098c10daad48e113c5",
+    "bytes": 47648,
+    "lines": 797
+  },
+  {
+    "path": "weft/design/create.md",
+    "sha256": "eccd23dac6e85faa9fa1d299846ab5e9208a2acf7c3b007c8c75bd075920eef2",
+    "bytes": 10004,
+    "lines": 106
+  },
+  {
+    "path": "weft/design/custom.md",
+    "sha256": "8454d1b5b81914253c91b5dd822f5df1061b208148d870efcc7508748dd50345",
+    "bytes": 10082,
+    "lines": 175
+  },
+  {
+    "path": "weft/design/discovery.md",
+    "sha256": "e5301acbfd47b70652cfbf9693dc6c47cf4e7cc9887b9a20e42ae84acec091f5",
+    "bytes": 36976,
+    "lines": 644
+  },
+  {
+    "path": "weft/design/done.md",
+    "sha256": "9de4d32f331c06e9a9d701795a13c77fd92e554c1651fa165cc2539f9a2c773c",
+    "bytes": 6498,
+    "lines": 131
+  },
+  {
+    "path": "weft/design/eh.md",
+    "sha256": "1c64582a9fc5c92ae1cc4c1bcc5be241f97e4078171264acd28bca7438bc5760",
+    "bytes": 16549,
+    "lines": 323
+  },
+  {
+    "path": "weft/design/feeed.md",
+    "sha256": "03015700898d30be31a171452c77ac536b2530fe5058967c6d09f3e6585fe932",
+    "bytes": 56242,
+    "lines": 1013
+  },
+  {
+    "path": "weft/design/feel.md",
+    "sha256": "41f9fb760d607f9f0f4b418cd175150ec7a6bdf37a271f5c25def18072a4cc63",
+    "bytes": 12840,
+    "lines": 134
+  }
+]

@@ -1,0 +1,50 @@
+[
+  {
+    "path": "docs/corpus/sources/A-design.md",
+    "sha256": "bdc03e05705d6cbb358c6afb54a1631cb577700bd52b627b185a1bd344ca07b2",
+    "bytes": 70242,
+    "lines": 479
+  },
+  {
+    "path": "docs/corpus/sources/B-top1.md",
+    "sha256": "7f2baf0582b540f0c2dae51a1b2ab71372bd35114bc6a7388840068f6a5fa2e8",
+    "bytes": 60958,
+    "lines": 441
+  },
+  {
+    "path": "docs/corpus/sources/C-top2.md",
+    "sha256": "5e875d7b227a13aebe1b40b434adeb9d1301400b3a1f7eaea44d8cb4724d71a9",
+    "bytes": 52296,
+    "lines": 247
+  },
+  {
+    "path": "docs/corpus/sources/D-top3.md",
+    "sha256": "709cff23794ad4d9cfcba368e43737f13aaeda1eb1a6edbdae3a87334e674a30",
+    "bytes": 46794,
+    "lines": 358
+  },
+  {
+    "path": "docs/corpus/sources/E-thread1-main.md",
+    "sha256": "abef6f8f9fbaf8df02b4c3fb8066dbd2478de850819aa68ab71c0398407dd1f2",
+    "bytes": 44333,
+    "lines": 308
+  },
+  {
+    "path": "docs/corpus/sources/F-thread2-design.md",
+    "sha256": "7e8b5d44a8958a22f74c6475fd09d686ddddff3190f3865bd7f8ccf5ec388310",
+    "bytes": 47818,
+    "lines": 393
+  },
+  {
+    "path": "docs/corpus/sources/G-splicers.md",
+    "sha256": "44e90799fc3b08102314dd9a2c37cbb84e68393f51a33907e4dbaed2a57dfddd",
+    "bytes": 53096,
+    "lines": 350
+  },
+  {
+    "path": "docs/corpus/sources/H-missing-turns.md",
+    "sha256": "5f35156d690766fdba2199dec60dc57786b6236baa33767393a815d6a51d6312",
+    "bytes": 52394,
+    "lines": 436
+  }
+]

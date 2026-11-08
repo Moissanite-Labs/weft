@@ -1,0 +1,230 @@
+[
+  {
+    "path": "weft/MOISSANITE-SYNTHESIS.md",
+    "sha256": "c14416dd1cd71fd32a3dfa18648d6775dd6c941f76abae173c48f1b2b3483c7b",
+    "bytes": 6420,
+    "lines": 48
+  },
+  {
+    "path": "weft/README.md",
+    "sha256": "c8e8420754150ac75417c0f3829e8b1491346ef4f48f7035f0d1108ff8afbac8",
+    "bytes": 71977,
+    "lines": 1318
+  },
+  {
+    "path": "weft/WEFT-ARCHITECTURE-LOCK.md",
+    "sha256": "6b06a2e8f239afab15b28f6567bb7d9dcf3226b0165d2bf6004976f47b18e085",
+    "bytes": 3931,
+    "lines": 25
+  },
+  {
+    "path": "weft/ahraz.md",
+    "sha256": "a0dee65de9ef785fdd035e909fa3fba7e3c5942a3b16d501e461ad708c22b0bc",
+    "bytes": 18044,
+    "lines": 330
+  },
+  {
+    "path": "weft/ainterface.md",
+    "sha256": "2888c9ef6a191ed4cd50b0d2521ea146f832b08a49e7c73c005b1f7679628822",
+    "bytes": 12594,
+    "lines": 257
+  },
+  {
+    "path": "weft/almalga.md",
+    "sha256": "0050dc841789443e3ee8cec5ab1ef33be615e7c81c9601462e43b8492a69a748",
+    "bytes": 58520,
+    "lines": 951
+  },
+  {
+    "path": "weft/deploymap.md",
+    "sha256": "761a9e10b94c5fe5bb89e18358affc8e86b3647e3a93c96978122ee8f46ac241",
+    "bytes": 9052,
+    "lines": 151
+  },
+  {
+    "path": "weft/dissertation-mac.md",
+    "sha256": "ed5982d521aa3d44de9f91a36e10825b7a2722436af917621c33b38aa014916f",
+    "bytes": 26637,
+    "lines": 363
+  },
+  {
+    "path": "weft/emergent.md",
+    "sha256": "62301080dab87d8746acdbf38e119afd02779bdc79023080c912c0e77461a945",
+    "bytes": 17412,
+    "lines": 162
+  },
+  {
+    "path": "weft/ethos.md",
+    "sha256": "5373a39cf8e1b157cdb38858fcf442c27749458251cc233dd66de6760a2f4a52",
+    "bytes": 8120,
+    "lines": 73
+  },
+  {
+    "path": "weft/govern.md",
+    "sha256": "fc00a07bfdc9edea73152edc5a373bdbad5b3d5b6f4a3d4c30b5c5d7428e88b2",
+    "bytes": 7922,
+    "lines": 77
+  },
+  {
+    "path": "weft/imprint.md",
+    "sha256": "a7d0a8e1c9bb6a1995461d09257c65d357078bd7e0fe67a1d0d00df72f6fe54b",
+    "bytes": 34795,
+    "lines": 352
+  },
+  {
+    "path": "weft/langdoc.md",
+    "sha256": "263414ec65a50615b0fcb84f1b779a72e5f9628034c9e3962c5645a97ba121d5",
+    "bytes": 11324,
+    "lines": 203
+  },
+  {
+    "path": "weft/launch.md",
+    "sha256": "fcf45166207deb673b54b67ca3db2985862e00dcea99fc59990f6ab49bbce619",
+    "bytes": 51965,
+    "lines": 1011
+  },
+  {
+    "path": "weft/mac.md",
+    "sha256": "ca7141c35a3f11960d872837814c93a682f5e3dfea17b46a1484f797d189efdb",
+    "bytes": 24671,
+    "lines": 449
+  },
+  {
+    "path": "weft/manifest.md",
+    "sha256": "a92eb99bf6a270175fea956eceed8bd4c8c52ed6124c70bab87cadcca3392b79",
+    "bytes": 7421,
+    "lines": 115
+  },
+  {
+    "path": "weft/more.md",
+    "sha256": "3a8920be26129e2d3dbdd8586f3fd7a02104281332a2039465f2c6018dbbdc78",
+    "bytes": 10323,
+    "lines": 216
+  },
+  {
+    "path": "weft/mugetsu.md",
+    "sha256": "689a11d66dae6bbf56e917a90fc1c6fc36db1a34a1fa92adeb435d888e0a347a",
+    "bytes": 10292,
+    "lines": 186
+  },
+  {
+    "path": "weft/pcoom.md",
+    "sha256": "45f6a98911921d8816636bcccd7aa0497225b98d2a7cb9b824bf92fb77e1cdbe",
+    "bytes": 12279,
+    "lines": 207
+  },
+  {
+    "path": "weft/penult.md",
+    "sha256": "c939c1a0e0b13495d30add83368c18f20ea25750e43676a9baff740afc204ea8",
+    "bytes": 6181,
+    "lines": 68
+  },
+  {
+    "path": "weft/perception.md",
+    "sha256": "2f06054a375fb95de10f350b52191e20f96e5c838276c5a1de67e6f61358c2a0",
+    "bytes": 9614,
+    "lines": 137
+  },
+  {
+    "path": "weft/process.md",
+    "sha256": "0db8e6788042cf6beb09d686606f60a766e4dc0c7b4015b81037a82418b8381a",
+    "bytes": 4698,
+    "lines": 46
+  },
+  {
+    "path": "weft/prove.md",
+    "sha256": "60a5a1e5700eedff6b779faa6269497b7bf399ded1a36c5c6c8f36239bf2e2fa",
+    "bytes": 11991,
+    "lines": 188
+  },
+  {
+    "path": "weft/provocol.md",
+    "sha256": "c7d1424d88995b52dbc1370b237995791f1f309dc497e115a594d2955d16d6cf",
+    "bytes": 10122,
+    "lines": 161
+  },
+  {
+    "path": "weft/self.md",
+    "sha256": "f088b44cfa3cb5981ce71470be659dc2e8f143aae98dc4d4d7dc0c61107f4d2c",
+    "bytes": 21454,
+    "lines": 343
+  },
+  {
+    "path": "weft/soc.md",
+    "sha256": "3b77c77b4cbdd31f08b27084a63bf1782b2bf1ceb93684840887132ede4ba390",
+    "bytes": 18762,
+    "lines": 315
+  },
+  {
+    "path": "weft/spread.md",
+    "sha256": "66fdc426e6874a010e8d7a450ccf3a45edc867b0b4b5254ade72af4eb6e8a5ee",
+    "bytes": 6790,
+    "lines": 64
+  },
+  {
+    "path": "weft/terrafab-calc.md",
+    "sha256": "9c8dc4da177e89ab360d1b73133dcb27457aaad8277aeb855b03601c655c6158",
+    "bytes": 10782,
+    "lines": 166
+  },
+  {
+    "path": "weft/terrafab.md",
+    "sha256": "eaa16517934cf619b8599e90c649c1d07cbe9c6d15b5f5b528af71f097e1908d",
+    "bytes": 32977,
+    "lines": 363
+  },
+  {
+    "path": "weft/terraweft.md",
+    "sha256": "d7433f1443529ecf45d550bef9b6cc109f27bd62d6714275f6892459829e104b",
+    "bytes": 6421,
+    "lines": 67
+  },
+  {
+    "path": "weft/test.md",
+    "sha256": "fc0622c56886156db5e896a66213498e4607edfdf0980e88d028b6df68c7d642",
+    "bytes": 17579,
+    "lines": 311
+  },
+  {
+    "path": "weft/testenviron.md",
+    "sha256": "5847cdb6d581fb77dc00947dce60083b8f38740df6eec2792e2e27624584f84f",
+    "bytes": 9330,
+    "lines": 152
+  },
+  {
+    "path": "weft/tune.md",
+    "sha256": "8829af226d223b9658210f0a72abe31ded554a61fbe3fd92e236ec916542e80e",
+    "bytes": 18222,
+    "lines": 210
+  },
+  {
+    "path": "weft/ult.md",
+    "sha256": "8252c0df0cc04a943080c97b19314fd3ce282239ceb73e0602ec94a148aa8be9",
+    "bytes": 11643,
+    "lines": 198
+  },
+  {
+    "path": "weft/whitepaper.md",
+    "sha256": "ac1f7eb0fa08e97637defe0deb63b356b928869191ef02aff7e7287e2f58798c",
+    "bytes": 21531,
+    "lines": 259
+  },
+  {
+    "path": "weft/whoa.md",
+    "sha256": "9317aa748c4b5f9e39a8ba3b469489af302a9cf101c01ca1a860712e87a49b49",
+    "bytes": 4431,
+    "lines": 56
+  },
+  {
+    "path": "weft/wrap.md",
+    "sha256": "b99fc85ec1be8c41e118e70e30089d057a900a0d87f627034235e2ad37179de2",
+    "bytes": 4193,
+    "lines": 40
+  },
+  {
+    "path": "weft/xtra.md",
+    "sha256": "19546860bf61c7546ae3459e7a6c34b291e4da196413f6fd9fc67a53e2bf1d81",
+    "bytes": 24468,
+    "lines": 259
+  }
+]

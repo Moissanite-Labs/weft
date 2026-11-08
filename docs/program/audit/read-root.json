@@ -1,0 +1,696 @@
+[
+  {
+    "path": "PROGRAM.md",
+    "sha256": "c2df7305fd1362197d5196bdb36741278667cd145ba45238d033e6fb6f718531",
+    "status": "read",
+    "read_ranges": [
+      [
+        1,
+        104
+      ]
+    ],
+    "summary": "The standing program preserves private in-repo development, models-as-cells vision language, issues before new paths, independent code review and human deployment decisions. Its original phase list is historical and later steering adds six tracks.",
+    "components": [
+      "program",
+      "models-as-cells",
+      "governance"
+    ],
+    "evidence": [
+      {
+        "start_line": 5,
+        "end_line": 19,
+        "finding": "Later convergence pointer and private workstreams coexist with original sequencing."
+      },
+      {
+        "start_line": 35,
+        "end_line": 62,
+        "finding": "Biological ideals and style-prior/predictive-model/personhood distinctions are explicit."
+      },
+      {
+        "start_line": 64,
+        "end_line": 104,
+        "finding": "Ownership, review and publication constraints apply to execution; inherited Composer instruction describes another agent setup, not evidence of capability."
+      }
+    ],
+    "variant_notes": [
+      "Original roles and prospective team boundaries are not proof of accepted ownership today."
+    ],
+    "next_actions": [
+      "Maintain a current operational entrypoint and evidence-gated phase plan."
+    ],
+    "uncertainties": [
+      "Original externally delivered mathematical/biological/governance reviews are not independently located by this audit."
+    ]
+  },
+  {
+    "path": "README.md",
+    "sha256": "bb1fe5d1ea5244a15a7aba44812b03c2d6941a2b9090f2460c9ef4f6fe1dd063",
+    "status": "read",
+    "read_ranges": [
+      [
+        1,
+        10
+      ]
+    ],
+    "summary": "Root navigation points to the program and preliminary convergence/use-now/variant guides; the footer still frames hosting as a Pages seed.",
+    "components": [
+      "program",
+      "publication"
+    ],
+    "evidence": [
+      {
+        "start_line": 4,
+        "end_line": 10,
+        "finding": "Program and current-work links exist; historical Pages instructions coexist with the later Cloudflare destination."
+      }
+    ],
+    "variant_notes": [
+      "Prepared manual Pages workflow is not an authorization to publish."
+    ],
+    "next_actions": [
+      "Add one authoritative navigation link to the complete audit/build program."
+    ],
+    "uncertainties": [
+      "Live site revision is not verified by repository reading."
+    ]
+  },
+  {
+    "path": "docs/corpus/README.md",
+    "sha256": "3c2765bc903d3147b9fb869967237ecc59999d444a685a028db556cd9fcd04e4",
+    "status": "read",
+    "read_ranges": [
+      [
+        1,
+        95
+      ]
+    ],
+    "summary": "Historical source inventory explains transcript provenance, variants, fabricated execution and missing turns; the dated addendum correctly cautions against treating it as current capability.",
+    "components": [
+      "corpus",
+      "lineage"
+    ],
+    "evidence": [
+      {
+        "start_line": 3,
+        "end_line": 7,
+        "finding": "Inventory identifies older revision f67d9dc and current planning addendum."
+      },
+      {
+        "start_line": 19,
+        "end_line": 44,
+        "finding": "Several provenance/count/name claims predate restored Turn31 and current owner decisions."
+      },
+      {
+        "start_line": 62,
+        "end_line": 89,
+        "finding": "Twelve-system classification and no-code-worth-extracting list are prior judgments, not exhaustive feasibility decisions."
+      }
+    ],
+    "variant_notes": [
+      "Raw sources, standalone copies and curated analyses differ in authority; date alone does not resolve compatibility."
+    ],
+    "next_actions": [
+      "Use immutable per-file records and source anchors; retain meaningful code and research branches."
+    ],
+    "uncertainties": [
+      "Historical report error corrections require exact source comparison rather than wholesale acceptance."
+    ]
+  },
+  {
+    "path": "docs/corpus/claims-register.md",
+    "sha256": "5ca1a949d87ef87849939b441b2a6e9d76d0adab278e7840f0b481e461ffa372",
+    "status": "read",
+    "read_ranges": [
+      [
+        1,
+        102
+      ]
+    ],
+    "summary": "Cross-source register is useful for locating contradictions and falsifiers, but VERIFIED mixes line inspection with execution and many entries describe code before repairs.",
+    "components": [
+      "claims",
+      "invariants",
+      "ledger",
+      "hardware"
+    ],
+    "evidence": [
+      {
+        "start_line": 5,
+        "end_line": 8,
+        "finding": "VERIFIED includes reading as well as running, so it cannot imply experimentally validated behavior."
+      },
+      {
+        "start_line": 20,
+        "end_line": 37,
+        "finding": "R1–R15 are historical runtime findings, including issues since repaired."
+      },
+      {
+        "start_line": 43,
+        "end_line": 100,
+        "finding": "Mathematical, economic and hardware contradictions remain valuable source navigation; H6 release-existence assertion lacks a dated external source."
+      }
+    ],
+    "variant_notes": [
+      "Historical findings and present behavior need separate evidence records."
+    ],
+    "next_actions": [
+      "Build a current status layer with environment and evidence type; preserve unresolved policy alternatives."
+    ],
+    "uncertainties": [
+      "Hardware/model existence claims need current primary-source checks, not knowledge-cutoff assumptions."
+    ]
+  },
+  {
+    "path": "docs/corpus/safety-index.md",
+    "sha256": "4acd144f3c331bf8818be9191b03f74487d7c9bad684b00941ec936fe5e16247",
+    "status": "read",
+    "read_ranges": [
+      [
+        1,
+        24
+      ]
+    ],
+    "summary": "A locations-only index for credentials, fabricated receipts, network listeners, deployment snippets and behavioral telemetry. Its before-public wording and source offsets are historical.",
+    "components": [
+      "provenance",
+      "operations",
+      "consent"
+    ],
+    "evidence": [
+      {
+        "start_line": 3,
+        "end_line": 7,
+        "finding": "Scope is locations at f67d9dc and old publication intention."
+      },
+      {
+        "start_line": 9,
+        "end_line": 24,
+        "finding": "Entries separate secret-like literals, placeholders, simulated receipts, raw listeners, privileged sketches and third-party widget code."
+      }
+    ],
+    "variant_notes": [
+      "Presence in corpus is not a direction to execute it or evidence an action happened."
+    ],
+    "next_actions": [
+      "Keep values out of derivative notes; reference exact current source locations and existing decisions."
+    ],
+    "uncertainties": [
+      "Some secret-like values are neutral replacements; review references without repeating values."
+    ]
+  },
+  {
+    "path": "docs/design-notes/aywa-web-design-philosophy.md",
+    "sha256": "291884809bb212ef60f29067b1ddb6dbb66e5bd23dd021c27bbb18e2b6d837d2",
+    "status": "read",
+    "read_ranges": [
+      [
+        1,
+        79
+      ]
+    ],
+    "summary": "Five useful Aywa design pillars connect continuous aesthetics, procedural geometry, telemetry, morphology and spatial loci; some supporting files are absent and several all-state/zero-allocation claims exceed current renderer behavior.",
+    "components": [
+      "C7",
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5"
+    ],
+    "evidence": [
+      {
+        "start_line": 19,
+        "end_line": 47,
+        "finding": "D1–D4 distinguish actual circular hue and heuristic cadence from broader model/analytical ideals; D3 overstates64B total rendering state."
+      },
+      {
+        "start_line": 59,
+        "end_line": 79,
+        "finding": "Current field encodings and shared CPU layout give testable procedural design commitments."
+      }
+    ],
+    "variant_notes": [
+      "Design ideals, current screen renderer, generated widgets and learned models are different artifacts."
+    ],
+    "next_actions": [
+      "Derive reusable browser modules with semantic accessibility, measured cost and second-consumer acceptance."
+    ],
+    "uncertainties": [
+      "Empirical superiority of spatial memory and user cognitive effects is not demonstrated."
+    ]
+  },
+  {
+    "path": "docs/design-notes/constitution-vs-contract.md",
+    "sha256": "02b54597af5f1a044c25381ad51d147c9fb0cabc52075d03d4fbfecaef7233a1",
+    "status": "read",
+    "read_ranges": [
+      [
+        1,
+        30
+      ]
+    ],
+    "summary": "Identifies constitutional intent and repaired ledger sketches, but assumes independent-adjudicator settings enforce more than an administrator-controlled flag can guarantee.",
+    "components": [
+      "C4",
+      "C5",
+      "governance"
+    ],
+    "evidence": [
+      {
+        "start_line": 12,
+        "end_line": 20,
+        "finding": "Repair table covers minting, adjudicator separation, bounded lineage and event hashing; these need local EVM parity."
+      },
+      {
+        "start_line": 22,
+        "end_line": 30,
+        "finding": "Current scope distinguishes consented migration and chosen style priors from autonomous evacuation/personhood."
+      }
+    ],
+    "variant_notes": [
+      "Constitutional norm, configurable guard and immutable guarantee have different authority."
+    ],
+    "next_actions": [
+      "Test actual contracts, document administrator powers and validate consent/appeal/succession before adoption."
+    ],
+    "uncertainties": [
+      "The stated event-topic prefix conflicts with other documents; compute canonical ABI topic from actual contract."
+    ]
+  },
+  {
+    "path": "docs/glossary.md",
+    "sha256": "04e0540ded51fa674da00bbc9c51571fcac56f36f30cdd229e6b0ccb83302af0",
+    "status": "read",
+    "read_ranges": [
+      [
+        1,
+        21
+      ]
+    ],
+    "summary": "Preserves biological names with implementation/horizon columns, but calls all C1–C7 verified and repeats incompatible I4 shapes, zero-DOM and cryptographic-watermark claims.",
+    "components": [
+      "terminology",
+      "C1",
+      "C3",
+      "C7"
+    ],
+    "evidence": [
+      {
+        "start_line": 3,
+        "end_line": 21,
+        "finding": "Vision terms are valuable; verified column conflates executable subsets, demonstrations and proposed guarantees."
+      }
+    ],
+    "variant_notes": [
+      "An architectural metaphor is neither a biological claim nor proof of implementation."
+    ],
+    "next_actions": [
+      "Link terms to current evidence and separate hypotheses from measured properties."
+    ],
+    "uncertainties": [
+      "PR47 corrects part of the I4 entry; other claims remain pending."
+    ]
+  },
+  {
+    "path": "docs/mission.md",
+    "sha256": "1f9c41838f8e4c1f7e97caa276946f4b6b312efe795bfe9914dd90a35d06da71",
+    "status": "read",
+    "read_ranges": [
+      [
+        1,
+        40
+      ]
+    ],
+    "summary": "Articulates modular Aywa and broader Syntactic Weft, plus ecosystem affiliations. The repository map and immutable provenance language are aspirations and are not independently established by these files.",
+    "components": [
+      "mission",
+      "ecosystem",
+      "C1",
+      "C7"
+    ],
+    "evidence": [
+      {
+        "start_line": 6,
+        "end_line": 24,
+        "finding": "Two domains are distinct; some design citations are nonexistent standalone files."
+      },
+      {
+        "start_line": 26,
+        "end_line": 40,
+        "finding": "One-to-one organization map and core guarantees go beyond tested repo scope and accepted external ownership."
+      }
+    ],
+    "variant_notes": [
+      "The four-horizon framing is an earlier lens; six tracks are later owner steering."
+    ],
+    "next_actions": [
+      "Preserve mission while distinguishing proposed ecosystem relationships from adopted cross-repo changes."
+    ],
+    "uncertainties": [
+      "No whole-organization repository audit is performed here."
+    ]
+  },
+  {
+    "path": "docs/program/convergence-plan.md",
+    "sha256": "46f219955cdbdc4df3534b1e4f08aff5cf5ee3e3ab6149263a907ffe29f2133b",
+    "status": "read",
+    "read_ranges": [
+      [
+        1,
+        82
+      ]
+    ],
+    "summary": "Preliminary six-track architecture plan with concrete CPU baseline, repair backlog, preserved variants and extraction gates; it explicitly does not claim full corpus reading or Mac validation.",
+    "components": [
+      "program",
+      "six-tracks"
+    ],
+    "evidence": [
+      {
+        "start_line": 9,
+        "end_line": 29,
+        "finding": "Six tracks plus cross-cutting runtime avoid forcing web or governance through future custom silicon."
+      },
+      {
+        "start_line": 39,
+        "end_line": 56,
+        "finding": "Evidence ledger identifies I4, device, language, ledger, telemetry, model and citation gaps."
+      },
+      {
+        "start_line": 60,
+        "end_line": 82,
+        "finding": "Parallel work sequence and extraction decisions remain gated by evidence and principal choices."
+      }
+    ],
+    "variant_notes": [
+      "Extend this preliminary map with complete source coverage, not replace source lineage."
+    ],
+    "next_actions": [
+      "Create detailed work packages, experiment cards and durable checkpoints."
+    ],
+    "uncertainties": [
+      "Rough bands are planning allowances, not empirical duration predictions."
+    ]
+  },
+  {
+    "path": "docs/program/decomposition.md",
+    "sha256": "52a2fa5c5043a9e5ad27d5fadf7dac4ffe143f2aafff4316261385a3926f551b",
+    "status": "read",
+    "read_ranges": [
+      [
+        1,
+        122
+      ]
+    ],
+    "summary": "Historical proposed C1–C10 and I1–I7 decomposition is a useful vocabulary; path presence, defaults, dependencies and static-hosting decisions have since changed.",
+    "components": [
+      "C1",
+      "C2",
+      "C3",
+      "C4",
+      "C5",
+      "C6",
+      "C7",
+      "C8",
+      "C9",
+      "C10",
+      "interfaces"
+    ],
+    "evidence": [
+      {
+        "start_line": 7,
+        "end_line": 14,
+        "finding": "Boundaries follow problems, trust/toolchains, interfaces and split-readiness."
+      },
+      {
+        "start_line": 20,
+        "end_line": 63,
+        "finding": "Candidate components and no-code-worth-extracting list include contestable feasibility judgments."
+      },
+      {
+        "start_line": 83,
+        "end_line": 112,
+        "finding": "W1–W5 and I1–I7 provide reusable documentation and dependency scaffolding."
+      }
+    ],
+    "variant_notes": [
+      "Do not treat original refusal to scaffold as permanent infeasibility; experiments can unlock branches."
+    ],
+    "next_actions": [
+      "Retain IDs and define current contracts/status separately, including language/OS/hardware research branches."
+    ],
+    "uncertainties": [
+      "Cross-component import policy is not fully realized in current source."
+    ]
+  },
+  {
+    "path": "docs/program/teams.md",
+    "sha256": "a1996f0fca5a385fada6aead650331d0bdeb4fed15ea63c0fd5651a8631935ee",
+    "status": "read",
+    "read_ranges": [
+      [
+        1,
+        78
+      ]
+    ],
+    "summary": "Proposed Substrate/Surface/Ledger/Corpus ownership and meaningful independent review rules; ownership is not automatically assigned by directory names.",
+    "components": [
+      "coordination",
+      "interfaces",
+      "provenance"
+    ],
+    "evidence": [
+      {
+        "start_line": 20,
+        "end_line": 50,
+        "finding": "Producer/consumer approval and evidence-specific independent reviews define acceptance."
+      },
+      {
+        "start_line": 52,
+        "end_line": 78,
+        "finding": "Disagreements need a deciding test or principal decision; claims, code and documents retain provenance."
+      }
+    ],
+    "variant_notes": [
+      "Local agent review is useful but not the formal different-account approval described by PROGRAM."
+    ],
+    "next_actions": [
+      "Use explicit issue/PR claims and exact-head evidence; preserve unresolved decisions."
+    ],
+    "uncertainties": [
+      "Existing teams have not ratified new component ownership in this session."
+    ]
+  },
+  {
+    "path": "docs/program/use-now.md",
+    "sha256": "7593398dfbe2fb9a2917f27125748721483f1e6ac0fe447e7ae7a687e695201d",
+    "status": "read",
+    "read_ranges": [
+      [
+        1,
+        125
+      ]
+    ],
+    "summary": "Practical CPU/Mac/Chrome entrypoint with host probes, bootstrapping, existing tests and allow-listed local preview; labels device results pending and the bundled data as fixture.",
+    "components": [
+      "local-use",
+      "hardware",
+      "C7"
+    ],
+    "evidence": [
+      {
+        "start_line": 5,
+        "end_line": 22,
+        "finding": "Owner-reported device and actual Linux evidence remain separate."
+      },
+      {
+        "start_line": 24,
+        "end_line": 67,
+        "finding": "Mac probes and dependency install are recipes, not pinned reproducibility or execution evidence."
+      },
+      {
+        "start_line": 90,
+        "end_line": 125,
+        "finding": "Preview avoids tracked regeneration; no deployed mesh, learned application, custom chip or governance claim."
+      }
+    ],
+    "variant_notes": [
+      "Native MPS/MLX and Chrome WebGPU/ONNX are separate stacks and need separate measurements."
+    ],
+    "next_actions": [
+      "Collect sanitized actual Mac/Chrome results and lock measured dependencies per component."
+    ],
+    "uncertainties": [
+      "Pending human device check remains unanswered."
+    ]
+  },
+  {
+    "path": "docs/program/variants.md",
+    "sha256": "9cb366150339ba4cb8ba54398f79915af43161e587b0408f20b23068c213bb22",
+    "status": "read",
+    "read_ranges": [
+      [
+        1,
+        45
+      ]
+    ],
+    "summary": "Nineteen system-level variant families preserve chronology, reimplementation, compatibility and alternative targets; deliberately defers fragment-level completeness.",
+    "components": [
+      "variants",
+      "lineage"
+    ],
+    "evidence": [
+      {
+        "start_line": 7,
+        "end_line": 18,
+        "finding": "Relationship/status vocabulary prevents latest-wins or duplicate-equals-redundant assumptions."
+      },
+      {
+        "start_line": 22,
+        "end_line": 39,
+        "finding": "Layouts, mitosis, IC, ledgers, economics, browser/model, mesh and hardware each retain incompatible branches."
+      },
+      {
+        "start_line": 41,
+        "end_line": 45,
+        "finding": "Future extraction needs source revision, context, API and behavioral evidence before retirement."
+      }
+    ],
+    "variant_notes": [
+      "Hash equality can establish exact bytes, never semantic equivalence or provenance intent."
+    ],
+    "next_actions": [
+      "Add exact file/fence inventory and family-specific build gates."
+    ],
+    "uncertainties": [
+      "External model metadata from prior check is not a new execution result."
+    ]
+  },
+  {
+    "path": "docs/roadmap.md",
+    "sha256": "2c7e5dfb21ecf9aeb0bc61b53ed1ec42a0bed2582ea63853264994e15c1ad8a4",
+    "status": "read",
+    "read_ranges": [
+      [
+        1,
+        73
+      ]
+    ],
+    "summary": "Four-horizon story describes potential runtime→silicon→society evolution but overstates present Mac verification, C4 EVM tests and implemented C8; it prematurely places GPU reduction ahead of settled graph semantics.",
+    "components": [
+      "roadmap",
+      "hardware",
+      "governance"
+    ],
+    "evidence": [
+      {
+        "start_line": 10,
+        "end_line": 15,
+        "finding": "Complete/verified horizon labels are unsupported by the actual verification environment."
+      },
+      {
+        "start_line": 23,
+        "end_line": 41,
+        "finding": "Runtime layout, cross-language parity and zero-allocation claims need corrections."
+      },
+      {
+        "start_line": 43,
+        "end_line": 73,
+        "finding": "OS, comparator, photonics, contracts, federation and social governance must have independent prerequisites and evidence gates."
+      }
+    ],
+    "variant_notes": [
+      "Dependency graph replaces mandatory single ladder; software and research work can advance independently."
+    ],
+    "next_actions": [
+      "Treat new build program as current execution plan and preserve this as a dated synthesis."
+    ],
+    "uncertainties": [
+      "Chip energy/speed and social adoption estimates cannot be inferred from this document."
+    ]
+  },
+  {
+    "path": "docs/whitepapers/syntactic-weft-whitepaper.md",
+    "sha256": "42511d361e857c6d7c8022180d29fe44e2b706e2406b2b80a62f13f870b9a1f6",
+    "status": "read",
+    "read_ranges": [
+      [
+        1,
+        115
+      ]
+    ],
+    "summary": "Broad synthesis captures the desired integration but currently presents hypotheses as resolved architecture and claims proofs, watermark security, hardware behavior and test counts beyond evidence.",
+    "components": [
+      "whitepaper",
+      "C1",
+      "C2",
+      "C3",
+      "C4",
+      "hardware"
+    ],
+    "evidence": [
+      {
+        "start_line": 6,
+        "end_line": 19,
+        "finding": "Abstract proposes three ambitious bottleneck solutions; evidence supports only bounded prototypes."
+      },
+      {
+        "start_line": 25,
+        "end_line": 78,
+        "finding": "Mathematical and graph descriptions need actual layout, precision, port semantics, budget and threat-model correspondence."
+      },
+      {
+        "start_line": 84,
+        "end_line": 115,
+        "finding": "Hardware/societal sections are proposals; verification list contains wrong paths/counts and no EVM or M1 record."
+      }
+    ],
+    "variant_notes": [
+      "Keep aspirational synthesis separate from source-backed technical notes and experiments."
+    ],
+    "next_actions": [
+      "Write W1–W5 as testable claims with assumptions, limitations and negative results."
+    ],
+    "uncertainties": [
+      "No accepted proof of confluence, cryptographic attribution or single-cycle total-matrix gate is provided."
+    ]
+  },
+  {
+    "path": "weft/browser-sources/README.md",
+    "sha256": "389d6d641403fcb6b23bf419d49da6b17a5e4fe75b14808352bbda6d8e5461d8",
+    "status": "read",
+    "read_ranges": [
+      [
+        1,
+        21
+      ]
+    ],
+    "summary": "Source-session and widget provenance guide describes saved DOM turns and standalone files; its attempted widget title correction still misidentifies four of five actual implementations.",
+    "components": [
+      "corpus",
+      "widgets"
+    ],
+    "evidence": [
+      {
+        "start_line": 5,
+        "end_line": 11,
+        "finding": "Three captured sessions and three pre-window bridge turns define repository provenance scope, not all possible external history."
+      },
+      {
+        "start_line": 15,
+        "end_line": 21,
+        "finding": "Recorded widget titles require correction: paired code implements procedural waves, SVG SDF/CSG, a conceptual model-to-GPU flow, target-guided cellular rules and a force graph. See browser full-read evidence and issue50."
+      }
+    ],
+    "variant_notes": [
+      "Exact widget exports duplicated into publication are intentional copies; transcripts overlap with standalone files non-exactly."
+    ],
+    "next_actions": [
+      "Keep full snapshots and source refs while building reproducible widget packages.",
+      "Correct present descriptors under issue50 without changing archival filenames or source payloads."
+    ],
+    "uncertainties": [
+      "Capture completeness relies on saved source boundaries; unavailable original browser sessions cannot be revalidated here."
+    ]
+  }
+]
