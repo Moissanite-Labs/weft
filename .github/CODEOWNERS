@@ -1,0 +1,9 @@
+# Default reviewers for every change. Review is required by the "Protect main"
+# ruleset (.github/rulesets/main.json); code-owner review is not, so a second
+# maintainer can approve. Replace or extend with a team once one exists.
+*                       @ahrazzle
+
+# Public website and its deploy path
+/site/                  @ahrazzle
+/wrangler.jsonc         @ahrazzle
+/.github/               @ahrazzle
