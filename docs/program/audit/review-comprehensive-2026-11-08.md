@@ -339,23 +339,31 @@ Proved wrong by: self hosted widget assets, or an owner ruling that
 keeps remote assets with a scoped policy for widget paths.
 A header check per path should prove the chosen policy ships.
 
-### S3. Dependency updates cannot pass the DCO gate as authored
+### S3. The DCO gate rejects valid sign-offs it cannot match
 
 Evidence: five Dependabot PRs sit open in weft, numbers 58 to 62.
 Each shows the `dco` check failing and the other checks passing.
 The bot author address differs from its sign-off address.
-The DCO script in `.github/workflows/dco.yml` needs an exact match.
-Its pattern also treats bracket text in the bot address as a pattern.
+The script in `.github/workflows/dco.yml` needs an exact match.
+Its pattern escapes dots only. Brackets and plus signs in an
+address then act as pattern syntax, not as literal text.
 A human rebase with sign-off still leaves the author field unchanged.
 
-Impact: action and browser updates stall under a required check.
-Pinned old versions then age in place. The open bumps include major
-versions for checkout, setup actions, and the Wrangler action.
+Publishing this audit proved the wider case. Its commit carries a
+sign-off line that matches the author field by eye. The author uses
+the ID based no-reply form with a plus sign. Hosted DCO still failed
+that commit while the other three required checks passed.
+Prior green DCO runs used an author address with no plus sign.
+
+Impact: action updates stall. Standard privacy address commits stall
+too. Pinned old versions then age in place. The open bumps include
+major versions for checkout, setup actions, and the Wrangler action.
 None should merge on green tests alone without change log review.
 
-Proved wrong by: a Dependabot PR that passes all required checks
-without an admin bypass, after a narrow bot rule in the DCO script.
-The fix should keep the human sign-off rule intact.
+Proved wrong by: one human PR and one Dependabot PR that each pass
+all required checks with no admin bypass. The script fix should
+match addresses as fixed text and keep the human sign-off rule.
+Bot sign-off handling needs its own narrow stated rule.
 
 ### S4. Hash checks prove integrity, not sender identity
 
@@ -485,9 +493,9 @@ File each only if reviewers confirm the evidence holds.
 1. Darwin shared memory names in C1 fail for long caller names.
    The issue should carry the macOS error, the name length limit,
    the fix shape, and the macOS CI job ask. See finding C3.
-2. The DCO check can never pass for Dependabot commits as authored.
-   The issue should weigh a narrow bot rule against the human rule.
-   See finding S3.
+2. The DCO check rejects valid sign-offs from bot commits and from
+   ID based no-reply addresses. The issue should weigh fixed text
+   matching and a narrow bot rule against the human rule. See S3.
 3. Site header policy covers `/` only. Widget and paper paths need a
    stated policy that matches the widget asset ruling. See S2.
 
