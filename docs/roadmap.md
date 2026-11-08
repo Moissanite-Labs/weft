@@ -27,11 +27,14 @@ Before intelligence can self-assemble in shared memory, agents require a shared 
 Horizon I proves the Syntactic Weft architecture on commodity Apple Silicon (`M1/M2/M3/M4 Max/Ultra`) by exploiting Unified Memory Architecture (UMA), where CPU, GPU (Metal Performance Shaders), and neural accelerators address the same physical DRAM without PCIe copy overhead:
 
 1. **Stratified Unified Memory Plasm (`C1`: `weft/runtime/plasm/`)**:
-   - Allocates a 540,688-byte POSIX shared-memory arena (`shm_open`) partitioned into:
-     - **Focal Nerve Register (`[4, 64, 512]` float32, 524,288 bytes)**: High-frequency sensory and target-directed inference channels.
-     - **Sympathetic Scalar Ring (`[4]` float32, 16 bytes)**: System tension, metabolic budget, clock step, and load-derived thermal state.
-     - **Hippocampal Novelty Lattice (`[8, 512]` float32, 16,384 bytes)**: Circular recency buffer that rewards behavioral novelty during mitotic selection.
-   - Enforces deterministic resource teardown (`StratifiedMemoryArena.close()`) with zero lingering buffer pointers.
+   - Allocates the current [I4 native shared-memory layout](interfaces/I4-shared-memory.md), 540,688 bytes (`shm_open`):
+     - **Header (16 bytes)**: `generation_epoch` and `metabolic_tension`.
+     - **Focal Nerve Register (`[256,256]` float32, 262,144 bytes)**: Weight workspace.
+     - **Sympathetic Ring (`[1024]` float32, 4,096 bytes)**: Scalar array, without the earlier four-scalar semantic assignment.
+     - **Hippocampal Novelty Lattice (`[64,1024]` float32, 262,144 bytes)**: Novelty-data array.
+     - **Reserved lock storage (12,288 bytes)**: No synchronization protocol yet.
+   - Mapped CPU views share these bytes; CPU/MPS tensor reads explicitly copy. `StratifiedAppleSiliconPlasm.close()` releases its own views and closes the mapping; callers release any additional exported views.
+   - The earlier `[4,64,512]` / `[4]` / `[8,512]` arrangement remains in the design lineage. Future layouts need their own compatibility decision and evidence; the current contract does not settle the hardware roadmap.
 2. **Speculative A/B Mitosis & Homomorphic Watermark Retention (`C1`: `plasm.py`)**:
    - Spawns parallel conservative (`alpha`) and exploratory (`beta`) weight candidates, masks the frozen 25% core parameters (`plasticity_mask`), evaluates candidates directly against `target_out` plus hippocampal novelty, and verifies that the homomorphic watermark projection (`Y = X_trig * W`) retains `>= 90%` cosine similarity across 10+ generations.
 3. **Cross-Language Invariant Safety Gate (`C2`: `weft/runtime/invariants/`)**:

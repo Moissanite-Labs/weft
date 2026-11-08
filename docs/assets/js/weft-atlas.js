@@ -86,7 +86,7 @@ export const HORIZONS = [
     invariant: "||W_cand - W_base||_F <= 120.0 (Frobenius gate), budget >= cost > 0, watermark >= 90%",
     codebases: ["C1 (plasm)", "C2 (invariants)", "C3 (ic + BCP)", "C6 (telemetry)"],
     summary:
-      "Replaces static-weight inference and IPC serialization with Models-as-Cells inside a 3-tier unified memory arena (Focal [4,64,512], Sympathetic [4], Hippocampal [8,512]), adapting via speculative A/B mitosis and flat-array Lafont Interaction Combinator graph reduction.",
+      "Replaces static-weight inference and IPC serialization with Models-as-Cells inside a 3-tier unified memory arena (Focal [256,256], Sympathetic [1024], Hippocampal [64,1024], plus a 16-byte header and 12,288 reserved lock bytes), adapting via speculative A/B mitosis and flat-array Lafont Interaction Combinator graph reduction.",
   },
   {
     stage: "Horizon II",
@@ -117,9 +117,9 @@ export const CODEBASES = [
     path: "weft/runtime/plasm/",
     horizon: "Horizon I",
     interfaces: "I3, I4, I7",
-    tests: "7/7 pass (test_plasm.py)",
+    tests: "C1 unit and I4 conformance tests (test_plasm.py)",
     purpose:
-      "540,688-byte POSIX shared-memory arena (Focal [4,64,512], Sympathetic [4], Hippocampal [8,512]), deterministic close() teardown, neutral seed WEFT-PLASM-SEED-V1, target-directed A/B mitosis, 25% frozen core plasticity mask, and >= 90% linear watermark retention.",
+      "540,688-byte POSIX shared-memory arena (Focal [256,256], Sympathetic [1024], Hippocampal [64,1024], plus a 16-byte header and 12,288 reserved lock bytes), deterministic close() teardown, neutral seed WEFT-PLASM-SEED-V1, target-directed A/B mitosis, 25% frozen core plasticity mask, and >= 90% linear watermark retention.",
   },
   {
     id: "C2",
@@ -136,7 +136,7 @@ export const CODEBASES = [
     name: "ic",
     path: "weft/runtime/ic/",
     horizon: "Horizon I & II",
-    interfaces: "I4 (BCP)",
+    interfaces: "I5 (BCP)",
     tests: "5/5 pass (test_ic.py)",
     purpose:
       "Zero-allocation flat-array Lafont Interaction Combinator VM (ERA=0, CON=1, DUP=2, plus Weft extensions VLV=3, FRC=4, SUP=5), deterministic active-pair reduction, 12-byte header (WEFT) + 20-byte node record (<IBBhiii) BCP binary codec, and SHA-256 execution trace hash.",
@@ -323,7 +323,7 @@ export const GLOSSARY_ITEMS = [
     term: "Stratified Memory Plasm",
     domain: "Horizon I",
     ideal: "Shared unified memory partitioned into fast sensory tensors, autonomic scalars, and episodic novelty memory.",
-    horizon1: "540,688-byte POSIX shm_open arena: Focal [4,64,512] + Sympathetic [4] + Hippocampal [8,512].",
+    horizon1: "540,688-byte POSIX shm_open arena: Focal [256,256] + Sympathetic [1024] + Hippocampal [64,1024], plus a 16-byte header and 12,288 reserved lock bytes. CPU views share storage; tensor reads copy.",
     horizon23: "3D-stacked SRAM/HBM tiers identity-mapped at physical address 0x10000000 (boot.asm).",
   },
   {

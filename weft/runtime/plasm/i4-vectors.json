@@ -1,0 +1,31 @@
+{
+  "profile": "i4-native-le64-current",
+  "document_version": 1,
+  "byte_order": "little",
+  "arena_bytes": 540688,
+  "alignment_bytes": 8,
+  "fields": [
+    {"name": "generation_epoch", "offset": 0, "size_bytes": 8, "scalar_bytes": 8, "shape": [], "format": "Q"},
+    {"name": "metabolic_tension", "offset": 8, "size_bytes": 8, "scalar_bytes": 8, "shape": [], "format": "d"},
+    {"name": "focal_workspace", "offset": 16, "size_bytes": 262144, "scalar_bytes": 4, "shape": [256, 256], "format": "f", "view": "focal_matrix"},
+    {"name": "sympathetic_ring", "offset": 262160, "size_bytes": 4096, "scalar_bytes": 4, "shape": [1024], "format": "f", "view": "symp_matrix"},
+    {"name": "hippocampal_lattice", "offset": 266256, "size_bytes": 262144, "scalar_bytes": 4, "shape": [64, 1024], "format": "f", "view": "hippo_matrix"},
+    {"name": "cryptographic_lock", "offset": 528400, "size_bytes": 12288, "scalar_bytes": 1, "shape": [12288], "format": "B"}
+  ],
+  "samples": [
+    {"field": "generation_epoch", "index": [], "byte_offset": 0, "value": 18364758544493064720, "hex": "1032547698badcfe"},
+    {"field": "metabolic_tension", "index": [], "byte_offset": 8, "value": 22.5, "hex": "0000000000803640"},
+    {"field": "focal_workspace", "index": [0, 0], "byte_offset": 16, "value": 1.0, "hex": "0000803f"},
+    {"field": "focal_workspace", "index": [0, 255], "byte_offset": 1036, "value": -2.5, "hex": "000020c0"},
+    {"field": "focal_workspace", "index": [1, 0], "byte_offset": 1040, "value": 3.25, "hex": "00005040"},
+    {"field": "focal_workspace", "index": [255, 255], "byte_offset": 262156, "value": -4.0, "hex": "000080c0"},
+    {"field": "sympathetic_ring", "index": [0], "byte_offset": 262160, "value": 0.5, "hex": "0000003f"},
+    {"field": "sympathetic_ring", "index": [1023], "byte_offset": 266252, "value": -0.25, "hex": "000080be"},
+    {"field": "hippocampal_lattice", "index": [0, 0], "byte_offset": 266256, "value": 8.0, "hex": "00000041"},
+    {"field": "hippocampal_lattice", "index": [0, 1023], "byte_offset": 270348, "value": -16.0, "hex": "000080c1"},
+    {"field": "hippocampal_lattice", "index": [1, 0], "byte_offset": 270352, "value": 32.0, "hex": "00000042"},
+    {"field": "hippocampal_lattice", "index": [63, 1023], "byte_offset": 528396, "value": -64.0, "hex": "000080c2"},
+    {"field": "cryptographic_lock", "index": [0], "byte_offset": 528400, "value": 165, "hex": "a5"},
+    {"field": "cryptographic_lock", "index": [12287], "byte_offset": 540687, "value": 90, "hex": "5a"}
+  ]
+}

@@ -7,10 +7,13 @@ Status: Active North-Star Specification
 
 The Weft corpus (`weft/`) establishes the primary architectural north star for the system. It replaces layered, allocation-heavy software stacks with a hardware-synchronized execution fabric organized into seven modular codebases (`C1`–`C7`):
 
-1. **Stratified Unified Memory Plasm (`C1`: `weft/runtime/plasm/`)**: A zero-copy POSIX shared-memory (`shm_open`, 540,688 bytes) and Apple Silicon Metal Performance Shaders (`mps` / CPU fallback) tensor substrate divided into three regions:
-   - **Focal Nerve Register (`[4, 64, 512]` float32)**: High-frequency sensory and target-directed speculative inference channels.
-   - **Sympathetic Ring (`[4]` float32)**: Real-time system tension, metabolic budget, clock step, and estimated load thermal state.
-   - **Hippocampal Novelty Lattice (`[8, 512]` float32)**: Circular memory buffer that enforces anti-homogenization pressure during mitotic selection while preserving a 25% frozen core plasticity mask and linear watermark retention (`>= 90%`).
+1. **Stratified Unified Memory Plasm (`C1`: `weft/runtime/plasm/`)**: The current [I4 layout](../docs/interfaces/I4-shared-memory.md) is a native ctypes POSIX shared-memory arena (`shm_open`, 540,688 bytes). Its mapped CPU views are zero-copy; reads into CPU/MPS tensors explicitly copy. It contains:
+   - **Header (16 bytes)**: `generation_epoch` (`uint64`) and `metabolic_tension` (`double`).
+   - **Focal Nerve Register (`[256,256]` float32, 262,144 bytes)**: The current weight workspace.
+   - **Sympathetic Ring (`[1024]` float32, 4,096 bytes)**: A scalar array; the earlier four-scalar semantic map is not its current layout.
+   - **Hippocampal Novelty Lattice (`[64,1024]` float32, 262,144 bytes)**: The current novelty-data array.
+   - **Reserved `cryptographic_lock` (12,288 bytes)**: Storage, not an implemented synchronization or cryptographic mechanism.
+   - **Design lineage**: The earlier `[4,64,512]` / `[4]` / `[8,512]` arrangement remains a distinct design variant. It has the same total size but incompatible offsets and shapes. I4 records that lineage and the required compatibility decision before any future adoption; the corpus is unchanged.
 2. **Invariants and Thermodynamic Safety Gate (`C2`: `weft/runtime/invariants/`)**: Pure Python and C11 (`weft_invariants.h`) safety predicates enforcing baseline-relative Frobenius distance (`||W_cand - W_base||_F <= R_invariant`), metabolic budget pre-checks, tension bounds (`T <= 85.0`), and integer-exact 15%/85% royalty excision splits verified against shared cross-language test vectors (`vectors.json`).
 3. **Zero-Allocation Interaction Combinator VM & BCP Codec (`C3`: `weft/runtime/ic/`)**: A flat-array Lafont Interaction Combinator reducer (`ERA=0`, `CON=1`, `DUP=2`, `VLV=3`, `FRC=4`, `SUP=5`) where computation proceeds by deterministic active-pair annihilation (`CON-CON`), commutation (`DUP-CON`), erasure (`ERA-*`), and metabolic valve gating (`VLV`) without garbage collection, paired with a 12-byte header (`WEFT`) + 20-byte node record (`<IBBhiii`) BCP binary graph serializer (`bcp_codec.py`) and SHA-256 execution trace commitment.
 4. **Homomorphic Provenance Triad & Off-Chain Gateway (`C4`: `weft/runtime/ledger/`, `C5`: `weft/runtime/gateway/`)**: Cycle-free, 12-hop bounded lineage attribution (`ProvenanceRegistry.sol`), 85%/15% metabolic excision (`WeftTokenTissue.sol`), and independent tension adjudication (`TensionGovernor.sol`), paired with a pure-Python Keccak-256 ABI topic verifier and localhost-guarded gateway simulator.

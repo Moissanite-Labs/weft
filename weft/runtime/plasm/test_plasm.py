@@ -1,9 +1,16 @@
 #!/usr/bin/env python3
-"""Unit tests for Codebase C1 (`weft/runtime/plasm`) covering Issues #4, #5, #6, #14, #17, #22, #28."""
+"""Unit tests for Codebase C1 (`weft/runtime/plasm`) covering Issues #4, #5, #6, #14, #17, #22, #28, #40."""
 
+import ctypes
+import json
+import math
 import os
+import struct
+import sys
 import unittest
+import uuid
 import warnings
+from multiprocessing import shared_memory
 from pathlib import Path
 
 import torch
@@ -12,12 +19,150 @@ from weft.runtime.plasm import (
     ARENA_BYTE_SIZE,
     DEFAULT_SEED_PHRASE,
     StratifiedAppleSiliconPlasm,
+    StratifiedMemoryArena,
     adjust_homeostatic_mutation_scale,
     compute_plasticity_mask,
     embed_weight_watermark,
     run_weft_plasm_cycle,
     verify_watermark_retention,
 )
+
+
+class TestI4SharedMemoryContract(unittest.TestCase):
+    """Check the static I4 profile against both the producer and a raw consumer."""
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.vectors = json.loads(
+            Path(__file__).with_name("i4-vectors.json").read_text(encoding="utf-8")
+        )
+        cls.fields = {field["name"]: field for field in cls.vectors["fields"]}
+
+    def arena(self) -> StratifiedAppleSiliconPlasm:
+        return StratifiedAppleSiliconPlasm(name=f"weft_i4_{uuid.uuid4().hex}")
+
+    def test_native_layout_and_mapped_views_match_profile(self) -> None:
+        self.assertEqual(sys.byteorder, self.vectors["byte_order"])
+        self.assertEqual(ctypes.alignment(StratifiedMemoryArena), self.vectors["alignment_bytes"])
+        self.assertEqual(ARENA_BYTE_SIZE, self.vectors["arena_bytes"])
+        ctypes_fields = dict(StratifiedMemoryArena._fields_)
+        scalar_types = {"Q": ctypes.c_uint64, "d": ctypes.c_double, "f": ctypes.c_float, "B": ctypes.c_uint8}
+        self.assertEqual(list(ctypes_fields), list(self.fields))
+        end = 0
+        with self.arena() as plasm:
+            for field in self.fields.values():
+                with self.subTest(field=field["name"]):
+                    # Contiguous regions cover the full mapping, without overlap or padding.
+                    self.assertEqual(field["offset"], end)
+                    self.assertEqual(
+                        field["size_bytes"], math.prod(field["shape"]) * field["scalar_bytes"]
+                    )
+                    self.assertEqual(struct.calcsize("<" + field["format"]), field["scalar_bytes"])
+                    end += field["size_bytes"]
+                    self.assertEqual(getattr(StratifiedMemoryArena, field["name"]).offset, field["offset"])
+                    self.assertEqual(ctypes.sizeof(ctypes_fields[field["name"]]), field["size_bytes"])
+                    actual_type = ctypes_fields[field["name"]]
+                    if field["shape"]:
+                        actual_type = actual_type._type_
+                    self.assertIs(actual_type, scalar_types[field["format"]])
+                    if "view" in field:
+                        view = getattr(plasm, field["view"])
+                        try:
+                            self.assertEqual(list(view.shape), field["shape"])
+                            self.assertEqual(view.dtype.kind, "f")
+                            self.assertEqual(view.itemsize, field["scalar_bytes"])
+                            self.assertTrue(view.dtype.isnative)
+                            self.assertTrue(view.flags.c_contiguous)
+                            self.assertEqual(
+                                view.strides,
+                                tuple(math.prod(field["shape"][i + 1:]) * field["scalar_bytes"]
+                                      for i in range(len(field["shape"]))),
+                            )
+                            self.assertEqual(
+                                view.ctypes.data - ctypes.addressof(plasm.c_view), field["offset"]
+                            )
+                        finally:
+                            del view  # Do not retain an exported buffer across close().
+            self.assertEqual(end, self.vectors["arena_bytes"])
+
+    def test_golden_bytes_exchange_with_independent_raw_consumer(self) -> None:
+        samples = self.vectors["samples"]
+        expected = bytearray(self.vectors["arena_bytes"])
+        occupied = set()
+        for sample in samples:
+            field = self.fields[sample["field"]]
+            self.assertEqual(len(sample["index"]), len(field["shape"]))
+            flat_index = 0
+            for index, dimension in zip(sample["index"], field["shape"]):
+                self.assertGreaterEqual(index, 0)
+                self.assertLess(index, dimension)
+                flat_index = flat_index * dimension + index
+            self.assertEqual(sample["byte_offset"], field["offset"] + flat_index * field["scalar_bytes"])
+            golden = bytes.fromhex(sample["hex"])
+            self.assertEqual(golden, struct.pack("<" + field["format"], sample["value"]))
+            start, end = sample["byte_offset"], sample["byte_offset"] + len(golden)
+            self.assertLessEqual(end, field["offset"] + field["size_bytes"])
+            self.assertTrue(occupied.isdisjoint(range(start, end)))
+            occupied.update(range(start, end))
+            expected[start:end] = golden
+
+        with self.arena() as plasm:
+            raw = shared_memory.SharedMemory(name=plasm.name, create=False)
+            try:
+                raw.buf[:] = bytes(self.vectors["arena_bytes"])
+                # Producer views write values; an independent reader uses only fixture offsets.
+                for sample in samples:
+                    field = self.fields[sample["field"]]
+                    if "view" in field:
+                        getattr(plasm, field["view"])[tuple(sample["index"])] = sample["value"]
+                    elif field["shape"]:
+                        getattr(plasm.c_view, field["name"])[sample["index"][0]] = sample["value"]
+                    else:
+                        setattr(plasm.c_view, field["name"], sample["value"])
+                self.assertEqual(bytes(raw.buf), bytes(expected))
+                for sample in samples:
+                    field = self.fields[sample["field"]]
+                    self.assertEqual(
+                        struct.unpack_from("<" + field["format"], raw.buf, sample["byte_offset"])[0],
+                        sample["value"],
+                    )
+
+                # Independent writer packs bytes; producer reads its typed views.
+                raw.buf[:] = bytes(self.vectors["arena_bytes"])
+                for sample in samples:
+                    field = self.fields[sample["field"]]
+                    struct.pack_into("<" + field["format"], raw.buf, sample["byte_offset"], sample["value"])
+                for sample in samples:
+                    field = self.fields[sample["field"]]
+                    if "view" in field:
+                        value = getattr(plasm, field["view"])[tuple(sample["index"])]
+                    elif field["shape"]:
+                        value = getattr(plasm.c_view, field["name"])[sample["index"][0]]
+                    else:
+                        value = getattr(plasm.c_view, field["name"])
+                    self.assertEqual(value, sample["value"])
+            finally:
+                raw.close()
+
+    def test_detached_tensor_lifetime_and_unlink(self) -> None:
+        with self.arena() as plasm:
+            name = plasm.name
+            plasm.focal_matrix.fill(1.0)
+            focal, symp, hippo = plasm.read_tensors_to_device(torch.device("cpu"))
+            plasm.focal_matrix[0, 0] = 2.0
+            self.assertEqual(focal[0, 0].item(), 1.0)
+            focal[0, 0] = 3.0
+            self.assertEqual(plasm.focal_matrix[0, 0], 2.0)
+        self.assertTrue(plasm._closed)
+        self.assertIsNone(plasm.c_view)
+        self.assertIsNone(plasm.focal_matrix)
+        self.assertIsNone(plasm.symp_matrix)
+        self.assertIsNone(plasm.hippo_matrix)
+        self.assertIsNone(plasm._raw_np)
+        self.assertEqual(focal[0, 0].item(), 3.0)
+        plasm.close()  # Closing an already closed owner is harmless.
+        with self.assertRaises(FileNotFoundError):
+            shared_memory.SharedMemory(name=name, create=False)
 
 
 class TestWeftPlasm(unittest.TestCase):
