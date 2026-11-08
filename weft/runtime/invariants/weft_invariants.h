@@ -20,7 +20,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#define WEFT_R_INVARIANT_DEFAULT 10.0f
+#define WEFT_R_INVARIANT_DEFAULT 120.0f
 #define WEFT_TENSION_MAX_DEFAULT 85.0f
 #define WEFT_HOMEOSTATIC_MIN_DEFAULT 15.0f
 #define WEFT_HOMEOSTATIC_MAX_DEFAULT 35.0f
