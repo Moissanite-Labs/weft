@@ -112,7 +112,7 @@ export class WeftLoomEngine {
       if (!line) return;
       const parsed = parseSym2pLine(line);
       const verified = await verifySym2pLine(line);
-      if (!verified.ok) {
+      if (!verified) {
         this.state.rejected_packets += 1;
         if (this.hudEl) {
           this.hudEl.textContent = `SYM-2P packet rejected (invalid/missing SHA-256) | rejected=${this.state.rejected_packets}`;
