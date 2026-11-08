@@ -84,10 +84,10 @@ class TestWeftICVM(unittest.TestCase):
 
         # Graph B has the same node indices (0, 1) and tags (CON, CON), so interact(0, 1)
         # produces the exact same step log [{"step": 1, "op": "ANNIHILATE...", "a": 0, "b": 1}],
-        # but different auxiliary port wiring (p1=99, p2=88).
+        # but different in-arena auxiliary references (p1=59, p2=58).
         vm_b = FlatCombinatorVM(capacity=64)
-        b0 = vm_b.alloc_node(vm_b.CON, p0=1, p1=99, p2=88)
-        b1 = vm_b.alloc_node(vm_b.CON, p0=b0, p1=77, p2=66)
+        b0 = vm_b.alloc_node(vm_b.CON, p0=1, p1=59, p2=58)
+        b1 = vm_b.alloc_node(vm_b.CON, p0=b0, p1=57, p2=56)
         vm_b.snapshot_initial_graph()
 
         vm_a.interact(a0, a1)
