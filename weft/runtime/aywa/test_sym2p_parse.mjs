@@ -1,13 +1,13 @@
 // Round-trip tests for the browser SYM-2P parser (issue #13).
 // Run: node --test weft/runtime/aywa/test_sym2p_parse.mjs
-// Lives beside the Python codec (not under docs/) so tests are not published by Pages.
+// Lives beside the Python codec (not under site/) so tests are not published by Pages.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
-import { parseSym2pLine, verifySym2pLine } from "../../../docs/assets/js/sym2p-parse.js";
+import { parseSym2pLine, verifySym2pLine } from "../../../site/assets/js/sym2p-parse.js";
 
 const here = dirname(fileURLToPath(import.meta.url));
 
@@ -40,7 +40,7 @@ test("tampered payload fails hash", async () => {
 });
 
 test("published seed line parses and verifies", async () => {
-  const text = readFileSync(join(here, "..", "..", "..", "docs", "data", "telemetry.jsonl"), "utf8");
+  const text = readFileSync(join(here, "..", "..", "..", "site", "data", "telemetry.jsonl"), "utf8");
   const line = text.split("\n").find((l) => l.startsWith(":"));
   const parsed = parseSym2pLine(line);
   assert.deepEqual([parsed.role, parsed.actionState, parsed.sequence], [1, 3, 1]);
@@ -61,7 +61,7 @@ test("verifySym2pLine returns a boolean (not { ok })", async () => {
 
 test("consumer gate accepts correctly signed fixture and golden lines", async () => {
   assert.equal(await consumerAcceptsSym2pLine(GOLDEN_LINE), true);
-  const seed = readFileSync(join(here, "..", "..", "..", "docs", "data", "telemetry.jsonl"), "utf8");
+  const seed = readFileSync(join(here, "..", "..", "..", "site", "data", "telemetry.jsonl"), "utf8");
   const line = seed.split("\n").find((l) => l.trim().startsWith(":"));
   assert.equal(await consumerAcceptsSym2pLine(line), true);
 });

@@ -1,0 +1,21 @@
+{
+  "source": "weft/runtime/aywa",
+  "files": [
+    "moissanite_telemetry.json",
+    "moissanite_telemetry.bin",
+    "telemetry.jsonl"
+  ],
+  "shader": "assets/shaders/dashboard_layout.wgsl",
+  "vendored": "VENDORED.json (Eido modules and corpus widgets; see scripts/vendor.py)",
+  "public_pages_allowlist": [
+    "index.html",
+    "404.html",
+    "favicon.svg",
+    "og.png",
+    "_headers",
+    "seed-manifest.json",
+    "assets/",
+    "data/",
+    "widgets/"
+  ]
+}

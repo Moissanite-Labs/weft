@@ -1,0 +1,73 @@
+{
+  "sources": {
+    "eido": {
+      "repository": "https://github.com/Moissanite-Labs/weft-eido",
+      "commit": "4edf98b8c287b83c7e9c8b2a25a9affdc3eca68e",
+      "files": {
+        "src/aesthetic-mixer.js": {
+          "path": "assets/js/aesthetic-mixer.js",
+          "sha256": "12b4b73e115710c796d6e9826c133e8f6cac9a70f3ae0fc150cb0e6b72c0a094"
+        },
+        "src/simplex-pad.js": {
+          "path": "assets/js/simplex-pad.js",
+          "sha256": "1dcd02f81ed38cb85e4d0337a2c71d9edbcdaeabd6dd6a19afaffb05c81f040d"
+        },
+        "src/cell-layout.js": {
+          "path": "assets/js/cell-layout.js",
+          "sha256": "60439c86be95bd2aff1a516e3d3b4ef882a4de038b7d95143f9b90a56644cb29"
+        },
+        "src/glyph-font.js": {
+          "path": "assets/js/glyph-font.js",
+          "sha256": "5f4fdad78ebd828c43818c8b7a5e0acc40fae33aeca2b17c3d4cd55c0bc7ea95"
+        }
+      }
+    },
+    "corpus": {
+      "repository": "https://github.com/Moissanite-Labs/weft-corpus",
+      "commit": "6d4a30919ff8adc70fc13c28a69dd35d2be6b317",
+      "files": {
+        "weft/browser-sources/widgets/01-sdf-laya-kinetic-typography.html": {
+          "path": "widgets/01-sdf-laya-kinetic-typography.html",
+          "sha256": "0aa7ab5c52aea8664e4052b226eaf3d7be51d7666bf86b8093636c9094379799"
+        },
+        "weft/browser-sources/widgets/01-sdf-laya-kinetic-typography.jsx": {
+          "path": "widgets/01-sdf-laya-kinetic-typography.jsx",
+          "sha256": "0ed410b4e89b4697176d2269188ac7699be9672411863bfae1f3ffd6d6eee018"
+        },
+        "weft/browser-sources/widgets/02-mind-palace-spatial-memory.html": {
+          "path": "widgets/02-mind-palace-spatial-memory.html",
+          "sha256": "f5c3a06010a6bbc1fd5d25ab3ac0a3f2cb9e0a8397974a11a05cc80368c7caa8"
+        },
+        "weft/browser-sources/widgets/02-mind-palace-spatial-memory.jsx": {
+          "path": "widgets/02-mind-palace-spatial-memory.jsx",
+          "sha256": "f4fc5464bfb9ef49c67d96dac3e3930d17f859f0fd617ed8f83975355867b0f2"
+        },
+        "weft/browser-sources/widgets/03-morphogenetic-bioelectric-field.html": {
+          "path": "widgets/03-morphogenetic-bioelectric-field.html",
+          "sha256": "aff25bb5b24c413d9be8f8004933a365432e3d129d20e3cff12962cf602e783f"
+        },
+        "weft/browser-sources/widgets/03-morphogenetic-bioelectric-field.jsx": {
+          "path": "widgets/03-morphogenetic-bioelectric-field.jsx",
+          "sha256": "96fd518bf797936f0d56645c41f4f6b5f871f2f8b5f526f629076e6dcd41a121"
+        },
+        "weft/browser-sources/widgets/04-neural-cellular-automata.html": {
+          "path": "widgets/04-neural-cellular-automata.html",
+          "sha256": "b473e06024aeb45ca25a6fd27617efa0320a3d879e845a57c3ee97c5938cdb89"
+        },
+        "weft/browser-sources/widgets/04-neural-cellular-automata.jsx": {
+          "path": "widgets/04-neural-cellular-automata.jsx",
+          "sha256": "ba8f858c1129ff9bc3f1fe2e43455bf367949957d55914c4921cdba7827fa4c4"
+        },
+        "weft/browser-sources/widgets/05-interaction-combinator-net.html": {
+          "path": "widgets/05-interaction-combinator-net.html",
+          "sha256": "fffa7e4b793c7b652b29c111a9e2d40f8a8d8de83ae55b7f48eab72a3358cde9"
+        },
+        "weft/browser-sources/widgets/05-interaction-combinator-net.jsx": {
+          "path": "widgets/05-interaction-combinator-net.jsx",
+          "sha256": "a1704c531ee8b8c6c6ebc5ec859f433a2b3580bc494677d58f72b335d084c995"
+        }
+      }
+    }
+  },
+  "note": "Files copied from sibling repositories. Do not edit here; see scripts/vendor.py."
+}

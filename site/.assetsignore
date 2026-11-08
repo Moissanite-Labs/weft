@@ -1,0 +1,4 @@
+# Files in site/ that are not served.
+.assetsignore
+*.jsx
+VENDORED.json

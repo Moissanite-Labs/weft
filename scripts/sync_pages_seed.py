@@ -1,7 +1,13 @@
 #!/usr/bin/env python3
 """
-Synchronize Aywa runtime artifacts into `docs/` and stage an allow-listed
-GitHub Pages bundle (`dist/`) that excludes internal documentation (#19).
+Synchronize Aywa runtime artifacts into the public site (`site/`) and stage a
+deployable bundle (`dist/`) for w3ft.org.
+
+Everything under `site/` is public. Project documentation lives in `docs/` and is
+never staged; the forbidden-name check below guards against it leaking in (#19).
+
+  python3 scripts/sync_pages_seed.py                 # regenerate telemetry fixtures and shader copy
+  python3 scripts/sync_pages_seed.py --stage-dist dist   # also stage dist/ for deploy
 """
 
 from __future__ import annotations
@@ -18,22 +24,12 @@ if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
 
 AYWA = os.path.join(ROOT, "weft", "runtime", "aywa")
-WIDGETS_SRC = os.path.join(ROOT, "weft", "browser-sources", "widgets")
-DOCS = os.path.join(ROOT, "docs")
-DATA = os.path.join(DOCS, "data")
-SHADERS = os.path.join(DOCS, "assets", "shaders")
-WIDGETS_DST = os.path.join(DOCS, "widgets")
+SITE = os.path.join(ROOT, "site")
+DATA = os.path.join(SITE, "data")
+SHADERS = os.path.join(SITE, "assets", "shaders")
 
-WIDGET_SEEDS = (
-    "01-sdf-laya-kinetic-typography",
-    "02-mind-palace-spatial-memory",
-    "03-morphogenetic-bioelectric-field",
-    "04-neural-cellular-automata",
-    "05-interaction-combinator-net",
-)
-
-# Issue #19: Only public site files/directories may be staged into the Pages artifact.
-PUBLIC_PAGES_FILES = ("index.html", ".nojekyll", "seed-manifest.json")
+# Issue #19: only these site files/directories are staged into the deploy bundle.
+PUBLIC_PAGES_FILES = ("index.html", "404.html", "favicon.svg", "og.png", "_headers", "seed-manifest.json")
 PUBLIC_PAGES_DIRS = ("assets", "data", "widgets")
 FORBIDDEN_INTERNAL_DOCS = (
     "corpus",
@@ -49,24 +45,9 @@ FORBIDDEN_INTERNAL_DOCS = (
 )
 
 
-def sync_browser_source_widgets() -> List[str]:
-    """Copy canonical browser-source widget implementations into docs/widgets/."""
-    os.makedirs(WIDGETS_DST, exist_ok=True)
-    copied: List[str] = []
-    for stem in WIDGET_SEEDS:
-        for ext in (".html", ".jsx"):
-            src = os.path.join(WIDGETS_SRC, stem + ext)
-            if not os.path.isfile(src):
-                raise FileNotFoundError(f"missing browser-source widget: {src}")
-            dst = os.path.join(WIDGETS_DST, stem + ext)
-            shutil.copy2(src, dst)
-            copied.append(os.path.relpath(dst, ROOT))
-    return copied
-
-
 def stage_pages_dist(dist_dir: str) -> Dict[str, Any]:
     """
-    Stage ONLY the allow-listed public Pages site files from `docs/` into `dist_dir`
+    Stage ONLY the allow-listed public site files from `site/` into `dist_dir`
     so internal docs (`docs/corpus/`, `docs/program/`, `docs/whitepapers/`, etc.)
     never enter the published Pages artifact (#19).
     """
@@ -76,13 +57,13 @@ def stage_pages_dist(dist_dir: str) -> Dict[str, Any]:
 
     staged: List[str] = []
     for fname in PUBLIC_PAGES_FILES:
-        src = os.path.join(DOCS, fname)
+        src = os.path.join(SITE, fname)
         if os.path.isfile(src):
             shutil.copy2(src, os.path.join(dist_dir, fname))
             staged.append(fname)
 
     for dname in PUBLIC_PAGES_DIRS:
-        src = os.path.join(DOCS, dname)
+        src = os.path.join(SITE, dname)
         if os.path.isdir(src):
             shutil.copytree(src, os.path.join(dist_dir, dname))
             staged.append(f"{dname}/")
@@ -110,19 +91,17 @@ def sync_docs_seed() -> Dict[str, Any]:
         os.path.join(AYWA, "dashboard_layout.wgsl"),
         os.path.join(SHADERS, "dashboard_layout.wgsl"),
     )
-    widget_files = sync_browser_source_widgets()
     manifest = {
         "source": "weft/runtime/aywa",
         "files": ["moissanite_telemetry.json", "moissanite_telemetry.bin", "telemetry.jsonl"],
         "shader": "assets/shaders/dashboard_layout.wgsl",
-        "widgets_source": "weft/browser-sources/widgets",
-        "widgets": widget_files,
+        "vendored": "VENDORED.json (Eido modules and corpus widgets; see scripts/vendor.py)",
         "public_pages_allowlist": list(PUBLIC_PAGES_FILES) + [f"{d}/" for d in PUBLIC_PAGES_DIRS],
     }
-    with open(os.path.join(DOCS, "seed-manifest.json"), "w", encoding="utf-8") as f:
+    with open(os.path.join(SITE, "seed-manifest.json"), "w", encoding="utf-8") as f:
         json.dump(manifest, f, indent=2)
         f.write("\n")
-    return {"status": "OK", "docs": DOCS, "manifest": manifest}
+    return {"status": "OK", "site": SITE, "manifest": manifest}
 
 
 def main() -> int:

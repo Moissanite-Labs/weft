@@ -1,0 +1,19 @@
+// w3ft.org: Cloudflare Worker "ml-weft" serving the static site in ./site.
+// Deploy:  npx wrangler@4 deploy        (or the "Deploy site" GitHub workflow)
+// Preview: npx wrangler@4 dev
+{
+  "$schema": "https://unpkg.com/wrangler@4/config-schema.json",
+  "name": "ml-weft",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./site",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  },
+  "routes": [
+    { "pattern": "w3ft.org", "custom_domain": true },
+    { "pattern": "www.w3ft.org", "custom_domain": true }
+  ],
+  "workers_dev": false,
+  "observability": { "enabled": true }
+}

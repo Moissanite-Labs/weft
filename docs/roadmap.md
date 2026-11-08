@@ -18,8 +18,8 @@ ML Weft is structured as a cumulative four-horizon progression. Each horizon pre
 
 Before intelligence can self-assemble in shared memory, agents require a shared constitution, a compact verifiable language, and an epistemic falsification loop:
 
-1. **Constitutional Origin (`compass` Discussion #5)**: Defines the shift from brittle orchestration to self-assembling splicer cells governed by thermodynamic and invariant bounds.
-2. **Dense Symbolic Wire Protocol (`abios` / `SYM-2P/1.0`)**: Replaces ambiguous natural-language JSON payloads with canonical `:RR:AA:SSSS[s-exp ...]<sha256>` lines verified by both Python (`weft/runtime/telemetry/sym2p_codec.py`) and browser/Node JavaScript (`docs/assets/js/sym2p-parse.js`).
+1. **Constitutional Origin (the Moissanite Labs founding constitution)**: Defines the shift from brittle orchestration to self-assembling splicer cells governed by thermodynamic and invariant bounds.
+2. **Dense Symbolic Wire Protocol (`abios` / `SYM-2P/1.0`)**: Replaces ambiguous natural-language JSON payloads with canonical `:RR:AA:SSSS[s-exp ...]<sha256>` lines verified by both Python (`weft/runtime/telemetry/sym2p_codec.py`) and browser/Node JavaScript (`site/assets/js/sym2p-parse.js`).
 3. **Epistemic Verification (`alkindus`, `averroes`, `synbios`)**: Every mathematical, biological, and governance claim is audited against executable falsifiers (`docs/corpus/claims-register.md` and `docs/corpus/safety-index.md`).
 
 ## 3. Horizon I: Apple Silicon Initial Prototype (The Cellular Organism)
@@ -70,7 +70,7 @@ Horizon III scales the Weft from individual silicon organisms to a self-governin
    - **`ProvenanceRegistry.sol`**: Registers foundational weight genotypes (`registerGenotype`) and cross-spliced child lineages (`recordCrossSplicing`) in a cycle-free, 12-hop bounded DAG (`MAX_LINEAGE_DEPTH = 12`), guaranteeing that root creator attribution (`getCreator`, `verifyAttribution`) cannot be stripped by downstream fine-tuning or splicing.
    - **`WeftTokenTissue.sol`**: Implements the **85/15 Metabolic Excision Valve** (`executeExcisionValve`). Every commercial or high-load capability invocation routes **85%** (`8500` bps) to the verified lineage creators and burns **15%** (`1500` bps) to maintain deflationary supply homeostasis.
    - **`TensionGovernor.sol`**: Monitors systemic tension (`MAX_SAFE_TENSION = 85`, corresponding to `85.0%` tension bound). When a node breaches safety invariants, `reportTensionFracture` logs an immutable dispute and `adjudicateTensionDispute` (with `enforceIndependentAdjudicator = true` so reporters cannot self-award slashes) transfers `CRITICAL_FRACTION_PENALTY` from the offending swarm to the injured creator.
-2. **Stage III-B: Authenticated Peer Mesh & Consented Federation (`C8`, `exorien`, `exyber`, Issue #25)**:
+2. **Stage III-B: Authenticated Peer Mesh & Consented Federation (`C8`, Issue #25)**:
    - Implements the 124-byte (`4s32s64s24s`) `WEFT` magic-header peer handshake over authenticated, human-consented transport channels (`localhost` default, explicit operator approval required for any cross-host weight delta transfer).
-3. **Stage III-C: Civilizational Coordination & Anti-Oligarchic Homeostasis (`govern.md`, `ethos.md`, `whitepaper.md`, `n30`)**:
+3. **Stage III-C: Civilizational Coordination & Anti-Oligarchic Homeostasis (`govern.md`, `ethos.md`, `whitepaper.md`)**:
    - Couples network-wide Gini concentration telemetry (`gini_index`) and epistemic verification (`alkindus` / `averroes`) to governance weight decay and quadratic resource allocation, ensuring that neither compute monopolies nor rogue agent loops can capture the civilizational weave.
