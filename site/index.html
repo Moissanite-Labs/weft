@@ -6,8 +6,8 @@
   <title>ML Weft · Moissanite Labs</title>
   <meta name="description" content="ML Weft is an open research program from Moissanite Labs: adaptive models treated as cells, weight updates that must stay within a checkable distance of a saved baseline, and every claim paired with a test that could fail.">
   <link rel="canonical" href="https://w3ft.org/">
-  <meta name="theme-color" content="#f5f2ea" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#0c0d11" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f4f6fa" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#060a12" media="(prefers-color-scheme: dark)">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="ML Weft">
   <meta property="og:title" content="ML Weft · Become the weaver">
@@ -37,6 +37,7 @@
         <a href="#try">Try it</a>
         <a href="#status">Status</a>
         <a href="#horizons">Horizons</a>
+        <a href="/papers/">Papers</a>
         <a href="#contribute">Contribute</a>
       </nav>
       <a class="icon-btn" href="https://github.com/Moissanite-Labs/weft" aria-label="Weft on GitHub">
@@ -55,6 +56,7 @@
           <a href="#try">Try it</a>
           <a href="#status">Status</a>
           <a href="#horizons">Horizons</a>
+          <a href="/papers/">Papers</a>
           <a href="#contribute">Contribute</a>
           <a href="/widgets/">Sketches</a>
         </div>
@@ -117,8 +119,8 @@
             <h3>Bounds you can check</h3>
             <p>
               An update is committed only if it stays within a fixed distance of a saved baseline and fits its
-              resource budget. The same rule is written in Python, C11 and JavaScript, and all three are checked
-              against one shared set of test vectors.
+              resource budget. The same rule is written in Python, C11 and JavaScript, and each is tested against
+              the same conformance cases.
             </p>
             <span class="path">weft/runtime/invariants</span>
           </article>
@@ -159,7 +161,7 @@
             <p class="source">
               Source: <a href="https://github.com/Moissanite-Labs/weft/blob/main/site/assets/js/invariant-gate.js"><code>invariant-gate.js</code></a>,
               a port of <a href="https://github.com/Moissanite-Labs/weft/blob/main/weft/runtime/invariants/invariants.py"><code>invariants.py</code></a>
-              that is checked against the same vectors as the C11 header.
+              that is checked against the same conformance vectors as the Python reference.
             </p>
           </div>
           <div class="panel" aria-live="polite">
@@ -367,7 +369,31 @@
       </div>
     </section>
 
-    <section class="block" aria-labelledby="token-title">
+    <section class="block" id="papers" aria-labelledby="papers-title">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">Papers</span>
+          <h2 id="papers-title">Read the papers</h2>
+          <p>An overview of the whole program and a technical paper on the cell and its safety gate. Every number in them comes from code in the repository.</p>
+        </div>
+        <div class="grid-2">
+          <article class="card">
+            <span class="path">Paper 0 · overview</span>
+            <h3 style="margin-top:6px"><a href="/papers/overview/">ML Weft: adaptive models within bounds you can check</a></h3>
+            <p>What the program is, how its parts fit together, what runs today, and what Weft is not.</p>
+            <a href="/papers/overview/">Read online</a> · <a href="/papers/">PDF and series</a>
+          </article>
+          <article class="card">
+            <span class="path">Paper 1 · runs and tested</span>
+            <h3 style="margin-top:6px"><a href="/papers/models-as-cells/">Models as Cells</a></h3>
+            <p>Self-modification bounded by distance from a saved baseline, with experiments, including the parts that fall short.</p>
+            <a href="/papers/models-as-cells/">Read online</a> · <a href="/papers/">PDF and series</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="block alt" aria-labelledby="token-title">
       <div class="wrap">
         <div class="callout" role="note">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
@@ -382,7 +408,7 @@
       </div>
     </section>
 
-    <section class="block alt" id="corpus" aria-labelledby="corpus-title">
+    <section class="block" id="corpus" aria-labelledby="corpus-title">
       <div class="wrap grid-2">
         <div class="section-head">
           <span class="eyebrow">The corpus</span>
@@ -406,7 +432,7 @@
       </div>
     </section>
 
-    <section class="block" id="start" aria-labelledby="start-title">
+    <section class="block alt" id="start" aria-labelledby="start-title">
       <div class="wrap grid-2">
         <div class="section-head">
           <span class="eyebrow">Get started</span>
@@ -430,7 +456,7 @@ node --test weft/runtime/aywa/test_*.mjs</code></pre>
       </div>
     </section>
 
-    <section class="block alt" id="contribute" aria-labelledby="contribute-title">
+    <section class="block" id="contribute" aria-labelledby="contribute-title">
       <div class="wrap grid-2">
         <div class="section-head">
           <span class="eyebrow">Contribute</span>
@@ -465,6 +491,7 @@ node --test weft/runtime/aywa/test_*.mjs</code></pre>
       <div>
         <h4>Project</h4>
         <ul>
+          <li><a href="/papers/">Papers</a></li>
           <li><a href="https://github.com/Moissanite-Labs/weft">Repository</a></li>
           <li><a href="https://github.com/Moissanite-Labs/weft/issues">Issues</a></li>
           <li><a href="https://github.com/Moissanite-Labs/weft-eido">Eido (design)</a></li>
