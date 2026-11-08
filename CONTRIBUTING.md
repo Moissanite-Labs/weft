@@ -33,12 +33,17 @@ These rules matter more here than style does:
    hardware interfaces. They must not need real keys or network access beyond installing packages.
 6. **Scaffold only what an issue names.** Open an issue before you create a new top-level directory or component.
 
-## The design corpus is read-only
+## Where things live
 
-`weft/*.md`, `weft/design/` and `weft/browser-sources/*.md` are kept verbatim as source material, and
-`scripts/corpus_audit.py` accounts for every file in them. Please don't edit them to fix content. Put corrections,
-analysis and repairs in `docs/` (for example `docs/corpus/` or `docs/design-notes/`) or in code under `weft/runtime/`,
-and link back to the source lines.
+- **The design corpus** is in [Moissanite-Labs/weft-corpus](https://github.com/Moissanite-Labs/weft-corpus). It is a
+  verbatim, read-only archive. Put corrections, analysis and repairs here instead, in `docs/` (for example
+  `docs/corpus/` or `docs/design-notes/`) or in code under `weft/runtime/`, and cite the source by path and line,
+  such as `weft/mac.md:50-100`. `scripts/corpus_audit.py` keeps the evidence ledger tied to the commit the corpus was
+  read at.
+- **The design language** (Eido) is in [Moissanite-Labs/weft-eido](https://github.com/Moissanite-Labs/weft-eido).
+  `site/assets/js/{aesthetic-mixer,simplex-pad,cell-layout,glyph-font}.js` and `site/widgets/*.{html,jsx}` are
+  vendored copies pinned by hash in `site/VENDORED.json`. Change them upstream, then run
+  `python3 scripts/vendor.py --eido ../weft-eido --corpus ../weft-corpus`. CI fails if they are edited here.
 
 ## Development setup
 
@@ -74,7 +79,7 @@ python3 -m http.server 8000 --directory site
 
 - Everything in `site/` is public. Never put internal notes there.
 - The landing page must not load anything from third parties. `site/_headers` sets a strict Content Security Policy.
-- The demos import the same modules the tests cover. If you change one, update its test in `weft/runtime/aywa/`.
+- The demos import the same modules the tests cover. Tests for Weft's own modules are in `weft/runtime/aywa/`, and tests for the vendored Eido modules are in weft-eido.
 - Keep the status table on the page in step with the README and the evidence.
 - Check phone width (390 px), light and dark themes, keyboard navigation, and `prefers-reduced-motion`.
 

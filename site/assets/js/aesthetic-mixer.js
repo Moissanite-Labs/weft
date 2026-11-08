@@ -1,10 +1,10 @@
 /**
- * Barycentric Aesthetic Mixer (Codebase C7 — Aywa Surface)
+ * Barycentric Aesthetic Mixer (Eido, formerly Weft codebase C7)
  * ========================================================
  * Implements the continuous design-token interpolation and circular mean hue
  * (`atan2(sum(w_i * sin(theta_i)), sum(w_i * cos(theta_i)))`) specified in
- * `weft/design/discovery.md:208-259`, `weft/design/core.md:237-292`, and
- * `weft/design/baryonic.md`.
+ * `weft-corpus:weft/design/discovery.md:208-259`, `weft-corpus:weft/design/core.md:237-292`, and
+ * `weft-corpus:weft/design/baryonic.md`.
  *
  * Fixes Issue #24 (P12): hues wrap continuously across the 0.0 / 1.0 boundary
  * on the unit circle instead of averaging linearly through 0.50 (cyan).

@@ -26,10 +26,11 @@ Weft starts from three ideas:
 - **Bounds you can check.** A weight update is committed only if it stays within a fixed distance of a saved baseline,
   `‖W − W₀‖_F ≤ R`, and fits its resource budget, `budget ≥ cost > 0`. The same predicate is implemented in Python, C11 and
   JavaScript, and all three are tested against one shared set of vectors.
-- **Interfaces as fields.** *Aywa*, Weft's design language, treats visual style as a point in a continuous space and feeds
+- **Interfaces as fields.** [*Eido*](https://github.com/Moissanite-Labs/weft-eido), Weft's design language (internal name *Aywa*), treats visual style as a point in a continuous space and feeds
   the screen small hash-checked packets ([SYM-2P](https://github.com/Moissanite-Labs/abios)) instead of loose JSON.
 
-Weft began as a long design conversation. That corpus is kept word for word in [`weft/`](weft/), and this repository turns
+Weft began as a long design conversation. That corpus is kept word for word in
+[Moissanite-Labs/weft-corpus](https://github.com/Moissanite-Labs/weft-corpus), and this repository turns
 it into code that runs, tests that can fail, and documents that say plainly which is which.
 
 > [!IMPORTANT]
@@ -46,7 +47,7 @@ it into code that runs, tests that can fail, and documents that say plainly whic
 | C4 · Ledger | [`weft/runtime/ledger`](weft/runtime/ledger) | Solidity drafts for provenance, metering and disputes | 📝 draft · not compiled in CI, never deployed |
 | C5 · Gateway | [`weft/runtime/gateway`](weft/runtime/gateway) | Offline contract simulator, pure-Python Keccak-256, ABI topic checks | 🧪 simulation only |
 | C6 · Telemetry | [`weft/runtime/telemetry`](weft/runtime/telemetry) | Host metrics, 64-byte frames, SYM-2P encoder | ✅ runs · tested (site data is a fixture) |
-| C7 · Aywa | [`weft/runtime/aywa`](weft/runtime/aywa), [`site/`](site/) | Browser modules: style mixer, simplex pad, packet verifier, WebGPU field | ✅ runs · tested |
+| C7 · Aywa | [`weft/runtime/aywa`](weft/runtime/aywa), [`site/`](site/) | Weft's field: packet verifier, telemetry worker, WebGPU loom, built on [Eido](https://github.com/Moissanite-Labs/weft-eido) modules | ✅ runs · tested |
 | Mac harness | [`weft/runtime/mac`](weft/runtime/mac) | Apple Silicon entry points that wrap C1 and C6 | 🧪 wrappers, no native Metal kernels yet |
 
 **Not built yet:** a bare-metal OS, RTL or FPGA designs, custom silicon, the peer-to-peer mesh, or any deployed governance
@@ -95,7 +96,6 @@ site/                The w3ft.org website: static, no build step, deployed by wr
 docs/                Documentation: mission, roadmap, glossary, interface specs, design notes, the build program
 docs/program/        Build program, convergence plan, experiment cards and a file-by-file evidence ledger
 docs/corpus/         Claims register, safety index and digests of the source material
-weft/*.md, weft/design/   The original design corpus, preserved verbatim (read as sources, not instructions)
 scripts/             Corpus audit, site sync and browser tests
 ```
 
@@ -114,11 +114,22 @@ itself to a few rules:
 
 - [Mission](docs/mission.md) and [roadmap (four horizons)](docs/roadmap.md)
 - [Whitepaper synthesis](docs/whitepapers/syntactic-weft-whitepaper.md) and [glossary](docs/glossary.md)
-- [Aywa design philosophy](docs/design-notes/aywa-web-design-philosophy.md)
+- [Eido design philosophy](https://github.com/Moissanite-Labs/weft-eido/blob/main/docs/philosophy.md), in the design-language repository
 - [Constitution vs. contract](docs/design-notes/constitution-vs-contract.md): where the stated governance and the example contracts disagree
 - [I4 shared-memory interface](docs/interfaces/I4-shared-memory.md)
 - [Build program](docs/program/build-program.md), [convergence plan](docs/program/convergence-plan.md), [experiment cards](docs/program/experiment-cards.md) and [evidence ledger](docs/program/audit/README.md)
 - [Program charter](docs/program/charter.md): the original charter, kept for history
+
+## Related repositories
+
+| Repository | What it holds |
+|---|---|
+| [weft-eido](https://github.com/Moissanite-Labs/weft-eido) | Eido, the design language: philosophy and dependency-free modules. `site/` vendors four of them. |
+| [weft-corpus](https://github.com/Moissanite-Labs/weft-corpus) | The original discovery sessions, verbatim. Corpus paths cited in code and docs here (for example `weft/design/craft.md:136`) refer to that repository. |
+| [abios](https://github.com/Moissanite-Labs/abios) | The SYM-2P protocol used for agent messages and telemetry packets. |
+
+Files under `site/` that come from those repositories are pinned by hash in [`site/VENDORED.json`](site/VENDORED.json).
+Update them with `python3 scripts/vendor.py --eido ../weft-eido --corpus ../weft-corpus`.
 
 ## Contributing
 
@@ -137,7 +148,7 @@ Please follow the [Code of Conduct](CODE_OF_CONDUCT.md). Report security issues 
 ## License
 
 - **Code** (`weft/runtime/`, `scripts/`, `site/`, `.github/`) is under the [Apache License 2.0](LICENSE).
-- **Documentation and the design corpus** (`docs/`, the Markdown under `weft/`) are under [CC BY 4.0](LICENSE-docs).
+- **Documentation** (`docs/` and the Markdown files) is under [CC BY 4.0](LICENSE-docs).
   Code listings inside documents may also be used under Apache-2.0.
 
 See [NOTICE](NOTICE) for details and attribution. "ML Weft" and "Moissanite Labs" are names of Moissanite Labs. The

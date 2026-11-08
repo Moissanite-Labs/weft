@@ -7,7 +7,7 @@ Organization: Moissanite Labs (`Moissanite-Labs/weft`)
 
 The `weft/` corpus contains two distinct bodies of work that share the same mathematical first principles while solving different problems at different scales:
 
-1. **Aywa (`weft/design/*`): A First-Principles Philosophy for Web Design and Spatial Representation**
+1. **Aywa, published as Eido ([`weft-eido`](https://github.com/Moissanite-Labs/weft-eido); sessions in `weft-corpus:weft/design/*`): A First-Principles Philosophy for Web Design and Spatial Representation**
    - **Scope**: How human-computer interfaces represent concepts, information, and live state on a screen.
    - **Core Shift**: Replaces static Document Object Model (DOM) box trees, discrete brittle stylesheets, and passive vertical scrolling with a continuous, zero-allocation, GPU-native visual medium.
    - **Self-Contained Modules**:
@@ -17,7 +17,7 @@ The `weft/` corpus contains two distinct bodies of work that share the same math
      - *Spatial Mind-Palace Loci & Morphogenetic Surfaces (`design/mind-palace.md`, `design/bio.md`)*: Information organized into navigable spatial rooms (*loci*) and self-healing cellular grids rather than disconnected pages.
    - **Modular Connection to the Weft**: Aywa stands on its own as a reusable web design paradigm for any complex knowledge or telemetry system. Within ML Weft (`w3ft.org`), Aywa serves as the visual medium that communicates the Syntactic Weft itself.
 
-2. **The Syntactic Weft (`weft/*.md`): A Schema for Adaptive Intelligence and Civilizational Governance**
+2. **The Syntactic Weft (`weft-corpus:weft/*.md`, built here): A Schema for Adaptive Intelligence and Civilizational Governance**
    - **Scope**: How adaptive intelligence computes in memory, how its mutations are bounded by physical and mathematical invariants, how it lowers into custom silicon, and how a civilization of human and artificial agents governs provenance, capital, and collective alignment.
    - **Core Shift**: Replaces isolated, static-weight model inference, high-overhead inter-process serialization, and extractive platform economics with **Models-as-Cells** operating inside a unified memory arena, **Interaction Combinator** graph reduction, hardware-enforced **Frobenius Safety Invariants**, and a **Three-Contract Constitutional Ledger Triad**.
 
@@ -31,7 +31,7 @@ Every repository in `Moissanite-Labs` and every runtime package in `weft/runtime
 | **Horizon I: Apple Silicon Initial Prototype** | Unified-memory cellular organism, speculative A/B mitosis, Frobenius invariant gate, and flat-array IC VM | [`tokenpage`](https://github.com/Moissanite-Labs/tokenpage), [`scry`](https://github.com/Moissanite-Labs/scry), [`nullmodem`](https://github.com/Moissanite-Labs/nullmodem) | **C1** (`plasm`), **C2** (`invariants`), **C3** (`ic`), **C6** (`telemetry`) |
 | **Horizon II: Custom Silicon & Terrafab Foundry** | Bare-metal unikernel, hardware-etched invariant comparators, and wafer-scale / photonic compute fabrics | [`exofab`](https://github.com/Moissanite-Labs/exofab), [`exo-os`](https://github.com/Moissanite-Labs/exo-os) | `C2` (`weft_invariants.h`), `README.md` §16 (`boot.asm`, `interrupts.asm`), `terrafab.md`, `terraweft.md` |
 | **Horizon III: Societal & Civilizational Weave** | Homomorphic lineage attribution, 85/15 metabolic capital excision, tension adjudication, and federated governance | [`synmerit`](https://github.com/Moissanite-Labs/synmerit), [`ethos`](https://github.com/Moissanite-Labs/ethos) | **C4** (`ledger`: `ProvenanceRegistry`, `WeftTokenTissue`, `TensionGovernor`), **C5** (`gateway`) |
-| **Cross-Horizon Visual Medium: Aywa Web Design** | Continuous barycentric design space, SDF/Laya typography, and spatial Mind-Palace browser organism | [`exoframe`](https://github.com/Moissanite-Labs/exoframe) | **C7** (`weft/runtime/aywa/` and `site/` public bundle on `w3ft.org`) |
+| **Cross-Horizon Visual Medium: Aywa Web Design** | Continuous barycentric design space, SDF/Laya typography, and spatial Mind-Palace browser organism | [`weft-eido`](https://github.com/Moissanite-Labs/weft-eido), [`exoframe`](https://github.com/Moissanite-Labs/exoframe) | **C7** (`weft/runtime/aywa/` and `site/` public bundle on `w3ft.org`) |
 
 ## 3. Core Engineering Commitments
 

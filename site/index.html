@@ -126,10 +126,10 @@
             <svg class="glyph" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 5L35 31H5z"/><circle cx="19" cy="22" r="3" fill="currentColor"/></svg>
             <h3>Interfaces as fields</h3>
             <p>
-              <strong>Aywa</strong> is Weft's design language. Style is a point in a continuous space rather than a
+              <strong>Eido</strong> is Weft's design language. Style is a point in a continuous space rather than a
               fixed theme, and the screen is fed small hash-checked packets instead of loose JSON. The demos on this page run on its code.
             </p>
-            <span class="path">weft/design · site/assets/js</span>
+            <span class="path"><a href="https://github.com/Moissanite-Labs/weft-eido">Moissanite-Labs/weft-eido</a></span>
           </article>
         </div>
       </div>
@@ -234,7 +234,7 @@
           <div class="demo-copy">
             <h3>Style as a point in space</h3>
             <p>
-              Aywa treats a visual style as a position in a continuous space. Drag the point inside the triangle to blend
+              Eido treats a visual style as a position in a continuous space. Drag the point inside the triangle to blend
               three presets. Their weights always sum to one.
             </p>
             <p>
@@ -242,8 +242,9 @@
               and red at 0.05 would land on cyan.
             </p>
             <p class="source">
-              Source: <a href="https://github.com/Moissanite-Labs/weft/blob/main/site/assets/js/simplex-pad.js"><code>simplex-pad.js</code></a>
-              and <a href="https://github.com/Moissanite-Labs/weft/blob/main/site/assets/js/aesthetic-mixer.js"><code>aesthetic-mixer.js</code></a>.
+              Source: <a href="https://github.com/Moissanite-Labs/weft-eido/blob/main/src/simplex-pad.js"><code>simplex-pad.js</code></a>
+              and <a href="https://github.com/Moissanite-Labs/weft-eido/blob/main/src/aesthetic-mixer.js"><code>aesthetic-mixer.js</code></a>
+              from <a href="https://github.com/Moissanite-Labs/weft-eido">Eido</a>.
             </p>
           </div>
           <div class="panel">
@@ -308,7 +309,7 @@
             </tr>
             <tr>
               <td><span class="name">C7 · Aywa</span><span class="path">weft/runtime/aywa · site/</span></td>
-              <td>Browser modules: style mixer, simplex pad, packet verifier and a WebGPU field with a Canvas2D fallback.</td>
+              <td>Weft's browser field: packet verifier, telemetry worker and a WebGPU loom with a Canvas2D fallback, built on Eido modules.</td>
               <td><span class="pill run">runs · tested</span></td>
             </tr>
             <tr>
@@ -395,9 +396,10 @@
           </p>
         </div>
         <ul class="linklist">
-          <li><a href="https://github.com/Moissanite-Labs/weft/tree/main/weft"><span class="t">Original corpus<span class="d">The design documents, preserved verbatim</span></span><span class="meta">weft/</span></a></li>
+          <li><a href="https://github.com/Moissanite-Labs/weft-corpus"><span class="t">Original corpus<span class="d">The discovery sessions, preserved verbatim</span></span><span class="meta">weft-corpus</span></a></li>
           <li><a href="https://github.com/Moissanite-Labs/weft/blob/main/docs/program/build-program.md"><span class="t">Build program<span class="d">Component-by-component plan, in phases</span></span><span class="meta">docs/program</span></a></li>
           <li><a href="https://github.com/Moissanite-Labs/weft/blob/main/docs/corpus/claims-register.md"><span class="t">Claims register<span class="d">Every claim with its evidence status</span></span><span class="meta">docs/corpus</span></a></li>
+          <li><a href="https://github.com/Moissanite-Labs/weft-eido"><span class="t">Eido<span class="d">The design language behind this page</span></span><span class="meta">weft-eido</span></a></li>
           <li><a href="https://github.com/Moissanite-Labs/weft/blob/main/docs/glossary.md"><span class="t">Glossary<span class="d">Each vision term next to what the code does today</span></span><span class="meta">docs/</span></a></li>
           <li><a href="/widgets/"><span class="t">Early sketches<span class="d">Five interactive widgets from the original sessions</span></span><span class="meta">/widgets</span></a></li>
         </ul>
@@ -458,13 +460,15 @@ node --test weft/runtime/aywa/test_*.mjs</code></pre>
           <span class="brand-name">ML Weft</span>
         </a>
         <p>A Moissanite Labs project. Code under <a href="https://github.com/Moissanite-Labs/weft/blob/main/LICENSE">Apache-2.0</a>,
-        documentation and corpus under <a href="https://github.com/Moissanite-Labs/weft/blob/main/LICENSE-docs">CC BY 4.0</a>.</p>
+        documentation under <a href="https://github.com/Moissanite-Labs/weft/blob/main/LICENSE-docs">CC BY 4.0</a>.</p>
       </div>
       <div>
         <h4>Project</h4>
         <ul>
           <li><a href="https://github.com/Moissanite-Labs/weft">Repository</a></li>
           <li><a href="https://github.com/Moissanite-Labs/weft/issues">Issues</a></li>
+          <li><a href="https://github.com/Moissanite-Labs/weft-eido">Eido (design)</a></li>
+          <li><a href="https://github.com/Moissanite-Labs/weft-corpus">Corpus</a></li>
           <li><a href="/widgets/">Sketches</a></li>
         </ul>
       </div>

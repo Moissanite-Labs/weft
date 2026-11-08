@@ -4,13 +4,11 @@ Copyright 2026 Moissanite Labs and the Weft contributors.
 This repository is dual-licensed by content type:
 
   * Source code is licensed under the Apache License, Version 2.0 (LICENSE).
-    This covers weft/runtime/, scripts/, site/, .github/, wrangler.jsonc and
-    weft/browser-sources/widgets/.
+    This covers weft/runtime/, scripts/, site/, .github/ and wrangler.jsonc.
 
-  * Documentation, prose and the design corpus are licensed under the Creative
-    Commons Attribution 4.0 International License (LICENSE-docs). This covers
-    docs/, the Markdown files under weft/ (including weft/design/ and
-    weft/browser-sources/*.md), and the Markdown files at the repository root.
+  * Documentation and prose are licensed under the Creative Commons
+    Attribution 4.0 International License (LICENSE-docs). This covers docs/ and
+    the Markdown files elsewhere in the repository.
     Code listings that appear inside those documents may also be used under
     the Apache License, Version 2.0, at your option.
 
@@ -22,6 +20,9 @@ them except as needed to describe the origin of the work.
 
 Third-party material:
 
-  * The exported widgets in weft/browser-sources/widgets/ and site/widgets/
-    reference web fonts and a stylesheet hosted by Google. Those assets are not
-    part of this repository and remain under their owners' terms.
+  * site/assets/js/{aesthetic-mixer,simplex-pad,cell-layout,glyph-font}.js are
+    copied from Moissanite-Labs/weft-eido (Apache-2.0), and site/widgets/ from
+    Moissanite-Labs/weft-corpus. See site/VENDORED.json.
+  * The exported widgets in site/widgets/ reference web fonts and a stylesheet
+    hosted by Google. Those assets are not part of this repository and remain
+    under their owners' terms.

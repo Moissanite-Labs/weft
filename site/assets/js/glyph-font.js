@@ -1,7 +1,7 @@
 /**
- * 5x7 bitmask font for GPU-drawn text (Codebase C7, issue #37).
+ * 5x7 bitmask font for GPU-drawn text (Eido; Moissanite-Labs/weft#37).
  *
- * `weft/design/feeed.md` proposes drawing metrics inside the fragment shader
+ * `weft-corpus:weft/design/feeed.md` proposes drawing metrics inside the fragment shader
  * from integer bitmasks instead of font files. Its version packs a 5x7 glyph
  * into one u32 and reads `mask >> (34u - bit)`, which cannot work: 35 bits do
  * not fit in 32. Here each glyph is two u32 words:

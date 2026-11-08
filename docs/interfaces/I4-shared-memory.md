@@ -71,8 +71,8 @@ described focal `[4,64,512]`, sympathetic `[4]`, and hippocampal `[8,512]`, tota
 540,688 bytes with no header or lock region. That is a distinct source variant,
 not the layout implemented here. The identical total does not make the two byte
 layouts interchangeable. Earlier corpus diagrams also describe a `3x64x512`
-focal nerve ([`weft/almalga.md`](../../weft/almalga.md),
-[`weft/dissertation-mac.md`](../../weft/dissertation-mac.md)).
+focal nerve ([`weft/almalga.md`](https://github.com/Moissanite-Labs/weft-corpus/blob/main/weft/almalga.md),
+[`weft/dissertation-mac.md`](https://github.com/Moissanite-Labs/weft-corpus/blob/main/weft/dissertation-mac.md)).
 
 These alternatives remain part of the design lineage; this contract does not
 erase them, label them invalid, or select one for every future technology stack.

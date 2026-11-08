@@ -16,7 +16,6 @@ if ROOT not in sys.path:
 
 SITE = os.path.join(ROOT, "site")
 DOCS = os.path.join(ROOT, "docs")
-WIDGETS_SRC = os.path.join(ROOT, "weft", "browser-sources", "widgets")
 WIDGETS_DOC = os.path.join(SITE, "widgets")
 
 WIDGET_SEEDS = (
@@ -41,33 +40,22 @@ def _sha256_file(path: str) -> str:
     return h.hexdigest()
 
 
-def assert_widgets_incorporated() -> dict:
-    mismatches = []
-    matched = []
-    for stem in WIDGET_SEEDS:
-        name = f"{stem}.html"
-        src = os.path.join(WIDGETS_SRC, name)
-        doc = os.path.join(WIDGETS_DOC, name)
-        if not os.path.isfile(src):
-            mismatches.append({"widget": name, "error": "missing source browser widget"})
-            continue
-        if not os.path.isfile(doc):
-            mismatches.append({"widget": name, "error": "missing site/widgets copy (run sync_pages_seed.py)"})
-            continue
-        if not filecmp.cmp(src, doc, shallow=False):
-            mismatches.append(
-                {
-                    "widget": name,
-                    "error": "site copy diverges from weft/browser-sources/widgets",
-                    "source_sha256": _sha256_file(src),
-                    "docs_sha256": _sha256_file(doc),
-                }
-            )
-            continue
-        matched.append(name)
-    if mismatches:
-        raise AssertionError(f"widget incorporation failed: {mismatches}")
-    return {"matched_html_widgets": matched, "count": len(matched)}
+def assert_vendored_files_intact() -> dict:
+    """Eido modules and corpus widgets are copied from sibling repositories.
+
+    site/VENDORED.json pins each file's SHA-256; an edit made here instead of
+    upstream fails this check (see scripts/vendor.py).
+    """
+    from scripts.vendor import check
+
+    errors = check()
+    if errors:
+        raise AssertionError(f"vendored files changed locally: {errors}")
+    manifest = json.load(open(os.path.join(SITE, "VENDORED.json"), encoding="utf-8"))
+    widgets = [n for n in os.listdir(WIDGETS_DOC) if n.endswith(".html") and n != "index.html"]
+    if len(widgets) != len(WIDGET_SEEDS):
+        raise AssertionError(f"expected {len(WIDGET_SEEDS)} widgets in site/widgets, found {len(widgets)}")
+    return {source: data["commit"] for source, data in manifest["sources"].items()}
 
 
 def run_site_selftest() -> dict:
@@ -83,7 +71,6 @@ def run_site_selftest() -> dict:
         os.path.join(DOCS, "roadmap.md"),
         os.path.join(DOCS, "glossary.md"),
         os.path.join(DOCS, "whitepapers", "syntactic-weft-whitepaper.md"),
-        os.path.join(DOCS, "design-notes", "aywa-web-design-philosophy.md"),
         os.path.join(DOCS, "design-notes", "constitution-vs-contract.md"),
         os.path.join(SITE, "assets", "js", "aesthetic-mixer.js"),
         os.path.join(SITE, "assets", "js", "sym2p-parse.js"),
@@ -96,11 +83,12 @@ def run_site_selftest() -> dict:
         os.path.join(SITE, "data", "moissanite_telemetry.json"),
         os.path.join(SITE, "data", "moissanite_telemetry.bin"),
         os.path.join(SITE, "seed-manifest.json"),
+        os.path.join(SITE, "VENDORED.json"),
     ]
     for path in required:
         _must_exist(path)
 
-    widget_check = assert_widgets_incorporated()
+    vendored = assert_vendored_files_intact()
 
     # Issue #15: verify no suspended_accounts or personal login leak in site/data/moissanite_telemetry.json
     telemetry_json_text = open(os.path.join(SITE, "data", "moissanite_telemetry.json"), encoding="utf-8").read()
@@ -159,7 +147,7 @@ def run_site_selftest() -> dict:
     return {
         "status": "PASS",
         "site_root": SITE,
-        "widgets_incorporated": widget_check,
+        "vendored_from": vendored,
         "sym2p_metrics": parsed["metrics"],
         "staged_allowlist": staged_info["staged"],
     }

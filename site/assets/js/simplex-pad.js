@@ -1,5 +1,5 @@
 /**
- * Barycentric simplex pad (Codebase C7, Aywa module D1).
+ * Barycentric simplex pad (Eido module D1).
  *
  * The mixer blends K = 3 aesthetic presets with weights on the 2-simplex
  * (w_k >= 0, sum w_k = 1). Three independent sliders cannot show that

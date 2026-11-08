@@ -6,7 +6,7 @@ deployable bundle (`dist/`) for w3ft.org.
 Everything under `site/` is public. Project documentation lives in `docs/` and is
 never staged; the forbidden-name check below guards against it leaking in (#19).
 
-  python3 scripts/sync_pages_seed.py                 # regenerate fixtures + widget copies
+  python3 scripts/sync_pages_seed.py                 # regenerate telemetry fixtures and shader copy
   python3 scripts/sync_pages_seed.py --stage-dist dist   # also stage dist/ for deploy
 """
 
@@ -24,19 +24,9 @@ if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
 
 AYWA = os.path.join(ROOT, "weft", "runtime", "aywa")
-WIDGETS_SRC = os.path.join(ROOT, "weft", "browser-sources", "widgets")
 SITE = os.path.join(ROOT, "site")
 DATA = os.path.join(SITE, "data")
 SHADERS = os.path.join(SITE, "assets", "shaders")
-WIDGETS_DST = os.path.join(SITE, "widgets")
-
-WIDGET_SEEDS = (
-    "01-sdf-laya-kinetic-typography",
-    "02-mind-palace-spatial-memory",
-    "03-morphogenetic-bioelectric-field",
-    "04-neural-cellular-automata",
-    "05-interaction-combinator-net",
-)
 
 # Issue #19: only these site files/directories are staged into the deploy bundle.
 PUBLIC_PAGES_FILES = ("index.html", "404.html", "favicon.svg", "og.png", "_headers", "seed-manifest.json")
@@ -53,21 +43,6 @@ FORBIDDEN_INTERNAL_DOCS = (
     "glossary.md",
     "roadmap.md",
 )
-
-
-def sync_browser_source_widgets() -> List[str]:
-    """Copy canonical browser-source widget implementations into site/widgets/."""
-    os.makedirs(WIDGETS_DST, exist_ok=True)
-    copied: List[str] = []
-    for stem in WIDGET_SEEDS:
-        for ext in (".html", ".jsx"):
-            src = os.path.join(WIDGETS_SRC, stem + ext)
-            if not os.path.isfile(src):
-                raise FileNotFoundError(f"missing browser-source widget: {src}")
-            dst = os.path.join(WIDGETS_DST, stem + ext)
-            shutil.copy2(src, dst)
-            copied.append(os.path.relpath(dst, ROOT))
-    return copied
 
 
 def stage_pages_dist(dist_dir: str) -> Dict[str, Any]:
@@ -116,13 +91,11 @@ def sync_docs_seed() -> Dict[str, Any]:
         os.path.join(AYWA, "dashboard_layout.wgsl"),
         os.path.join(SHADERS, "dashboard_layout.wgsl"),
     )
-    widget_files = sync_browser_source_widgets()
     manifest = {
         "source": "weft/runtime/aywa",
         "files": ["moissanite_telemetry.json", "moissanite_telemetry.bin", "telemetry.jsonl"],
         "shader": "assets/shaders/dashboard_layout.wgsl",
-        "widgets_source": "weft/browser-sources/widgets",
-        "widgets": widget_files,
+        "vendored": "VENDORED.json (Eido modules and corpus widgets; see scripts/vendor.py)",
         "public_pages_allowlist": list(PUBLIC_PAGES_FILES) + [f"{d}/" for d in PUBLIC_PAGES_DIRS],
     }
     with open(os.path.join(SITE, "seed-manifest.json"), "w", encoding="utf-8") as f:

@@ -1,5 +1,5 @@
 /**
- * Cell layout for the w3ft.org field (Codebase C7, issue #37).
+ * Cell layout for value-encoded fields (Eido; Moissanite-Labs/weft#37).
  *
  * The previous shader tiled clip space with a fixed 16:10 aspect and a 5-column
  * index, so cells stretched on any other viewport and grid indices aliased.

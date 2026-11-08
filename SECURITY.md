@@ -23,9 +23,9 @@ In scope:
 
 Out of scope:
 
-- The design corpus under `weft/*.md` and `weft/design/`. It is a preserved record of
-  design conversations and contains example code that was never meant to run as is.
-  Problems in it are welcome as ordinary issues.
+- The design corpus in [Moissanite-Labs/weft-corpus](https://github.com/Moissanite-Labs/weft-corpus). It is a
+  preserved record of design conversations and contains example code that was never meant to run as is.
+  Problems in it are welcome as ordinary issues here.
 - The Solidity drafts in `weft/runtime/ledger/`. They are research drafts that are not
   deployed anywhere, so please report findings as ordinary issues.
 
