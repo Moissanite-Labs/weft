@@ -252,41 +252,46 @@ export const WIDGETS = [
     id: "01",
     file: "widgets/01-sdf-laya-kinetic-typography.html",
     jsx: "widgets/01-sdf-laya-kinetic-typography.jsx",
-    origin: "Thread 2 (6C083A) Turn 6",
-    title: "01: Aywa Barycentric Design System Explorer",
-    desc: "Interactive barycentric style-coordinate studio interpolating typography, border rounding, spatial density, and chromatic tokens across reference presets.",
+    origin: "Recorded capture: Thread 2 (6C083A) Turn 6",
+    title: "01: Procedural Wave Sandbox",
+    desc:
+      "Canvas2D radial and matrix waves with animation speed, spatial frequency and play/pause controls.",
   },
   {
     id: "02",
     file: "widgets/02-mind-palace-spatial-memory.html",
     jsx: "widgets/02-mind-palace-spatial-memory.jsx",
-    origin: "Thread 2 (6C083A) Turn 19",
-    title: "02: Spatial Compute Canvas & Node Topology",
-    desc: "Infinite-zoom spatial compute canvas and multi-layer node architecture inspector with viewport-culled spatial rooms.",
+    origin: "Recorded capture: Thread 2 (6C083A) Turn 19",
+    title: "02: Signed-Distance Geometry Explorer",
+    desc:
+      "SVG circle and box fields with union, subtraction, intersection, smooth union and an interactive distance probe.",
   },
   {
     id: "03",
     file: "widgets/03-morphogenetic-bioelectric-field.html",
     jsx: "widgets/03-morphogenetic-bioelectric-field.jsx",
-    origin: "Thread 1 (84ADC9) Turn 10",
-    title: "03: Weft Sovereign Matrix & Telemetry Monitor",
-    desc: "Sovereign Weft telemetry matrix monitoring metabolic tension, Frobenius invariant radius, and active node lanes across the organism substrate.",
+    origin: "Recorded capture: Thread 1 (84ADC9) Turn 10",
+    title: "03: Reflex and Cognitive Flow Diagram",
+    desc:
+      "Canvas2D animation connecting telemetry, reflex and cognitive systems, uniforms and GPU nodes. Displayed synergy, latency and load are slider-derived examples.",
   },
   {
     id: "04",
     file: "widgets/04-neural-cellular-automata.html",
     jsx: "widgets/04-neural-cellular-automata.jsx",
-    origin: "Thread 1 (84ADC9) Turn 25",
-    title: "04: Morphogenetic Grid & Cellular Automata Demo",
-    desc: "Interactive cellular-automata regeneration and damage-recovery grid illustrating local neighborhood update rules and target homeostasis.",
+    origin: "Recorded capture: Thread 1 (84ADC9) Turn 25",
+    title: "04: Target-Guided Cellular Automaton",
+    desc:
+      "A 56×32 grid with eight channels, hand-coded neighborhood rules, a fixed coordinate target, damage and reseeding controls.",
   },
   {
     id: "05",
     file: "widgets/05-interaction-combinator-net.html",
     jsx: "widgets/05-interaction-combinator-net.jsx",
-    origin: "Thread 1 (84ADC9) Turn 40",
-    title: "05: Splicer Organism & Mitotic Lineage Simulator",
-    desc: "Splicer mitotic lineage and metabolic valve simulator visualizing speculative A/B child lineages, hippocampal novelty, and apoptosis gating.",
+    origin: "Recorded capture: Thread 1 (84ADC9) Turn 40",
+    title: "05: Force-Directed Concept Graph",
+    desc:
+      "Five illustrative agent/code/net nodes move under spring and repulsion forces. Reduction rates, power values and short provenance labels are simulated.",
   },
 ];
 
