@@ -51,3 +51,11 @@ No live deployment, merge, repository visibility/name change, new organization, 
 - PR53: https://github.com/Moissanite-Labs/weft/pull/53 (widget identities, ad9eb1a). PR54: https://github.com/Moissanite-Labs/weft/pull/54 (partial43, a9b798b). Both drafts; local independent reviews accept.
 - Independent C3 review retained a reproducible script with3024 differential/state cases and500 independent wire fixtures; original review results passed. The saved script is syntax-checked and its reconstruction status is explicit.
 - Pushed annotated tag `audit/source-2026-11-08-a721b12`; remote peeled target is exactly`a721b12579caba4e04dc31b16731cc2657079207`. Preserve it through later squash/rebase/branch cleanup.
+
+## Integrated verification and published review artifacts
+
+PR55 (https://github.com/Moissanite-Labs/weft/pull/55) contains the complete-corpus program, stacked on PR48. All three new PRs are attached to this Codex task.
+
+A detached local integration of PR46/47/48/53/54 and PR55's initial commit applied cleanly, including both CI jobs. At integration commit `0007f28` all17 verification commands passed:47 runtime Python tests,7 audit tests,38 Node tests,real Chromium telemetry regression (root/nested path subtests),daemon/site/core/Mac-wrapper checks,ledger validation and clean-worktree assertion. These are Linux CPU/browser results. Full commands,environment,stdout/stderr,timing and ordered source commits are retained in [audit/verification.json](audit/verification.json); recreate from its base/cherry-pick order rather than relying on the local worktree.
+
+GitHub CI succeeded for PR53 at`ad9eb1a` (run42460416277) and PR54 at`a9b798b` (run42460519271). Final PR55 CI status is reported in its checks; the initial commit and later record-only completion commit are separate heads. No code was changed to obtain these results.

@@ -26,9 +26,9 @@ Inspect open issues/PRs and path ownership before new edits. Current GitHub post
 | `codex/weft-telemetry-worker`, PR46 | Worker URL resolution and error/recovery regression | Draft, previous CI/local review passed; check present remote status |
 | `codex/weft-i4-contract`, PR47 | Exact current shared-memory byte contract | Draft, previous CI/local review passed; original layouts preserved |
 | `codex/weft-convergence-plan`, PR48 | Preliminary six tracks/use-now/variants | Base of this audit proposal; no Mac execution claimed |
-| `codex/weft-complete-corpus`, issue49 | Full source ledger, build/experiment plan, resume tooling | Follow PR link recorded at completion; source baseline remains fixed |
-| `codex/weft-widget-identities`, issue50 | Correct current widget descriptions | Exact source exports unchanged; formal review required |
-| `codex/weft-ic-state-contract`, issue43 | Bounded storage/failure repair | Partial #43; topology, continuation and cost/debit remain open |
+| `codex/weft-complete-corpus`, issue49 | Full source ledger, build/experiment plan, resume tooling | PR55, stacked on PR48; source baseline remains fixed |
+| `codex/weft-widget-identities`, issue50 | Correct current widget descriptions | PR53; exact source exports unchanged; formal review required |
+| `codex/weft-ic-state-contract`, issue43 | Bounded storage/failure repair | PR54; partial #43; topology, continuation and cost/debit remain open |
 
 Local worktree names are session conveniences, not dependencies: `/workspace/weft-corpus`, `/workspace/weft-widget-fix`, `/workspace/weft-ic-repair`. Recreate from remote branches elsewhere. The earlier Exo checkout was not changed. Source readers' observations and exact test limits are saved under `audit/`; their names describe tasks, not approved organization ownership.
 

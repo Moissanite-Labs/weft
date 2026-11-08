@@ -39,3 +39,5 @@ The [build program](../build-program.md) and [13 experiment cards](../experiment
 This is a complete pass over the pinned tracked files, including three preliminary plan additions to main's180-file tree. It excludes Git history, external model/library contents, other repositories, unavailable original sessions and live deployment state. Updates need changed-file rereads; changing the inventory ref does not refresh semantic evidence automatically. Source text, alternate designs and negative findings remain preserved.
 
 The annotated tag `audit/source-2026-11-08-a721b12` preserves the source commit independently of PR merge style. Keep that tag when cleaning branches; it was pushed and its peeled target verified as the full source SHA. CI checkout with full history fetches this durable reference.
+
+[verification.json](verification.json) retains the complete integrated command/result record and exact composition recipe for the earlier repairs plus this tranche. It distinguishes47 runtime Python tests,7 audit tests,38 Node tests and the real Chromium regression from source reading and unexecuted experiments.
