@@ -46,3 +46,33 @@ test("published seed line parses and verifies", async () => {
   assert.deepEqual([parsed.role, parsed.actionState, parsed.sequence], [1, 3, 1]);
   assert.equal(await verifySym2pLine(line), true);
 });
+
+/** Mirrors weft-loom.js / telemetry-worker.js rejection gate (boolean, not { ok }). */
+async function consumerAcceptsSym2pLine(line) {
+  return await verifySym2pLine(line);
+}
+
+test("verifySym2pLine returns a boolean (not { ok })", async () => {
+  const verified = await verifySym2pLine(GOLDEN_LINE);
+  assert.equal(typeof verified, "boolean");
+  assert.equal(verified, true);
+  assert.equal(verified.ok, undefined);
+});
+
+test("consumer gate accepts correctly signed fixture and golden lines", async () => {
+  assert.equal(await consumerAcceptsSym2pLine(GOLDEN_LINE), true);
+  const seed = readFileSync(join(here, "..", "..", "..", "docs", "data", "telemetry.jsonl"), "utf8");
+  const line = seed.split("\n").find((l) => l.trim().startsWith(":"));
+  assert.equal(await consumerAcceptsSym2pLine(line), true);
+});
+
+test("consumer gate rejects missing or mismatched hash", async () => {
+  assert.equal(await consumerAcceptsSym2pLine(":01:03:0001[s-exp (tension 0.14)]"), false);
+  assert.equal(await consumerAcceptsSym2pLine(GOLDEN_LINE.replace("0.92", "0.93")), false);
+});
+
+test("treating verify result as verified.ok wrongly rejects valid packets", async () => {
+  const verified = await verifySym2pLine(GOLDEN_LINE);
+  assert.equal(!verified.ok, true);
+  assert.equal(!verified, false);
+});

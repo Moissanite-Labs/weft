@@ -32,10 +32,13 @@ async function poll(dataUrl) {
     if (!line) return;
     const parsed = parseSym2pLine(line);
     const verified = await verifySym2pLine(line);
-    if (!verified.ok) {
+    if (!verified) {
+      const trimmed = line.trim();
+      const payloadEnd = trimmed.lastIndexOf("]");
+      const claimed = trimmed.slice(payloadEnd + 1, payloadEnd + 65);
       self.postMessage({
         type: "telemetry_rejected",
-        reason: parsed.hashPresent ? "hash_mismatch" : "missing_hash",
+        reason: claimed.length !== 64 ? "missing_hash" : "hash_mismatch",
       });
       return;
     }
