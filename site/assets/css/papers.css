@@ -5,8 +5,8 @@
 .crumbs a { color: var(--muted); }
 
 .paper-hero { border-bottom: 1px solid var(--line); background:
-  radial-gradient(120% 140% at 100% 0%, color-mix(in srgb, var(--thread-b) 10%, transparent) 0%, transparent 55%),
-  radial-gradient(90% 120% at 0% 0%, color-mix(in srgb, var(--thread-a) 9%, transparent) 0%, transparent 60%),
+  radial-gradient(120% 140% at 100% 0%, rgb(212 175 55 / 0.07) 0%, transparent 55%),
+  radial-gradient(90% 120% at 0% 0%, rgb(202 211 224 / 0.08) 0%, transparent 60%),
   var(--bg); }
 .paper-hero .wrap { padding-top: clamp(36px, 6vw, 72px); padding-bottom: clamp(32px, 5vw, 56px); }
 .paper-hero .eyebrow { margin-bottom: 12px; }
@@ -27,7 +27,7 @@
 .paper-toc ul ul { padding-left: 12px; margin: 2px 0 6px; border-left: 1px solid var(--line); }
 .paper-toc a { display: block; padding: 4px 8px; border-radius: var(--radius-sm); color: var(--ink-2); text-decoration: none; line-height: 1.35; }
 .paper-toc a:hover { background: var(--bg-2); color: var(--ink); }
-.paper-toc a.active { color: var(--accent); background: var(--accent-soft); }
+.paper-toc a.active { color: var(--ink); background: var(--accent-soft); box-shadow: inset 2px 0 0 var(--gold-flat); }
 @media (max-width: 980px) {
   .paper-toc { position: static; max-height: none; border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; background: var(--surface); }
   .paper-toc summary { margin-bottom: 0; }
@@ -45,7 +45,7 @@
 .paper li { margin: 0.3em 0; }
 .paper a { overflow-wrap: anywhere; }
 
-.abstract { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: var(--radius); padding: clamp(18px, 2.4vw, 26px); box-shadow: var(--shadow); }
+.abstract { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--gold-flat); border-radius: var(--radius); padding: clamp(18px, 2.4vw, 26px); box-shadow: var(--shadow); }
 .abstract h2 { margin: 0 0 8px !important; font: 600 0.78rem var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
 .abstract p { margin-bottom: 0.8em; }
 .abstract .keywords { font-size: 0.9rem; color: var(--muted); margin: 0; }
@@ -57,7 +57,7 @@
 /* Figures: light plates in both themes so plotted colours stay faithful */
 .paper { counter-reset: fig tab; }
 .paper figure { margin: 2em 0; counter-increment: fig; }
-.paper figure img { width: 100%; height: auto; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: clamp(8px, 2vw, 16px); }
+.paper figure img { width: 100%; height: auto; background: var(--plate, #fff); border: 1px solid var(--line); border-radius: var(--radius); padding: clamp(8px, 2vw, 16px); }
 .paper figcaption { margin-top: 10px; font-size: 0.9rem; line-height: 1.5; color: var(--muted); }
 .paper figcaption::before { content: "Figure " counter(fig) ". "; font-weight: 700; color: var(--ink); }
 

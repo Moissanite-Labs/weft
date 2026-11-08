@@ -6,8 +6,7 @@
   <title>ML Weft: Adaptive models within bounds you can check · ML Weft</title>
   <meta name="description" content="ML Weft is an open research program from Moissanite Labs. It studies models that keep adapting after deployment, under limits that a program can verify. It treats each model as a cell: a bounded piece of memory with a frozen core, a resource budget, and a rule that commits a change only if the…">
   <link rel="canonical" href="https://w3ft.org/papers/overview/">
-  <meta name="theme-color" content="#f4f6fa" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#060a12" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#0a1a3d">
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="ML Weft">
   <meta property="og:title" content="ML Weft: Adaptive models within bounds you can check">
@@ -28,7 +27,7 @@
 <body>
   <a class="skip" href="#paper">Skip to the paper</a>
 
-  <header class="site-header">
+  <header class="site-header navy-scope">
     <div class="wrap">
       <a class="brand" href="/" aria-label="ML Weft home">
         <svg viewBox="0 0 32 32" aria-hidden="true"><use href="#weave-mark"/></svg>
@@ -67,7 +66,7 @@
     </div>
   </header>
   <main id="main">
-    <header class="paper-hero">
+    <header class="paper-hero navy-scope">
       <div class="wrap">
         <nav class="crumbs" aria-label="Breadcrumb"><a href="/papers/">Papers</a><span aria-hidden="true">/</span><span>Paper 0</span></nav>
         <p class="eyebrow">Paper 0 · Version 1.1 · 8 November 2026</p>
@@ -354,7 +353,7 @@ Software going idle is not death, and a hash on a ledger is not immortality.</li
     </div>
   </main>
 
-  <footer class="site-footer">
+  <footer class="site-footer navy-scope">
     <div class="wrap">
       <div>
         <a class="brand" href="/" aria-label="ML Weft home">
@@ -388,12 +387,18 @@ Software going idle is not death, and a hash on a ledger is not immortality.</li
 
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
     <defs>
+      <linearGradient id="mark-chrome" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="32" y2="32">
+        <stop offset="0" stop-color="#f4f7fb"/><stop offset=".35" stop-color="#aab5c6"/><stop offset=".55" stop-color="#eef2f7"/><stop offset="1" stop-color="#8d99ad"/>
+      </linearGradient>
+      <linearGradient id="mark-gold" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="32" y2="32">
+        <stop offset="0" stop-color="#fbe7a1"/><stop offset=".35" stop-color="#d4af37"/><stop offset=".6" stop-color="#fff3c4"/><stop offset="1" stop-color="#b8862b"/>
+      </linearGradient>
       <symbol id="weave-mark" viewBox="0 0 32 32">
-        <rect x="1" y="1" width="30" height="30" rx="8" fill="none" stroke="currentColor" stroke-opacity=".25" stroke-width="2"/>
+        <rect x="1" y="1" width="30" height="30" rx="8" fill="#0a1a3d" stroke="url(#mark-chrome)" stroke-width="1.5"/>
         <g fill="none" stroke-width="3.2" stroke-linecap="round">
-          <path d="M11 6v20M21 6v20" style="stroke:var(--thread-b)"/>
-          <path d="M6 11h3.2M12.8 11h6.4M22.8 11H26" style="stroke:var(--thread-a)"/>
-          <path d="M6 21h16" style="stroke:var(--thread-a)"/><path d="M24.4 21H26" style="stroke:var(--thread-a)"/>
+          <path d="M11 6v20M21 6v20" stroke="url(#mark-chrome)"/>
+          <path d="M6 11h3.2M12.8 11h6.4M22.8 11H26" stroke="url(#mark-gold)"/>
+          <path d="M6 21h16M24.4 21H26" stroke="url(#mark-chrome)"/>
         </g>
       </symbol>
       <symbol id="gh" viewBox="0 0 24 24"><path fill="currentColor" d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></symbol>

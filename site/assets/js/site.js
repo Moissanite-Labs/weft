@@ -7,27 +7,20 @@ import { mixAestheticPresets } from "./aesthetic-mixer.js";
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-const cssVar = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+const cssVar = (name, el = document.documentElement) => getComputedStyle(el).getPropertyValue(name).trim();
 const themeListeners = [];
 
 /* ---------- Theme ---------- */
 function setupTheme() {
   const btn = $(".theme-toggle");
   if (!btn) return;
-  const effective = () => {
-    const t = document.documentElement.getAttribute("data-theme");
-    if (t) return t;
-    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-  };
+  // Navy (dark) is the brand default; the reader can switch to the light theme.
+  const effective = () => (document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark");
   const sync = () => btn.setAttribute("aria-pressed", String(effective() === "dark"));
   btn.addEventListener("click", () => {
     const next = effective() === "dark" ? "light" : "dark";
     document.documentElement.setAttribute("data-theme", next);
     try { localStorage.setItem("weft-theme", next); } catch { /* not persisted */ }
-    sync();
-    themeListeners.forEach((fn) => fn());
-  });
-  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
     sync();
     themeListeners.forEach((fn) => fn());
   });
@@ -57,13 +50,26 @@ function setupLoom() {
   let colors = {};
   const pointer = { x: -1e4, y: -1e4, tx: -1e4, ty: -1e4 };
 
+  // The hero is always navy (.navy-scope), so read tokens from the canvas, not the root.
   const readColors = () => {
     colors = {
-      bg: cssVar("--bg"),
-      warp: cssVar("--thread-warp"),
-      a: cssVar("--thread-a"),
-      b: cssVar("--thread-b"),
+      bg: cssVar("--bg", canvas),
+      warp: cssVar("--thread-warp", canvas),
+      weft: cssVar("--thread-weft", canvas),
+      gold: cssVar("--thread-gold", canvas),
     };
+    metallic();
+  };
+  // Brushed-metal strokes: the colour varies along each thread, never on text.
+  const metallic = () => {
+    if (!w) return;
+    const sheen = (stops) => {
+      const g = ctx.createLinearGradient(0, 0, w, h * 0.35);
+      stops.forEach(([o, c]) => g.addColorStop(o, c));
+      return g;
+    };
+    colors.a = sheen([[0, "#7f8ba0"], [0.18, "#dfe5ee"], [0.36, "#9aa6b9"], [0.55, "#f4f7fb"], [0.74, "#8d99ad"], [1, "#d3dae5"]]);
+    colors.b = sheen([[0, "#b8862b"], [0.25, "#f6dc85"], [0.45, "#d4af37"], [0.62, "#fff1b8"], [0.82, "#b8862b"], [1, "#e8c45a"]]);
   };
 
   const resize = () => {
@@ -74,6 +80,7 @@ function setupLoom() {
     canvas.width = Math.round(w * dpr);
     canvas.height = Math.round(h * dpr);
     spacing = Math.max(20, Math.min(34, w / 34));
+    metallic();
     draw(performance.now());
   };
 
@@ -110,7 +117,7 @@ function setupLoom() {
 
     // Weft: wavy horizontal threads with a background halo so crossings read as depth.
     for (let j = 0; j < rows; j++) {
-      const color = j % 5 === 2 ? colors.b : colors.a;
+      const color = j % 7 === 3 ? colors.b : colors.a; // gold, sparingly
       for (const pass of [0, 1]) {
         ctx.beginPath();
         for (let x = 0; x <= w + step; x += step) {
@@ -224,8 +231,8 @@ function setupGate() {
     return [parseInt(v.slice(0, 2), 16), parseInt(v.slice(2, 4), 16), parseInt(v.slice(4, 6), 16)];
   };
   const paintMatrix = () => {
-    const pos = hexToRgb(cssVar("--thread-a"));
-    const neg = hexToRgb(cssVar("--thread-b"));
+    const pos = hexToRgb(cssVar("--gold-flat"));
+    const neg = hexToRgb(cssVar("--accent"));
     const mid = hexToRgb(cssVar("--surface"));
     const img = ctx.createImageData(N, N);
     for (let k = 0; k < SIZE; k++) {

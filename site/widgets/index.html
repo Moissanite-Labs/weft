@@ -10,15 +10,24 @@
   <script src="/assets/js/theme.js"></script>
 </head>
 <body>
-  <header class="site-header">
+  <header class="site-header navy-scope">
     <div class="wrap">
       <a class="brand" href="/" aria-label="ML Weft home">
-        <svg viewBox="0 0 32 32" aria-hidden="true">
-          <g fill="none" stroke-width="3.2" stroke-linecap="round">
-            <path d="M11 6v20M21 6v20" style="stroke:var(--thread-b)"/>
-            <path d="M6 11h3.2M12.8 11h6.4M22.8 11H26M6 21h16M24.4 21H26" style="stroke:var(--thread-a)"/>
-          </g>
-        </svg>
+        <svg viewBox="0 0 32 32" aria-hidden="true"><defs>
+      <linearGradient id="mark-chrome" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="32" y2="32">
+        <stop offset="0" stop-color="#f4f7fb"/><stop offset=".35" stop-color="#aab5c6"/><stop offset=".55" stop-color="#eef2f7"/><stop offset="1" stop-color="#8d99ad"/>
+      </linearGradient>
+      <linearGradient id="mark-gold" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="32" y2="32">
+        <stop offset="0" stop-color="#fbe7a1"/><stop offset=".35" stop-color="#d4af37"/><stop offset=".6" stop-color="#fff3c4"/><stop offset="1" stop-color="#b8862b"/>
+      </linearGradient>
+      
+        </defs><rect x="1" y="1" width="30" height="30" rx="8" fill="#0a1a3d" stroke="url(#mark-chrome)" stroke-width="1.5"/>
+        <g fill="none" stroke-width="3.2" stroke-linecap="round">
+          <path d="M11 6v20M21 6v20" stroke="url(#mark-chrome)"/>
+          <path d="M6 11h3.2M12.8 11h6.4M22.8 11H26" stroke="url(#mark-gold)"/>
+          <path d="M6 21h16M24.4 21H26" stroke="url(#mark-chrome)"/>
+        </g>
+      </svg>
         <span class="brand-name">ML Weft</span>
         <span class="brand-org">Moissanite Labs</span>
       </a>
@@ -83,7 +92,7 @@
       </div>
     </section>
   </main>
-  <footer class="site-footer">
+  <footer class="site-footer navy-scope">
     <div class="wrap"><p>ML Weft is a Moissanite Labs project. <a href="/">Home</a> · <a href="https://github.com/Moissanite-Labs/weft">GitHub</a></p></div>
   </footer>
 </body>

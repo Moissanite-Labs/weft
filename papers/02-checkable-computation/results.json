@@ -1,7 +1,7 @@
 {
   "schema": "weft-paper-2-results/1",
   "environment": {
-    "commit": "ddf06bf36b6e849aecf15d04a70bc1edb10832d3",
+    "commit": "88f4d88779bd5c34481842a2d7ede40174140d16",
     "python": "3.13.18",
     "numpy": "2.5.3",
     "node": "v22.23.4"

@@ -178,8 +178,8 @@ def common_fields(p: dict) -> dict:
 # ---------------------------------------------------------------- site chrome
 def site_chrome() -> dict:
     index = (SITE / "index.html").read_text(encoding="utf-8")
-    header = re.search(r'\n(\s*<header class="site-header">.*?</header>)', index, re.S).group(1)
-    footer = re.search(r'\n(\s*<footer class="site-footer">.*?</footer>)', index, re.S).group(1)
+    header = re.search(r'\n(\s*<header class="site-header[^"]*">.*?</header>)', index, re.S).group(1)
+    footer = re.search(r'\n(\s*<footer class="site-footer[^"]*">.*?</footer>)', index, re.S).group(1)
     sprite = re.search(r'\n(\s*<svg width="0" height="0".*?</defs>\s*</svg>)', index, re.S).group(1)
     # In-page anchors in the nav point back to the landing page; icon <use href="#…"> stays local.
     root_links = lambda s: re.sub(r'(<a\b[^>]*?\s)href="#', r'\1href="/#', s)  # noqa: E731

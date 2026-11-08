@@ -1,7 +1,7 @@
 {
   "schema": "weft-paper-1-results/1",
   "environment": {
-    "commit": "a18fc40e31e71325aec507258fb80bb26f125c7c",
+    "commit": "88f4d88779bd5c34481842a2d7ede40174140d16",
     "python": "3.13.18",
     "torch": "2.15.0+cpu",
     "machine": "x86_64",
@@ -385,7 +385,7 @@
     "proposals_total": 120,
     "alpha_wins": 120,
     "beta_wins": 0,
-    "elapsed_ms_median": 84.28193100007775,
+    "elapsed_ms_median": 67.1038749999866,
     "runs": [
       {
         "seed": 0,
@@ -453,7 +453,7 @@
         "min_watermark_alignment": 1.0,
         "max_watermark_response_drift": 0.0,
         "final_budget": 70.0,
-        "elapsed_ms": 185.1797090000673,
+        "elapsed_ms": 132.42505599998822,
         "final_weights_sha256": "0xbc2faae4ed365d10e9ba0a375ea1ba365bf9deb429bf75d030131c432e0c16e8"
       },
       {
@@ -522,7 +522,7 @@
         "min_watermark_alignment": 1.0,
         "max_watermark_response_drift": 0.0,
         "final_budget": 70.0,
-        "elapsed_ms": 89.72380699992755,
+        "elapsed_ms": 61.608669999998256,
         "final_weights_sha256": "0x5910dcf3ebbf70c834c2fb972d979bb9220490ca8f1bcda0d8ae91b94f098540"
       },
       {
@@ -591,7 +591,7 @@
         "min_watermark_alignment": 1.0,
         "max_watermark_response_drift": 0.0,
         "final_budget": 70.0,
-        "elapsed_ms": 106.70635699989361,
+        "elapsed_ms": 66.63265000003094,
         "final_weights_sha256": "0xb98090f0e4ca669b21535a0e9015f17f8c0dc27963ad94b78b96252750c60c1f"
       },
       {
@@ -660,7 +660,7 @@
         "min_watermark_alignment": 1.0,
         "max_watermark_response_drift": 0.0,
         "final_budget": 70.0,
-        "elapsed_ms": 93.9027150000129,
+        "elapsed_ms": 67.1038749999866,
         "final_weights_sha256": "0x03a26e8649ccef2c9f5aafd62bd40f37914869e302a8a8744eb077c9f3e36815"
       },
       {
@@ -729,7 +729,7 @@
         "min_watermark_alignment": 1.0,
         "max_watermark_response_drift": 0.0,
         "final_budget": 70.0,
-        "elapsed_ms": 84.28193100007775,
+        "elapsed_ms": 67.46144200002391,
         "final_weights_sha256": "0xa5b3aca2870b908b2d5e9d4cfdf6996ce3d35b8ba654cbaaf451cc8945b654dd"
       },
       {
@@ -798,7 +798,7 @@
         "min_watermark_alignment": 1.0,
         "max_watermark_response_drift": 0.0,
         "final_budget": 70.0,
-        "elapsed_ms": 79.70592299989221,
+        "elapsed_ms": 85.4621619999989,
         "final_weights_sha256": "0x19ff9609ecf09b8dcc4b680023ec8410f1cf4db92b88aa2cdc3c5b42a9022f3f"
       },
       {
@@ -867,7 +867,7 @@
         "min_watermark_alignment": 1.0,
         "max_watermark_response_drift": 0.0,
         "final_budget": 70.0,
-        "elapsed_ms": 72.01120300010189,
+        "elapsed_ms": 60.672174999979234,
         "final_weights_sha256": "0x47dbe711b532d5648f948e51e366e2aac6e3704d23d8f0ac6428999bb10f35e6"
       },
       {
@@ -936,7 +936,7 @@
         "min_watermark_alignment": 1.0,
         "max_watermark_response_drift": 0.0,
         "final_budget": 70.0,
-        "elapsed_ms": 79.46465299983174,
+        "elapsed_ms": 58.80343499995888,
         "final_weights_sha256": "0x9d90ec37a109230fc309df08b06470d3d02724c7a2e1ed019c5ff0a88300e414"
       },
       {
@@ -1005,7 +1005,7 @@
         "min_watermark_alignment": 1.0,
         "max_watermark_response_drift": 0.0,
         "final_budget": 70.0,
-        "elapsed_ms": 70.67924799980574,
+        "elapsed_ms": 61.96652400001312,
         "final_weights_sha256": "0x97d4695e27bb050158af03cde3b0292e16cdab671cee30380f350585ed217d19"
       },
       {
@@ -1074,7 +1074,7 @@
         "min_watermark_alignment": 1.0,
         "max_watermark_response_drift": 0.0,
         "final_budget": 70.0,
-        "elapsed_ms": 80.28066699989722,
+        "elapsed_ms": 82.25351300001194,
         "final_weights_sha256": "0xe0b341977d69d2f72be91cb2be9ca04335dfd93b09e54f84bd46c4743877875b"
       }
     ]

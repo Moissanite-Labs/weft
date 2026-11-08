@@ -599,8 +599,8 @@ def figures(e2: dict, e6: dict) -> None:
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
-    ink, muted, grid = "#0f172a", "#64748b", "#e2e8f0"
-    cyan, violet, red, amber = "#0e7490", "#6d28d9", "#b91c1c", "#b45309"
+    ink, muted, grid = "#0a1a3d", "#586780", "#e4e9f0"
+    cyan, violet, red, amber = "#163168", "#aab5c6", "#3d4c6b", "#b8862b"  # navy, silver, dark slate, gold
     plt.rcParams.update({
         "font.family": "DejaVu Sans", "font.size": 9, "axes.edgecolor": muted, "axes.labelcolor": ink,
         "xtick.color": muted, "ytick.color": muted, "axes.grid": True, "grid.color": grid, "grid.linewidth": 0.6,
@@ -609,7 +609,7 @@ def figures(e2: dict, e6: dict) -> None:
     (HERE / "figures").mkdir(exist_ok=True)
 
     # Figure 2: differential fuzzing outcomes
-    order = [("agree_normal_form", "agrees to normal form", cyan), ("agree_until_cap", "agrees until step cap", "#7cc3d3"),
+    order = [("agree_normal_form", "agrees to normal form", cyan), ("agree_until_cap", "agrees until step cap", violet),
              ("diverged", "diverges from reference (never observed)", red), ("vm_unreadable", "storage no longer a valid net", amber)]
     fig, ax = plt.subplots(figsize=(6.4, 2.3))
     for row, cls in enumerate(("general", "simple")):
@@ -634,7 +634,7 @@ def figures(e2: dict, e6: dict) -> None:
     names = ["header\n(role, action, sequence)", "payload\n(s-expression)", "hash\n(64 hex digits)"]
     regs = ["header", "payload", "hash"]
     det = [100 * e6["single_char_mutations"][r]["rejected"] / e6["single_char_mutations"][r]["mutants"] for r in regs]
-    bars = ax.bar(names, det, color=[red, cyan, cyan], width=0.55)
+    bars = ax.bar(names, det, color=[amber, cyan, cyan], width=0.55)
     for b, v in zip(bars, det):
         ax.text(b.get_x() + b.get_width() / 2, v + 2, f"{v:.0f}%", ha="center", color=ink, fontsize=9)
     ax.set_ylim(0, 112)

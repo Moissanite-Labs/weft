@@ -254,8 +254,8 @@ def figures(e1: dict, e2: dict, e3: dict, e5: dict) -> None:
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
-    ink, muted, grid = "#0f172a", "#64748b", "#e2e8f0"
-    cyan, violet, red = "#0e7490", "#6d28d9", "#b91c1c"
+    ink, muted, grid = "#0a1a3d", "#586780", "#e4e9f0"
+    cyan, violet, red = "#163168", "#b8862b", "#6b7a94"  # navy, gold, slate (names kept for diff size)
     plt.rcParams.update({
         "font.family": "DejaVu Sans", "font.size": 9, "axes.edgecolor": muted, "axes.labelcolor": ink,
         "xtick.color": muted, "ytick.color": muted, "axes.grid": True, "grid.color": grid, "grid.linewidth": 0.6,

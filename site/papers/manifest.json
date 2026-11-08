@@ -6,27 +6,27 @@
       "number": 0,
       "version": "1.1",
       "pdf": "ml-weft-paper-0-overview-v1.1.pdf",
-      "pdf_bytes": 220040,
-      "source_sha256": "a5b6ba4d217a10f9bc50fcf906c3d18258357bf1edc89697ee653a778dec897f",
-      "templates_sha256": "fa4a0080d39f1e27647be9de6d2b823022b3c1e7791f48d1e77e86ff8ac09cb8"
+      "pdf_bytes": 220014,
+      "source_sha256": "176bd48f221104d817fccea5aa30bdee6737c6118d5efe44d9e6305d1f8ad8f3",
+      "templates_sha256": "b18ce07baa9da0de0779736107e5d7b8c8aa6279508602828f74da0cf88a9de8"
     },
     {
       "slug": "models-as-cells",
       "number": 1,
       "version": "1.0",
       "pdf": "ml-weft-paper-1-models-as-cells-v1.0.pdf",
-      "pdf_bytes": 518341,
-      "source_sha256": "077cf8ce36374d326eb548b0dab73a65cd1dcf6a50b64e9af2dfda3b2a4fa683",
-      "templates_sha256": "fa4a0080d39f1e27647be9de6d2b823022b3c1e7791f48d1e77e86ff8ac09cb8"
+      "pdf_bytes": 518387,
+      "source_sha256": "e189cdd374bd61cd01eea831f9149d28edc0785f65e869662538001b28d3f911",
+      "templates_sha256": "b18ce07baa9da0de0779736107e5d7b8c8aa6279508602828f74da0cf88a9de8"
     },
     {
       "slug": "checkable-computation",
       "number": 2,
       "version": "1.0",
       "pdf": "ml-weft-paper-2-checkable-computation-v1.0.pdf",
-      "pdf_bytes": 365421,
-      "source_sha256": "ecc011a7a29c4eae2f3ff1f12a3be5b4dd5b8d3f5ce875302b7859c87ec9cbd1",
-      "templates_sha256": "fa4a0080d39f1e27647be9de6d2b823022b3c1e7791f48d1e77e86ff8ac09cb8"
+      "pdf_bytes": 365414,
+      "source_sha256": "8435ab7a22c5b46e2f2178b00b755669c6cc4275117c66a19e9817c1b3b459a1",
+      "templates_sha256": "b18ce07baa9da0de0779736107e5d7b8c8aa6279508602828f74da0cf88a9de8"
     }
   ]
 }
