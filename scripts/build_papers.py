@@ -186,6 +186,16 @@ def site_chrome() -> dict:
     return {"header": root_links(header), "footer": root_links(footer), "sprite": sprite}
 
 
+def previous_versions(p: dict) -> str:
+    """Links to earlier PDF editions kept beside the current one (committed under site/papers/<slug>/)."""
+    prefix = f"ml-weft-paper-{p['number']}-{p['slug']}-v"
+    olds = sorted(f.name for f in (OUT / p["slug"]).glob(prefix + "*.pdf") if f.name != pdf_name(p))
+    if not olds:
+        return ""
+    links = ", ".join(f'<a href="{n}">v{n[len(prefix):-4]}</a>' for n in olds)
+    return f" Earlier PDF editions: {links}."
+
+
 def human_size(n: int) -> str:
     return f"{n / 1024:.0f} KB" if n < 1024 * 1024 else f"{n / 1024 / 1024:.1f} MB"
 
@@ -199,7 +209,8 @@ def build_html(papers: list[dict], out: Path, pdf_sizes: dict) -> dict[str, str]
     for p in papers:
         target = out / p["slug"]
         target.mkdir(parents=True, exist_ok=True)
-        fields = common_fields(p) | chrome | {"toc": toc_html(p["body_md"]), "pdf_size": pdf_sizes.get(p["slug"], "")}
+        fields = common_fields(p) | chrome | {"toc": toc_html(p["body_md"]), "pdf_size": pdf_sizes.get(p["slug"], ""),
+                                              "previous_versions": previous_versions(p)}
         page = fill(page_tpl, fields)
         (target / "index.html").write_text(page, encoding="utf-8")
         written[f"{p['slug']}/index.html"] = sha256_bytes(page.encode())
@@ -311,9 +322,7 @@ def main() -> int:
     for p in papers:
         target = OUT / p["slug"]
         target.mkdir(parents=True, exist_ok=True)
-        for stale in target.glob("*.pdf"):
-            if stale.name != pdf_name(p):
-                stale.unlink()
+        # Earlier versions stay published: their URLs may already be cited or linked.
         pdf_path = target / pdf_name(p)
         if args.no_pdf:
             prev = old_by_slug.get(p["slug"])

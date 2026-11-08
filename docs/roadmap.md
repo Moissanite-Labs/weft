@@ -9,7 +9,7 @@ ML Weft is structured as a cumulative four-horizon progression. Each horizon pre
 
 | Horizon | Name | Primary Substrate | Core Invariant | Status & Timeline |
 | :--- | :--- | :--- | :--- | :--- |
-| **Horizon 0** | **Symbolic & Epistemic Seed** | Multi-agent harness (`exo`) + `SYM-2P/1.0` wire protocol | Deterministic SHA-256 packet verification (`101B` symbolic vs `481B` JSON) | **Active / Complete** (Baseline across `Moissanite-Labs`) |
+| **Horizon 0** | **Symbolic & Epistemic Seed** | Multi-agent harness (`exo`) + the [abios](https://github.com/Moissanite-Labs/abios) messaging protocol (SYM-2P) | SHA-256 payload hashes (integrity against accidents, not authentication; see Paper 2 §6.6) | **Active / Complete** (Baseline across `Moissanite-Labs`) |
 | **Horizon I** | **Apple Silicon Initial Prototype** | M-series Unified Memory (`shm_open` + Metal/MPS + C11 + Python) | Baseline Frobenius gate (`\|\|W_cand - W_base\|\|_F <= 120.0`) & `>= 90%` watermark retention | **Active / Verified on `main`** (`C1`–`C7`, 28 issues closed, CI green) |
 | **Horizon II** | **Custom Silicon & Terrafab Foundry** | Bare-metal unikernel (`boot.asm`) -> FPGA RTL -> Wafer-scale / photonic ASIC | Single-cycle DMA invariant gate & Landauer bit-erasure efficiency (`k_B T ln 2`) | **Next Engineering Horizon** (Stage II-A Unikernel -> Stage II-B RTL -> Stage II-C Foundry) |
 | **Horizon III** | **Societal & Civilizational Weave** | Constitutional Ledger Triad (`C4`) + Federated Multi-Node Mesh (`C8`) | 85/15 metabolic excision split, `T <= 85.0%` tension bound, and 12-hop cycle-free lineage DAG | **Local Simulation Verified (`C4`/`C5`) -> Testnet & Civilizational Rollout** |
@@ -19,7 +19,7 @@ ML Weft is structured as a cumulative four-horizon progression. Each horizon pre
 Before intelligence can self-assemble in shared memory, agents require a shared constitution, a compact verifiable language, and an epistemic falsification loop:
 
 1. **Constitutional Origin (the Moissanite Labs founding constitution)**: Defines the shift from brittle orchestration to self-assembling splicer cells governed by thermodynamic and invariant bounds.
-2. **Dense Symbolic Wire Protocol (`abios` / `SYM-2P/1.0`)**: Replaces ambiguous natural-language JSON payloads with canonical `:RR:AA:SSSS[s-exp ...]<sha256>` lines verified by both Python (`weft/runtime/telemetry/sym2p_codec.py`) and browser/Node JavaScript (`site/assets/js/sym2p-parse.js`).
+2. **Dense Symbolic Wire Protocol ([`abios`](https://github.com/Moissanite-Labs/abios), SYM-2P)**: Replaces ambiguous natural-language payloads with compact, checkable agent messages. abios's normative SYM-2P/1.0 profile is one canonical JSON object per line; its v2 draft is a positional line. Weft's telemetry uses an earlier dialect, `:RR:AA:SSSS[s-exp ...]<sha256>`, verified by Python (`weft/runtime/telemetry/sym2p_codec.py`) and the browser (`site/assets/js/sym2p-parse.js`). Its hash covers only the payload and is unkeyed. Moving it onto abios is [#67](https://github.com/Moissanite-Labs/weft/issues/67).
 3. **Epistemic Verification (`alkindus`, `averroes`, `synbios`)**: Every mathematical, biological, and governance claim is audited against executable falsifiers (`docs/corpus/claims-register.md` and `docs/corpus/safety-index.md`).
 
 ## 3. Horizon I: Apple Silicon Initial Prototype (The Cellular Organism)

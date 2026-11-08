@@ -54,8 +54,8 @@ Set `WEFT_BROWSER_EXECUTABLE` to use a system Chromium. The header and footer of
 ## Versioning
 
 Bump `version` and `date` for any change of substance, and say what changed in the pull request. A new version
-gets a new PDF file name (`ml-weft-paper-<n>-<slug>-v<version>.pdf`), so citations to an old version can be told
-apart from the new one.
+gets a new PDF file name (`ml-weft-paper-<n>-<slug>-v<version>.pdf`). Earlier PDFs are never deleted: they stay at
+their URLs and are listed on the paper's page, so existing citations and links keep working.
 
 ## License
 
