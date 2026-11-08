@@ -1,0 +1,27 @@
+ML Weft
+Copyright 2026 Moissanite Labs and the Weft contributors.
+
+This repository is dual-licensed by content type:
+
+  * Source code is licensed under the Apache License, Version 2.0 (LICENSE).
+    This covers weft/runtime/, scripts/, site/, .github/, wrangler.jsonc and
+    weft/browser-sources/widgets/.
+
+  * Documentation, prose and the design corpus are licensed under the Creative
+    Commons Attribution 4.0 International License (LICENSE-docs). This covers
+    docs/, the Markdown files under weft/ (including weft/design/ and
+    weft/browser-sources/*.md), and the Markdown files at the repository root.
+    Code listings that appear inside those documents may also be used under
+    the Apache License, Version 2.0, at your option.
+
+Attribution for CC BY 4.0 reuse: "ML Weft, Moissanite Labs, https://w3ft.org".
+
+"ML Weft", "Weft" as the name of this project, "Moissanite Labs" and the Weft
+weave mark are names of Moissanite Labs. Neither license grants rights to use
+them except as needed to describe the origin of the work.
+
+Third-party material:
+
+  * The exported widgets in weft/browser-sources/widgets/ and site/widgets/
+    reference web fonts and a stylesheet hosted by Google. Those assets are not
+    part of this repository and remain under their owners' terms.

@@ -1,0 +1,23 @@
+name: Claim or evidence gap
+description: A doc, the site or the corpus claims more than the code or evidence shows, or a claim needs a falsifier.
+labels: [evidence]
+body:
+  - type: textarea
+    id: claim
+    attributes:
+      label: The claim
+      description: Quote it and link the file and lines.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: What the code or evidence actually shows
+      description: Link the code path, test or run. Say whether the rule is only stated or actually checked.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed repair or falsifier
+      description: A test, an experiment, or a wording change. Keep the vision term and fix the overclaim.
