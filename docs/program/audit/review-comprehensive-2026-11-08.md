@@ -478,26 +478,41 @@ where no owner call blocks it. One branch and one PR per change.
 7. Work the open contract queue in issue order: 42, 43 with 52,
    44, 45, and 51. Keep economics and lineage rulings explicit.
    Do not bury policy choices inside test fixtures.
-8. Finish admin prep that needs no owner data: create the decision
-   label in all three repos, label owner issues, settle Wiki and
-   Discussions settings, and add a repo link check.
+8. Finish admin prep that needs no owner data. The decision label
+   now exists in all three repos with owner issues labeled.
+   Settle Wiki and Discussions settings next. Add the link check.
 9. Hold these for owner rulings: email destination, social preview
    upload, widget asset terms, history form, corpus inclusion, and
    the visibility flip itself. Keep Pages off. Keep outreach off.
 
-## Proposed new issues
+## Where each finding lives
 
-Most findings map to open issues. Three gaps have no issue yet.
-File each only if reviewers confirm the evidence holds.
+Filed at publication time so the team can claim work in the open.
+Owner issues carry the decision label created at the same time.
 
-1. Darwin shared memory names in C1 fail for long caller names.
-   The issue should carry the macOS error, the name length limit,
-   the fix shape, and the macOS CI job ask. See finding C3.
-2. The DCO check rejects valid sign-offs from bot commits and from
-   ID based no-reply addresses. The issue should weigh fixed text
-   matching and a narrow bot rule against the human rule. See S3.
-3. Site header policy covers `/` only. Widget and paper paths need a
-   stated policy that matches the widget asset ruling. See S2.
+| Finding | Repo home |
+|---|---|
+| B1 | Issue 71. Umbrella in issue 57 |
+| B2 | Issue 72 |
+| B3 | Eido PR 1 and Corpus PR 1 in sibling repos |
+| B4 | Issue 57, decision label applied |
+| B5 | Label created in all three repos. Issues 25, 27, 57 labeled |
+| C1 | Issue 42 |
+| C2 | Issue 63, wider family in issue 51 |
+| C3 | Issue 68 |
+| C4 | Issue 44 |
+| C5 | Issue 45 |
+| C6 | Issues 42 and 44 |
+| C7 | Issues 43, 51, 52. New detail in issue 66 |
+| S1 | Issue 57 for history form. Scan job in issue 73 |
+| S2 | Issue 70. Asset terms in issue 57 |
+| S3 | Issue 69 |
+| S4 | Issue 67. Label limits also in issue 45 |
+| P1 | Ruleset order in issue 71. Branch consent stays per author |
+| P2 | Issue 57 |
+| P3 | Issue 57 |
+| P4 | Issues 44, 68, and 73 |
+| P5 | Issue 71 for landing. Issue 63 for rerun duty |
 
 ## Appendix: commands behind the counts
 
@@ -531,5 +546,6 @@ python papers/01-models-as-cells/experiments.py --check
 Live checks used `curl` status, size, header, and SHA-256 reads.
 GitHub reads used `gh` API calls for repos, rulesets, runs, issues,
 pull requests, variables, and alert counts. No write call was made
-during evidence gathering. The audit claim and this PR are the only
-writes from this audit.
+during evidence gathering. Writes since then: this PR, issues 68 to
+73, and the decision label in all three repos with labels applied
+to issues 25, 27, and 57. No merge or deploy write was made.
