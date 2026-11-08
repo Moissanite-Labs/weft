@@ -83,6 +83,9 @@ def run_site_selftest() -> dict:
         os.path.join(DOCS, "design-notes", "constitution-vs-contract.md"),
         os.path.join(DOCS, "assets", "js", "aesthetic-mixer.js"),
         os.path.join(DOCS, "assets", "js", "sym2p-parse.js"),
+        os.path.join(DOCS, "assets", "js", "cell-layout.js"),
+        os.path.join(DOCS, "assets", "js", "glyph-font.js"),
+        os.path.join(DOCS, "assets", "js", "simplex-pad.js"),
         os.path.join(DOCS, "assets", "workers", "telemetry-worker.js"),
         os.path.join(DOCS, "assets", "shaders", "dashboard_layout.wgsl"),
         os.path.join(DOCS, "data", "telemetry.jsonl"),
@@ -117,9 +120,20 @@ def run_site_selftest() -> dict:
     wgsl = open(wgsl_path, encoding="utf-8").read()
     if "@vertex" not in wgsl or "@fragment" not in wgsl:
         raise AssertionError("dashboard_layout.wgsl missing shader stages")
-    for uniform_field in ("gini_index", "user_density", "user_hue", "node_vel_0", "labelData"):
+    for uniform_field in ("gini_index", "user_density", "user_hue", "node_vel_0", "user_rounding", "org_tension"):
         if uniform_field not in wgsl:
             raise AssertionError(f"dashboard_layout.wgsl does not consume {uniform_field} (#24)")
+    # Issue #37: cells come from the CPU layout (exact rectangles in CSS px) and text from
+    # the two-word bitmask font; no clip-space aspect constant or modulo grid index.
+    for binding in ("var<uniform> view", "var<storage, read> cells", "var<storage, read> font"):
+        if binding not in wgsl:
+            raise AssertionError(f"dashboard_layout.wgsl missing binding '{binding}' (#37)")
+    for stale in ("p.x *= 1.6", "1.77777777778", "(cell_id.y + 2.0) * 5.0"):
+        if stale in wgsl:
+            raise AssertionError(f"dashboard_layout.wgsl still contains '{stale}' (#37)")
+    runtime_wgsl = open(os.path.join(ROOT, "weft", "runtime", "aywa", "dashboard_layout.wgsl"), encoding="utf-8").read()
+    if runtime_wgsl != wgsl:
+        raise AssertionError("docs/assets/shaders/dashboard_layout.wgsl diverges from weft/runtime/aywa/ (run scripts/sync_pages_seed.py)")
 
     # Issue #19: verify allow-listed Pages dist staging excludes internal docs/ subdirectories
     from scripts.sync_pages_seed import stage_pages_dist
