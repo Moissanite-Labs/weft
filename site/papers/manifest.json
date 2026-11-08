@@ -1,0 +1,23 @@
+{
+  "pandoc": "pandoc 3.1.3",
+  "papers": [
+    {
+      "slug": "overview",
+      "number": 0,
+      "version": "1.0",
+      "pdf": "ml-weft-paper-0-overview-v1.0.pdf",
+      "pdf_bytes": 218784,
+      "source_sha256": "3b7b77212a48b6d1008d3fb644a003ded0e801a0ffcb375da206294c2ba24b21",
+      "templates_sha256": "10716e2f194f03dfa60bc3a6a4e08ebfd6019c198bc9ff61b2e3b9025cb655a8"
+    },
+    {
+      "slug": "models-as-cells",
+      "number": 1,
+      "version": "1.0",
+      "pdf": "ml-weft-paper-1-models-as-cells-v1.0.pdf",
+      "pdf_bytes": 517509,
+      "source_sha256": "c15fa47e57408dccf83115f2cd42eaf359664bacdf031e9181c9ffb16a00d73b",
+      "templates_sha256": "10716e2f194f03dfa60bc3a6a4e08ebfd6019c198bc9ff61b2e3b9025cb655a8"
+    }
+  ]
+}

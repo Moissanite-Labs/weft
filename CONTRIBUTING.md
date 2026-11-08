@@ -86,6 +86,13 @@ python3 -m http.server 8000 --directory site
 Merges to `main` that touch `site/` are deployed to w3ft.org by `.github/workflows/deploy-site.yml` once maintainers
 have enabled it.
 
+### Working on the papers
+
+Paper sources live in `papers/`, and [`papers/README.md`](papers/README.md) has the rules and build steps. In short:
+label the evidence, pin the commit, produce every number from a script, and say what the paper does not show. Run
+`python3 scripts/build_papers.py` and commit the regenerated `site/papers/`. CI checks that the HTML is current, that
+the PDFs were built from the current sources, and that Paper 1's experiments still reproduce its numbers.
+
 ## Pull requests
 
 1. Fork the repository and create a branch from `main`.

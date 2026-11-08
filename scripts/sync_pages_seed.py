@@ -30,7 +30,7 @@ SHADERS = os.path.join(SITE, "assets", "shaders")
 
 # Issue #19: only these site files/directories are staged into the deploy bundle.
 PUBLIC_PAGES_FILES = ("index.html", "404.html", "favicon.svg", "og.png", "_headers", "seed-manifest.json")
-PUBLIC_PAGES_DIRS = ("assets", "data", "widgets")
+PUBLIC_PAGES_DIRS = ("assets", "data", "widgets", "papers")
 FORBIDDEN_INTERNAL_DOCS = (
     "corpus",
     "program",

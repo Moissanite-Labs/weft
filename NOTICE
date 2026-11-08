@@ -20,6 +20,9 @@ them except as needed to describe the origin of the work.
 
 Third-party material:
 
+  * The fonts in papers/templates/fonts/ (Source Serif 4, Inter, JetBrains Mono,
+    STIX Two Math) are licensed under the SIL Open Font License 1.1, and are
+    embedded in the PDF editions of the papers. See papers/templates/fonts/OFL.txt.
   * site/assets/js/{aesthetic-mixer,simplex-pad,cell-layout,glyph-font}.js are
     copied from Moissanite-Labs/weft-eido (Apache-2.0), and site/widgets/ from
     Moissanite-Labs/weft-corpus. See site/VENDORED.json.

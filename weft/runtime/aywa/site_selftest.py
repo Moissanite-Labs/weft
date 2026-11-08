@@ -70,7 +70,6 @@ def run_site_selftest() -> dict:
         os.path.join(DOCS, "mission.md"),
         os.path.join(DOCS, "roadmap.md"),
         os.path.join(DOCS, "glossary.md"),
-        os.path.join(DOCS, "whitepapers", "syntactic-weft-whitepaper.md"),
         os.path.join(DOCS, "design-notes", "constitution-vs-contract.md"),
         os.path.join(SITE, "assets", "js", "aesthetic-mixer.js"),
         os.path.join(SITE, "assets", "js", "sym2p-parse.js"),
@@ -84,6 +83,9 @@ def run_site_selftest() -> dict:
         os.path.join(SITE, "data", "moissanite_telemetry.bin"),
         os.path.join(SITE, "seed-manifest.json"),
         os.path.join(SITE, "VENDORED.json"),
+        os.path.join(SITE, "papers", "index.html"),
+        os.path.join(SITE, "papers", "manifest.json"),
+        os.path.join(SITE, "assets", "css", "papers.css"),
     ]
     for path in required:
         _must_exist(path)

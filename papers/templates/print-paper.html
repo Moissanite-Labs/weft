@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{{title}}: {{subtitle}}</title>
+  <meta name="author" content="{{authors}}">
+  <meta name="description" content="{{description}}">
+  <meta name="keywords" content="{{keywords}}">
+  <link rel="stylesheet" href="fonts.css">
+  <link rel="stylesheet" href="print.css">
+  <style>@page { @top-left { content: "ML Weft · Paper {{number}}"; } @top-right { content: "{{title}}"; } }</style>
+</head>
+<body>
+  <header class="titleblock">
+    <div class="series">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><g fill="none" stroke-width="3.4" stroke-linecap="round"><path d="M11 6v20M21 6v20" stroke="#6d3fd8"/><path d="M6 11h3.2M12.8 11h6.4M22.8 11H26M6 21h16M24.4 21H26" stroke="#0e8aa8"/></g></svg>
+      <span>ML Weft · Moissanite Labs</span>
+      <span class="sep">Paper {{number}} · Version {{version}} · {{date_human}}</span>
+    </div>
+    <h1>{{title}}</h1>
+    <p class="subtitle">{{subtitle}}</p>
+    <p class="byline">{{authors}}</p>
+    <section class="abstract">
+      <h2>Abstract</h2>
+{{abstract}}
+      <p class="keywords"><span>Keywords</span> {{keywords}}</p>
+    </section>
+    <table class="facts">
+      <tr><th>Evidence</th><td>{{status}}</td></tr>
+      <tr><th>Repository</th><td>github.com/Moissanite-Labs/weft at commit <code>{{commit_short}}</code></td></tr>
+      <tr><th>Online</th><td>w3ft.org/papers/{{slug}}/</td></tr>
+    </table>
+  </header>
+  <main class="body">
+{{body}}
+  </main>
+  <footer class="colophon">
+    <h2>Citation</h2>
+    <pre><code>{{bibtex}}</code></pre>
+    <p>© 2026 Moissanite Labs and the ML Weft contributors. This paper is licensed under the Creative Commons
+    Attribution 4.0 International License (CC BY 4.0). Code referenced here is licensed under the Apache License 2.0.
+    Typeset from <code>papers/{{dir}}/paper.md</code> in Source Serif 4, Inter, JetBrains Mono and STIX Two Math.</p>
+  </footer>
+</body>
+</html>

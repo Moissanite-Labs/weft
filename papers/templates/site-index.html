@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Papers · ML Weft</title>
+  <meta name="description" content="The ML Weft paper series: an overview of the program and in-depth papers on each part, in HTML and PDF.">
+  <link rel="canonical" href="https://w3ft.org/papers/">
+  <meta name="theme-color" content="#f4f6fa" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#060a12" media="(prefers-color-scheme: dark)">
+  <meta property="og:title" content="ML Weft papers">
+  <meta property="og:description" content="An overview of the program and in-depth papers on each part, in HTML and PDF.">
+  <meta property="og:image" content="https://w3ft.org/og.png">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/css/site.css">
+  <link rel="stylesheet" href="/assets/css/papers.css">
+  <script src="/assets/js/theme.js"></script>
+  <script type="module" src="/assets/js/site.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+{{header}}
+  <main id="main">
+    <header class="paper-hero">
+      <div class="wrap">
+        <p class="eyebrow">Papers</p>
+        <h1>The ML Weft series</h1>
+        <p class="paper-subtitle">One overview, then a paper for each part, each with its evidence labelled.</p>
+        <p class="paper-status">Every paper names the repository commit it describes and includes the commands that reproduce its
+        results. Each one is available as a web page and as a PDF.</p>
+      </div>
+    </header>
+    <section class="block">
+      <div class="wrap paper-list">
+{{cards}}
+      </div>
+    </section>
+  </main>
+{{footer}}
+{{sprite}}
+</body>
+</html>
