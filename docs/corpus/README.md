@@ -3,6 +3,8 @@
 Status: first full pass, 2026-11-07, for Discussion #11 ("Weaving"), PR #12.
 Line numbers refer to `main@f67d9dc`.
 
+**Planning addendum, 2026-11-08 (#39):** this is a dated inventory, not a current capability report. Use the [variant and lineage register](../program/variants.md) to compare implementations and the [convergence plan](../program/convergence-plan.md) for current evidence and sequencing. Preserve the original transcripts and historical source reports. Repetition can preserve a different assumption, stack or stage of a design; assess that context before choosing, combining or retiring a variant.
+
 This directory maps every Markdown file under `weft/`: what each file is, where it came from, which code it holds, and what it claims. It is the evidence base for the proposed decomposition in [`../program/decomposition.md`](../program/decomposition.md). Read it before scaffolding a codebase or writing a white paper from the corpus.
 
 | File | What it holds |
@@ -34,9 +36,9 @@ Outliers that come from none of the three sources:
 
 ### Consequences for the build
 
-1. **Use the latest variant, not the first one found.** The transcripts show each program evolving turn by turn. The latest variant of each system is listed in §3 below.
+1. **Compare variants by lineage, assumptions and evidence.** The transcripts show each program evolving and branching across different stacks and goals. §3 records late variants as navigation aids, not automatic winners. Use the [variant register](../program/variants.md), preserve meaningful alternatives, and record why an implementation is selected or repaired.
 2. **Narrated execution is not evidence.** From thread1 Turn 30 onward, the assistant role-plays execution. It prints invented terminal output and claims contracts were "sealed on-chain". The transcript itself concedes, at `thread1:6566-6568` and `emergent.md:96-98`, that nothing exists outside the chat. The contract addresses it quotes are the default addresses of a fresh local Hardhat/Anvil devnet (`sources/C` §3, `sources/E` §3.3). PROGRAM.md already says a simulated receipt is not evidence. This map identifies where those receipts are.
-3. **External "facts" are unverified premises.** GPT-6 Astra, jev-ui, Inkling 2 on Tinker, Laya, two arXiv IDs, and "macOS Golden Gate 27.0.1" are unverified. The last one does not exist. See `sources/A` §3.6, `sources/G`, and `sources/D` §0.
+3. **External "facts" require dated verification.** The original inventory did not establish the availability or stated behavior of GPT-6 Astra, jev-ui, Inkling 2 on Tinker, Laya, two arXiv IDs, or the reported OS name "macOS Golden Gate 27.0.1". This is not evidence of their absence. See `sources/A` §3.6, `sources/G`, and `sources/D` §0 for the historical findings. For the owner's current device report, record `sw_vers` and runtime probes as described in [use-now.md](../program/use-now.md), rather than substituting a version or inferring compatibility.
 4. **Possible name clash.** The transcripts attribute the name "Weft" to Luca Berton's Weft language (`thread1:4441-4452`). The search results also show WeaveMindAI/weft. The genesis thread instead derives the name from the user's loom metaphor (`splicers:133-154`). This needs a recorded decision before the project goes public.
 
 ## 2. Counts
@@ -56,7 +58,7 @@ The fragment counts overlap heavily because the per-turn files duplicate the tra
 
 ## 3. Distinct systems after de-duplication
 
-The candidate systems from the eight reports collapse into the following. Each "latest variant" is the most recent version in the transcript order.
+The candidate systems from the eight reports were grouped as follows at the inventory revision. Each "latest variant" is the most recent version in transcript order, not a recommendation to discard its predecessors. The "In repo today" column describes that historical revision; consult the current evidence and variant registers before treating it as present state.
 
 | # | System (corpus name) | Latest corpus variant | In repo today | Shares logic with |
 |---|---|---|---|---|
