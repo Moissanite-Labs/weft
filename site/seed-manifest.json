@@ -1,0 +1,33 @@
+{
+  "source": "weft/runtime/aywa",
+  "files": [
+    "moissanite_telemetry.json",
+    "moissanite_telemetry.bin",
+    "telemetry.jsonl"
+  ],
+  "shader": "assets/shaders/dashboard_layout.wgsl",
+  "widgets_source": "weft/browser-sources/widgets",
+  "widgets": [
+    "site/widgets/01-sdf-laya-kinetic-typography.html",
+    "site/widgets/01-sdf-laya-kinetic-typography.jsx",
+    "site/widgets/02-mind-palace-spatial-memory.html",
+    "site/widgets/02-mind-palace-spatial-memory.jsx",
+    "site/widgets/03-morphogenetic-bioelectric-field.html",
+    "site/widgets/03-morphogenetic-bioelectric-field.jsx",
+    "site/widgets/04-neural-cellular-automata.html",
+    "site/widgets/04-neural-cellular-automata.jsx",
+    "site/widgets/05-interaction-combinator-net.html",
+    "site/widgets/05-interaction-combinator-net.jsx"
+  ],
+  "public_pages_allowlist": [
+    "index.html",
+    "404.html",
+    "favicon.svg",
+    "og.png",
+    "_headers",
+    "seed-manifest.json",
+    "assets/",
+    "data/",
+    "widgets/"
+  ]
+}

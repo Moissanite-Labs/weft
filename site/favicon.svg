@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <style>
+    .bg{fill:#f5f2ea}.warp{stroke:#3a46b8}.weft{stroke:#b07d16}
+    @media (prefers-color-scheme: dark){.bg{fill:#0c0d11}.warp{stroke:#8e9cff}.weft{stroke:#e3b450}}
+  </style>
+  <rect class="bg" width="32" height="32" rx="8"/>
+  <g fill="none" stroke-width="3.6" stroke-linecap="round">
+    <path class="warp" d="M11 6v20M21 6v20"/>
+    <path class="weft" d="M6 11h3M13 11h6M23 11h3M6 21h16M24.6 21H26"/>
+  </g>
+</svg>

@@ -1,22 +1,26 @@
-name: Weft Runtime & Surface CI
+name: CI
 
 on:
   pull_request:
   push:
-    branches:
-      - main
+    branches: [main]
+  merge_group:
 
 permissions:
   contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   corpus-audit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           fetch-depth: 0 # The reading ledger names an immutable earlier source commit.
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
           python-version: "3.12"
       - name: Test evidence-ledger validation
@@ -27,16 +31,11 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Python 3.12
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
           python-version: "3.12"
-
-      - name: Setup Node.js 20
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: "20"
 
@@ -45,57 +44,44 @@ jobs:
           python3 -m pip install --upgrade pip
           python3 -m pip install numpy --extra-index-url https://download.pytorch.org/whl/cpu torch
 
-      - name: Run C2 Invariants unit and C11 header conformance tests
+      - name: C2 invariants (Python + C11 header conformance)
         run: python3 -m unittest discover -s weft/runtime/invariants -p 'test_*.py'
-
-      - name: Run C1 Plasm shared-memory and mitosis unit tests
+      - name: C1 plasm (shared memory, A/B mitosis)
         run: python3 -m unittest discover -s weft/runtime/plasm -p 'test_*.py'
-
-      - name: Run C3 Interaction Combinator VM and BCP codec unit tests
+      - name: C3 interaction-combinator VM and BCP codec
         run: python3 -m unittest discover -s weft/runtime/ic -p 'test_*.py'
-
-      - name: Run C6 Host and organization telemetry unit tests
+      - name: C6 telemetry
         run: python3 -m unittest discover -s weft/runtime/telemetry -p 'test_*.py'
-
-      - name: Run C4/C5 Ledger triad and off-chain gateway unit tests
+      - name: C4/C5 ledger simulator and gateway
         run: python3 -m unittest discover -s weft/runtime/gateway -p 'test_*.py'
-
-      - name: Run C7 Aywa SYM-2P Python unit tests
+      - name: C7 Aywa (Python)
         run: python3 -m unittest discover -s weft/runtime/aywa -p 'test_*.py'
-
-      - name: Run C7 Aywa Node.js tests (SYM-2P, mixer, atlas, cell layout, glyph font, simplex pad)
-        run: node --test weft/runtime/aywa/test_sym2p_parse.mjs weft/runtime/aywa/test_aesthetic_mixer.mjs weft/runtime/aywa/test_weft_atlas.mjs weft/runtime/aywa/test_cell_layout.mjs weft/runtime/aywa/test_glyph_font.mjs weft/runtime/aywa/test_simplex_pad.mjs weft/runtime/aywa/test_weft_loom_pack.mjs
-
-      - name: Run Aywa daemon self-test (no tracked file dirtiness)
+      - name: C7 Aywa and site modules (Node)
+        run: node --test weft/runtime/aywa/test_*.mjs
+      - name: Aywa daemon self-test
         run: python3 weft/runtime/aywa/weft_daemon.py --self-test
-
-      - name: Run Pages seed and allow-list staging self-test
+      - name: Site self-test (w3ft.org bundle in site/)
         run: python3 weft/runtime/aywa/site_selftest.py
-
-      - name: Run Core and Mac runtime selftests
+      - name: Core and Mac runtime self-tests
         run: |
           python3 weft/runtime/core/selftest.py
           python3 weft/runtime/mac/darwin_sysctl.py
           python3 weft/runtime/mac/metal_loom.py
-
       - name: Assert clean working tree after all self-tests
-        run: test -z "$(git status --porcelain)"
+        run: |
+          git status --porcelain
+          test -z "$(git status --porcelain)"
 
   telemetry-browser:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Python 3.12
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
           python-version: "3.12"
-
       - name: Install pinned browser test dependencies
         run: |
           python3 -m pip install -r scripts/requirements-browser.txt
           python3 -m playwright install --with-deps chromium
-
       - name: Test telemetry worker refresh, rejection, and recovery
         run: python3 scripts/test_telemetry_browser.py

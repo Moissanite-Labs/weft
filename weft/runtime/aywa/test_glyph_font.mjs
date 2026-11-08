@@ -9,7 +9,7 @@ import {
   glyphBit,
   packGlyph,
   packLabel,
-} from "../../../docs/assets/js/glyph-font.js";
+} from "../../../site/assets/js/glyph-font.js";
 
 const A_ROWS = [".###.", "#...#", "#...#", "#####", "#...#", "#...#", "#...#"];
 

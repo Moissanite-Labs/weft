@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { AestheticMixer, mixAestheticPresets } from "../../../docs/assets/js/aesthetic-mixer.js";
+import { AestheticMixer, mixAestheticPresets } from "../../../site/assets/js/aesthetic-mixer.js";
 
 test("circular mean hue wraps across 0.0/1.0 boundary (0.95 and 0.05 -> 0.0 red, not 0.50 cyan)", () => {
   const presets = {

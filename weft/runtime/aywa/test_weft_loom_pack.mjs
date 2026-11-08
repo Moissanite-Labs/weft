@@ -1,12 +1,12 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import test from "node:test";
-import { layoutCells } from "../../../docs/assets/js/cell-layout.js";
-import { LAYERS, LOCUS_LAYERS, labelMetrics, layerHue, packCellRecords } from "../../../docs/assets/js/weft-loom.js";
+import { layoutCells } from "../../../site/assets/js/cell-layout.js";
+import { LAYERS, LOCUS_LAYERS, labelMetrics, layerHue, packCellRecords } from "../../../site/assets/js/weft-loom.js";
 
-const wgsl = fs.readFileSync(new URL("../../../docs/assets/shaders/dashboard_layout.wgsl", import.meta.url), "utf8");
+const wgsl = fs.readFileSync(new URL("../../../site/assets/shaders/dashboard_layout.wgsl", import.meta.url), "utf8");
 const repos = JSON.parse(
-  fs.readFileSync(new URL("../../../docs/data/moissanite_telemetry.json", import.meta.url), "utf8"),
+  fs.readFileSync(new URL("../../../site/data/moissanite_telemetry.json", import.meta.url), "utf8"),
 ).repositories;
 
 test("struct Cell in the shader is four 16-byte vectors (64 bytes), matching packCellRecords", () => {

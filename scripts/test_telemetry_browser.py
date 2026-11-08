@@ -19,7 +19,7 @@ from urllib.parse import parse_qs, urlsplit
 from playwright.sync_api import sync_playwright
 
 
-DOCS = Path(__file__).resolve().parents[1] / "docs"
+SITE = Path(__file__).resolve().parents[1] / "site"
 NESTED_PREFIX = "/nested/site/"
 POLL_MS = 100
 
@@ -47,7 +47,7 @@ engine.startTelemetryWorker({POLL_MS});
 
 class TelemetryServer(ThreadingHTTPServer):
     def __init__(self):
-        super().__init__(("127.0.0.1", 0), partial(Handler, directory=str(DOCS)))
+        super().__init__(("127.0.0.1", 0), partial(Handler, directory=str(SITE)))
         self.lock = Lock()
         self.status = 200
         self.body = ""

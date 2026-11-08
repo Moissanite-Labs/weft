@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { barycentric, pointFromWeights, projectToSimplex, weightsAt } from "../../../docs/assets/js/simplex-pad.js";
+import { barycentric, pointFromWeights, projectToSimplex, weightsAt } from "../../../site/assets/js/simplex-pad.js";
 
 const A = [110, 18];
 const B = [16, 186];

@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import test from "node:test";
-import { GOLDEN_ANGLE, hitTest, layerThreads, layoutCells } from "../../../docs/assets/js/cell-layout.js";
+import { GOLDEN_ANGLE, hitTest, layerThreads, layoutCells } from "../../../site/assets/js/cell-layout.js";
 
 const telemetry = JSON.parse(
-  fs.readFileSync(new URL("../../../docs/data/moissanite_telemetry.json", import.meta.url), "utf8"),
+  fs.readFileSync(new URL("../../../site/data/moissanite_telemetry.json", import.meta.url), "utf8"),
 );
 const REPOS = telemetry.repositories;
 const ITEMS = REPOS.map((r) => ({ weight: r.commits, labelLength: r.name.length }));

@@ -24,7 +24,7 @@ Instead of switching between discrete stylesheets, Aywa represents visual design
 
 1. **Linear Structural Tokens**: Border rounding, spatial packing density, and background contrast interpolate linearly across the simplex:
    $$r = \sum_{k=1}^K \hat{w}_k r_k, \qquad d = \sum_{k=1}^K \hat{w}_k d_k, \qquad c = \sum_{k=1}^K \hat{w}_k c_k$$
-2. **Circular Mean Hue on $S^1$**: Because chromatic hue is periodic on $[0, 1)$, linear averaging produces a false midpoint (averaging crimson $0.95$ and scarlet $0.05$ linearly yields cyan $0.50$). Aywa maps each hue $h_k$ to an angle $\theta_k = 2\pi h_k$ on the unit circle $S^1$ and computes the circular mean (`docs/assets/js/aesthetic-mixer.js`):
+2. **Circular Mean Hue on $S^1$**: Because chromatic hue is periodic on $[0, 1)$, linear averaging produces a false midpoint (averaging crimson $0.95$ and scarlet $0.05$ linearly yields cyan $0.50$). Aywa maps each hue $h_k$ to an angle $\theta_k = 2\pi h_k$ on the unit circle $S^1$ and computes the circular mean (`site/assets/js/aesthetic-mixer.js`):
    $$\bar{h} = \frac{1}{2\pi}\operatorname{atan2}\!\left(\sum_{k=1}^K \hat{w}_k \sin(2\pi h_k), \sum_{k=1}^K \hat{w}_k \cos(2\pi h_k)\right) \bmod 1$$
 3. **Real-Time Binding**: The resulting vector drives both CSS custom properties (`--weft-rounding`, `--weft-density`, `--weft-hue-deg`, `--weft-contrast`) and slots `[4..7]` of the 64-byte WebGPU uniform buffer at 60–120 Hz.
 
@@ -57,7 +57,7 @@ Human spatial memory remembers *where* a concept lives far better than *how far 
 On `w3ft.org` (`docs/index.html`), Aywa is not merely described in prose. The website itself is built as an Aywa spatial organism:
 1. **Top Spatial Locus Bar**: Switches instantaneously between the six architectural Loci while morphing the live background canvas topology to match the active Horizon.
 2. **Live Barycentric Simplex Dock**: Allows any visitor to drag the aesthetic weights (`Native Base`, `Neon Terminal`, `Airy Pastel`) or select presets and watch the entire site's geometry, color phase, spacing density, and GPU shader uniforms transform in real time.
-3. **Interactive Falsifier & Simulation Widgets**: Embeds live in-browser calculators for the Frobenius Invariant Gate (`C2`), Speculative A/B Mitosis (`C1`), the 85/15 Metabolic Excision Valve (`C4`), and the 5 extracted React/WebGPU simulation widgets (`docs/widgets/`).
+3. **Interactive Falsifier & Simulation Widgets**: Embeds live in-browser calculators for the Frobenius Invariant Gate (`C2`), Speculative A/B Mitosis (`C1`), the 85/15 Metabolic Excision Valve (`C4`), and the 5 extracted React/WebGPU simulation widgets (`site/widgets/`).
 
 ## 4. Field encodings on `w3ft.org` (issue #37)
 
@@ -65,7 +65,7 @@ The first viewport of `docs/index.html` is the field itself. Every visual channe
 
 | Channel | Quantity | Rule | Code |
 |---|---|---|---|
-| Cell area | commits | side = s·√commits, so area ratios equal commit ratios at every viewport | `docs/assets/js/cell-layout.js` |
+| Cell area | commits | side = s·√commits, so area ratios equal commit ratios at every viewport | `site/assets/js/cell-layout.js` |
 | Cell position | rank by commits | golden-angle (137.508°) packing, stretched to the region's aspect, scale fitted by bisection | `layoutCells` |
 | Cell hue | layer | simplex hue rotated by k/5 of the circle for layer k | `layerHue` in `weft-loom.js` |
 | Threads | same layer | minimum spanning tree of cell centres (Prim) | `layerThreads` |
@@ -74,6 +74,6 @@ The first viewport of `docs/index.html` is the field itself. Every visual channe
 | Shiver, warm tint | repo tension above 0.35 | homeostatic band 15–35% from D4 | `dashboard_layout.wgsl` |
 | Corner radius | simplex rounding | 0 is a square, 1 is a circle | `dashboard_layout.wgsl` |
 | Emphasis | locus | layers that each locus brings forward (`LOCUS_LAYERS`) | `weft-loom.js` |
-| Text | names, commit counts | 5×7 bitmask font, two `u32` per glyph, drawn at whole device pixels | `docs/assets/js/glyph-font.js` |
+| Text | names, commit counts | 5×7 bitmask font, two `u32` per glyph, drawn at whole device pixels | `site/assets/js/glyph-font.js` |
 
 Layout is done on the CPU in CSS pixels. The shader receives exact rectangles and never assumes an aspect ratio. Anti-aliasing is one device pixel (1/dpr CSS px) wide. The Canvas2D fallback uses the same layout, threads, encodings and font table, without the per-pixel weave, grain and animation.
