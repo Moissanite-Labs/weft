@@ -15,7 +15,12 @@
       --weft-accent-2: hsl(91, 82%, 58%);
       --weft-accent-dim: hsla(43, 84%, 62%, 0.22);
       --weft-contrast: 0.05;
-      --laya-tracking: 0.015em;
+      --laya-calm: 1;
+      --layer-0: hsl(43, 72%, 60%);
+      --layer-1: hsl(115, 72%, 60%);
+      --layer-2: hsl(187, 72%, 60%);
+      --layer-3: hsl(259, 72%, 60%);
+      --layer-4: hsl(331, 72%, 60%);
     }
     * { box-sizing: border-box; }
     html, body {
@@ -25,7 +30,8 @@
       color: #e2e8f0;
       font-family: "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
       line-height: 1.55;
-      letter-spacing: var(--laya-tracking);
+      letter-spacing: 0.012em;
+      overflow-x: hidden;
     }
     #gpuCanvas {
       position: fixed;
@@ -104,17 +110,19 @@
       margin: 0 auto;
       padding: 20px;
       display: grid;
-      grid-template-columns: 1fr 340px;
+      grid-template-columns: minmax(0, 1fr) 340px;
       gap: calc(14px + (1 - var(--weft-density)) * 10px);
       align-items: start;
     }
     @media (max-width: 1080px) {
-      .workspace { grid-template-columns: 1fr; }
+      .workspace { grid-template-columns: minmax(0, 1fr); }
+      aside.aywa-dock { position: static; }
     }
 
     /* Cards & panels */
     .panel {
-      background: rgba(8, 13, 24, 0.84);
+      /* Reading calm (--laya-calm, 0..1) deepens the panel while the reader dwells. */
+      background: rgba(8, 13, 24, calc(0.78 + 0.1 * var(--laya-calm)));
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       border: 1px solid rgba(148, 163, 184, 0.22);
@@ -168,12 +176,12 @@
 
     .grid-2 {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
       gap: 14px;
     }
     .grid-3 {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
       gap: 12px;
     }
     .subcard {
@@ -262,18 +270,6 @@
       position: sticky;
       top: 72px;
     }
-    .mixer-controls {
-      display: grid;
-      grid-template-columns: 1fr 110px 38px;
-      gap: 7px 8px;
-      align-items: center;
-      font-size: 11px;
-      margin: 10px 0;
-    }
-    .mixer-controls input[type="range"] {
-      width: 100%;
-      accent-color: var(--weft-accent);
-    }
     .uniform-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -313,12 +309,138 @@
       background: #000;
       display: block;
     }
+    /* Field stage: the first viewport is the organism itself. #fieldRegion is an
+       empty box; the engine lays the cells out inside its exact rectangle. */
+    .field-stage {
+      position: relative;
+      z-index: 5;
+      max-width: 1420px;
+      margin: 0 auto;
+      padding: 20px;
+      height: calc(100svh - var(--header-h, 64px));
+      min-height: 560px;
+      display: grid;
+      grid-template-columns: minmax(280px, 0.72fr) minmax(0, 1.6fr);
+      grid-template-rows: 1fr auto auto 1fr;
+      grid-template-areas: ". field" "intro field" "legend field" ". field";
+      column-gap: 20px;
+      row-gap: 18px;
+    }
+    .stage-copy, .stage-legend {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      max-width: 460px;
+    }
+    .stage-copy { grid-area: intro; }
+    .stage-legend { grid-area: legend; }
+    #fieldRegion { grid-area: field; }
+    .stage-kicker {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--weft-accent);
+    }
+    .stage-copy h1 {
+      margin: 0;
+      font-size: clamp(22px, 3.2vw, 34px);
+      line-height: 1.15;
+      color: #f8fafc;
+      letter-spacing: 0.01em;
+    }
+    .stage-copy p {
+      margin: 0;
+      font-size: 12.5px;
+      color: #a9b6c8;
+    }
+    .stage-copy p strong { color: #e2e8f0; font-weight: 600; }
+    #fieldRegion {
+      position: relative;
+      min-height: 520px;
+    }
+    .stage-lede { display: none; margin: 0; font-size: 12.5px; color: #a9b6c8; }
+    .legend {
+      display: grid;
+      gap: 6px;
+      font-size: 11px;
+      color: #94a3b8;
+      border-top: 1px solid rgba(148, 163, 184, 0.16);
+      padding-top: 12px;
+    }
+    .legend-row { display: flex; gap: 8px; align-items: baseline; }
+    .legend-row b { color: #e2e8f0; font-weight: 600; min-width: 78px; }
+    .layer-keys { display: flex; flex-wrap: wrap; gap: 6px 12px; }
+    .layer-key { display: inline-flex; align-items: center; gap: 6px; }
+    .layer-key i {
+      width: 10px; height: 10px; border-radius: 3px; display: inline-block;
+      border: 1.5px solid currentColor;
+    }
+    .layer-key.dim { opacity: 0.38; }
+    .stage-status { font-size: 10.5px; color: #64748b; }
+    .scroll-cue { font-size: 11px; color: #64748b; text-decoration: none; }
+    .scroll-cue:hover { color: var(--weft-accent); }
+    .cell-card {
+      position: fixed;
+      z-index: 40;
+      pointer-events: none;
+      min-width: 220px;
+      max-width: 280px;
+      padding: 10px 12px;
+      border-radius: var(--weft-rounding);
+      background: rgba(6, 10, 19, 0.92);
+      border: 1px solid var(--weft-accent-dim);
+      font-size: 11px;
+      color: #cbd5e1;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.12s ease, transform 0.12s ease;
+    }
+    .cell-card.show { opacity: 1; transform: none; }
+    .cell-card .nm { font-weight: 700; color: #f8fafc; font-size: 12px; }
+    .cell-card .rl { color: #94a3b8; margin: 2px 0 8px; }
+    .cell-card dl { display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; margin: 0; }
+    .cell-card dt { color: #64748b; }
+    .cell-card dd { margin: 0; color: #e2e8f0; }
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+    }
+    .simplex-pad { width: 100%; max-width: 260px; display: block; margin: 6px auto 4px; touch-action: none; cursor: crosshair; }
+    .simplex-pad:focus-visible { outline: 1px dashed var(--weft-accent); outline-offset: 4px; }
+    .simplex-edge { fill: rgba(148, 163, 184, 0.05); stroke: rgba(148, 163, 184, 0.45); stroke-width: 1; }
+    .simplex-guide { stroke: rgba(148, 163, 184, 0.12); stroke-width: 0.6; }
+    .simplex-spoke { stroke: var(--weft-accent); stroke-width: 1; }
+    .simplex-vertex { fill: #94a3b8; }
+    .simplex-knob { fill: var(--weft-accent); stroke: #04070d; stroke-width: 2; }
+    .simplex-label { fill: #94a3b8; font-size: 10px; font-family: inherit; }
+    @media (max-width: 860px) {
+      .field-stage {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: auto auto auto;
+        grid-template-areas: "intro" "field" "legend";
+        height: auto; min-height: 0; padding: 16px;
+      }
+      .stage-copy, .stage-legend { max-width: none; }
+      .stage-copy p { display: none; }
+      .stage-legend .stage-lede { display: block; }
+      nav.locus-nav {
+        flex-wrap: nowrap; overflow-x: auto; width: 100%;
+        scrollbar-width: none; -webkit-overflow-scrolling: touch;
+        mask-image: linear-gradient(90deg, #000 85%, transparent);
+      }
+      nav.locus-nav::-webkit-scrollbar { display: none; }
+      .locus-btn { white-space: nowrap; flex: 0 0 auto; }
+      #fieldRegion { min-height: 0; height: min(180vw, 760px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; }
+    }
     .locus-view { display: none; }
     .locus-view.active { display: block; }
   </style>
 </head>
 <body>
-  <canvas id="gpuCanvas" aria-label="ML Weft locus-responsive WebGPU and High-DPI Canvas2D spatial field"></canvas>
+  <canvas id="gpuCanvas" aria-hidden="true"></canvas>
 
   <header class="top-bar" role="banner">
     <div class="brand">
@@ -335,6 +457,30 @@
       <a class="locus-btn" href="./widgets/" style="text-decoration:none;">Widgets (5) ↗</a>
     </nav>
   </header>
+
+  <section class="field-stage" aria-labelledby="stageTitle">
+    <div class="stage-copy">
+      <div class="stage-kicker">ML Weft · Moissanite Labs</div>
+      <h1 id="stageTitle">A loom of cells, computed per pixel</h1>
+      <p>Each cell is a Moissanite Labs module. The field behind this text is one full-screen triangle; every pixel of it is evaluated on your GPU from signed distance functions. Nothing is an image and nothing is a font file: the names and numbers are 5×7 bitmasks.</p>
+    </div>
+    <div class="stage-legend">
+      <p class="stage-lede">Each cell is a Moissanite Labs module, drawn per pixel on your GPU from signed distance functions. The names and numbers are 5×7 bitmasks, not a font file.</p>
+      <div class="legend" aria-label="How to read the field">
+        <div class="legend-row"><b>Area</b><span>commits. Side = s·√commits, so area ratios equal commit ratios at any screen size.</span></div>
+        <div class="legend-row"><b>Colour</b><span class="layer-keys" id="layerKeys"></span></div>
+        <div class="legend-row"><b>Threads</b><span>shortest tree joining each layer (Prim’s MST)</span></div>
+        <div class="legend-row"><b>Stroke</b><span>Gini concentration of the organisation</span></div>
+        <div class="legend-row"><b>Grain</b><span>organisation tension; calm reading softens it</span></div>
+        <div class="legend-row"><b>Shape</b><span>the simplex’s rounding token: squares at 0, circles at 1</span></div>
+      </div>
+      <div class="stage-status" id="stageStatus">Fixture data, not live. Placement: golden-angle packing (137.5°), fitted to this viewport.</div>
+      <a class="scroll-cue" href="#locusContainer">Read the architecture ↓</a>
+    </div>
+    <div id="fieldRegion" aria-hidden="true"></div>
+    <ul class="sr-only" id="cellList" aria-label="Modules shown in the field"></ul>
+  </section>
+  <div class="cell-card" id="cellCard" role="status" aria-live="polite"></div>
 
   <div class="workspace">
     <main id="locusContainer">
@@ -667,22 +813,9 @@ slashRogueSwarm(swarm, creator, 500e18)</code>
     <aside class="aywa-dock" aria-label="Live Aywa Barycentric Studio and 64-Byte Telemetry">
       <div class="panel panel-accent">
         <h2 class="sec-title">Aywa Barycentric Simplex Studio</h2>
-        <p class="body-copy" style="font-size:11px;">Adjust the simplex archetype weights below. The circular-hue S<sup>1</sup> mixer continuously reshapes this website's geometry, color phase, density, and WebGPU shader uniforms:</p>
+        <p class="body-copy" style="font-size:11px;">Drag the point inside the triangle (or focus it and use the arrow keys). Its barycentric coordinates are the three preset weights, so every position is a valid blend. The circular-hue S<sup>1</sup> mixer turns the blend into the rounding, density, hue and contrast that drive this page's CSS and the shader:</p>
 
-        <div class="mixer-controls">
-          <label for="wNative">native_base (h=0.12)</label>
-          <input id="wNative" type="range" min="0" max="1" step="0.05" value="1.0" />
-          <span id="vNative">1.00</span>
-
-          <label for="wNeon">neon_terminal (h=0.45)</label>
-          <input id="wNeon" type="range" min="0" max="1" step="0.05" value="0.0" />
-          <span id="vNeon">0.00</span>
-
-          <label for="wPastel">airy_pastel (h=0.85)</label>
-          <input id="wPastel" type="range" min="0" max="1" step="0.05" value="0.0" />
-          <span id="vPastel">0.00</span>
-        </div>
-
+        <div id="simplexPad"></div>
         <div id="mixerReadout" class="mono-formula" style="font-size:11px;">
           circular hue=0.120 (43deg) | rounding=0.85 | density=0.30 | contrast=0.05
         </div>
@@ -703,7 +836,8 @@ slashRogueSwarm(swarm, creator, 500e18)</code>
   </noscript>
 
   <script type="module">
-    import { WeftLoomEngine } from "./assets/js/weft-loom.js";
+    import { LAYERS, LOCUS_LAYERS, WeftLoomEngine } from "./assets/js/weft-loom.js";
+    import { mountSimplexPad } from "./assets/js/simplex-pad.js";
     import {
       LOCI,
       HORIZONS,
@@ -717,6 +851,51 @@ slashRogueSwarm(swarm, creator, 500e18)</code>
     const hud = document.getElementById("hudMetrics");
     const readout = document.getElementById("mixerReadout");
     const uniformGrid = document.getElementById("uniformInspectorGrid");
+
+    // The stage fills exactly the viewport below the (wrapping) header.
+    const headerEl = document.querySelector("header.top-bar");
+    const syncHeaderHeight = () =>
+      document.documentElement.style.setProperty("--header-h", `${Math.ceil(headerEl.getBoundingClientRect().height)}px`);
+    syncHeaderHeight();
+    new ResizeObserver(syncHeaderHeight).observe(headerEl);
+
+    const cellCard = document.getElementById("cellCard");
+    const escapeHtml = (v) => String(v).replace(/[&<>"]/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[ch]);
+    function showCellCard(idx, repo, x, y) {
+      if (!repo) {
+        cellCard.classList.remove("show");
+        document.body.style.cursor = "";
+        return;
+      }
+      document.body.style.cursor = "default";
+      cellCard.innerHTML = `<div class="nm">${escapeHtml(repo.name)}</div><div class="rl">${escapeHtml(repo.role)}</div>
+        <dl><dt>layer</dt><dd>${escapeHtml(repo.layer)}</dd><dt>commits</dt><dd>${repo.commits} (cell area)</dd>
+        <dt>PRs / issues</dt><dd>${repo.prs} / ${repo.issues}</dd><dt>tension</dt><dd>${Number(repo.tension).toFixed(2)}${repo.tension > 0.35 ? " (above band)" : " (in band)"}</dd></dl>`;
+      const w = 260;
+      const left = Math.min(window.innerWidth - w - 12, x + 16);
+      const top = Math.min(window.innerHeight - 150, y + 16);
+      cellCard.style.left = `${Math.max(12, left)}px`;
+      cellCard.style.top = `${Math.max(12, top)}px`;
+      cellCard.classList.add("show");
+    }
+    function renderLayerKeys(locusIdx) {
+      const lit = new Set(LOCUS_LAYERS[locusIdx]);
+      document.getElementById("layerKeys").innerHTML = LAYERS.map(
+        (l, i) => `<span class="layer-key ${lit.has(l) ? "" : "dim"}" style="color:var(--layer-${i})"><i></i><span style="color:#94a3b8">${l}</span></span>`,
+      ).join("");
+    }
+    renderLayerKeys(0);
+    fetch("./data/moissanite_telemetry.json")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (!d || !Array.isArray(d.repositories)) return;
+        document.getElementById("cellList").innerHTML = d.repositories
+          .map((r) => `<li>${escapeHtml(r.name)}: ${escapeHtml(r.role)}; layer ${escapeHtml(r.layer)}; ${r.commits} commits</li>`)
+          .join("");
+        document.getElementById("stageStatus").textContent =
+          `${d.source === "fixture" ? "Fixture data, not live" : `Source: ${d.source}`} · ${d.repositories.length} modules · placement: golden-angle packing (137.5°), fitted to this viewport.`;
+      })
+      .catch(() => {});
 
     const UNIFORM_LABELS = [
       "[0] active_nodes",
@@ -734,6 +913,8 @@ slashRogueSwarm(swarm, creator, 500e18)</code>
       shaderUrl: "./assets/shaders/dashboard_layout.wgsl",
       dataUrl: "./data/telemetry.jsonl",
       hudEl: hud,
+      regionEl: document.getElementById("fieldRegion"),
+      onHover: showCellCard,
       onUniformUpdate: (arr) => {
         if (!uniformGrid) return;
         uniformGrid.innerHTML = UNIFORM_LABELS.map(
@@ -844,30 +1025,26 @@ slashRogueSwarm(swarm, creator, 500e18)</code>
         btn.classList.add("active");
         document.querySelectorAll(".locus-view").forEach((sec, i) => sec.classList.toggle("active", i === idx));
         engine.setLocusMode(idx);
+        renderLayerKeys(idx);
       });
     });
 
-    // Barycentric Mixer Sliders & Presets
-    function syncMixerSliders() {
-      const wn = parseFloat(document.getElementById("wNative").value);
-      const wt = parseFloat(document.getElementById("wNeon").value);
-      const wp = parseFloat(document.getElementById("wPastel").value);
-      document.getElementById("vNative").textContent = wn.toFixed(2);
-      document.getElementById("vNeon").textContent = wt.toFixed(2);
-      document.getElementById("vPastel").textContent = wp.toFixed(2);
-      engine.mixer.setSliceWeight("native_base", wn);
-      engine.mixer.setSliceWeight("neon_terminal", wt);
-      engine.mixer.setSliceWeight("airy_pastel", wp);
+    // Barycentric simplex pad & presets
+    const SLICES = ["native_base", "neon_terminal", "airy_pastel"];
+    function applyWeights(w) {
+      SLICES.forEach((id, i) => engine.mixer.setSliceWeight(id, w[i]));
       const vec = engine.mixer.calculateUnifiedAestheticVector();
       const deg = Math.round(vec.hue * 360);
-      readout.textContent = `circular hue=${vec.hue.toFixed(3)} (${deg}deg) | rounding=${vec.rounding.toFixed(2)} | density=${vec.density.toFixed(2)} | contrast=${vec.contrast.toFixed(2)}`;
+      readout.textContent = `w = (${w.map((x) => x.toFixed(2)).join(", ")})\ncircular hue=${vec.hue.toFixed(3)} (${deg}deg) | rounding=${vec.rounding.toFixed(2)} | density=${vec.density.toFixed(2)} | contrast=${vec.contrast.toFixed(2)}`;
     }
-    for (const id of ["wNative", "wNeon", "wPastel"]) {
-      document.getElementById(id).addEventListener("input", syncMixerSliders);
-    }
+    const pad = mountSimplexPad(document.getElementById("simplexPad"), {
+      labels: ["native_base", "neon_terminal", "airy_pastel"],
+      hues: engine.mixer.activeSlices.map((sl) => sl.hue_shift),
+      weights: [1, 0, 0],
+      onChange: applyWeights,
+    });
     document.querySelectorAll("[data-preset]").forEach((btn) => {
       btn.addEventListener("click", () => {
-        const p = btn.dataset.preset;
         const map = {
           native: [1.0, 0.0, 0.0],
           neon: [0.0, 1.0, 0.0],
@@ -875,11 +1052,7 @@ slashRogueSwarm(swarm, creator, 500e18)</code>
           triad: [0.35, 0.35, 0.30],
           s1wrap: [0.5, 0.0, 0.5],
         };
-        const [a, b, c] = map[p] || [1, 0, 0];
-        document.getElementById("wNative").value = a;
-        document.getElementById("wNeon").value = b;
-        document.getElementById("wPastel").value = c;
-        syncMixerSliders();
+        pad.set(map[btn.dataset.preset] || [1, 0, 0]);
       });
     });
 
@@ -940,7 +1113,7 @@ slashRogueSwarm(swarm, creator, 500e18)</code>
     }
 
     window.addEventListener("DOMContentLoaded", () => {
-      syncMixerSliders();
+      applyWeights(pad.get());
       updateC2Simulator();
       updateC4Simulator();
       engine.boot();

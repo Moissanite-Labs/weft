@@ -31,7 +31,7 @@ Instead of switching between discrete stylesheets, Aywa represents visual design
 ### Module D2: Analytical Field & Laya Kinetic Typography (`design/typo.md`, `design/craft.md`)
 
 1. **Signed Distance Field (SDF) Geometry**: UI cells, borders, and procedural glyphs in `dashboard_layout.wgsl` are evaluated analytically per fragment via signed distance functions (`sdBox(p, b, r)`), remaining razor-sharp at any zoom level or device pixel ratio (`window.devicePixelRatio`) with zero texture memory overhead.
-2. **Laya Cadence & Scroll-Membrane Coupling**: Named after the rhythmic tempo principle (*Laya*), typographic tracking, line-height, and alpha/beta lineage weighting respond continuously to the reader's scroll cadence and pointer velocity (`trackPointerMembrane` in `weft-loom.js`), calming visual noise during focused reading and expanding structural overview during rapid navigation.
+2. **Laya Cadence (reading calm)**: A scroll-speed heuristic (`trackReadingCadence` in `weft-loom.js`; no model is involved) produces a calm value in `[0, 1]`: 1 while the reader dwells or scrolls slowly, falling toward 0 while skimming. Calm softens the shader's grain, widens the cell glow, deepens the panel backgrounds (`--laya-calm`), and sets the alpha/beta lineage weighting. `weft/design/alive.md` also proposes expanding line-height. We deliberately do not change line-height or letter-spacing, because either one reflows the paragraph the reader is in the middle of (issue #37).
 
 ### Module D3: Zero-Allocation 64-Byte Uniform Bus & `SYM-2P` Wire Verification (`design/system.md`)
 
@@ -58,3 +58,22 @@ On `w3ft.org` (`docs/index.html`), Aywa is not merely described in prose. The we
 1. **Top Spatial Locus Bar**: Switches instantaneously between the six architectural Loci while morphing the live background canvas topology to match the active Horizon.
 2. **Live Barycentric Simplex Dock**: Allows any visitor to drag the aesthetic weights (`Native Base`, `Neon Terminal`, `Airy Pastel`) or select presets and watch the entire site's geometry, color phase, spacing density, and GPU shader uniforms transform in real time.
 3. **Interactive Falsifier & Simulation Widgets**: Embeds live in-browser calculators for the Frobenius Invariant Gate (`C2`), Speculative A/B Mitosis (`C1`), the 85/15 Metabolic Excision Valve (`C4`), and the 5 extracted React/WebGPU simulation widgets (`docs/widgets/`).
+
+## 4. Field encodings on `w3ft.org` (issue #37)
+
+The first viewport of `docs/index.html` is the field itself. Every visual channel encodes one quantity, and the page's legend states each mapping:
+
+| Channel | Quantity | Rule | Code |
+|---|---|---|---|
+| Cell area | commits | side = s·√commits, so area ratios equal commit ratios at every viewport | `docs/assets/js/cell-layout.js` |
+| Cell position | rank by commits | golden-angle (137.508°) packing, stretched to the region's aspect, scale fitted by bisection | `layoutCells` |
+| Cell hue | layer | simplex hue rotated by k/5 of the circle for layer k | `layerHue` in `weft-loom.js` |
+| Threads | same layer | minimum spanning tree of cell centres (Prim) | `layerThreads` |
+| Stroke weight | organisation Gini | 1 px at G = 0 to 4 px at G = 1 | `dashboard_layout.wgsl` |
+| Grain | organisation tension | hash noise × tension | `dashboard_layout.wgsl` |
+| Shiver, warm tint | repo tension above 0.35 | homeostatic band 15–35% from D4 | `dashboard_layout.wgsl` |
+| Corner radius | simplex rounding | 0 is a square, 1 is a circle | `dashboard_layout.wgsl` |
+| Emphasis | locus | layers that each locus brings forward (`LOCUS_LAYERS`) | `weft-loom.js` |
+| Text | names, commit counts | 5×7 bitmask font, two `u32` per glyph, drawn at whole device pixels | `docs/assets/js/glyph-font.js` |
+
+Layout is done on the CPU in CSS pixels. The shader receives exact rectangles and never assumes an aspect ratio. Anti-aliasing is one device pixel (1/dpr CSS px) wide. The Canvas2D fallback uses the same layout, threads, encodings and font table, without the per-pixel weave, grain and animation.

@@ -49,8 +49,8 @@ jobs:
       - name: Run C7 Aywa SYM-2P Python unit tests
         run: python3 -m unittest discover -s weft/runtime/aywa -p 'test_*.py'
 
-      - name: Run C7 Aywa Node.js SYM-2P and circular-hue Barycentric Mixer tests
-        run: node --test weft/runtime/aywa/test_sym2p_parse.mjs weft/runtime/aywa/test_aesthetic_mixer.mjs weft/runtime/aywa/test_weft_atlas.mjs
+      - name: Run C7 Aywa Node.js tests (SYM-2P, mixer, atlas, cell layout, glyph font, simplex pad)
+        run: node --test weft/runtime/aywa/test_sym2p_parse.mjs weft/runtime/aywa/test_aesthetic_mixer.mjs weft/runtime/aywa/test_weft_atlas.mjs weft/runtime/aywa/test_cell_layout.mjs weft/runtime/aywa/test_glyph_font.mjs weft/runtime/aywa/test_simplex_pad.mjs weft/runtime/aywa/test_weft_loom_pack.mjs
 
       - name: Run Aywa daemon self-test (no tracked file dirtiness)
         run: python3 weft/runtime/aywa/weft_daemon.py --self-test
