@@ -78,7 +78,7 @@
         <div class="cta">
           <a class="btn btn-primary" href="ml-weft-paper-1-models-as-cells-v1.0.pdf" download>
             <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
-            Download PDF <span class="btn-meta">505 KB</span>
+            Download PDF <span class="btn-meta">484 KB</span>
           </a>
           <a class="btn" href="https://github.com/Moissanite-Labs/weft/blob/main/papers/01-models-as-cells/paper.md">Source</a>
           <a class="btn" href="#cite">Cite</a>
@@ -126,7 +126,7 @@
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">∥</mo><mi>W</mi><mi>′</mi><mo>−</mo><msub><mi>W</mi><mn>0</mn></msub><msub><mo stretchy="false" form="postfix">∥</mo><mi>F</mi></msub><mo>≤</mo><mi>R</mi><mspace width="1.0em"></mspace><mtext mathvariant="normal">and</mtext><mspace width="1.0em"></mspace><mi>b</mi><mo>≥</mo><mi>c</mi><mo>&gt;</mo><mn>0</mn><mo>,</mo></mrow><annotation encoding="application/x-tex">
 \lVert W&#39; - W_0 \rVert_F \le R \quad\text{and}\quad b \ge c &gt; 0,
 </annotation></semantics></math></p>
-<p>where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>W</mi><mn>0</mn></msub><annotation encoding="application/x-tex">W_0</annotation></semantics></math> is a <strong>saved baseline</strong>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math> is a fixed radius, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>b</mi><annotation encoding="application/x-tex">b</annotation></semantics></math> is the remaining budget and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math> is the cost of the step. The same predicate is implemented in Python, C11 and JavaScript, and each implementation is tested against the same conformance cases.</p>
+<p>where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>W</mi><mn>0</mn></msub><annotation encoding="application/x-tex">W_0</annotation></semantics></math> is a <strong>saved baseline</strong>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math> is a fixed radius, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>b</mi><annotation encoding="application/x-tex">b</annotation></semantics></math> is the remaining budget and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math> is the cost of the step. The same predicate is implemented in Python, C11 and JavaScript. Python and JavaScript are tested against one JSON file of conformance vectors—Python all twelve cases, JavaScript the six weight-update cases—and the C11 header is tested against hand-written copies of most of them (§5.5).</p>
 <p>This paper makes four contributions:</p>
 <ol type="1">
 <li><strong>A precise statement of the cell contract</strong>: what a cell may change, how candidates are chosen, and the conditions under which a candidate is committed (§2–3).</li>

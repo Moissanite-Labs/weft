@@ -39,8 +39,9 @@ $$
 $$
 
 where $W_0$ is a **saved baseline**, $R$ is a fixed radius, $b$ is the remaining budget and $c$ is the cost of the
-step. The same predicate is implemented in Python, C11 and JavaScript, and each implementation is tested against
-the same conformance cases.
+step. The same predicate is implemented in Python, C11 and JavaScript. Python and JavaScript are tested against one
+JSON file of conformance vectors—Python all twelve cases, JavaScript the six weight-update cases—and the C11 header
+is tested against hand-written copies of most of them (§5.5).
 
 This paper makes four contributions:
 

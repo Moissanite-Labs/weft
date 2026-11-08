@@ -6,7 +6,7 @@
       "number": 0,
       "version": "1.0",
       "pdf": "ml-weft-paper-0-overview-v1.0.pdf",
-      "pdf_bytes": 218784,
+      "pdf_bytes": 201242,
       "source_sha256": "3b7b77212a48b6d1008d3fb644a003ded0e801a0ffcb375da206294c2ba24b21",
       "templates_sha256": "10716e2f194f03dfa60bc3a6a4e08ebfd6019c198bc9ff61b2e3b9025cb655a8"
     },
@@ -15,8 +15,8 @@
       "number": 1,
       "version": "1.0",
       "pdf": "ml-weft-paper-1-models-as-cells-v1.0.pdf",
-      "pdf_bytes": 517509,
-      "source_sha256": "c15fa47e57408dccf83115f2cd42eaf359664bacdf031e9181c9ffb16a00d73b",
+      "pdf_bytes": 495874,
+      "source_sha256": "077cf8ce36374d326eb548b0dab73a65cd1dcf6a50b64e9af2dfda3b2a4fa683",
       "templates_sha256": "10716e2f194f03dfa60bc3a6a4e08ebfd6019c198bc9ff61b2e3b9025cb655a8"
     }
   ]

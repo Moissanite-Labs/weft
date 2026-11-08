@@ -119,8 +119,9 @@
             <h3>Bounds you can check</h3>
             <p>
               An update is committed only if it stays within a fixed distance of a saved baseline and fits its
-              resource budget. The same rule is written in Python, C11 and JavaScript, and each is tested against
-              the same conformance cases.
+              resource budget. The same rule is written in Python, C11 and JavaScript. Python and the browser port
+              read one JSON conformance file; the C11 header is checked against hand-written copies of most of
+              those cases (Python all 12 vectors, JavaScript the 6 weight-update vectors).
             </p>
             <span class="path">weft/runtime/invariants</span>
           </article>
@@ -161,7 +162,8 @@
             <p class="source">
               Source: <a href="https://github.com/Moissanite-Labs/weft/blob/main/site/assets/js/invariant-gate.js"><code>invariant-gate.js</code></a>,
               a port of <a href="https://github.com/Moissanite-Labs/weft/blob/main/weft/runtime/invariants/invariants.py"><code>invariants.py</code></a>
-              that is checked against the same conformance vectors as the Python reference.
+              that is checked against the six weight-update vectors from the same
+              <code>vectors.json</code> file Python runs in CI—not the full twelve-case corpus.
             </p>
           </div>
           <div class="panel" aria-live="polite">
@@ -286,7 +288,7 @@
             </tr>
             <tr>
               <td><span class="name">C2 · Invariants</span><span class="path">weft/runtime/invariants</span></td>
-              <td>The safety gate above, in Python, C11 and JavaScript, run against shared conformance vectors.</td>
+              <td>The safety gate above, in Python, C11 and JavaScript: Python all 12 shared vectors; JavaScript the 6 weight-update vectors; C11 hand-coded copies of most cases.</td>
               <td><span class="pill run">runs · tested</span></td>
             </tr>
             <tr>
