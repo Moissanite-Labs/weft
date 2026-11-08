@@ -11,7 +11,7 @@ Explicitly separates:
        external neighbor pointers bidirectionally.
      - `ERA` interacting with `CON` or `DUP` erases the binary node by spawning two
        `ERA` nodes connected to `p1` and `p2`.
-     - Pure Lafont nets satisfy strong confluence (one-step diamond property).
+     - Confluence of this implementation has not been established by its tests.
   2. Weft Extended Metabolic & Superposition Nodes (`VLV = 3`, `FRC = 4`, `SUP = 5`):
      - `VLV` (Metabolic Valve): gates a reduction across a node pair using the C2
        invariant gate (`verify_tension_bound` and metabolic budget). When within
@@ -23,13 +23,14 @@ Explicitly separates:
 
 Execution trace commitment (#21, #29, PROGRAM.md Phase 4):
   `trace_commitment_sha256` hashes `SHA256(initial_graph_bcp || step_log_json || final_graph_bcp)`
-  so two distinct graphs can never collide on identical step tuples.
+  binding graph bytes to the trace under SHA-256's collision-resistance assumption.
 """
 
 from __future__ import annotations
 
 import hashlib
 import json
+import math
 from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
@@ -70,16 +71,18 @@ class FlatCombinatorVM:
         p2: int = -1,
         aux_tag: int = 0,
     ) -> int:
-        while self.next_alloc < self.capacity and self.tags[self.next_alloc] != self.FREE:
-            self.next_alloc += 1
-        if self.next_alloc >= self.capacity:
+        cursor = self.next_alloc
+        while cursor < self.capacity and self.tags[cursor] != self.FREE:
+            cursor += 1
+        if cursor >= self.capacity:
             free_slots = np.where(self.tags == self.FREE)[0]
             if len(free_slots) == 0:
                 raise MemoryError("Combinator arena exhausted")
             idx = int(free_slots[0])
         else:
-            idx = self.next_alloc
-            self.next_alloc += 1
+            idx = cursor
+
+        self.next_alloc = cursor if cursor >= self.capacity else cursor + 1
 
         self.tags[idx] = tag
         self.aux_tags[idx] = aux_tag
@@ -121,6 +124,11 @@ class FlatCombinatorVM:
         self._initial_bcp = serialize_graph_bcp(self)
         return self._initial_bcp
 
+    def _require_free_slots(self, count: int) -> None:
+        """Preflight an entire allocating rule before mutating any VM state."""
+        if int(np.count_nonzero(self.tags == self.FREE)) < count:
+            raise MemoryError(f"Combinator rule requires {count} free arena slots")
+
     def interact(
         self,
         a: int,
@@ -128,20 +136,42 @@ class FlatCombinatorVM:
         tension: float = 22.0,
         metabolic_budget: float = 100.0,
     ) -> str:
-        if self._initial_bcp is None:
-            self.snapshot_initial_graph()
-
         ta = int(self.tags[a])
         tb = int(self.tags[b])
         la = int(self.aux_tags[a])
         lb = int(self.aux_tags[b])
 
+        annihilates = (
+            (ta == tb and la == lb and ta in (self.CON, self.DUP, self.SUP))
+            or ({ta, tb} == {self.DUP, self.SUP} and la == lb)
+        )
+        # This is a single-threaded arena. Reserve the rule's existing peak
+        # requirement, including the old pair, before snapshot/allocator changes.
+        # It preserves current allocation order and successful reduction behavior.
+        if ta == self.VLV or tb == self.VLV:
+            tension = float(tension)
+            metabolic_budget = float(metabolic_budget)
+            if not (math.isfinite(tension) and math.isfinite(metabolic_budget)):
+                raise ValueError("VLV tension and metabolic_budget must be finite")
+            t_check = verify_tension_bound(tension, max_tension=TENSION_MAX)
+            valve_passes = t_check["accepted"] and metabolic_budget > 0.0
+            required_slots = 0 if valve_passes else 1
+        elif ta == self.ERA and tb == self.ERA:
+            required_slots = 0
+        elif ta == self.ERA or tb == self.ERA:
+            required_slots = 2
+        else:
+            required_slots = 0 if annihilates else 4
+        if required_slots:
+            self._require_free_slots(required_slots)
+        if self._initial_bcp is None:
+            self.snapshot_initial_graph()
+
         # 0. Weft Extended Metabolic Valve (VLV = 3)
         if ta == self.VLV or tb == self.VLV:
             vlv = a if ta == self.VLV else b
             peer = b if ta == self.VLV else a
-            t_check = verify_tension_bound(tension, max_tension=TENSION_MAX)
-            if t_check["accepted"] and metabolic_budget > 0.0:
+            if valve_passes:
                 ext_out = int(self.ports[vlv, 1])
                 self._replace_neighbor_link(ext_out, vlv, peer)
                 self.ports[peer, 0] = ext_out
@@ -155,7 +185,8 @@ class FlatCombinatorVM:
                 op = "VLV_EXCISE_TO_FRC"
             self.reductions += 1
             self.trace_log.append(
-                {"step": self.reductions, "op": op, "a": a, "b": b, "tension": round(float(tension), 4)}
+                {"step": self.reductions, "op": op, "a": a, "b": b,
+                 "tension": tension, "metabolic_budget": metabolic_budget}
             )
             return op
 
@@ -180,10 +211,7 @@ class FlatCombinatorVM:
         #    - CON <-> CON (with matching aux_tag)
         #    - DUP(L) <-> DUP(L) (matching label L)
         #    - SUP(L) <-> DUP(L) or SUP(L) <-> SUP(L) (matching label L)
-        elif (
-            (ta == tb and la == lb and ta in (self.CON, self.DUP, self.SUP))
-            or ({ta, tb} == {self.DUP, self.SUP} and la == lb)
-        ):
+        elif annihilates:
             a1, a2 = int(self.ports[a, 1]), int(self.ports[a, 2])
             b1, b2 = int(self.ports[b, 1]), int(self.ports[b, 2])
             self._fuse_external_wires(a1, a, b1, b)
