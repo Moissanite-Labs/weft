@@ -585,7 +585,7 @@
 
         <div class="panel">
           <h2 class="sec-title">Interactive Browser-Corpus Simulation Widgets (scf.usercontent.goog Extractions)</h2>
-          <p class="body-copy">Select any of the five extracted interactive React/WebGPU simulation apps below to run it inline or open it in a dedicated viewport:</p>
+          <p class="body-copy">Explore five preserved React demos using Canvas2D or SVG. Each description identifies its implemented behavior and illustrative metrics; the exports load external scripts and fonts:</p>
           <div class="filter-row" id="widgetPickerRow"></div>
           <div id="activeWidgetMeta" style="margin-bottom:10px;font-size:12px;color:#cbd5e1;"></div>
           <iframe class="widget-frame" id="inlineWidgetFrame" src="widgets/01-sdf-laya-kinetic-typography.html" title="Interactive Weft Simulation Widget"></iframe>
@@ -996,6 +996,7 @@ slashRogueSwarm(swarm, creator, 500e18)</code>
     function selectWidget(idx) {
       const w = WIDGETS[idx];
       widgetFrame.src = w.file;
+      widgetFrame.title = w.title;
       widgetMeta.innerHTML = `<strong>${w.title}</strong> <span class="badge badge-secondary">${w.origin}</span> — ${w.desc} <a href="${w.file}" target="_blank" rel="noopener" style="color:var(--weft-accent);margin-left:8px;">Open standalone ↗</a>`;
       widgetPicker.querySelectorAll(".chip-btn").forEach((b, i) => b.classList.toggle("active", i === idx));
     }
