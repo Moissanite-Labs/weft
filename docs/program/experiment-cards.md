@@ -112,7 +112,7 @@ These tracks are not a compulsory staircase. E01, E03 and E04 can create useful 
 
 ## E06 — Is the self-healing visual rule learned, persistent and generalizable?
 
-**Source intent:** [design thread](../../weft/browser-sources/thread2-design-main-6C083A.md), turns 9–11, plus the NCA widget line; [PROGRAM.md](../../PROGRAM.md) sets growth, persistence and damage metrics rather than the hand-coded widget as the evidence bar.
+**Source intent:** [design thread](../../weft/browser-sources/thread2-design-main-6C083A.md), turns 9–11, plus the NCA widget line; [PROGRAM.md](charter.md) sets growth, persistence and damage metrics rather than the hand-coded widget as the evidence bar.
 
 **Question and usefulness:** Does a trained local rule recover a target under unseen perturbations better than coordinate-aware reconstruction or a hand-coded CA, at acceptable cost?
 
@@ -144,7 +144,7 @@ These tracks are not a compulsory staircase. E01, E03 and E04 can create useful 
 
 ## E08 — Can a living user's chosen preferences be predicted with useful abstention?
 
-**Source intent:** [design thread](../../weft/browser-sources/thread2-design-main-6C083A.md), turns 5,12,30–35; [imprint](../../weft/imprint.md) and [top-level audit](audit/notes-top_corpus.md); [PROGRAM.md](../../PROGRAM.md) separates a testamentary policy, a testable preference model and unsupported claims of survival.
+**Source intent:** [design thread](../../weft/browser-sources/thread2-design-main-6C083A.md), turns 5,12,30–35; [imprint](../../weft/imprint.md) and [top-level audit](audit/notes-top_corpus.md); [PROGRAM.md](charter.md) separates a testamentary policy, a testable preference model and unsupported claims of survival.
 
 **Question and usefulness:** Can a voluntary, correctable preference model reduce repeated settings work while respecting explicit instructions and changes of mind?
 

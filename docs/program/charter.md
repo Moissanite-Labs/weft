@@ -1,14 +1,21 @@
 # Weft build program
 
-Weft is the final-form architecture for Moissanite Labs. This program turns the restored design corpus into issues, repaired software, and internal documents. All of that work stays inside this private repository for now.
+> **Historical charter.** This is the original Weft build program, written while the repository was private
+> (it lived at the repository root as `PROGRAM.md`). The repository went public on 2026-11-08 at the owner's direction,
+> which lifts the restrictions below on public posts, outreach and publishing. The engineering constraints still
+> apply: evidence before claims, nothing deployed live, and scaffolding only what an issue names. For current
+> sequencing see the [build program](build-program.md) and [convergence plan](convergence-plan.md). Contributor-facing
+> rules are in [CONTRIBUTING.md](../../CONTRIBUTING.md).
 
-For the current proposed sequence following Discussion #11 and the 2026-11-08 owner follow-up, see [the convergence plan](docs/program/convergence-plan.md), [use-now guide](docs/program/use-now.md), and [variant register](docs/program/variants.md) (#39). They distinguish six tracks, present evidence, hardware/resource gates, and implementation lineages. The phase lists below preserve the original program; their historical status is not evidence that a task is still pending or that a later capability is complete.
+Weft is the final-form architecture for Moissanite Labs. This program turns the restored design corpus into issues, repaired software, and internal documents. All of that work stays inside this repository.
 
-The complete source review (#49) extends this into a [component-by-component phased build program](docs/program/build-program.md), [experiment portfolio](docs/program/experiment-cards.md), [file evidence ledger](docs/program/audit/README.md) and [persistent handoff](docs/program/resume.md). Use those for current sequencing while preserving this original charter and source lineage.
+For the current proposed sequence following Discussion #11 and the 2026-11-08 owner follow-up, see [the convergence plan](convergence-plan.md), [use-now guide](use-now.md), and [variant register](variants.md) (#39). They distinguish six tracks, present evidence, hardware/resource gates, and implementation lineages. The phase lists below preserve the original program; their historical status is not evidence that a task is still pending or that a later capability is complete.
+
+The complete source review (#49) extends this into a [component-by-component phased build program](build-program.md), [experiment portfolio](experiment-cards.md), [file evidence ledger](audit/README.md) and [persistent handoff](resume.md). Use those for current sequencing while preserving this original charter and source lineage.
 
 The other repositories remain bridges while hardware and society catch up. This program does not dissolve them, replace them, or apply Weft to them immediately. An organization around Weft may come later. It is not part of this phase.
 
-No public posts, outreach, marketing copy, benchmark write-ups, or Zenodo records are part of this program until that restriction is lifted. Do not file Weft material into any other repository. This repository is the single source of truth. Do not copy the corpus into the private archives (`aska-digital/anthology` and `aska-digital/nafs`) unless Alkindus asks.
+No public posts, outreach, marketing copy, benchmark write-ups, or Zenodo records are part of this program until that restriction is lifted. Do not file Weft material into any other repository. This repository is the single source of truth.
 
 ## Workstreams
 
@@ -82,7 +89,6 @@ Phase 5. File the governance review into this repository, then file research iss
 - grk-lumen owns visual design when a browser-dashboard or widget issue is opened, so implementation does not invent the UI.
 - grk-ship is out of scope unless Alkindus later asks to deploy. Do not deploy anything live. GitHub Pages is currently off. If it is ever enabled, a merge that publishes Pages is a live deploy. Independent review comes first, then ship merges after that review plus Alkindus's own approval.
 - Weft items go through the conductor, not also through digest.
-- Cloud agents working in this repository stay on Composer 2.5.
 
 This is a code repository. It does not inherit a docs-only review rule for the whole tree. Code pull requests and mixed pull requests follow the ordinary code-repository rules.
 
@@ -99,7 +105,7 @@ Later, and not gates on checkpoint 4: remaining mathematical-repair issues (Phas
 
 ## Constraints
 
-Keep every deliverable in this private repository. Do not route work outward. Do not treat a simulated receipt, a conversation dashboard, or a claim of installation as evidence that software is running or sealed on a chain.
+Keep every deliverable in this repository. Do not route work outward. Do not treat a simulated receipt, a conversation dashboard, or a claim of installation as evidence that software is running or sealed on a chain.
 
 Distinguish a stated rule from a rule that the executable path actually checks. Distinguish an implemented behavior from a biological name that names the ideal we iterate toward. Keep the name. Do not claim the implementation has arrived until the evidence is there.
 

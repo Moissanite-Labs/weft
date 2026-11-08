@@ -10,7 +10,7 @@ Baseline: `main@94b9064f9d09509a46c9e9d9ba219707f9551bb9`, reviewed on 2026-11-0
 
 The owner's subsequent working-session direction is to act as justified steps become clear, separate what can be used now from what needs further progress, and preserve the many versions and implementation stacks in context. The available personal target is a user-reported M1 MacBook with 64 GB RAM and Chrome; the reported OS name is “Golden Gate 27.0.1.” These are planning inputs, not a hardware verification result. [Use now](use-now.md) explains how to establish the actual host and runtime record.
 
-Keep the full vision. Make each near-term claim precise enough to test. [The variant register](variants.md) records the source and executable alternatives; timestamp or filename order alone does not choose a winner. This plan supplies current sequencing alongside [PROGRAM.md](../../PROGRAM.md). Older phase lists, source inventories and architecture claims retain their provenance and require the reconciliations below.
+Keep the full vision. Make each near-term claim precise enough to test. [The variant register](variants.md) records the source and executable alternatives; timestamp or filename order alone does not choose a winner. This plan supplies current sequencing alongside [PROGRAM.md](charter.md). Older phase lists, source inventories and architecture claims retain their provenance and require the reconciliations below.
 
 ## Six tracks, with a shared runtime foundation
 
@@ -75,7 +75,7 @@ For every actionable finding, file or reuse an issue with evidence and a falsifi
 
 ## Council recommendation and human decisions
 
-Keep the current private repository as the integration and provenance record while making component boundaries executable. This allows the six tracks to develop without forcing premature migration. A new repository is useful when independent releases, ownership, access or licensing demand it and the extraction gates above hold. An organization is justified by governance and stewardship needs, not by the number of directories.
+Keep this repository as the integration and provenance record while making component boundaries executable. This allows the six tracks to develop without forcing premature migration. A new repository is useful when independent releases, ownership, access or licensing demand it and the extraction gates above hold. An organization is justified by governance and stewardship needs, not by the number of directories.
 
 Before proposing a new repository, inspect existing Moissanite Labs projects for the same purpose. Treat the synthesis map's “absorb,” “replace” and “supersede” labels as proposed relationships until the affected owners accept them; `PROGRAM.md` currently retains the bridge repositories.
 
