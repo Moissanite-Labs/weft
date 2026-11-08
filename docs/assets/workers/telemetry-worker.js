@@ -25,11 +25,13 @@ function applyVerifiedMetrics(metrics, sequence) {
 
 async function poll(dataUrl) {
   try {
-    const res = await fetch(`${dataUrl}?t=${Date.now()}`);
-    if (!res.ok) return;
+    const url = new URL(dataUrl);
+    url.searchParams.set("t", String(Date.now()));
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const text = await res.text();
     const line = text.split("\n").find((l) => l.trim().startsWith(":")) || "";
-    if (!line) return;
+    if (!line) throw new Error("No telemetry packet in response");
     const parsed = parseSym2pLine(line);
     const verified = await verifySym2pLine(line);
     if (!verified) {
@@ -44,7 +46,7 @@ async function poll(dataUrl) {
     }
     applyVerifiedMetrics(parsed.metrics, parsed.sequence);
   } catch (err) {
-    self.postMessage({ type: "error", message: String(err) });
+    self.postMessage({ type: "error", message: err.message || String(err) });
   }
 }
 

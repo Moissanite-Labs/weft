@@ -210,31 +210,35 @@ export class WeftLoomEngine {
     }
   }
 
-  async fetchSym2pOnce() {
-    try {
-      const res = await fetch(`${this.dataUrl}?t=${Date.now()}`);
-      if (!res.ok) return;
-      const text = await res.text();
-      const line = text.split("\n").find((l) => l.trim().startsWith(":"));
-      if (!line) return;
-      const parsed = parseSym2pLine(line);
-      const verified = await verifySym2pLine(line);
-      if (!verified) {
-        this.state.rejected_packets += 1;
-        if (this.hudEl) {
-          this.hudEl.textContent = `SYM-2P packet rejected (invalid/missing SHA-256) | rejected=${this.state.rejected_packets}`;
-        }
-        return;
-      }
-      this.applyVerifiedSym2pPacket(parsed);
-    } catch (_) {
-      if (this.hudEl) {
-        this.hudEl.textContent = `Telemetry snapshot (${this.state.source}) | nodes=${this.state.active_nodes} | tension=${this.state.org_tension.toFixed(4)}`;
-      }
+  reportTelemetryFailure(reason, rejected = false) {
+    if (rejected) this.state.rejected_packets += 1;
+    if (this.hudEl) {
+      this.hudEl.textContent = `Telemetry ${rejected ? "rejected" : "unavailable"} (${reason}); retaining last values | source=${this.state.source} | nodes=${this.state.active_nodes} | tension=${this.state.org_tension.toFixed(4)} | gini=${this.state.gini_index.toFixed(4)}`;
     }
   }
 
-  startTelemetryWorker() {
+  async fetchSym2pOnce() {
+    try {
+      const url = new URL(this.dataUrl, document.baseURI);
+      url.searchParams.set("t", String(Date.now()));
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const text = await res.text();
+      const line = text.split("\n").find((l) => l.trim().startsWith(":"));
+      if (!line) throw new Error("No telemetry packet in response");
+      const parsed = parseSym2pLine(line);
+      const verified = await verifySym2pLine(line);
+      if (!verified) {
+        this.reportTelemetryFailure("invalid/missing SHA-256", true);
+        return;
+      }
+      this.applyVerifiedSym2pPacket(parsed);
+    } catch (err) {
+      this.reportTelemetryFailure(err.message || String(err));
+    }
+  }
+
+  startTelemetryWorker(pollMs = 60000) {
     try {
       if (typeof SharedArrayBuffer !== "undefined" && window.crossOriginIsolated) {
         this.telemetrySab = new SharedArrayBuffer(64);
@@ -249,12 +253,18 @@ export class WeftLoomEngine {
         if (data.type === "telemetry" && data.hashValid) {
           this.applyVerifiedSym2pPacket({ sequence: data.sequence ?? 1, metrics: data.metrics || {} });
         } else if (data.type === "telemetry_rejected") {
-          this.state.rejected_packets += 1;
+          this.reportTelemetryFailure("invalid/missing SHA-256", true);
+        } else if (data.type === "error") {
+          this.reportTelemetryFailure(data.message || "Worker fetch failed");
         }
       };
-      this.worker.postMessage({ type: "init", dataUrl: this.dataUrl, sab: this.telemetrySab, pollMs: 60000 });
+      this.worker.onerror = () => this.reportTelemetryFailure("Telemetry worker failed");
+      // A relative fetch in a worker resolves against its script, not the page.
+      // Resolve here so root and nested deployments use the same data endpoint.
+      const dataUrl = new URL(this.dataUrl, document.baseURI).href;
+      this.worker.postMessage({ type: "init", dataUrl, sab: this.telemetrySab, pollMs });
     } catch (_) {
-      setInterval(() => this.fetchSym2pOnce(), 60000);
+      setInterval(() => this.fetchSym2pOnce(), pollMs);
     }
   }
 
