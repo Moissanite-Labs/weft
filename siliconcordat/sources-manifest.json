@@ -1,0 +1,12 @@
+{
+  "weft": {
+    "repo": "https://github.com/Moissanite-Labs/weft",
+    "sha": "bff15957656a4c904250963e67d0a2c770cd5a26",
+    "site_path": "site"
+  },
+  "lab_site": {
+    "repo": "https://github.com/Moissanite-Labs/.github",
+    "sha": "a42df12a53ab3c86b31573012a16ee5a62ce1a26",
+    "docs_path": "docs"
+  }
+}

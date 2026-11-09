@@ -1,6 +1,7 @@
 __pycache__/
 .venv/
 dist/
+.cache/
 node_modules/
 .wrangler/
 .DS_Store
