@@ -64,6 +64,8 @@ export function setupAttention({ motion = true, panel = true } = {}) {
     for (const e of entries) {
       const b = byEl.get(e.target);
       b.visible = e.isIntersecting;
+      // Coming back to a skipped passage gives it a fresh chance, and skipping it again counts again.
+      if (b.visible && b.skipped && !b.read) { b.skipped = false; b.seen = false; b.dwell = 0; b.again = true; }
       // Seen: most of it was on screen (or, for a tall block, it filled a good part of the screen).
       if (e.intersectionRatio > 0.6 || e.intersectionRect.height > innerHeight * 0.4) b.seen = true;
     }
@@ -423,7 +425,7 @@ export function setupAttention({ motion = true, panel = true } = {}) {
       if (b.el.getBoundingClientRect().bottom < 0 && b.dwell < b.need * 0.35) {
         b.skipped = true;
         stats.skippedWords += b.words;
-        bump(Math.min(0.2, 0.03 + b.words / 500));
+        bump(Math.min(0.2, 0.03 + b.words / 500) * (b.again ? 0.6 : 1));
       }
     }
     // Fast scrolling, frantic direction changes and a jerky cursor.

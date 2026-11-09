@@ -257,5 +257,110 @@
    "telemetry labels;",
    "labels;"
   ]
+ },
+ "headings": {
+  "abstract": [
+   "Summary",
+   "Gist",
+   "Big idea",
+   "TL;DR",
+   "What’s this about?"
+  ],
+  "the-problem": [
+   "1. The problem",
+   "1. Problem",
+   "Why care",
+   "Problem",
+   "What’s the problem?"
+  ],
+  "principles": [
+   "2. Principles",
+   "2. Rules",
+   "Rules",
+   "Five rules",
+   "What are the rules?"
+  ],
+  "architecture": [
+   "3. Architecture",
+   "3. Parts",
+   "Parts",
+   "Seven parts",
+   "What are the pieces?"
+  ],
+  "evidence-status": [
+   "4. Evidence",
+   "4. Proof",
+   "What works",
+   "Status",
+   "What really works?"
+  ],
+  "horizons": [
+   "5. Horizons",
+   "5. Roadmap",
+   "Future",
+   "Roadmap",
+   "What comes next?"
+  ],
+  "eido-the-design-language": [
+   "6. Eido design",
+   "6. Eido",
+   "Eido look",
+   "Eido",
+   "How does it look?"
+  ],
+  "what-weft-is-not": [
+   "7. Non-claims",
+   "7. Not this",
+   "Not this",
+   "Not claims",
+   "What isn’t it?"
+  ],
+  "origins-and-method": [
+   "8. Origins",
+   "8. Origin",
+   "Where from",
+   "Origins",
+   "Where did it come from?"
+  ],
+  "the-paper-series": [
+   "9. Paper series",
+   "9. Papers",
+   "Papers",
+   "Series",
+   "Where are the other papers?"
+  ],
+  "taking-part": [
+   "10. Get involved",
+   "10. Join",
+   "Join",
+   "Join in",
+   "How can I help?"
+  ]
+ },
+ "tldr": {
+  "abstract": "Weft studies models that keep learning within checkable limits, with every claim labelled.",
+  "the-problem": "Self-adapting models need limits that code enforces, not just policies.",
+  "principles": "Five rules: bound change, test rules, label evidence, keep interfaces small, run nothing live.",
+  "architecture": "Seven components: most run and are tested; the ledger drafts are only research.",
+  "evidence-status": "A table of what runs today and what is not yet shown.",
+  "horizons": "Four horizons, directions not dates: only the first is in use.",
+  "eido-the-design-language": "Eido is a design language for honest live state; its paper is in preparation.",
+  "what-weft-is-not": "Not a product, no token, no claims about minds, not finished biology.",
+  "origins-and-method": "Born from AI chats; the first job was separating real results from narrated ones.",
+  "the-paper-series": "Papers 0 to 2 are published, 3 is in preparation, 4 is planned.",
+  "taking-part": "Open code and documents; best contributions make a claim testable or wrong."
+ },
+ "eli5": {
+  "abstract": "Some programs keep learning after people start using them. Weft asks how to keep that safe, like a kite that can move but only as far as its string. Every part is labelled <em>works</em>, <em>pretend</em> or <em>just an idea</em>.",
+  "the-problem": "Most programs that learn stop once they are built. Soon some will keep changing by themselves, with nobody watching. Rules on paper are easy to ignore, so Weft wants rules the computer checks on every change.",
+  "principles": "Weft follows five rules. A program may only wander a short way from an approved version, like a dog on a leash. Rules get tested, claims get honest labels, parts stay small, and nothing touches the real world.",
+  "architecture": "Weft is built from seven parts, like toy blocks. One part is a <em>gate</em>, a bouncer that checks every change. Most parts really run and are tested. Some are only drafts or practice runs.",
+  "evidence-status": "This is the honest report card. For each part it says what really works today and what nobody has shown yet. Things not listed as working, like real money or custom chips, do not exist yet.",
+  "horizons": "There are four steps, and they are plans, not dates. Only the first, a shared language for programs to talk, is in use. The second is being worked on. The last two are ideas still on paper.",
+  "eido-the-design-language": "Eido is a way of designing screens that show what a program is really doing, like a trustworthy car dashboard. If you cannot see what a program does, you cannot supervise it. Its paper is still being written.",
+  "what-weft-is-not": "Weft is not something you can buy, and it has no coins or tokens. It does not claim to make minds or bring anyone back. Words like <em>cell</em> name what the team hopes to build, not what exists.",
+  "origins-and-method": "Weft began as a long chat between a person and AI helpers. The chat described things that never happened. So the first job was sorting real from pretend, like checking a story against what truly occurred.",
+  "the-paper-series": "The research is split into five papers, like chapters. The first three are finished and out. The fourth is still being written, and the fifth is only a plan.",
+  "taking-part": "Anyone can use and share the work, because it is open. The best way to help is to test a claim and see if it holds up. Finding a mistake is just as useful as confirming something."
  }
 }
