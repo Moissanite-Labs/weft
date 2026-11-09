@@ -122,6 +122,7 @@ itself to a few rules:
 - [I4 shared-memory interface](docs/interfaces/I4-shared-memory.md)
 - [Build program](docs/program/build-program.md), [convergence plan](docs/program/convergence-plan.md), [experiment cards](docs/program/experiment-cards.md) and [evidence ledger](docs/program/audit/README.md)
 - [Program charter](docs/program/charter.md): the original charter, kept for history
+- [Releasing](docs/program/releasing.md): GitHub releases and Zenodo records for the software and papers
 
 ## Related repositories
 
@@ -147,6 +148,12 @@ Start with [CONTRIBUTING.md](CONTRIBUTING.md). Every commit needs a DCO sign-off
 
 Please follow the [Code of Conduct](CODE_OF_CONDUCT.md). Report security issues privately as described in
 [SECURITY.md](SECURITY.md).
+
+## Citing
+
+GitHub's *Cite this repository* button reads [CITATION.cff](CITATION.cff). Each paper's page on
+[w3ft.org/papers](https://w3ft.org/papers/) has its own citation. Zenodo DOIs will be added once the repository is
+public and archived ([releasing](docs/program/releasing.md)).
 
 ## License
 
