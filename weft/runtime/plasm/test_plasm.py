@@ -110,8 +110,14 @@ class TestI4SharedMemoryContract(unittest.TestCase):
 
         with self.arena() as plasm:
             raw = shared_memory.SharedMemory(name=plasm.name, create=False)
+            # macOS rounds an attached mapping up to whole pages (16 KiB on arm64),
+            # so the raw buffer can be longer than the profile. Only the profile's
+            # bytes are the contract; the tail is OS padding (#68).
+            size = int(self.vectors["arena_bytes"])
+            self.assertGreaterEqual(len(raw.buf), size)
+            region = raw.buf[:size]
             try:
-                raw.buf[:] = bytes(self.vectors["arena_bytes"])
+                region[:] = bytes(self.vectors["arena_bytes"])
                 # Producer views write values; an independent reader uses only fixture offsets.
                 for sample in samples:
                     field = self.fields[sample["field"]]
@@ -121,7 +127,7 @@ class TestI4SharedMemoryContract(unittest.TestCase):
                         getattr(plasm.c_view, field["name"])[sample["index"][0]] = sample["value"]
                     else:
                         setattr(plasm.c_view, field["name"], sample["value"])
-                self.assertEqual(bytes(raw.buf), bytes(expected))
+                self.assertEqual(bytes(region), bytes(expected))
                 for sample in samples:
                     field = self.fields[sample["field"]]
                     self.assertEqual(
@@ -130,7 +136,7 @@ class TestI4SharedMemoryContract(unittest.TestCase):
                     )
 
                 # Independent writer packs bytes; producer reads its typed views.
-                raw.buf[:] = bytes(self.vectors["arena_bytes"])
+                region[:] = bytes(self.vectors["arena_bytes"])
                 for sample in samples:
                     field = self.fields[sample["field"]]
                     struct.pack_into("<" + field["format"], raw.buf, sample["byte_offset"], sample["value"])
@@ -144,6 +150,7 @@ class TestI4SharedMemoryContract(unittest.TestCase):
                         value = getattr(plasm.c_view, field["name"])
                     self.assertEqual(value, sample["value"])
             finally:
+                region.release()
                 raw.close()
 
     def test_detached_tensor_lifetime_and_unlink(self) -> None:

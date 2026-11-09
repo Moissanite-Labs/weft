@@ -31,6 +31,11 @@ names at 31 bytes including the leading `/` that Python adds; Linux allows 255.
 that passes on Linux CI also works on Apple Silicon (#68). The cycle's
 per-process default is `weft_plasm_<pid>`.
 
+An attached mapping can be longer than the profile: macOS rounds it up to whole
+pages (16 KiB on Apple Silicon). Consumers read and write only the profile's
+bytes from offset 0 and ignore the tail; the mapping size is not part of the
+contract.
+
 ## Byte layout
 
 Offsets are decimal bytes from the beginning of the shared-memory mapping.
