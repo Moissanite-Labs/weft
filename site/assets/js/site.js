@@ -4,6 +4,7 @@ import { frobeniusNorm, verifyWeightUpdateSafety } from "./invariant-gate.js";
 import { parseSym2pLine, verifySym2pLine } from "./sym2p-parse.js";
 import { mountSimplexPad } from "./simplex-pad.js";
 import { mixAestheticPresets } from "./aesthetic-mixer.js";
+import { attention } from "./attention.js"; // starts the reading weave on this page too
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -217,8 +218,9 @@ function setupLoom() {
     mood.idle += dt;
   };
   // Derived feelings, 0..1.
-  const arousal = () => Math.max(mood.speed, mood.turn * 0.8, mood.jolt);
-  const agitation = () => clamp01(mood.jolt * 1.1 + mood.turn * 0.35);
+  // A restless reader (see attention.js) agitates the loom too.
+  const arousal = () => Math.max(mood.speed, mood.turn * 0.8, mood.jolt, attention.restless);
+  const agitation = () => Math.max(clamp01(mood.jolt * 1.1 + mood.turn * 0.35), attention.restless * 0.9);
   const rest = () => clamp01((mood.idle - 4) / 8);
 
   const center = (k) => k * spacing + spacing / 2;
