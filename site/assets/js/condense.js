@@ -127,7 +127,7 @@ export function setupCondense(data, reading) {
   } catch { /* start fresh */ }
   if (params.has("condense")) {
     level = parseInt(params.get("condense"), 10) || 0;
-    passages.forEach((p) => (p.lv = Math.min(level, 3)));
+    passages.forEach((p) => (p.lv = clamp(level, 0, 3)));
   }
   level = clamp(level, 0, top);
   let off = store.get("weft-condense-off") === "1";
