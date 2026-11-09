@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" role="img" aria-label="Siliconcordat">
+  <!-- Siliconcordat mark — two hexagonal lattices, one shared cut.
+       Left hexagon = carbon (#c4844a), right hexagon = silicon (#9db0c4),
+       the overlap (itself a hexagon) = fire (#e6d2a8): the concordat.
+       32-unit grid; strokes 2u so the mark holds at 16px. Use on the bg token (#0a0908). -->
+  <path d="M16 8.81 L20.23 11.25 L20.23 20.75 L16 23.19 L11.77 20.75 L11.77 11.25 Z" fill="#e6d2a8"/>
+  <path d="M12 6.5 L20.23 11.25 L20.23 20.75 L12 25.5 L3.77 20.75 L3.77 11.25 Z" fill="none" stroke="#c4844a" stroke-width="2" stroke-linejoin="miter"/>
+  <path d="M20 6.5 L28.23 11.25 L28.23 20.75 L20 25.5 L11.77 20.75 L11.77 11.25 Z" fill="none" stroke="#9db0c4" stroke-width="2" stroke-linejoin="miter"/>
+</svg>

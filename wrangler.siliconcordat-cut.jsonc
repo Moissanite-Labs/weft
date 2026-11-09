@@ -1,0 +1,18 @@
+// siliconcordat.org (future): Cloudflare Worker "ml-siliconcordat-cut".
+// Build:   python3 scripts/build_siliconcordat_cut_bundle.py
+// Preview: npx wrangler@4 dev -c wrangler.siliconcordat-cut.jsonc   (after build)
+// Do not deploy from automation; no custom domains or routes are bound here.
+{
+  "$schema": "https://unpkg.com/wrangler@4/config-schema.json",
+  "name": "ml-siliconcordat-cut",
+  "main": "workers/siliconcordat-cut.mjs",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./dist-cut",
+    "binding": "ASSETS",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  },
+  "workers_dev": true,
+  "observability": { "enabled": true }
+}

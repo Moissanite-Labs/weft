@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Annotation: wayfinding on Weft — not a visual restyle</title>
+<link rel="icon" href="../assets/mark.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="site.css">
+<style>
+  /* ---------- Annotation frame (Siliconcordat tokens) ---------- */
+  .anno-head { padding: 56px 0 32px; border-bottom: 1px solid var(--line); }
+  .anno-head h1 { font-size: clamp(2rem, 1.4rem + 2vw, 3rem); line-height: 1.05; font-weight: 380; font-variation-settings: "opsz" 48; letter-spacing: -0.02em; margin: 0 0 16px; max-width: 26ch; }
+  .anno-head p { max-width: 46rem; margin: 0; }
+  .stage { padding: 40px 0; border-bottom: 1px solid var(--line); }
+  .stage__label { display: flex; align-items: baseline; gap: 14px; margin: 0 0 16px; }
+  .stage__label .tag { font: 500 0.6875rem var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 8px; border: 1px solid var(--line-2); color: var(--ink-2); }
+  .stage__label .tag--rec { border-color: var(--fire); color: var(--fire); }
+  .stage__label .tag--fb { border-style: dashed; }
+  .stage__label h2 { font: 420 1.375rem var(--font-display); font-variation-settings: "opsz" 28; }
+  .frame { position: relative; border: 1px solid var(--line-2); padding: 0; }
+  .frame__corner { position: absolute; top: -1px; right: -1px; padding: 4px 8px; background: var(--line-2); color: var(--ink-2); font: 500 0.6875rem var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; z-index: 2; }
+  .notes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin: 20px 0 0; padding: 0; list-style: none; counter-reset: n; }
+  .notes li { border-top: 1px solid var(--line-2); padding-top: 12px; font-size: 0.9375rem; color: var(--ink-2); }
+  .notes li b { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; margin-right: 8px; background: var(--fire); color: var(--bg); font: 600 0.75rem var(--font-mono); border-radius: 50%; }
+  .pin { position: absolute; width: 22px; height: 22px; border-radius: 50%; background: var(--fire); color: var(--bg); font: 600 0.75rem/22px var(--font-mono); text-align: center; z-index: 3; box-shadow: 0 0 0 3px var(--bg); }
+  .bracket { position: absolute; border: 1px dashed var(--fire); pointer-events: none; z-index: 2; }
+  .split { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 32px; align-items: start; }
+  pre.code { margin: 0; padding: 18px 20px; background: var(--bg-2); border: 1px solid var(--line-2); color: var(--ink-2); font: 400 0.8125rem/1.6 var(--font-mono); overflow-x: auto; white-space: pre; }
+  pre.code .c { color: var(--muted); }
+  pre.code .k { color: var(--fire); }
+
+  /* ---------- Weft facsimile (Weft tokens and Weft type only; simplified) ---------- */
+  .weft-fx {
+    --w-bg: #060a12; --w-surface: #0b1825; --w-surface-2: #0e2030; --w-ink: #e2f1f8; --w-ink-2: #b8cad8; --w-muted: #86a0b5;
+    --w-line: #142a3c; --w-line-2: #21435c; --w-accent-strong: #a1d3e4; --w-link: #7fcbe3; --w-link-hover: #cfe8f3; --w-btn-bg: #0a2333;
+    --w-chrome: linear-gradient(135deg, #cfe8f3 0%, #4096b2 22%, #a1d3e4 42%, #176886 62%, #74bdd4 82%, #35708a 100%);
+    --w-chrome-line: linear-gradient(90deg, transparent, #176886 15%, #a1d3e4 50%, #176886 85%, transparent);
+    --w-display: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", "URW Palladio L", Georgia, serif;
+    --w-body: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: var(--w-bg); color: var(--w-ink); font: 400 17px/1.6 var(--w-body); position: relative;
+  }
+  .weft-fx .w-header { position: relative; border-bottom: 1px solid var(--w-line); }
+  .weft-fx .w-header::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px; background: var(--w-chrome-line); opacity: 0.45; }
+  .weft-fx .w-wrap { max-width: 1120px; margin: 0 auto; padding: 0 40px; display: flex; align-items: center; gap: 16px; height: 60px; }
+  .weft-fx .brand { display: inline-flex; align-items: center; gap: 10px; color: var(--w-ink); text-decoration: none; }
+  .weft-fx .brand svg { width: 26px; height: 26px; }
+  .weft-fx .brand-name { font-family: var(--w-display); font-weight: 700; font-size: 1.15rem; letter-spacing: 0.01em; }
+  .weft-fx .brand-org { font-size: 0.78rem; color: var(--w-muted); border-left: 1px solid var(--w-line-2); padding-left: 10px; text-decoration: none; }
+  .weft-fx a.brand-org:hover { color: var(--w-link-hover); text-decoration: underline; text-underline-offset: 0.2em; }
+  .weft-fx .brand-family { display: inline-flex; align-items: center; gap: 10px; margin-right: auto; }
+  .weft-fx .spacer { margin-right: auto; }
+  .weft-fx .nav { display: flex; gap: 4px; }
+  .weft-fx .nav a { color: var(--w-ink-2); text-decoration: none; font-size: 0.93rem; padding: 6px 10px; border-radius: 6px; }
+  .weft-fx .icon-btn { display: inline-flex; align-items: center; justify-content: center; height: 36px; min-width: 36px; border: 1px solid transparent; border-radius: 6px; background: linear-gradient(var(--w-btn-bg), var(--w-btn-bg)) padding-box, var(--w-chrome) border-box; color: var(--w-ink); }
+  .weft-fx .icon-btn svg { width: 18px; height: 18px; }
+  .weft-fx .w-hero { padding: 40px 40px 44px; max-width: 1120px; margin: 0 auto; }
+  .weft-fx .w-hero h3 { font: 600 3rem/1.05 var(--w-display); color: var(--w-ink); margin: 0; }
+  .weft-fx .w-hero .ghost { color: var(--w-muted); font-size: 0.85rem; margin-top: 10px; }
+  .weft-fx .w-rail { height: 40px; padding-top: 4px; border-bottom: 1px solid var(--w-line); background: var(--w-bg); }
+  .weft-fx .w-rail .w-wrap { height: 32px; gap: 18px; font-size: 0.78rem; }
+  .weft-fx .w-rail a { color: var(--w-muted); text-decoration: none; }
+  .weft-fx .w-rail a.on { color: var(--w-link); }
+  .weft-fx .menu-panel-fx { width: 240px; background: var(--w-surface); border: 1px solid var(--w-line); border-radius: 10px; padding: 6px; display: grid; }
+  .weft-fx .menu-panel-fx a { padding: 10px 12px; border-radius: 6px; color: var(--w-ink); text-decoration: none; font-size: 0.95rem; }
+  .weft-fx .menu-panel-fx .sep { height: 1px; background: var(--w-line); margin: 6px 4px; }
+  .weft-fx .menu-panel-fx .fam-label { padding: 6px 12px 2px; font-size: 0.72rem; color: var(--w-muted); letter-spacing: 0.06em; text-transform: uppercase; }
+  .weft-fx .menu-panel-fx .fam a { color: var(--w-ink-2); }
+  .weft-fx .hl { position: relative; outline: 1px dashed #e6d2a8; outline-offset: 4px; }
+  .weft-fx .hl::after { content: attr(data-pin); position: absolute; top: -30px; left: 50%; transform: translateX(-50%); width: 22px; height: 22px; border-radius: 50%; background: #e6d2a8; color: #0a0908; font: 600 12px/22px "IBM Plex Mono", monospace; text-align: center; text-decoration: none; letter-spacing: 0; text-transform: none; }
+  .weft-fx .w-rail .hl::after { top: 4px; left: auto; right: 8px; transform: none; }
+  .weft-fx .menu-panel-fx .hl::after { top: 50%; left: -40px; transform: translateY(-50%); }
+  .weft-fx .w-header .w-wrap { padding-top: 0; }
+  .frame.weft-fx { padding-top: 22px; }
+  .phone { width: 390px; border: 1px solid var(--line-2); }
+  .phone .w-wrap { padding: 0 16px; }
+  @media (max-width: 1000px) { .notes { grid-template-columns: 1fr 1fr; } .split { grid-template-columns: 1fr; } .weft-fx .nav { display: none; } }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="family-header">
+  <div class="wrap">
+    <nav aria-label="Moissanite Labs family">
+      <ul class="fam">
+        <li><a class="fam-home" href="landing.html"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 8.81 L20.23 11.25 L20.23 20.75 L16 23.19 L11.77 20.75 L11.77 11.25 Z" fill="#e6d2a8"/><path d="M12 6.5 L20.23 11.25 L20.23 20.75 L12 25.5 L3.77 20.75 L3.77 11.25 Z" fill="none" stroke="#c4844a" stroke-width="2"/><path d="M20 6.5 L28.23 11.25 L28.23 20.75 L20 25.5 L11.77 20.75 L11.77 11.25 Z" fill="none" stroke="#9db0c4" stroke-width="2"/></svg><span>Siliconcordat</span></a></li>
+        <li><a href="ml.html">Moissanite Labs</a></li>
+        <li><a class="fam-weft" href="family-weft.html" aria-current="page"><span class="weft-tick" aria-hidden="true"></span>Weft</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<main id="main">
+  <section class="anno-head">
+    <div class="wrap">
+      <span class="eyebrow">Design annotation · /weft</span>
+      <h1>Annotation of wayfinding on Weft — not a visual restyle.</h1>
+      <p>Weft keeps its palette, type, liquid-metal chrome, loom canvas, theme toggle and content. The only change is in its existing header: the brand block is split so “Moissanite Labs” and “Siliconcordat” become their own text links, drawn with Weft’s own <code style="font-family:var(--font-mono);color:var(--fire)">.brand-org</code> style. The headers below are simplified facsimiles redrawn for this annotation; they are not live Weft assets.</p>
+    </div>
+  </section>
+
+  <!-- TODAY -->
+  <section class="stage">
+    <div class="wrap">
+      <div class="stage__label"><span class="tag">Today</span><h2>w3ft.org header, desktop</h2></div>
+      <div class="frame weft-fx" aria-label="Facsimile of the current Weft header">
+        <span class="frame__corner">Facsimile · Weft tokens</span>
+        <div class="w-header"><div class="w-wrap">
+          <a class="brand spacer hl" data-pin="A" href="#" tabindex="-1"><svg viewBox="0 0 32 32" aria-hidden="true"><use href="#weave-mark"/></svg><span class="brand-name">ML Weft</span><span class="brand-org">Moissanite Labs</span></a>
+          <nav class="nav" aria-hidden="true"><a>Idea</a><a>Try it</a><a>Status</a><a>Horizons</a><a>Papers</a><a>Contribute</a></nav>
+          <span class="icon-btn" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/></svg></span>
+          <span class="icon-btn" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/></svg></span>
+        </div></div>
+      </div>
+      <ul class="notes">
+        <li><b>A</b>One link: mark + “ML Weft” + “Moissanite Labs” all go to Weft home. A visitor cannot reach the lab or the Siliconcordat from Weft.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- RECOMMENDED -->
+  <section class="stage">
+    <div class="wrap">
+      <div class="stage__label"><span class="tag tag--rec">Recommended · default</span><h2>Split the brand block. Nothing else changes.</h2></div>
+      <div class="frame weft-fx" aria-label="Facsimile of the Weft header with the recommended wayfinding links">
+        <span class="frame__corner">Facsimile · Weft tokens</span>
+        <div class="w-header"><div class="w-wrap">
+          <a class="brand hl" data-pin="1" href="#" tabindex="-1"><svg viewBox="0 0 32 32" aria-hidden="true"><use href="#weave-mark"/></svg><span class="brand-name">ML Weft</span></a>
+          <span class="brand-family"><a class="brand-org hl" data-pin="2" href="ml.html">Moissanite Labs</a><a class="brand-org hl" data-pin="3" href="landing.html">Siliconcordat</a></span>
+          <nav class="nav" aria-hidden="true"><a>Idea</a><a>Try it</a><a>Status</a><a>Horizons</a><a>Papers</a><a>Contribute</a></nav>
+          <span class="icon-btn" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/></svg></span>
+          <span class="icon-btn" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/></svg></span>
+        </div></div>
+        <div class="w-hero"><h3>ML Weft</h3><p class="ghost">Hero, loom canvas, tagline, buttons, sections and footer: unchanged (not drawn).</p></div>
+      </div>
+      <ul class="notes">
+        <li><b>1</b>Weave-mark + “ML Weft” stay one link to Weft home (<code>/weft/</code>, or <code>/</code> while served on w3ft.org). <code>aria-label="ML Weft home"</code> unchanged.</li>
+        <li><b>2</b>“Moissanite Labs” becomes its own link to <code>/ml</code>. Same <code>.brand-org</code> look: 0.78rem, Weft muted <code>#86a0b5</code>, 1px <code>#21435c</code> left rule.</li>
+        <li><b>3</b>New “Siliconcordat” link to <code>/</code>, styled exactly like 2. Hover: Weft <code>--link-hover</code> <code>#cfe8f3</code> + underline. Focus: Weft’s own aqua outline. No champagne, no new font.</li>
+        <li><b>4</b>On w3ft.org (before the cutover), 2 and 3 use absolute URLs: <code>https://siliconcordat.com/ml</code> and <code>https://siliconcordat.com/</code>.</li>
+      </ul>
+      <div class="split" style="margin-top:28px">
+<pre class="code"><span class="c">&lt;!-- Weft header: only the brand block changes --&gt;</span>
+<span class="k">&lt;a class="brand" href="/weft/" aria-label="ML Weft home"&gt;</span>
+  &lt;svg viewBox="0 0 32 32" aria-hidden="true"&gt;&lt;use href="#weave-mark"/&gt;&lt;/svg&gt;
+  &lt;span class="brand-name"&gt;ML Weft&lt;/span&gt;
+<span class="k">&lt;/a&gt;</span>
+<span class="k">&lt;span class="brand-family"&gt;</span>
+  &lt;a class="brand-org" href="/ml"&gt;Moissanite Labs&lt;/a&gt;
+  &lt;a class="brand-org" href="/"&gt;Siliconcordat&lt;/a&gt;
+<span class="k">&lt;/span&gt;</span>
+&lt;nav class="nav" aria-label="Primary"&gt; … unchanged … &lt;/nav&gt;</pre>
+<pre class="code"><span class="c">/* Weft site.css additions (Weft tokens only) */</span>
+.brand { margin-right: 0; }
+.brand-family { display: inline-flex; align-items: center;
+  gap: 10px; margin-right: auto; }
+a.brand-org { text-decoration: none; }
+a.brand-org:hover { color: var(--link-hover);
+  text-decoration: underline;
+  text-underline-offset: 0.2em; }
+@media (max-width: 860px) {
+  .brand-family { display: none; } <span class="c">/* moved to menu */</span>
+}</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- MOBILE -->
+  <section class="stage">
+    <div class="wrap split">
+      <div>
+        <div class="stage__label"><span class="tag tag--rec">Recommended · mobile</span><h2>Under 860px, the family moves into Weft’s menu</h2></div>
+        <p style="max-width:34rem">Weft already hides <code style="font-family:var(--font-mono);color:var(--fire)">.brand-org</code> below 860px. Keep that. Append a small group to the bottom of Weft’s existing <code style="font-family:var(--font-mono);color:var(--fire)">.menu-panel</code>, after a 1px Weft <code style="font-family:var(--font-mono);color:var(--fire)">--line</code> rule: a muted “Moissanite Labs family” label, then “Moissanite Labs” and “Siliconcordat”. Weft’s own menu-link style; rows stay 44px or taller.</p>
+      </div>
+      <div class="phone weft-fx" aria-label="Facsimile of the Weft mobile menu with family links">
+        <div class="w-header"><div class="w-wrap">
+          <a class="brand spacer" href="#" tabindex="-1"><svg viewBox="0 0 32 32" aria-hidden="true"><use href="#weave-mark"/></svg><span class="brand-name">ML Weft</span></a>
+          <span class="icon-btn" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+        </div></div>
+        <div style="padding:10px 16px 20px; display:flex; justify-content:flex-end; position:relative">
+          <div class="menu-panel-fx">
+            <a>Idea</a><a>Try it</a><a>Status</a><a>Horizons</a><a>Papers</a><a>Contribute</a><a>Sketches</a>
+            <div class="sep"></div>
+            <div class="hl" data-pin="5" style="display:grid"><span class="fam-label">Moissanite Labs family</span>
+            <span class="fam" style="display:grid"><a href="ml.html">Moissanite Labs</a><a href="landing.html">Siliconcordat</a></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FALLBACK -->
+  <section class="stage">
+    <div class="wrap">
+      <div class="stage__label"><span class="tag tag--fb">Fallback · not default</span><h2>32px family rail above Weft’s header, Weft tokens only</h2></div>
+      <div class="frame weft-fx" aria-label="Facsimile of the fallback family rail">
+        <span class="frame__corner">Facsimile · Weft tokens</span>
+        <div class="w-rail"><div class="w-wrap hl" data-pin="6" style="justify-content:flex-start"><a href="landing.html">Siliconcordat</a><a href="ml.html">Moissanite Labs</a><a class="on" aria-current="page">Weft</a></div></div>
+        <div class="w-header"><div class="w-wrap">
+          <a class="brand spacer" href="#" tabindex="-1"><svg viewBox="0 0 32 32" aria-hidden="true"><use href="#weave-mark"/></svg><span class="brand-name">ML Weft</span><span class="brand-org">Moissanite Labs</span></a>
+          <nav class="nav" aria-hidden="true"><a>Idea</a><a>Try it</a><a>Status</a><a>Horizons</a><a>Papers</a><a>Contribute</a></nav>
+        </div></div>
+      </div>
+      <ul class="notes">
+        <li><b>5</b>Mobile: family group appended to Weft’s existing menu. No new header, no new button.</li>
+        <li><b>6</b>Fallback rail: <code>#060a12</code> ground, <code>#86a0b5</code> links, <code>#7fcbe3</code> for the current “Weft”, <code>#142a3c</code> rule, Weft system type, 0.78rem. Not the default: two stacked headers read as two sites.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="mark-chrome" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#cfe8f3"/><stop offset=".35" stop-color="#4096b2"/><stop offset=".6" stop-color="#a1d3e4"/><stop offset="1" stop-color="#176886"/></linearGradient>
+    <linearGradient id="mark-gold" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fbe7a1"/><stop offset=".5" stop-color="#d4af37"/><stop offset="1" stop-color="#b8862b"/></linearGradient>
+    <!-- simplified facsimile of Weft's weave-mark, for annotation only -->
+    <symbol id="weave-mark" viewBox="0 0 32 32">
+      <rect x="1" y="1" width="30" height="30" rx="8" fill="#060a12" stroke="url(#mark-chrome)" stroke-width="1.5"/>
+      <g fill="none" stroke-width="3.2" stroke-linecap="round"><path d="M11 6v20M21 6v20" stroke="url(#mark-chrome)"/><path d="M6 11h3.2M12.8 11h6.4M22.8 11H26" stroke="url(#mark-gold)"/><path d="M6 21h16M24.4 21H26" stroke="url(#mark-chrome)"/></g>
+    </symbol>
+  </defs>
+</svg>
+</body>
+</html>

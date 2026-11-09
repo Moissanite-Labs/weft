@@ -1,6 +1,7 @@
 __pycache__/
 .venv/
 dist/
+dist-cut/
 .cache/
 node_modules/
 .wrangler/
