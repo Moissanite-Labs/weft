@@ -39,7 +39,7 @@ ties each PDF to the hashes of its sources. The output is committed so the site 
 
 ## Building
 
-You need pandoc 3.1, PyYAML, and Playwright with Chromium.
+You need pandoc 3.1.3 exactly ([release page](https://github.com/jgm/pandoc/releases/tag/3.1.3)), PyYAML, and Playwright with Chromium. Other pandoc releases produce different HTML, so the CI check would fail; the build script refuses to run with any other version, and CI installs the same release.
 
 ```bash
 pip install pyyaml playwright && python3 -m playwright install chromium

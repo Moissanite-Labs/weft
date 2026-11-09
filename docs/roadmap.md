@@ -38,7 +38,7 @@ Horizon I proves the Syntactic Weft architecture on commodity Apple Silicon (`M1
 2. **Speculative A/B Mitosis & Homomorphic Watermark Retention (`C1`: `plasm.py`)**:
    - Spawns parallel conservative (`alpha`) and exploratory (`beta`) weight candidates, masks the frozen 25% core parameters (`plasticity_mask`), evaluates candidates directly against `target_out` plus hippocampal novelty, and verifies that the homomorphic watermark projection (`Y = X_trig * W`) retains `>= 90%` cosine similarity across 10+ generations.
 3. **Cross-Language Invariant Safety Gate (`C2`: `weft/runtime/invariants/`)**:
-   - Enforces `||W_cand - W_base||_F <= R_invariant` (`120.0`) and `remaining_budget >= step_cost > 0` identically in Python (`invariants.py`) and standalone C11 (`weft_invariants.h`), verified against `vectors.json`.
+   - Enforces `||W_cand - W_base||_F <= R_invariant` (`120.0`) and `remaining_budget >= step_cost > 0` in Python (`invariants.py`) and standalone C11 (`weft_invariants.h`). Python is verified against all 12 cases in `vectors.json`; the C11 test hard-codes copies of 10 of them rather than reading the file.
 4. **Zero-Allocation Interaction Combinator VM & BCP Codec (`C3`: `weft/runtime/ic/`)**:
    - Executes deterministic active-pair graph reduction (`CON-CON` annihilation, `DUP-CON` commutation, `ERA-*` erasure, and `VLV`/`FRC`/`SUP` extensions) in a flat pre-allocated node array (`ic_vm.py`), paired with the 12-byte header (`WEFT`) + 20-byte node record (`<IBBhiii`) Binary Combinator Protocol (`bcp_codec.py`).
 

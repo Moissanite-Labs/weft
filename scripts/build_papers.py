@@ -13,7 +13,8 @@ Outputs:   site/papers/index.html
   python3 scripts/build_papers.py --no-pdf   # HTML only
   python3 scripts/build_papers.py --check    # CI: HTML up to date, PDFs built from current sources
 
-Needs pandoc (3.1.x), PyYAML, and Playwright with Chromium for PDFs.
+Needs pandoc 3.1.3 exactly (other releases emit different markup, and CI
+compares bytes), PyYAML, and Playwright with Chromium for PDFs.
 The header, footer and icon sprite are taken from site/index.html so the paper
 pages always match the landing page.
 """
@@ -80,6 +81,25 @@ def find_papers() -> list[dict]:
 
 
 # ---------------------------------------------------------------- pandoc
+# The committed HTML must be byte-identical to a fresh build, and pandoc's output
+# changes between releases, so everyone builds with this one release. CI installs
+# it in .github/workflows/ci.yml; keep the two in step.
+PANDOC_VERSION = "3.1.3"
+
+
+def require_pandoc_version() -> None:
+    try:
+        first = subprocess.run(["pandoc", "--version"], capture_output=True, text=True, check=True).stdout.split("\n")[0]
+    except FileNotFoundError:
+        raise SystemExit("pandoc is required (https://pandoc.org/installing.html)")
+    found = first.split()[-1] if first else "unknown"
+    if found != PANDOC_VERSION:
+        raise SystemExit(
+            f"pandoc {PANDOC_VERSION} is required, found {found}. Other releases produce different HTML, "
+            f"so the committed pages would not match. Install it from "
+            f"https://github.com/jgm/pandoc/releases/tag/{PANDOC_VERSION}")
+
+
 def pandoc(markdown: str, *extra: str) -> str:
     try:
         out = subprocess.run(["pandoc", *PANDOC_ARGS, *extra], input=markdown, capture_output=True, text=True, check=True)
@@ -285,6 +305,7 @@ def main() -> int:
     parser.add_argument("--no-pdf", action="store_true", help="skip PDF generation")
     parser.add_argument("--check", action="store_true", help="verify committed outputs match the sources")
     args = parser.parse_args()
+    require_pandoc_version()
 
     papers = find_papers()
     tdigest = template_digest()
