@@ -4,6 +4,8 @@
 #include <stdio.h>
 
 int main(void) {
+    assert(WEFT_R_INVARIANT_DEFAULT == 120.0f);
+
     /* 1. matching_sizes_large_move: rejected because baseline distance = sqrt(8) > 0.5 */
     {
         float base[4] = {1.0f, 0.0f, 0.0f, 1.0f};
