@@ -15,8 +15,8 @@
    rules, borders, button fills, dots).
 
    Navy is the default for every visitor. The toggle switches to a light theme
-   (frost-white, with navy text); the header, hero, paper headers and footer
-   stay navy in both. */
+   (frost-white, with navy text); the hero and paper headers stay navy in
+   both; the header and footer follow the theme. */
 
 :root,
 .navy-scope,
@@ -408,9 +408,7 @@ section.alt { background: radial-gradient(80% 60% at 85% 0%, rgb(35 81 78 / 0.22
 .card h3 a { color: var(--ink); text-decoration: none; }
 .card h3 a:hover { color: var(--ink); text-decoration: underline; text-decoration-color: var(--gold-flat); }
 
-/* Navy framing in both themes: header, hero, paper header and footer. */
-.site-header.navy-scope, .site-footer.navy-scope { background: var(--bg); }
-.site-footer.navy-scope { color: var(--muted); }
+/* Hero and paper header stay navy in both themes; header and footer follow the theme. */
 .site-footer { position: relative; }
 .site-footer::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: var(--chrome-line); opacity: 0.4; }
 .hero.navy-scope, .paper-hero.navy-scope { background-color: var(--bg); color: var(--ink-2); }
