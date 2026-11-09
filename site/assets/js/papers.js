@@ -1,6 +1,17 @@
 // Paper pages: highlight the current section in the contents list.
 // Theme, menu and copy buttons come from site.js.
 import "./site.js";
+import { holdAttention, setupAttention } from "./attention.js";
+import { loadCondensed, setupCondense } from "./condense.js";
+
+// A paper with condensed versions beside it swaps the reading weave's motion
+// for condensing prose; the others keep the reading weave as it is.
+holdAttention();
+loadCondensed().then((data) => {
+  if (!data) return setupAttention();
+  const reading = setupAttention({ motion: false, panel: false });
+  if (reading) setupCondense(data, reading);
+});
 
 const links = new Map();
 document.querySelectorAll(".paper-toc a[href^='#']").forEach((a) => {
