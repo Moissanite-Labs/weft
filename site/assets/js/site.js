@@ -68,8 +68,9 @@ function setupLoom() {
       stops.forEach(([o, c]) => g.addColorStop(o, c));
       return g;
     };
-    colors.a = sheen([[0, "#35708a"], [0.18, "#a1d3e4"], [0.36, "#4096b2"], [0.55, "#cfe8f3"], [0.74, "#176886"], [1, "#74bdd4"]]);
-    colors.b = sheen([[0, "#b8862b"], [0.25, "#f6dc85"], [0.45, "#d4af37"], [0.62, "#fff1b8"], [0.82, "#b8862b"], [1, "#e8c45a"]]);
+    colors.a = sheen([[0, "#487775"], [0.18, "#b0d5d2"], [0.36, "#5a9892"], [0.55, "#d7ebea"], [0.74, "#306d68"], [1, "#8abeb8"]]);
+    colors.s = sheen([[0, "#7d8a90"], [0.2, "#e8eef0"], [0.4, "#a9b6bb"], [0.6, "#f5f8f9"], [0.8, "#97a4a9"], [1, "#d3dcdf"]]);
+    colors.b = sheen([[0, "#bfa97c"], [0.25, "#efe3c8"], [0.45, "#d9c7a0"], [0.62, "#f7efdc"], [0.82, "#bfa97c"], [1, "#e6d6b0"]]);
   };
 
   const resize = () => {
@@ -117,7 +118,7 @@ function setupLoom() {
 
     // Weft: wavy horizontal threads with a background halo so crossings read as depth.
     for (let j = 0; j < rows; j++) {
-      const color = j % 7 === 3 ? colors.b : colors.a; // gold, sparingly
+      const color = j % 7 === 3 ? colors.b : (j % 7 === 1 || j % 7 === 5) ? colors.s : colors.a; // champagne + silver, sparingly
       for (const pass of [0, 1]) {
         ctx.beginPath();
         for (let x = 0; x <= w + step; x += step) {
