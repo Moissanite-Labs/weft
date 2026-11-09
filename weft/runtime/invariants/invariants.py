@@ -178,7 +178,7 @@ def verify_weight_update_safety(
             "accepted": False,
             "reason": "remaining_budget_underflow",
             "compared_sizes": compared_sizes,
-            "baseline_distance": _frobenius_norm(candidate_weights) if hasattr(candidate_weights, "detach") else float("inf"),
+            "baseline_distance": dist,
             "remaining_budget": rem,
         }
     if not accepted:
