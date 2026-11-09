@@ -1,8 +1,9 @@
 /* ML Weft — w3ft.org
    One stylesheet, no build step.
 
-   Palette: navy is primary, cool silver is secondary, metallic gold is a rare
-   highlight, and white is the neutral. Text is always a flat colour: white or
+   Palette: deep navy-black (the dark hues of the previous design) is primary,
+   cool silver is secondary, metallic gold is a rare highlight, and white is
+   the neutral. Text is always a flat colour: white or
    cool silver on navy, navy on white. Metallic gradients appear only on
    non-text surfaces (threads, rules, borders, button fills, dots).
 
@@ -12,29 +13,29 @@
 :root,
 .navy-scope,
 :root[data-theme="light"] .navy-scope {
-  --bg: #0a1a3d;
-  --bg-2: #0d2047;
-  --surface: #112651;
-  --ink: #ffffff;               /* headings */
-  --ink-2: #cad3e0;             /* body: cool silver */
-  --muted: #95a3ba;
-  --line: #1f3768;
-  --line-2: #2c4881;
+  --bg: #060a12;
+  --bg-2: #0a0f1a;
+  --surface: #0e1522;
+  --ink: #e6ecf5;               /* headings: near-white */
+  --ink-2: #c2ccdb;             /* body: cool silver */
+  --muted: #8a96ab;
+  --line: #1b2436;
+  --line-2: #29344b;
   --accent: #cad3e0;            /* labels and UI accents: silver, flat */
   --accent-strong: #ffffff;
   --accent-soft: rgb(202 211 224 / 0.10);
-  --link: #e4eaf2;
+  --link: #e6ecf5;
   --link-hover: #ffffff;
   --ok: #e9eef5;  --ok-soft: rgb(233 238 245 / 0.10);
   --alert: #e2bf5a; --alert-soft: rgb(212 175 55 / 0.14); --alert-line: rgb(212 175 55 / 0.55);
   --no: #95a3ba;  --no-soft: rgb(149 163 186 / 0.12);
-  --code-bg: #08163a;
-  --btn-bg: #112651;
+  --code-bg: #09101c;
+  --btn-bg: #0e1522;
   --btn-fg: #ffffff;
   --shadow: 0 1px 2px rgb(0 0 0 / 0.35), 0 10px 28px rgb(2 8 24 / 0.35);
   --thread-weft: #b4bfcf;
   --thread-gold: #d4af37;
-  --thread-warp: #1b3266;
+  --thread-warp: #182133;
   --plate: #ffffff;
   color-scheme: dark;
 }
@@ -43,22 +44,22 @@
   --bg: #ffffff;
   --bg-2: #f2f4f8;
   --surface: #ffffff;
-  --ink: #0a1a3d;               /* navy */
+  --ink: #0b1530;               /* navy */
   --ink-2: #23385f;
   --muted: #586780;
   --line: #dde3ec;
   --line-2: #c5cedb;
   --accent: #0f2552;
-  --accent-strong: #0a1a3d;
+  --accent-strong: #0b1530;
   --accent-soft: rgb(15 37 82 / 0.07);
   --link: #13306b;
-  --link-hover: #0a1a3d;
+  --link-hover: #0b1530;
   --ok: #0f2552;  --ok-soft: #e8edf6;
   --alert: #6b4e0c; --alert-soft: #fbf3dc; --alert-line: #d9b44a;
   --no: #586780;  --no-soft: #eef1f6;
   --code-bg: #f2f4f8;
   --btn-bg: #ffffff;
-  --btn-fg: #0a1a3d;
+  --btn-fg: #0b1530;
   --shadow: 0 1px 2px rgb(10 26 61 / 0.06), 0 8px 24px rgb(10 26 61 / 0.07);
   --thread-weft: #9aa7ba;
   --thread-gold: #c99a2e;
@@ -183,7 +184,7 @@ p { margin: 0 0 1em; }
 }
 .btn:hover { color: var(--btn-fg); background: linear-gradient(var(--bg-2), var(--bg-2)) padding-box, var(--chrome) border-box; }
 .btn svg { width: 18px; height: 18px; }
-.btn-primary, .btn-primary:hover { background: var(--gold); color: #0a1a3d; border: 1px solid #b8862b; text-shadow: 0 1px 0 rgb(255 255 255 / 0.35); }
+.btn-primary, .btn-primary:hover { background: var(--gold); color: #060a12; border: 1px solid #b8862b; text-shadow: 0 1px 0 rgb(255 255 255 / 0.35); }
 .btn-primary:hover { filter: brightness(1.06) saturate(1.05); }
 .hero-meta { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 28px; font-size: 0.88rem; color: var(--muted); }
 .hero-meta span { display: inline-flex; align-items: center; gap: 6px; }
