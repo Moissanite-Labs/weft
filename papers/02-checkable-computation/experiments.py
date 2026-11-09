@@ -474,7 +474,9 @@ def e5_bcp(completed_vms: list) -> dict:
 
 
 # ---------------------------------------------------------------- E6 the Weft telemetry line
-FIXTURE = (ROOT / "site" / "data" / "telemetry.jsonl").read_text().splitlines()[0].strip()
+FIXTURE = (
+    ROOT / "weft" / "runtime" / "aywa" / "web" / "data" / "telemetry.jsonl"
+).read_text().splitlines()[0].strip()
 
 JS_HARNESS = r"""
 import { parseSym2pLine, verifySym2pLine } from "%s";

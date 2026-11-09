@@ -1,11 +1,13 @@
 {
-  "source": "weft/runtime/aywa",
-  "files": [
-    "moissanite_telemetry.json",
-    "moissanite_telemetry.bin",
-    "telemetry.jsonl"
+  "source": "weft/runtime/aywa/web",
+  "field_assets": [
+    "weft/runtime/aywa/web/data/moissanite_telemetry.json",
+    "weft/runtime/aywa/web/data/moissanite_telemetry.bin",
+    "weft/runtime/aywa/web/data/telemetry.jsonl",
+    "weft/runtime/aywa/web/assets/shaders/dashboard_layout.wgsl",
+    "weft/runtime/aywa/web/assets/js/weft-loom.js",
+    "weft/runtime/aywa/web/assets/workers/telemetry-worker.js"
   ],
-  "shader": "assets/shaders/dashboard_layout.wgsl",
   "vendored": "VENDORED.json (Eido modules and corpus widgets; see scripts/vendor.py)",
   "public_pages_allowlist": [
     "index.html",
@@ -15,7 +17,7 @@
     "_headers",
     "seed-manifest.json",
     "assets/",
-    "data/",
-    "widgets/"
+    "widgets/",
+    "papers/"
   ]
 }

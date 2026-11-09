@@ -27,7 +27,7 @@ from weft.runtime.telemetry.host_metrics import (  # noqa: E402
     read_host_hardware_metrics,
 )
 
-SHM_BRIDGE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "moissanite_telemetry.bin")
+SHM_BRIDGE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "web", "data", "moissanite_telemetry.bin")
 
 
 def build_unified_64b_frame(

@@ -40,7 +40,7 @@ test("tampered payload fails hash", async () => {
 });
 
 test("published seed line parses and verifies", async () => {
-  const text = readFileSync(join(here, "..", "..", "..", "site", "data", "telemetry.jsonl"), "utf8");
+  const text = readFileSync(join(here, "web", "data", "telemetry.jsonl"), "utf8");
   const line = text.split("\n").find((l) => l.startsWith(":"));
   const parsed = parseSym2pLine(line);
   assert.deepEqual([parsed.role, parsed.actionState, parsed.sequence], [1, 3, 1]);
@@ -61,7 +61,7 @@ test("verifySym2pLine returns a boolean (not { ok })", async () => {
 
 test("consumer gate accepts correctly signed fixture and golden lines", async () => {
   assert.equal(await consumerAcceptsSym2pLine(GOLDEN_LINE), true);
-  const seed = readFileSync(join(here, "..", "..", "..", "site", "data", "telemetry.jsonl"), "utf8");
+  const seed = readFileSync(join(here, "web", "data", "telemetry.jsonl"), "utf8");
   const line = seed.split("\n").find((l) => l.trim().startsWith(":"));
   assert.equal(await consumerAcceptsSym2pLine(line), true);
 });

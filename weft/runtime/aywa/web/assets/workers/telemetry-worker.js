@@ -1,7 +1,7 @@
 /* SharedArrayBuffer-capable telemetry ingest worker (Codebase C7 / Interface I2).
    Enforces SHA-256 verification on every SYM-2P line before updating uniforms (#24 / P22). */
 
-import { parseSym2pLine, verifySym2pLine } from "../js/sym2p-parse.js";
+import { parseSym2pLine, verifySym2pLine } from "../../../../../../site/assets/js/sym2p-parse.js";
 
 let sharedView = null;
 let pollMs = 45000;

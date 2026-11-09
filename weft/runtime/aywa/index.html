@@ -36,7 +36,7 @@
             }
             async boot() {
                 try {
-                    const res = await fetch("./moissanite_telemetry.json");
+                    const res = await fetch("./web/data/moissanite_telemetry.json");
                     if (res.ok) {
                         const data = await res.json();
                         this.telemetry.active_nodes = data.active_nodes;
