@@ -5,8 +5,8 @@
 .crumbs a { color: var(--link); }
 
 .paper-hero { border-bottom: 1px solid var(--line); background:
-  radial-gradient(120% 140% at 100% 0%, rgb(212 175 55 / 0.06) 0%, transparent 55%),
-  radial-gradient(90% 120% at 0% 0%, rgb(17 74 99 / 0.38) 0%, transparent 62%),
+  radial-gradient(120% 140% at 100% 0%, rgb(217.0 199.0 160.0 / 0.06) 0%, transparent 55%),
+  radial-gradient(90% 120% at 0% 0%, rgb(35 81 78 / 0.38) 0%, transparent 62%),
   var(--bg); }
 .paper-hero .wrap { padding-top: clamp(36px, 6vw, 72px); padding-bottom: clamp(32px, 5vw, 56px); }
 .paper-hero .eyebrow { margin-bottom: 12px; }
@@ -58,7 +58,7 @@
 /* Figures: light plates in both themes so plotted colours stay faithful */
 .paper { counter-reset: fig tab; }
 .paper figure { margin: 2em 0; counter-increment: fig; }
-.paper figure img { width: 100%; height: auto; background: var(--plate, #fff); border: 1px solid var(--line); border-radius: var(--radius); padding: clamp(8px, 2vw, 16px); }
+.paper figure img { width: 100%; height: auto; background: var(--plate, #ffffff); border: 1px solid var(--line); border-radius: var(--radius); padding: clamp(8px, 2vw, 16px); }
 .paper figcaption { margin-top: 10px; font-size: 0.9rem; line-height: 1.5; color: var(--muted); }
 .paper figcaption::before { content: "Figure " counter(fig) ". "; font-weight: 700; color: var(--ink); }
 
