@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Experiments for Paper 2, "Checkable Computation".
 
-Every number in the paper comes from this script. It imports the tested C3
-reducer and binary format (weft/runtime/ic), the C6 telemetry line codec and
+Every number in the paper comes from this script. It imports the C3 reducer
+and binary format as studied at commit a18fc40 (frozen in studied_c3/), the C6 telemetry line codec and
 frame packer (weft/runtime/telemetry), and the browser parser
 (site/assets/js/sym2p-parse.js, run under Node). It compares the reducer with
 an independent reference semantics (reference.py). Run from the repository root:
@@ -30,9 +30,11 @@ sys.path.insert(0, str(HERE))
 
 import numpy as np  # noqa: E402
 
-import weft.runtime.ic.ic_vm as ic_vm  # noqa: E402
-from weft.runtime.ic.bcp_codec import deserialize_graph_bcp, serialize_graph_bcp  # noqa: E402
-from weft.runtime.ic.ic_vm import FlatCombinatorVM  # noqa: E402
+# The reducer as studied (commit a18fc40), frozen in studied_c3/. The runtime
+# has since been fixed; see studied_c3/__init__.py.
+import studied_c3.ic_vm as ic_vm  # noqa: E402
+from studied_c3.bcp_codec import deserialize_graph_bcp, serialize_graph_bcp  # noqa: E402
+from studied_c3.ic_vm import FlatCombinatorVM  # noqa: E402
 from weft.runtime.telemetry.frame64 import FRAME64_STRUCT  # noqa: E402
 from weft.runtime.telemetry.sym2p_codec import encode_sym2p_line, parse_sym2p_line  # noqa: E402
 

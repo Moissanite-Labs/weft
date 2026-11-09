@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Unit tests for Codebase C3 (`weft/runtime/ic`) covering Issues #21 and #29."""
+"""Unit tests for Codebase C3 (`weft/runtime/ic`): rules, records and replay (#21, #29, #52, #66, #77)."""
 
 import unittest
 
@@ -7,102 +7,186 @@ from weft.runtime.ic import (
     FlatCombinatorVM,
     deserialize_graph_bcp,
     graph_state_sha256,
+    replay_execution,
     run_combinator_self_test,
     serialize_graph_bcp,
+    verify_execution_record,
 )
 
 
-class TestWeftICVM(unittest.TestCase):
-    def test_pure_lafont_annihilation_rewires_neighbors(self) -> None:
-        """Issue #21: CON-CON annihilation must splice external neighbor wires bidirectionally."""
-        vm = FlatCombinatorVM(capacity=64)
-        left_anchor = vm.alloc_node(vm.CON, p0=0, p1=-1, p2=-1)
-        right_anchor = vm.alloc_node(vm.CON, p0=1, p1=-1, p2=-1)
-        c_a = vm.alloc_node(vm.CON)
-        c_b = vm.alloc_node(vm.CON)
-        vm.connect_ports(c_a, 0, c_b, 0)
-        vm.connect_ports(c_a, 1, left_anchor, 1)
-        vm.connect_ports(c_b, 1, right_anchor, 1)
-        vm.snapshot_initial_graph()
+def pair(ta, tb, la=0, lb=0, capacity=64):
+    vm = FlatCombinatorVM(capacity=capacity)
+    a, b = vm.alloc_node(ta, aux_tag=la), vm.alloc_node(tb, aux_tag=lb)
+    vm.connect_ports(a, 0, b, 0)
+    return vm, a, b
 
-        op = vm.interact(c_a, c_b)
-        self.assertIn("ANNIHILATE", op)
-        # left_anchor.port[1] and right_anchor.port[1] are now directly wired to each other
-        self.assertEqual(int(vm.ports[left_anchor, 1]), right_anchor)
-        self.assertEqual(int(vm.ports[right_anchor, 1]), left_anchor)
+
+class TestRules(unittest.TestCase):
+    def test_annihilation_joins_aux_wires_port_to_port(self) -> None:
+        vm, a, b = pair(FlatCombinatorVM.CON, FlatCombinatorVM.CON)
+        left, right = vm.alloc_node(vm.CON), vm.alloc_node(vm.CON)
+        vm.connect_ports(a, 1, left, 2)
+        vm.connect_ports(b, 1, right, 1)
+        self.assertIn("ANNIHILATE", vm.interact(a, b))
+        self.assertEqual(vm.peer(left, 2), (right, 1))
+        self.assertEqual(vm.peer(right, 1), (left, 2))
+        vm.check_net()
 
     def test_dup_label_annihilation_vs_commutation(self) -> None:
-        """Issue #21: DUP(L)-DUP(L) annihilates when labels match and commutes when L != M."""
-        vm1 = FlatCombinatorVM(capacity=64)
-        d1 = vm1.alloc_node(vm1.DUP, aux_tag=7)
-        d2 = vm1.alloc_node(vm1.DUP, aux_tag=7)
-        vm1.connect_ports(d1, 0, d2, 0)
-        self.assertIn("ANNIHILATE", vm1.interact(d1, d2))
+        vm, a, b = pair(FlatCombinatorVM.DUP, FlatCombinatorVM.DUP, 7, 7)
+        self.assertIn("ANNIHILATE", vm.interact(a, b))
+        vm, a, b = pair(FlatCombinatorVM.DUP, FlatCombinatorVM.DUP, 7, 9)
+        self.assertIn("COMMUTE", vm.interact(a, b))
+        vm.check_net()
 
-        vm2 = FlatCombinatorVM(capacity=64)
-        d3 = vm2.alloc_node(vm2.DUP, aux_tag=7)
-        d4 = vm2.alloc_node(vm2.DUP, aux_tag=9)
-        vm2.connect_ports(d3, 0, d4, 0)
-        self.assertIn("COMMUTE", vm2.interact(d3, d4))
+    def test_erasing_a_self_looped_dup_leaves_an_era_era_pair(self) -> None:
+        """#66: the two new ERAs must be wired to each other, not to the freed DUP."""
+        vm, era, dup = pair(FlatCombinatorVM.ERA, FlatCombinatorVM.DUP, 0, 1)
+        vm.connect_ports(dup, 1, dup, 2)
+        op = vm.interact(era, dup)
+        e1, e2 = (int(x) for x in op[op.index("(") + 1:-1].split(","))
+        self.assertEqual(vm.peer(e1, 0), (e2, 0))
+        self.assertEqual(vm.active_pairs(), [(min(e1, e2), max(e1, e2))])
+        vm.check_net()
 
-    def test_extended_metabolic_valve_pass_and_excise(self) -> None:
-        """Issue #21: VLV node passes under homeostatic tension and excises to FRC when tension > 85.0."""
-        vm_ok = FlatCombinatorVM(capacity=64)
-        anchor = vm_ok.alloc_node(vm_ok.CON)
-        vlv = vm_ok.alloc_node(vm_ok.VLV)
-        peer = vm_ok.alloc_node(vm_ok.CON)
-        vm_ok.connect_ports(vlv, 0, peer, 0)
-        vm_ok.connect_ports(vlv, 1, anchor, 1)
-        op_ok = vm_ok.interact(vlv, peer, tension=24.0, metabolic_budget=50.0)
-        self.assertEqual(op_ok, "VLV_PASS")
-        self.assertEqual(int(vm_ok.ports[peer, 0]), anchor)
+    def test_commuting_a_self_looped_con_wires_its_copies_together(self) -> None:
+        """#66: CON-DUP with the CON's aux ports looped together."""
+        vm, con, dup = pair(FlatCombinatorVM.CON, FlatCombinatorVM.DUP, 0, 1)
+        vm.connect_ports(con, 1, con, 2)
+        op = vm.interact(con, dup)
+        a1, a2, _b1, _b2 = (int(x) for x in op[op.index("(") + 1:-1].split(","))
+        self.assertEqual(vm.peer(a1, 0), (a2, 0))
+        vm.check_net()
 
-        vm_hi = FlatCombinatorVM(capacity=64)
-        vlv_hi = vm_hi.alloc_node(vm_hi.VLV)
-        peer_hi = vm_hi.alloc_node(vm_hi.CON)
-        vm_hi.connect_ports(vlv_hi, 0, peer_hi, 0)
-        op_hi = vm_hi.interact(vlv_hi, peer_hi, tension=92.5, metabolic_budget=50.0)
-        self.assertEqual(op_hi, "VLV_EXCISE_TO_FRC")
-        self.assertEqual(int(vm_hi.tags[vlv_hi]), vm_hi.FRC)
+    def test_multi_edges_are_kept_apart(self) -> None:
+        """#52: crossed and parallel double wires are different nets and stay different."""
+        def net(crossed):
+            vm, a, b = pair(FlatCombinatorVM.CON, FlatCombinatorVM.CON)
+            x, y = vm.alloc_node(vm.DUP, aux_tag=1), vm.alloc_node(vm.DUP, aux_tag=2)
+            vm.connect_ports(x, 0, y, 0)
+            vm.connect_ports(a, 1, x, 1)
+            vm.connect_ports(a, 2, x, 2)
+            vm.connect_ports(b, 1, y, 2 if crossed else 1)
+            vm.connect_ports(b, 2, y, 1 if crossed else 2)
+            return vm, a, b, x, y
 
-    def test_bcp_roundtrip_and_graph_committed_execution_hash(self) -> None:
-        """
-        Issues #21 & #29 falsifier:
-        1. BCP serialization round-trips the full graph state byte-for-byte.
-        2. Two distinct graphs undergoing identical `(op, a, b)` step tuples MUST
-           produce different `trace_commitment_sha256` digests because the graph
-           state itself is included in the commitment.
-        """
-        vm_a = FlatCombinatorVM(capacity=64)
-        a0 = vm_a.alloc_node(vm_a.CON, p0=1, p1=10, p2=20)
-        a1 = vm_a.alloc_node(vm_a.CON, p0=a0, p1=30, p2=40)
-        vm_a.snapshot_initial_graph()
-        blob_a = serialize_graph_bcp(vm_a)
-        restored_a = deserialize_graph_bcp(blob_a)
-        self.assertEqual(serialize_graph_bcp(restored_a), blob_a)
-        self.assertEqual(graph_state_sha256(restored_a), graph_state_sha256(vm_a))
+        (p, pa, pb, px, py), (c, ca, cb, cx, cy) = net(False), net(True)
+        self.assertNotEqual(serialize_graph_bcp(p), serialize_graph_bcp(c))
+        p.interact(pa, pb)
+        c.interact(ca, cb)
+        self.assertEqual(p.peer(px, 1), (py, 1))
+        self.assertEqual(c.peer(cx, 1), (cy, 2))
 
-        # Graph B has the same node indices (0, 1) and tags (CON, CON), so interact(0, 1)
-        # produces the exact same step log [{"step": 1, "op": "ANNIHILATE...", "a": 0, "b": 1}],
-        # but different in-arena auxiliary references (p1=59, p2=58).
-        vm_b = FlatCombinatorVM(capacity=64)
-        b0 = vm_b.alloc_node(vm_b.CON, p0=1, p1=59, p2=58)
-        b1 = vm_b.alloc_node(vm_b.CON, p0=b0, p1=57, p2=56)
-        vm_b.snapshot_initial_graph()
+    def test_non_active_pairs_are_rejected_without_change(self) -> None:
+        vm, a, b = pair(FlatCombinatorVM.CON, FlatCombinatorVM.DUP)
+        c = vm.alloc_node(vm.CON)
+        vm.connect_ports(c, 0, a, 1)  # principal to aux: not active
+        before = serialize_graph_bcp(vm)
+        for x, y in ((a, c), (c, a), (a, a), (a, 63), (b, c)):
+            with self.subTest(pair=(x, y)):
+                with self.assertRaises(ValueError):
+                    vm.interact(x, y)
+        self.assertEqual(serialize_graph_bcp(vm), before)
+        self.assertEqual(vm.reductions, 0)
+        self.assertIsNone(vm._initial_bcp)
 
-        vm_a.interact(a0, a1)
-        vm_b.interact(b0, b1)
+    def test_frc_has_no_rule(self) -> None:
+        vm, v, c = pair(FlatCombinatorVM.VLV, FlatCombinatorVM.CON)
+        vm.interact(v, c, tension=92.5)
+        era = vm.peer(c, 0)[0]
+        self.assertEqual(int(vm.tags[era]), vm.ERA)
+        self.assertEqual(int(vm.tags[v]), vm.FRC)
+        self.assertIsNone(vm.peer(v, 0))
+        self.assertEqual(vm.active_pairs(), [tuple(sorted((era, c)))])
 
-        rec_a = vm_a.compute_execution_commitment()
-        rec_b = vm_b.compute_execution_commitment()
-        self.assertEqual(rec_a["steps"], rec_b["steps"])
-        self.assertNotEqual(rec_a["initial_graph_sha256"], rec_b["initial_graph_sha256"])
-        self.assertNotEqual(rec_a["trace_commitment_sha256"], rec_b["trace_commitment_sha256"])
+    def test_valve_pass_hands_the_output_wire_to_the_peer(self) -> None:
+        vm, v, c = pair(FlatCombinatorVM.VLV, FlatCombinatorVM.CON)
+        anchor = vm.alloc_node(vm.CON)
+        vm.connect_ports(v, 1, anchor, 1)
+        self.assertEqual(vm.interact(v, c, tension=24.0, metabolic_budget=50.0), "VLV_PASS")
+        self.assertEqual(vm.peer(c, 0), (anchor, 1))
+        vm.check_net()
 
-    def test_self_test_entrypoint(self) -> None:
+    def test_ports_beyond_arity_cannot_be_wired(self) -> None:
+        vm = FlatCombinatorVM(capacity=8)
+        e, c = vm.alloc_node(vm.ERA), vm.alloc_node(vm.CON)
+        with self.assertRaises(ValueError):
+            vm.connect_ports(e, 1, c, 1)
+
+
+class TestRecords(unittest.TestCase):
+    def test_graph_is_sealed_after_snapshot(self) -> None:
+        vm, a, b = pair(FlatCombinatorVM.CON, FlatCombinatorVM.CON)
+        vm.snapshot_initial_graph()
+        for edit in (lambda: vm.alloc_node(vm.CON), lambda: vm.connect_ports(a, 1, b, 1), lambda: vm.free_node(a)):
+            with self.assertRaises(RuntimeError):
+                edit()
+
+    def test_same_steps_on_different_graphs_commit_differently(self) -> None:
+        """#21/#29: the commitment covers the graphs, not just the step list."""
+        def run(crossed):
+            vm, a, b = pair(FlatCombinatorVM.CON, FlatCombinatorVM.CON)
+            vm.connect_ports(a, 1, b, 2 if crossed else 1)
+            vm.interact(a, b)
+            return vm.compute_execution_commitment()
+
+        x, y = run(False), run(True)
+        self.assertEqual(x["steps"], y["steps"])
+        self.assertNotEqual(x["initial_graph_sha256"], y["initial_graph_sha256"])
+        self.assertNotEqual(x["trace_commitment_sha256"], y["trace_commitment_sha256"])
+
+    def test_self_test_reaches_normal_form_and_replays(self) -> None:
         res = run_combinator_self_test()
-        self.assertEqual(res["reductions_executed"], 3)
+        self.assertEqual(res["status"], "PASS")
+        self.assertEqual(res["replay"], "PASS")
+        self.assertEqual(res["reductions_executed"], 6)
         self.assertTrue(res["trace_commitment_sha256"].startswith("0x"))
+
+    def test_replay_verifier_catches_tampering(self) -> None:
+        vm, a, b = pair(FlatCombinatorVM.CON, FlatCombinatorVM.DUP)
+        e = vm.alloc_node(vm.ERA)
+        vm.connect_ports(a, 1, e, 0)
+        initial = vm.snapshot_initial_graph()
+        vm.normalize()
+        record = vm.compute_execution_commitment()
+        self.assertEqual(verify_execution_record(initial, record)["status"], "PASS")
+
+        bad_op = {**record, "steps": [dict(s) for s in record["steps"]]}
+        bad_op["steps"][0]["op"] = "ANNIHILATE(tagA=1,tagB=2,label=0)"
+        self.assertEqual(verify_execution_record(initial, bad_op)["status"], "FAIL")
+
+        bad_pair = {**record, "steps": [dict(s) for s in record["steps"]]}
+        bad_pair["steps"][0]["b"] = e
+        self.assertEqual(verify_execution_record(initial, bad_pair)["status"], "FAIL")
+
+        dropped = {**record, "steps": record["steps"][:-1]}
+        self.assertEqual(verify_execution_record(initial, dropped)["status"], "FAIL")
+
+        other = pair(FlatCombinatorVM.CON, FlatCombinatorVM.CON)[0]
+        self.assertEqual(verify_execution_record(serialize_graph_bcp(other), record)["status"], "FAIL")
+
+    def test_bcp_roundtrip_preserves_continuation(self) -> None:
+        """A snapshot taken mid-run fixes every later step (lowest-free-slot allocation).
+
+        This net never reaches normal form (the CON-DUP pair keeps copying
+        itself), so both runs stop after the same 12 steps.
+        """
+        vm = FlatCombinatorVM(capacity=256)
+        nodes = [vm.alloc_node(t, aux_tag=l) for t, l in ((1, 0), (2, 1), (1, 0), (2, 2), (0, 0), (2, 1))]
+        vm.connect_ports(nodes[0], 0, nodes[1], 0)
+        vm.connect_ports(nodes[2], 0, nodes[3], 0)
+        vm.connect_ports(nodes[4], 0, nodes[5], 0)
+        vm.connect_ports(nodes[0], 1, nodes[3], 1)
+        vm.connect_ports(nodes[1], 2, nodes[2], 2)
+        vm.interact(nodes[0], nodes[1])
+        mid = serialize_graph_bcp(vm)
+        resumed = deserialize_graph_bcp(mid)
+        self.assertEqual(serialize_graph_bcp(resumed), mid)
+        self.assertEqual(graph_state_sha256(resumed), graph_state_sha256(vm))
+        self.assertEqual(vm.normalize(max_steps=12), 12)
+        self.assertEqual(resumed.normalize(max_steps=12), 12)
+        self.assertEqual(serialize_graph_bcp(resumed), serialize_graph_bcp(vm))
+        self.assertEqual(replay_execution(mid, resumed.trace_log).trace_log, resumed.trace_log)
 
 
 if __name__ == "__main__":
