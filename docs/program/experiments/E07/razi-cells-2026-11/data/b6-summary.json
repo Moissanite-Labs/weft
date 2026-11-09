@@ -1,0 +1,223 @@
+{
+ "calls": 132,
+ "improvements": 17,
+ "imp_per_100_calls": 12.88,
+ "done": 3,
+ "bad_replies": 0,
+ "wall_s": 555.0,
+ "par": 8,
+ "peak_rss_mb": 913.4,
+ "peak_cpu_pct": 187.8,
+ "mean_cpu_pct": 30.9,
+ "cells": {
+  "primes": {
+   "rc": 0,
+   "secs": 511.1,
+   "steps": 26,
+   "errors": 0,
+   "acts": {
+    "sh": 4,
+    "assay": 1,
+    "try": 2,
+    "done": 1,
+    "variants": 7
+   },
+   "splits": 0,
+   "ties": 0,
+   "bad_replies": 0,
+   "assays": 1,
+   "variants": 7,
+   "tries": 2,
+   "improvements": 1,
+   "gain": 0.21,
+   "apoptosis": false,
+   "calls": 25,
+   "routes": {
+    "openai:gpt-6-astra": 15
+   },
+   "done": true
+  },
+  "sortints": {
+   "rc": 1,
+   "secs": 168.1,
+   "steps": 10,
+   "errors": 3,
+   "acts": {
+    "sh": 2,
+    "assay": 1,
+    "try": 1
+   },
+   "splits": 0,
+   "ties": 0,
+   "bad_replies": 0,
+   "assays": 1,
+   "variants": 0,
+   "tries": 1,
+   "improvements": 0,
+   "gain": 0,
+   "apoptosis": true,
+   "calls": 11,
+   "routes": {
+    "openai:gpt-6-astra": 4
+   },
+   "done": false
+  },
+  "wordfreq": {
+   "rc": 1,
+   "secs": 337.4,
+   "steps": 23,
+   "errors": 3,
+   "acts": {
+    "sh": 1,
+    "assay": 1,
+    "variants": 5,
+    "try": 1
+   },
+   "splits": 0,
+   "ties": 0,
+   "bad_replies": 0,
+   "assays": 1,
+   "variants": 5,
+   "tries": 1,
+   "improvements": 4,
+   "gain": 2.297,
+   "apoptosis": true,
+   "calls": 16,
+   "routes": {
+    "openai:gpt-6-astra": 8
+   },
+   "done": false
+  },
+  "compress": {
+   "rc": 1,
+   "secs": 391.7,
+   "steps": 13,
+   "errors": 3,
+   "acts": {
+    "sh": 2,
+    "assay": 1,
+    "try": 2
+   },
+   "splits": 0,
+   "ties": 0,
+   "bad_replies": 0,
+   "assays": 1,
+   "variants": 0,
+   "tries": 2,
+   "improvements": 1,
+   "gain": 0.373,
+   "apoptosis": true,
+   "calls": 20,
+   "routes": {
+    "openai:gpt-6-astra": 5
+   },
+   "done": false
+  },
+  "fibmod": {
+   "rc": 1,
+   "secs": 326.4,
+   "steps": 26,
+   "errors": 3,
+   "acts": {
+    "write": 2,
+    "sh": 3,
+    "assay": 1,
+    "variants": 5
+   },
+   "splits": 0,
+   "ties": 0,
+   "bad_replies": 0,
+   "assays": 1,
+   "variants": 5,
+   "tries": 0,
+   "improvements": 5,
+   "gain": 26.911,
+   "apoptosis": true,
+   "calls": 14,
+   "routes": {
+    "openai:gpt-6-astra": 11
+   },
+   "done": false
+  },
+  "lcs": {
+   "rc": 0,
+   "secs": 409.0,
+   "steps": 27,
+   "errors": 0,
+   "acts": {
+    "sh": 4,
+    "assay": 1,
+    "done": 1,
+    "variants": 8,
+    "write": 1
+   },
+   "splits": 0,
+   "ties": 0,
+   "bad_replies": 0,
+   "assays": 1,
+   "variants": 8,
+   "tries": 0,
+   "improvements": 3,
+   "gain": 0.642,
+   "apoptosis": false,
+   "calls": 15,
+   "routes": {
+    "openai:gpt-6-astra": 15
+   },
+   "done": true
+  },
+  "csvsum": {
+   "rc": 0,
+   "secs": 553.1,
+   "steps": 22,
+   "errors": 1,
+   "acts": {
+    "sh": 7,
+    "assay": 2,
+    "try": 2,
+    "done": 1,
+    "variants": 1,
+    "write": 1
+   },
+   "splits": 0,
+   "ties": 0,
+   "bad_replies": 0,
+   "assays": 2,
+   "variants": 1,
+   "tries": 2,
+   "improvements": 2,
+   "gain": 10.305,
+   "apoptosis": false,
+   "calls": 25,
+   "routes": {
+    "openai:gpt-6-astra": 14
+   },
+   "done": true
+  },
+  "maze": {
+   "rc": 1,
+   "secs": 164.8,
+   "steps": 10,
+   "errors": 3,
+   "acts": {
+    "sh": 1,
+    "assay": 1,
+    "variants": 1
+   },
+   "splits": 0,
+   "ties": 0,
+   "bad_replies": 0,
+   "assays": 1,
+   "variants": 1,
+   "tries": 0,
+   "improvements": 1,
+   "gain": 15.886,
+   "apoptosis": true,
+   "calls": 6,
+   "routes": {
+    "openai:gpt-6-astra": 3
+   },
+   "done": false
+  }
+ }
+}

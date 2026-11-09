@@ -1,0 +1,234 @@
+{
+ "calls": 118,
+ "improvements": 13,
+ "imp_per_100_calls": 11.02,
+ "done": 8,
+ "bad_replies": 0,
+ "wall_s": 597.1,
+ "par": 8,
+ "peak_rss_mb": 1378.7,
+ "peak_cpu_pct": 289.2,
+ "mean_cpu_pct": 69.5,
+ "cells": {
+  "primes": {
+   "rc": 0,
+   "secs": 463.8,
+   "steps": 21,
+   "errors": 0,
+   "acts": {
+    "done": 1,
+    "remember": 1,
+    "assay": 1,
+    "sh": 7,
+    "write": 2,
+    "variants": 3
+   },
+   "splits": 0,
+   "ties": 0,
+   "bad_replies": 0,
+   "assays": 1,
+   "variants": 3,
+   "tries": 0,
+   "improvements": 2,
+   "gain": 0.567,
+   "apoptosis": false,
+   "calls": 15,
+   "routes": {
+    "anthropic:claude-fable-5-1": 15
+   },
+   "done": true
+  },
+  "sortints": {
+   "rc": 0,
+   "secs": 286.5,
+   "steps": 19,
+   "errors": 0,
+   "acts": {
+    "done": 1,
+    "remember": 1,
+    "assay": 1,
+    "sh": 10,
+    "variants": 2
+   },
+   "splits": 0,
+   "ties": 0,
+   "bad_replies": 0,
+   "assays": 1,
+   "variants": 2,
+   "tries": 0,
+   "improvements": 1,
+   "gain": 1.421,
+   "apoptosis": false,
+   "calls": 15,
+   "routes": {
+    "anthropic:claude-fable-5-1": 15
+   },
+   "done": true
+  },
+  "wordfreq": {
+   "rc": 0,
+   "secs": 394.9,
+   "steps": 19,
+   "errors": 0,
+   "acts": {
+    "done": 1,
+    "remember": 2,
+    "assay": 1,
+    "sh": 6,
+    "variants": 3
+   },
+   "splits": 0,
+   "ties": 0,
+   "bad_replies": 0,
+   "assays": 1,
+   "variants": 3,
+   "tries": 0,
+   "improvements": 2,
+   "gain": 5.199,
+   "apoptosis": false,
+   "calls": 13,
+   "routes": {
+    "anthropic:claude-fable-5-1": 13
+   },
+   "done": true
+  },
+  "compress": {
+   "rc": 0,
+   "secs": 580.2,
+   "steps": 19,
+   "errors": 0,
+   "acts": {
+    "done": 1,
+    "assay": 2,
+    "sh": 8,
+    "write": 2,
+    "variants": 2
+   },
+   "splits": 0,
+   "ties": 0,
+   "bad_replies": 0,
+   "assays": 2,
+   "variants": 2,
+   "tries": 0,
+   "improvements": 0,
+   "gain": 0,
+   "apoptosis": false,
+   "calls": 15,
+   "routes": {
+    "anthropic:claude-fable-5-1": 15
+   },
+   "done": true
+  },
+  "fibmod": {
+   "rc": 0,
+   "secs": 385.2,
+   "steps": 21,
+   "errors": 0,
+   "acts": {
+    "done": 1,
+    "remember": 2,
+    "assay": 1,
+    "sh": 5,
+    "write": 3,
+    "variants": 3
+   },
+   "splits": 0,
+   "ties": 0,
+   "bad_replies": 0,
+   "assays": 1,
+   "variants": 3,
+   "tries": 0,
+   "improvements": 2,
+   "gain": 41.855,
+   "apoptosis": false,
+   "calls": 15,
+   "routes": {
+    "anthropic:claude-fable-5-1": 15
+   },
+   "done": true
+  },
+  "lcs": {
+   "rc": 0,
+   "secs": 595.7,
+   "steps": 24,
+   "errors": 0,
+   "acts": {
+    "done": 1,
+    "assay": 1,
+    "sh": 6,
+    "write": 2,
+    "variants": 5
+   },
+   "splits": 0,
+   "ties": 0,
+   "bad_replies": 0,
+   "assays": 1,
+   "variants": 5,
+   "tries": 0,
+   "improvements": 3,
+   "gain": 3.986,
+   "apoptosis": false,
+   "calls": 15,
+   "routes": {
+    "anthropic:claude-fable-5-1": 15
+   },
+   "done": true
+  },
+  "csvsum": {
+   "rc": 0,
+   "secs": 403.8,
+   "steps": 18,
+   "errors": 0,
+   "acts": {
+    "done": 1,
+    "remember": 1,
+    "assay": 1,
+    "sh": 7,
+    "write": 4,
+    "variants": 1
+   },
+   "splits": 0,
+   "ties": 0,
+   "bad_replies": 0,
+   "assays": 1,
+   "variants": 1,
+   "tries": 0,
+   "improvements": 1,
+   "gain": 0.596,
+   "apoptosis": false,
+   "calls": 15,
+   "routes": {
+    "anthropic:claude-fable-5-1": 15
+   },
+   "done": true
+  },
+  "maze": {
+   "rc": 0,
+   "secs": 410.4,
+   "steps": 20,
+   "errors": 0,
+   "acts": {
+    "done": 1,
+    "remember": 1,
+    "assay": 1,
+    "write": 4,
+    "sh": 6,
+    "variants": 2
+   },
+   "splits": 0,
+   "ties": 0,
+   "bad_replies": 0,
+   "assays": 1,
+   "variants": 2,
+   "tries": 0,
+   "improvements": 2,
+   "gain": 7.884,
+   "apoptosis": false,
+   "calls": 15,
+   "routes": {
+    "anthropic:claude-fable-5-1": 15
+   },
+   "done": true
+  }
+ }
+}
