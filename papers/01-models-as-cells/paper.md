@@ -5,7 +5,7 @@ number: 1
 slug: models-as-cells
 version: "1.1"
 date: 2026-11-09
-authors: "ML Weft contributors, Moissanite Labs"
+authors: "Ahraz Arifuddin"
 status: "Runs and tested. Small-scale CPU experiments. Apple MPS results not yet measured."
 commit: a18fc40e31e71325aec507258fb80bb26f125c7c
 abstract: |
