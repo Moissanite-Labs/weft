@@ -13,7 +13,10 @@
 // it, and nothing moves under prefers-reduced-motion.
 //
 // A small panel shows the reading, explains it, and lets the visitor switch it off.
-// It runs on every page with a few passages to read; the module starts itself.
+// It runs on every page with a few passages to read; the module starts itself,
+// unless a page calls holdAttention() first and later starts it with its own
+// options. The paper pages do that: they keep the reading score but swap the
+// motion and this panel for condensing prose (condense.js).
 // For review and tuning: ?attn adds raw numbers to the panel, ?restless=0.7 pins the score.
 
 const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
@@ -30,10 +33,17 @@ const BLOCKS = "main :is(p, li)";
 // Never read or rippled: the navy heroes, code, math, figures, tables, forms, demos and navigation.
 const NOT_TEXT = ".hero, .paper-hero, pre, code, button, label, form, .demo, figure, table, nav, aside, .crumbs";
 const NAV = ".site-header .nav a, .site-header .icon-btn, .btn, .card h3 a, .paper-toc a, .site-footer a";
-let started = false;
+let started = false, held = false;
 
-export function setupAttention() {
-  if (started) return;
+// Stop the module from starting itself, so a page can start it with options.
+export function holdAttention() {
+  held = true;
+}
+
+// Options: motion (default true) moves words, links and waves; panel (default true)
+// shows the reading weave panel. Returns a small handle for pages that build on the score.
+export function setupAttention({ motion = true, panel = true } = {}) {
+  if (started) return null;
   started = true;
   const params = new URLSearchParams(location.search);
   const pinned = params.has("restless") ? clamp01(parseFloat(params.get("restless")) || 0) : null;
@@ -47,7 +57,7 @@ export function setupAttention() {
       return { el, order, words, need: Math.max(1.2, words / READ_WPS), dwell: 0, seen: false, read: false, skipped: false, visible: false, spans: null };
     })
     .filter((b) => b.words >= 4);
-  if (blocks.length < 3) return; // nothing much to read here
+  if (blocks.length < 3) return null; // nothing much to read here
   blocks.forEach((b) => b.el.classList.add("attn-block"));
   const byEl = new Map(blocks.map((b) => [b.el, b]));
   const io = new IntersectionObserver((entries) => {
@@ -195,7 +205,7 @@ export function setupAttention() {
   });
 
   /* ---------- Links and buttons ---------- */
-  const navs = [...document.querySelectorAll(NAV)].map((el) => ({ el, x: 0, y: 0, ox: 0, oy: 0, hover: 0, fixed: false }));
+  const navs = (motion ? [...document.querySelectorAll(NAV)] : []).map((el) => ({ el, x: 0, y: 0, ox: 0, oy: 0, hover: 0, fixed: false }));
   navs.forEach((n) => {
     n.el.classList.add("attn-nav");
     n.el.addEventListener("pointerenter", () => (n.hover = 0.0001));
@@ -206,7 +216,7 @@ export function setupAttention() {
   const overlay = document.createElement("canvas");
   overlay.className = "attn-overlay";
   overlay.setAttribute("aria-hidden", "true");
-  document.body.append(overlay);
+  if (motion) document.body.append(overlay);
   const octx = overlay.getContext("2d");
   let ow = 0, oh = 0, odpr = 1, overlayOn = false;
   const sizeOverlay = () => {
@@ -228,9 +238,9 @@ export function setupAttention() {
     get: (k) => { try { return localStorage.getItem(k); } catch { return null; } },
     set: (k, v) => { try { v === null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch { /* not kept */ } },
   };
-  let off = store.get("weft-attn-off") === "1";
+  let off = panel && store.get("weft-attn-off") === "1";
   const debug = params.has("attn");
-  const ui = (() => {
+  const ui = !panel ? { update() {} } : (() => {
     const icon = {
       help: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 1 1 3.4 2.3c-.7.3-1 .8-1 1.5v.6"/><circle cx="12" cy="16.9" r=".6" fill="currentColor"/></svg>',
       min: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 12h12"/></svg>',
@@ -425,7 +435,7 @@ export function setupAttention() {
     attention.restless = restless;
     ui.update();
 
-    if (reducedMotion.matches) return;
+    if (!motion || reducedMotion.matches) return;
     const r = restless;
     clock += dt * (0.6 + 0.8 * r);
     churn = 0.9 * smooth(0.22, 1, r);
@@ -544,6 +554,23 @@ export function setupAttention() {
   // Keep the woven threads, but skip all motion under reduced motion.
   reducedMotion.addEventListener("change", () => { if (reducedMotion.matches) still(); });
   requestAnimationFrame(frame);
+
+  return {
+    blocks: blocks.map((b) => b.el),
+    stats,
+    // Settle the score (never raise it), e.g. when the visitor undoes what the score has done.
+    calm(to = 0) {
+      if (pinned === null) restless = attention.restless = Math.min(restless, clamp01(to));
+    },
+    // A block's text changed: re-count its words so the time it needs stays fair.
+    recount(el) {
+      const b = byEl.get(el);
+      if (!b) return;
+      b.words = (el.textContent.match(/\S+/g) || []).length;
+      b.need = Math.max(1.2, b.words / READ_WPS);
+    },
+  };
 }
 
-setupAttention();
+// Module scripts run in one go, so a page that imports this can hold it before it starts.
+queueMicrotask(() => { if (!held) setupAttention(); });

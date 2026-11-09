@@ -518,3 +518,32 @@ html.attn-off .attn-block.attn-read::before { display: none; }
   .attn-block { filter: none !important; }
   .attn-block.attn-read::before { display: none; }
 }
+
+/* ---------- Condensing prose: skimming a paper squeezes its writing (condense.js) ---------- */
+.cx-w { transition: color 0.35s, opacity 0.35s, max-width 0.5s cubic-bezier(.4, 0, .2, 1); }
+.cx-strike { color: #e08f7a; text-decoration: line-through; text-decoration-thickness: 1.5px; }
+.cx-box { display: inline-block; white-space: pre; overflow: hidden; vertical-align: top; }
+.cx-gone { max-width: 0 !important; opacity: 0; }
+.cx-new { color: var(--gold-flat); }
+.cx-new.cx-inked { color: inherit; transition: color 1.1s; }
+.cx-ladder { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; margin: 2px 0 9px; }
+.cx-rung {
+  min-height: 28px; padding: 0 4px; border-radius: var(--radius-sm); cursor: pointer;
+  border: 1px solid var(--line); background: transparent; color: var(--muted); font: inherit; font-size: 0.78rem;
+}
+.cx-rung:hover, .cx-rung:focus-visible { color: var(--ink); border-color: var(--gold-flat); }
+.cx-rung.cx-past { color: var(--ink-2); background: var(--surface-2); }
+.cx-rung[aria-pressed="true"] { color: #1a1408; background: var(--gold-flat); border-color: var(--gold-flat); font-weight: 600; }
+.cx-ui .attn-dock { position: relative; }
+.cx-badge {
+  position: absolute; top: -4px; right: -4px; min-width: 18px; height: 18px; border-radius: 9px;
+  display: grid; place-items: center; font: 700 0.68rem/1 var(--font-body); color: #1a1408; background: var(--gold-flat);
+}
+.cx-squeezed .attn-panel, .cx-squeezed .attn-dock { animation: cx-squeeze 0.7s cubic-bezier(.3, .7, .3, 1); }
+@keyframes cx-squeeze { 30% { transform: scaleX(0.94); box-shadow: 0 0 0 3px rgb(217 199 160 / 0.45); } }
+html.cx-off .attn-dock { color: var(--muted); }
+@media (prefers-reduced-motion: reduce) {
+  .cx-w, .cx-new.cx-inked { transition: none; }
+  .cx-squeezed .attn-panel, .cx-squeezed .attn-dock { animation: none; }
+}
+@media print { .cx-ui { display: none !important; } }
