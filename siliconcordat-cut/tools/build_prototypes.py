@@ -7,6 +7,7 @@ OUT = pathlib.Path("prototypes")
 # Prototype hrefs (production hrefs in comments / SPEC):
 HOME, ML, PRIN = "landing.html", "ml.html", "ml-principles.html"   # prod: /  /ml  /ml/principles/
 WEFT = "family-weft.html"   # prod: /weft  (in the prototype, Weft links open the wayfinding annotation)
+MANIFESTO_GH = "https://github.com/Moissanite-Labs/siliconcordat"
 
 MARK = '''<svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M16 8.81 L20.23 11.25 L20.23 20.75 L16 23.19 L11.77 20.75 L11.77 11.25 Z" fill="#e6d2a8"/><path d="M12 6.5 L20.23 11.25 L20.23 20.75 L12 25.5 L3.77 20.75 L3.77 11.25 Z" fill="none" stroke="#c4844a" stroke-width="2"/><path d="M20 6.5 L28.23 11.25 L28.23 20.75 L20 25.5 L11.77 20.75 L11.77 11.25 Z" fill="none" stroke="#9db0c4" stroke-width="2"/></svg>'''
 
@@ -118,6 +119,7 @@ def footer(current):
     </div>
     <div class="footer-base">
       <span class="meta">Moissanite Labs</span>
+      <a class="meta" href="{MANIFESTO_GH}">github.com/Moissanite-Labs/siliconcordat{EXT}</a>
       <span class="meta">siliconcordat.com</span>
     </div>
   </div>
