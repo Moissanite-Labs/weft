@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using these metadata. To cite a paper, use the citation on its page at https://w3ft.org/papers/."
+type: software
+title: "ML Weft"
+abstract: >-
+  An open research program on models that keep adapting after deployment, under limits that a program can verify:
+  bounded cells with a frozen core and a commit rule, hashed message packets, a serialised graph language with
+  committed execution records, and the Eido design language.
+authors:
+  - family-names: Arifuddin
+    given-names: Ahraz
+    affiliation: Moissanite Labs
+repository-code: "https://github.com/Moissanite-Labs/weft"
+url: "https://w3ft.org"
+license: Apache-2.0
+keywords:
+  - adaptive models
+  - AI safety
+  - verification
+  - continual learning
+  - interaction combinators

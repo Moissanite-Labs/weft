@@ -124,6 +124,8 @@ jobs:
           sudo dpkg -i "$RUNNER_TEMP/$PANDOC_DEB"
           pandoc --version | head -1
           python3 -m pip install pyyaml
+      - name: Zenodo and citation metadata agree, and every paper has a PDF
+        run: python3 scripts/zenodo_metadata.py --check
       - name: Paper HTML is current and PDFs were built from current sources
         run: python3 scripts/build_papers.py --check
 

@@ -17,7 +17,7 @@ The complete source review (#49) extends this into a [component-by-component pha
 
 The other repositories remain bridges while hardware and society catch up. This program does not dissolve them, replace them, or apply Weft to them immediately. An organization around Weft may come later. It is not part of this phase.
 
-No public posts, outreach, marketing copy, benchmark write-ups, or Zenodo records are part of this program until that restriction is lifted. Do not file Weft material into any other repository. This repository is the single source of truth.
+No public posts, outreach, marketing copy, benchmark write-ups, or Zenodo records are part of this program until that restriction is lifted. (2026-11-09: the owner lifted it for Zenodo records of the software and Papers 0–2, once the repository is public. See [Releasing](releasing.md).) Do not file Weft material into any other repository. This repository is the single source of truth.
 
 ## Workstreams
 
