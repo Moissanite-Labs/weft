@@ -60,7 +60,7 @@ function setupLoom() {
     };
     metallic();
   };
-  // Brushed-metal strokes: the colour varies along each thread, never on text.
+  // Liquid-metal strokes: the colour varies along each thread, never on text.
   const metallic = () => {
     if (!w) return;
     const sheen = (stops) => {
@@ -68,7 +68,7 @@ function setupLoom() {
       stops.forEach(([o, c]) => g.addColorStop(o, c));
       return g;
     };
-    colors.a = sheen([[0, "#7f8ba0"], [0.18, "#dfe5ee"], [0.36, "#9aa6b9"], [0.55, "#f4f7fb"], [0.74, "#8d99ad"], [1, "#d3dae5"]]);
+    colors.a = sheen([[0, "#35708a"], [0.18, "#a1d3e4"], [0.36, "#4096b2"], [0.55, "#cfe8f3"], [0.74, "#176886"], [1, "#74bdd4"]]);
     colors.b = sheen([[0, "#b8862b"], [0.25, "#f6dc85"], [0.45, "#d4af37"], [0.62, "#fff1b8"], [0.82, "#b8862b"], [1, "#e8c45a"]]);
   };
 

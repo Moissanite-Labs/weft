@@ -2,11 +2,11 @@
    from papers/<nn-slug>/paper.md via scripts/build_papers.py. */
 
 .crumbs { display: flex; gap: 8px; align-items: center; font-size: 0.88rem; color: var(--muted); margin-bottom: 18px; }
-.crumbs a { color: var(--muted); }
+.crumbs a { color: var(--link); }
 
 .paper-hero { border-bottom: 1px solid var(--line); background:
-  radial-gradient(120% 140% at 100% 0%, rgb(212 175 55 / 0.07) 0%, transparent 55%),
-  radial-gradient(90% 120% at 0% 0%, rgb(202 211 224 / 0.08) 0%, transparent 60%),
+  radial-gradient(120% 140% at 100% 0%, rgb(212 175 55 / 0.06) 0%, transparent 55%),
+  radial-gradient(90% 120% at 0% 0%, rgb(17 74 99 / 0.38) 0%, transparent 62%),
   var(--bg); }
 .paper-hero .wrap { padding-top: clamp(36px, 6vw, 72px); padding-bottom: clamp(32px, 5vw, 56px); }
 .paper-hero .eyebrow { margin-bottom: 12px; }
@@ -40,19 +40,20 @@
 .paper h3 { font-size: 1.2rem; margin: 2em 0 0.6em; scroll-margin-top: 80px; }
 .paper section > h2:first-child { margin-top: 2.2em; }
 .paper p, .paper li { color: var(--ink-2); }
-.paper strong { color: var(--ink); }
+.paper strong { color: var(--strong); }
 .paper ul, .paper ol { padding-left: 1.4em; }
 .paper li { margin: 0.3em 0; }
 .paper a { overflow-wrap: anywhere; }
+.paper code { font-size: 0.9em; }
 
-.abstract { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--gold-flat); border-radius: var(--radius); padding: clamp(18px, 2.4vw, 26px); box-shadow: var(--shadow); }
+.abstract { background: linear-gradient(180deg, var(--surface-2), var(--surface) 160px); border: 1px solid var(--line); border-left: 3px solid var(--gold-flat); border-radius: var(--radius); padding: clamp(18px, 2.4vw, 26px); box-shadow: var(--shadow); }
 .abstract h2 { margin: 0 0 8px !important; font: 600 0.78rem var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
 .abstract p { margin-bottom: 0.8em; }
 .abstract .keywords { font-size: 0.9rem; color: var(--muted); margin: 0; }
 
 /* Math */
-.paper math { font-size: 1.08em; }
-.paper math[display="block"] { display: block math; margin: 1.1em 0; padding: 14px 10px; overflow-x: auto; overflow-y: hidden; background: var(--bg-2); border-radius: var(--radius-sm); }
+.paper math { font-size: 1.08em; color: var(--code-ink); }
+.paper math[display="block"] { display: block math; margin: 1.1em 0; padding: 14px 10px; overflow-x: auto; overflow-y: hidden; background: var(--code-bg); border: 1px solid var(--code-line); border-radius: var(--radius-sm); }
 
 /* Figures: light plates in both themes so plotted colours stay faithful */
 .paper { counter-reset: fig tab; }
@@ -70,7 +71,7 @@
 .paper td[style*="right"], .paper th[style*="right"] { font-variant-numeric: tabular-nums; }
 
 /* Code */
-.paper pre { background: var(--code-bg); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; overflow-x: auto; line-height: 1.6; font-size: 0.86rem; }
+.paper pre { background: var(--code-bg); color: var(--code-ink); border: 1px solid var(--code-line); border-radius: var(--radius); padding: 16px 18px; overflow-x: auto; line-height: 1.6; font-size: 0.86rem; }
 .paper pre code { background: none; border: 0; padding: 0; }
 
 .paper-end { margin-top: 3em; padding-top: 1.5em; border-top: 1px solid var(--line); }
@@ -85,7 +86,7 @@
 .paper-num { font: 700 2.4rem/1 var(--font-display); color: var(--accent); min-width: 2ch; }
 .paper-card h3 { font-size: 1.45rem; margin-bottom: 4px; }
 .paper-card h3 a { color: var(--ink); text-decoration: none; }
-.paper-card h3 a:hover { text-decoration: underline; }
+.paper-card h3 a:hover { color: var(--link-hover); text-decoration: underline; text-decoration-color: var(--gold-flat); }
 .paper-card .sub { font-family: var(--font-display); font-style: italic; color: var(--ink-2); margin-bottom: 10px; }
 .paper-card .meta { font: 0.8rem var(--font-mono); color: var(--muted); margin-bottom: 10px; }
 .paper-card .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }

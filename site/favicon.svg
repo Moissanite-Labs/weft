@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
   <defs>
-    <linearGradient id="c" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="32" y2="32"><stop offset="0" stop-color="#f4f7fb"/><stop offset=".35" stop-color="#aab5c6"/><stop offset=".55" stop-color="#eef2f7"/><stop offset="1" stop-color="#8d99ad"/></linearGradient>
+    <linearGradient id="c" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="32" y2="32"><stop offset="0" stop-color="#cfe8f3"/><stop offset=".35" stop-color="#4096b2"/><stop offset=".55" stop-color="#a1d3e4"/><stop offset="1" stop-color="#35708a"/></linearGradient>
     <linearGradient id="g" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="32" y2="32"><stop offset="0" stop-color="#fbe7a1"/><stop offset=".35" stop-color="#d4af37"/><stop offset=".6" stop-color="#fff3c4"/><stop offset="1" stop-color="#b8862b"/></linearGradient>
   </defs>
   <rect width="32" height="32" rx="8" fill="#060a12"/>
