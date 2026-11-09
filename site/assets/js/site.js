@@ -91,7 +91,7 @@ function setupLoom() {
     const dx = x - pointer.x, dy = base - pointer.y;
     const d2 = dx * dx + dy * dy;
     if (d2 < 40000) y += Math.sign(dy || 1) * 26 * Math.exp(-d2 / (2 * 70 * 70));
-    return y;
+    return y + ripple(x, base);
   };
 
   function draw(t) {
@@ -154,11 +154,222 @@ function setupLoom() {
         ctx.stroke();
       }
     }
+
+    drawWaves(t, lw, halo);
+  }
+
+  /* ---------- Living weave ----------
+     The cloth is a medium. Waves pass through it: rings of oscillation spread
+     from sources and fade as they spread. Where a crest passes, the threads
+     catch the light and the weft ripples a few pixels. The warp never moves:
+     it is the fixed set of checks, and the weft is what changes, within a
+     small, fixed amplitude. A slow breath swells through the cloth.
+
+     The weave takes its mood from the visitor. Calm, smooth movement makes
+     long, slow, cool swells, and the cursor leaves a wake along its heading.
+     Fast, jerky movement makes short, quick, choppy, warmer waves scattered
+     in every direction. A click drops a stone in the pond. The mood rises
+     quickly and settles slowly, like breath after exertion. */
+  const waves = [];
+  let lastT = 0, seedDebt = 0, wakeDebt = 0, breathPhase = 0, swellPhase = 0;
+  const CALM = [214, 236, 234]; // marble teal sheen
+  const HOT = [255, 212, 156]; // champagne heat when agitated
+  const mix = (a, b, k) => `${Math.round(a[0] + (b[0] - a[0]) * k)}, ${Math.round(a[1] + (b[1] - a[1]) * k)}, ${Math.round(a[2] + (b[2] - a[2]) * k)}`;
+  const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
+
+  /* Visitor mood, from how the cursor moves:
+       speed  how fast the pointer travels
+       turn   how fast it changes heading (angular velocity)
+       jolt   how fast that turning changes (angular acceleration): frantic zig-zags score high,
+              a smooth sweep or a steady curve scores low
+     Plus: scrolling stirs the cloth a little, a click drops a stone, and stillness deepens the rest. */
+  const gesture = { x: 0, y: 0, t: 0, heading: 0, omega: 0, has: false };
+  const raw = { speed: 0, turn: 0, jolt: 0 }; // latest readings; they fade while the pointer rests
+  const mood = { speed: 0, turn: 0, jolt: 0, idle: 0, heading: 0 };
+  const readGesture = (x, y, ts) => {
+    if (!gesture.has || ts - gesture.t > 250) {
+      Object.assign(gesture, { x, y, t: ts, omega: 0, has: true });
+      return;
+    }
+    const dx = x - gesture.x, dy = y - gesture.y, dist = Math.hypot(dx, dy);
+    if (dist < 10) return; // heading is noise over tiny steps
+    const dt = Math.max(0.008, (ts - gesture.t) / 1000);
+    const v = dist / dt;
+    const heading = Math.atan2(dy, dx);
+    const dTheta = Math.atan2(Math.sin(heading - gesture.heading), Math.cos(heading - gesture.heading));
+    const omega = gesture.omega * 0.5 + (dTheta / dt) * 0.5; // rad/s, lightly smoothed
+    const alpha = Math.abs(omega - gesture.omega) / dt; // rad/s²
+    Object.assign(gesture, { x, y, t: ts, heading, omega });
+    const moving = clamp01(v / 350); // turning only counts while the cursor really moves
+    raw.speed = Math.max(raw.speed, clamp01(v / 1800));
+    raw.turn = Math.max(raw.turn, clamp01(Math.abs(omega) / 14) * moving);
+    raw.jolt = Math.max(raw.jolt, clamp01(alpha / 1400) * moving);
+    mood.heading = heading;
+    mood.idle = 0;
+  };
+  const settleMood = (dt) => {
+    const fade = Math.exp(-dt / 0.12);
+    for (const k of ["speed", "turn", "jolt"]) {
+      raw[k] *= fade;
+      const rate = raw[k] > mood[k] ? 1 - Math.exp(-dt / 0.18) : 1 - Math.exp(-dt / 2.4);
+      mood[k] += (raw[k] - mood[k]) * rate;
+    }
+    mood.idle += dt;
+  };
+  // Derived feelings, 0..1.
+  const arousal = () => Math.max(mood.speed, mood.turn * 0.8, mood.jolt);
+  const agitation = () => clamp01(mood.jolt * 1.1 + mood.turn * 0.35);
+  const rest = () => clamp01((mood.idle - 4) / 8);
+
+  const center = (k) => k * spacing + spacing / 2;
+  const budget = () => Math.round(7 + 9 * arousal());
+  // On wide screens the CSS mask hides the left ~40% of the loom; start waves where they can be seen.
+  const visibleX = () => (w > 700 ? w * 0.42 : 0);
+
+  // A wave packet: a ring (or, with `heading`, a forward lobe) whose crest band travels outwards.
+  const launch = (x, y, { amp = 0.6, heading = null, force = false } = {}) => {
+    if (!force && waves.length >= budget()) return;
+    const g = agitation(), a = arousal();
+    const lambda = 110 - 62 * g + Math.random() * 20; // calm: long swells; agitated: short chop
+    waves.push({
+      x, y, heading, amp,
+      r: 0,
+      c: 55 + 90 * a + 110 * g + Math.random() * 15, // px per second
+      lambda,
+      len: lambda * (1.6 + Math.random() * 0.8), // how many crests the packet carries
+      phase: Math.random() * Math.PI * 2,
+      fade: 0,
+      age: 0,
+      life: 4 + Math.random() * 3 - 2 * g,
+    });
+  };
+  // Displacement field of all waves at (x, y): roughly -1..1.
+  const field = (x, y) => {
+    let f = 0;
+    for (let n = 0; n < waves.length; n++) {
+      const v = waves[n];
+      const dx = x - v.x, dy = y - v.y;
+      const d = Math.sqrt(dx * dx + dy * dy);
+      const u = v.r - d; // distance behind the wavefront
+      if (u < 0 || u > v.len) continue;
+      let k = v.amp * Math.sin((Math.PI * u) / v.len) * v.fade; // smooth envelope over the packet
+      if (v.heading !== null && d > 1) {
+        const c = (dx * Math.cos(v.heading) + dy * Math.sin(v.heading)) / d;
+        k *= ((1 + c) / 2) ** 3; // a wake: mostly ahead of the cursor
+      }
+      f += k * Math.cos((2 * Math.PI * u) / v.lambda + v.phase);
+    }
+    return f;
+  };
+  // The breath: a very slow, faint swell drifting diagonally through the cloth.
+  const swell = (x, y) => Math.max(0, Math.sin(x * 0.0082 + y * 0.011 - swellPhase)) ** 6;
+
+  // A click drops a stone: a strong ring from that point.
+  const drop = (x, y) => {
+    if (!w) return;
+    launch(x, y, { amp: 1, force: true });
+    raw.speed = Math.max(raw.speed, 0.3);
+  };
+
+  const stepWaves = (dt) => {
+    if (!w || !h || !dt) return;
+    settleMood(dt);
+    const a = arousal(), g = agitation(), r = rest();
+
+    // Breath: a ~12 s cycle at rest that quickens with arousal and slows when the visitor is still.
+    breathPhase += dt * 0.52 * (1 + 1.3 * a) * (1 - 0.4 * r);
+    swellPhase += dt * 0.5 * (1 + 1.5 * a) * (1 - 0.4 * r);
+    const breath = 0.5 + 0.5 * Math.sin(breathPhase);
+    seedDebt += dt * (0.12 + 0.4 * breath) * (1 + 2.5 * a) * (1 - 0.5 * r);
+    while (seedDebt >= 1) {
+      seedDebt -= 1;
+      const x0 = visibleX();
+      launch(x0 + Math.random() * (w - x0), Math.random() * h, { amp: 0.35 + 0.35 * Math.random() + 0.3 * g });
+    }
+
+    // The cursor's wake: smooth movement sends a lobe ahead along its heading; frantic movement scatters rings.
+    if (pointer.x > -1000) {
+      wakeDebt += dt * 5 * mood.speed;
+      while (wakeDebt >= 1) {
+        wakeDebt -= 1;
+        const jitter = 12 * g;
+        launch(pointer.x + (Math.random() - 0.5) * jitter, pointer.y + (Math.random() - 0.5) * jitter, {
+          amp: 0.45 + 0.4 * mood.speed,
+          heading: g < 0.4 ? mood.heading : null,
+        });
+      }
+    }
+
+    const reach = Math.hypot(w, h);
+    for (let n = waves.length - 1; n >= 0; n--) {
+      const v = waves[n];
+      v.age += dt;
+      v.r += v.c * dt * (1 - 0.3 * r);
+      // Fade with age and as the ring spreads its energy over a longer circumference.
+      v.fade = Math.min(1, v.age * 3) * Math.max(0, 1 - v.age / v.life) / Math.sqrt(1 + v.r / 160);
+      if (v.age > v.life || v.r - v.len > reach) waves.splice(n, 1);
+    }
+  };
+  // How far the weft is pushed by the waves at (x, y): a few px at most.
+  const ripple = (x, y) => (waves.length ? field(x, y) * spacing * 0.11 : 0);
+
+  // Light on the threads where crests pass. Drawn last, trimmed so it never lies on a thread
+  // that is under the other one at a crossing.
+  function drawWaves(t, lw, halo) {
+    const a = arousal(), g = agitation();
+    const cols = Math.ceil(w / spacing) + 1, rows = Math.ceil(h / spacing) + 1;
+    const trim = halo * 0.55;
+    const gain = 0.5 * (0.8 + 0.8 * a);
+    const rgb = mix(CALM, HOT, g * 0.85);
+    const x0 = visibleX() - spacing * 2;
+    ctx.save();
+    ctx.globalCompositeOperation = "lighter";
+    ctx.lineCap = "round";
+    ctx.lineWidth = lw * 0.5;
+    const light = (x, y) => clamp01(Math.max(0, field(x, y)) * gain + swell(x, y) * 0.07);
+    // Weft segments between crossings.
+    for (let j = 0; j < rows; j++) {
+      for (let i = 0; i < cols - 1; i++) {
+        const xa = center(i), xb = center(i + 1);
+        if (xb < x0) continue;
+        const xm = (xa + xb) / 2;
+        const b = light(xm, j * spacing + spacing / 2);
+        if (b < 0.015) continue;
+        const s = xa + ((i + j) % 2 === 1 ? trim : 0); // warp lies on top at an odd crossing
+        const e = xb - ((i + 1 + j) % 2 === 1 ? trim : 0);
+        ctx.strokeStyle = `rgba(${rgb}, ${b})`;
+        ctx.beginPath();
+        ctx.moveTo(s, weftY(j, s, t));
+        ctx.lineTo(xm, weftY(j, xm, t));
+        ctx.lineTo(e, weftY(j, e, t));
+        ctx.stroke();
+      }
+    }
+    // Warp segments between rows (the warp lights up but never moves).
+    for (let i = 0; i < cols; i++) {
+      const x = center(i);
+      if (x < x0) continue;
+      for (let j = 0; j < rows - 1; j++) {
+        const ya = weftY(j, x, t), yb = weftY(j + 1, x, t);
+        const b = light(x, (ya + yb) / 2) * 0.8;
+        if (b < 0.015) continue;
+        const s = ya + ((i + j) % 2 === 0 ? trim : 0); // weft lies on top at an even crossing
+        const e = yb - ((i + j + 1) % 2 === 0 ? trim : 0);
+        ctx.strokeStyle = `rgba(${rgb}, ${b})`;
+        ctx.beginPath();
+        ctx.moveTo(x, s);
+        ctx.lineTo(x, e);
+        ctx.stroke();
+      }
+    }
+    ctx.restore();
   }
 
   const frame = (t) => {
     pointer.x += (pointer.tx - pointer.x) * 0.12;
     pointer.y += (pointer.ty - pointer.y) * 0.12;
+    stepWaves(lastT ? Math.min(0.05, (t - lastT) / 1000) : 0);
+    lastT = t;
     draw(t);
     raf = running ? requestAnimationFrame(frame) : 0;
   };
@@ -171,6 +382,8 @@ function setupLoom() {
     running = false;
     if (raf) cancelAnimationFrame(raf);
     raf = 0;
+    lastT = 0;
+    if (reducedMotion.matches) waves.length = 0;
   };
 
   readColors();
@@ -187,8 +400,22 @@ function setupLoom() {
     pointer.tx = ev.clientX - r.left;
     pointer.ty = ev.clientY - r.top;
     if (pointer.x < -1000) { pointer.x = pointer.tx; pointer.y = pointer.ty; }
+    const samples = ev.getCoalescedEvents ? ev.getCoalescedEvents() : [];
+    for (const e of samples.length ? samples : [ev]) readGesture(e.clientX - r.left, e.clientY - r.top, e.timeStamp);
   });
-  hero.addEventListener("pointerleave", () => { pointer.tx = pointer.ty = -1e4; });
+  hero.addEventListener("pointerleave", () => { pointer.tx = pointer.ty = -1e4; gesture.has = false; });
+  hero.addEventListener("pointerdown", (ev) => {
+    const r = canvas.getBoundingClientRect();
+    drop(ev.clientX - r.left, ev.clientY - r.top);
+  });
+  // Scrolling stirs the cloth a little.
+  let lastScroll = { y: window.scrollY, t: performance.now() };
+  window.addEventListener("scroll", () => {
+    const now = performance.now(), dt = Math.max(16, now - lastScroll.t) / 1000;
+    raw.speed = Math.max(raw.speed, Math.min(0.5, Math.abs(window.scrollY - lastScroll.y) / dt / 4000));
+    mood.idle = 0;
+    lastScroll = { y: window.scrollY, t: now };
+  }, { passive: true });
   themeListeners.push(() => { readColors(); draw(performance.now()); });
   start();
 }
