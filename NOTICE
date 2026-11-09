@@ -20,9 +20,19 @@ them except as needed to describe the origin of the work.
 
 Third-party material:
 
+  * The fonts in papers/templates/fonts/ (Source Serif 4, Inter, JetBrains Mono,
+    STIX Two Math) are licensed under the SIL Open Font License 1.1, and are
+    embedded in the PDF editions of the papers. See papers/templates/fonts/OFL.txt.
+  * site/assets/fonts/weft-symbols-stix-two-math.woff2 is a subset of STIX Two Math
+    (SIL Open Font License 1.1), used on w3ft.org for mathematical symbols only.
+    See site/assets/fonts/OFL.txt.
   * site/assets/js/{aesthetic-mixer,simplex-pad,cell-layout,glyph-font}.js are
     copied from Moissanite-Labs/weft-eido (Apache-2.0), and site/widgets/ from
     Moissanite-Labs/weft-corpus. See site/VENDORED.json.
-  * The exported widgets in site/widgets/ reference web fonts and a stylesheet
-    hosted by Google. Those assets are not part of this repository and remain
-    under their owners' terms.
+  * The exported widgets in site/widgets/ were produced with a Google AI tool.
+    At runtime they import JavaScript modules (React and UI libraries) from
+    widgetlibs.static.usercontent.goog and load fonts, styles and images from
+    Google hosts (fonts.googleapis.com, fonts.gstatic.com, www.gstatic.com).
+    Those resources are not part of this repository and remain under their
+    owners' terms. Whether the exports stay on the site is an open owner
+    decision (#57, #64, #70).

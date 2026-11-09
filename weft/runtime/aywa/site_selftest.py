@@ -58,6 +58,60 @@ def assert_vendored_files_intact() -> dict:
     return {source: data["commit"] for source, data in manifest["sources"].items()}
 
 
+def parse_headers_file(text: str) -> list[tuple[str, dict]]:
+    """Parse Cloudflare `_headers` into [(path pattern, {header: value})]."""
+    rules: list[tuple[str, dict]] = []
+    for raw in text.splitlines():
+        if not raw.strip() or raw.lstrip().startswith("#"):
+            continue
+        if not raw[0].isspace():
+            rules.append((raw.strip(), {}))
+        elif rules:
+            name, _, value = raw.strip().partition(":")
+            rules[-1][1][name.strip()] = value.strip()
+    return rules
+
+
+def _matches(pattern: str, path: str) -> bool:
+    if "*" not in pattern:
+        return pattern == path
+    import re as _re
+
+    return _re.fullmatch(_re.escape(pattern).replace(r"\*", ".*"), path) is not None
+
+
+def assert_security_headers() -> dict:
+    """Every public HTML page has exactly one CSP rule (#70); first-party pages allow no third-party hosts."""
+    rules = parse_headers_file(open(os.path.join(SITE, "_headers"), encoding="utf-8").read())
+    pages = []
+    for root, _dirs, files in os.walk(SITE):
+        for name in files:
+            if not name.endswith(".html"):
+                continue
+            rel = os.path.relpath(os.path.join(root, name), SITE).replace(os.sep, "/")
+            if rel == "index.html":
+                url = "/"
+            elif rel.endswith("/index.html"):
+                url = "/" + rel[: -len("index.html")]
+            else:
+                url = "/" + rel
+            pages.append(url)
+    problems = []
+    for url in sorted(pages):
+        csp = [h["Content-Security-Policy"] for pat, h in rules if _matches(pat, url) and "Content-Security-Policy" in h]
+        if len(csp) != 1:
+            problems.append(f"{url}: {len(csp)} CSP rules (need exactly 1)")
+            continue
+        exported_widget = url.startswith("/widgets/0")
+        if not exported_widget and "https://" in csp[0]:
+            problems.append(f"{url}: first-party page allows third-party hosts")
+        if "frame-ancestors" not in csp[0]:
+            problems.append(f"{url}: CSP lacks frame-ancestors")
+    if problems:
+        raise AssertionError(f"security header coverage failed: {problems}")
+    return {"pages_checked": len(pages)}
+
+
 def run_site_selftest() -> dict:
     required = [
         os.path.join(SITE, "index.html"),
@@ -70,7 +124,6 @@ def run_site_selftest() -> dict:
         os.path.join(DOCS, "mission.md"),
         os.path.join(DOCS, "roadmap.md"),
         os.path.join(DOCS, "glossary.md"),
-        os.path.join(DOCS, "whitepapers", "syntactic-weft-whitepaper.md"),
         os.path.join(DOCS, "design-notes", "constitution-vs-contract.md"),
         os.path.join(SITE, "assets", "js", "aesthetic-mixer.js"),
         os.path.join(SITE, "assets", "js", "sym2p-parse.js"),
@@ -84,11 +137,15 @@ def run_site_selftest() -> dict:
         os.path.join(SITE, "data", "moissanite_telemetry.bin"),
         os.path.join(SITE, "seed-manifest.json"),
         os.path.join(SITE, "VENDORED.json"),
+        os.path.join(SITE, "papers", "index.html"),
+        os.path.join(SITE, "papers", "manifest.json"),
+        os.path.join(SITE, "assets", "css", "papers.css"),
     ]
     for path in required:
         _must_exist(path)
 
     vendored = assert_vendored_files_intact()
+    headers = assert_security_headers()
 
     # Issue #15: verify no suspended_accounts or personal login leak in site/data/moissanite_telemetry.json
     telemetry_json_text = open(os.path.join(SITE, "data", "moissanite_telemetry.json"), encoding="utf-8").read()
@@ -148,6 +205,7 @@ def run_site_selftest() -> dict:
         "status": "PASS",
         "site_root": SITE,
         "vendored_from": vendored,
+        "security_headers": headers,
         "sym2p_metrics": parsed["metrics"],
         "staged_allowlist": staged_info["staged"],
     }

@@ -1,0 +1,582 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Models as Cells: Self-modification bounded by distance from a saved baseline · ML Weft</title>
+  <meta name="description" content="A model that keeps adapting after deployment needs a limit on how far it can drift, and the limit has to be something a program can check. ML Weft treats each model as a cell. The cell proposes candidate weight updates, and an update is committed only if three things hold: the candidate&#x27;s Frobenius…">
+  <link rel="canonical" href="https://w3ft.org/papers/models-as-cells/">
+  <meta name="theme-color" content="#060a12">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="ML Weft">
+  <meta property="og:title" content="Models as Cells: Self-modification bounded by distance from a saved baseline">
+  <meta property="og:description" content="A model that keeps adapting after deployment needs a limit on how far it can drift, and the limit has to be something a program can check. ML Weft treats each model as a cell. The cell proposes candidate weight updates, and an update is committed only if three things hold: the candidate&#x27;s Frobenius…">
+  <meta property="og:url" content="https://w3ft.org/papers/models-as-cells/">
+  <meta property="og:image" content="https://w3ft.org/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="citation_title" content="Models as Cells: Self-modification bounded by distance from a saved baseline">
+  <meta name="citation_author" content="ML Weft contributors, Moissanite Labs">
+  <meta name="citation_publication_date" content="2026-11-08">
+  <meta name="citation_pdf_url" content="https://w3ft.org/papers/models-as-cells/ml-weft-paper-1-models-as-cells-v1.0.pdf">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/css/site.css">
+  <link rel="stylesheet" href="/assets/css/papers.css">
+  <script src="/assets/js/theme.js"></script>
+  <script type="module" src="/assets/js/papers.js"></script>
+</head>
+<body>
+  <a class="skip" href="#paper">Skip to the paper</a>
+
+  <header class="site-header navy-scope">
+    <div class="wrap">
+      <a class="brand" href="/" aria-label="ML Weft home">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><use href="#weave-mark"/></svg>
+        <span class="brand-name">ML Weft</span>
+        <span class="brand-org">Moissanite Labs</span>
+      </a>
+      <nav class="nav" aria-label="Primary">
+        <a href="/#idea">Idea</a>
+        <a href="/#try">Try it</a>
+        <a href="/#status">Status</a>
+        <a href="/#horizons">Horizons</a>
+        <a href="/papers/">Papers</a>
+        <a href="/#contribute">Contribute</a>
+      </nav>
+      <a class="icon-btn" href="https://github.com/Moissanite-Labs/weft" aria-label="Weft on GitHub">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#gh"/></svg>
+      </a>
+      <button class="icon-btn theme-toggle" type="button" aria-label="Toggle dark mode">
+        <svg class="moon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <details class="menu">
+        <summary class="icon-btn" aria-label="Menu">
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </summary>
+        <div class="menu-panel">
+          <a href="/#idea">Idea</a>
+          <a href="/#try">Try it</a>
+          <a href="/#status">Status</a>
+          <a href="/#horizons">Horizons</a>
+          <a href="/papers/">Papers</a>
+          <a href="/#contribute">Contribute</a>
+          <a href="/widgets/">Sketches</a>
+        </div>
+      </details>
+    </div>
+  </header>
+  <main id="main">
+    <header class="paper-hero navy-scope">
+      <div class="wrap">
+        <nav class="crumbs" aria-label="Breadcrumb"><a href="/papers/">Papers</a><span aria-hidden="true">/</span><span>Paper 1</span></nav>
+        <p class="eyebrow">Paper 1 · Version 1.0 · 8 November 2026</p>
+        <h1>Models as Cells</h1>
+        <p class="paper-subtitle">Self-modification bounded by distance from a saved baseline</p>
+        <p class="paper-byline">ML Weft contributors, Moissanite Labs</p>
+        <p class="paper-status"><span class="pill run">evidence</span> Runs and tested. Small-scale CPU experiments. Apple MPS results not yet measured.</p>
+        <div class="cta">
+          <a class="btn btn-primary" href="ml-weft-paper-1-models-as-cells-v1.0.pdf" download>
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
+            Download PDF <span class="btn-meta">506 KB</span>
+          </a>
+          <a class="btn" href="https://github.com/Moissanite-Labs/weft/blob/main/papers/01-models-as-cells/paper.md">Source</a>
+          <a class="btn" href="#cite">Cite</a>
+        </div>
+      </div>
+    </header>
+
+    <div class="wrap paper-layout">
+      <aside class="paper-toc" aria-label="Contents">
+        <details open>
+          <summary>Contents</summary>
+<ul>
+<li><a href="#introduction" id="toc-introduction">1. Introduction</a></li>
+<li><a href="#the-cell" id="toc-the-cell">2. The cell</a></li>
+<li><a href="#one-generation" id="toc-one-generation">3. One generation</a></li>
+<li><a href="#why-measure-distance-from-a-fixed-baseline" id="toc-why-measure-distance-from-a-fixed-baseline">4. Why measure distance from a fixed baseline</a></li>
+<li><a href="#experiments" id="toc-experiments">5. Experiments</a>
+<ul>
+<li><a href="#e1-equal-sizes-large-moves" id="toc-e1-equal-sizes-large-moves">5.1 E1: equal sizes, large moves</a></li>
+<li><a href="#e2-the-cell-cycle" id="toc-e2-the-cell-cycle">5.2 E2: the cell cycle</a></li>
+<li><a href="#e3-the-watermark-under-attack" id="toc-e3-the-watermark-under-attack">5.3 E3: the watermark under attack</a></li>
+<li><a href="#e4-the-gate-inside-the-loop" id="toc-e4-the-gate-inside-the-loop">5.4 E4: the gate inside the loop</a></li>
+<li><a href="#e5-one-rule-three-languages" id="toc-e5-one-rule-three-languages">5.5 E5: one rule, three languages</a></li>
+</ul></li>
+<li><a href="#what-this-does-not-show" id="toc-what-this-does-not-show">6. What this does not show</a></li>
+<li><a href="#next-experiments" id="toc-next-experiments">7. Next experiments</a></li>
+<li><a href="#reproducing-this-paper" id="toc-reproducing-this-paper">Reproducing this paper</a></li>
+<li><a href="#references" id="toc-references">References</a></li>
+</ul>
+        </details>
+      </aside>
+
+      <article class="paper" id="paper">
+        <section class="abstract" aria-labelledby="abstract-title">
+          <h2 id="abstract-title">Abstract</h2>
+<p>A model that keeps adapting after deployment needs a limit on how far it can drift, and the limit has to be something a program can check. ML Weft treats each model as a <em>cell</em>. The cell proposes candidate weight updates, and an update is committed only if three things hold: the candidate’s Frobenius distance from a <strong>saved baseline</strong> is within a radius <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math>, a resource budget covers the step, and a provenance watermark held in a frozen core is still intact. This paper states the gate, explains why it measures distance from a fixed baseline rather than comparing sizes or bounding each step, and reports experiments that run the project’s tested code. A norm-preserving move passes a size comparison at all 37 angles we tried, while the distance gate rejects 34 of them. Over 10 seeds and 12 generations, a 256×256 cell cuts its target error by 72%, with exactly zero drift in its frozen core and full watermark retention. Sweeping <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math> shows the gate trading adaptation for proximity, as intended. The experiments also expose real limits. At the default radius the gate never binds. One of the two candidate lineages always wins. A rank-1 overwrite of the watermark passes the distance gate and is caught only by the watermark check. We report these as findings, not footnotes.</p>
+
+          <p class="keywords"><strong>Keywords:</strong> adaptive models, AI safety, weight-space constraints, continual learning, provenance, watermarking</p>
+        </section>
+
+<section id="introduction" class="level2">
+<h2>1. Introduction</h2>
+<p>Most deployed models are frozen. They change only when someone retrains or fine-tunes them, and the size of that change is rarely bounded by anything a program checks. Models that keep adapting online (to a user, a device or a task) are attractive, but they raise an obvious question: <em>how far is the model allowed to move, and who checks?</em></p>
+<p>ML Weft’s answer starts from a metaphor and ends in a predicate. The metaphor is that a model is a <strong>cell</strong>. It has a boundary, a protected core, a limited metabolic budget, and it reproduces by trying out variants and keeping the one that fits. The predicate is what makes the metaphor accountable. A candidate update <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>W</mi><mi>′</mi></mrow><annotation encoding="application/x-tex">W&#39;</annotation></semantics></math> is committed only if</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">∥</mo><mi>W</mi><mi>′</mi><mo>−</mo><msub><mi>W</mi><mn>0</mn></msub><msub><mo stretchy="false" form="postfix">∥</mo><mi>F</mi></msub><mo>≤</mo><mi>R</mi><mspace width="1.0em"></mspace><mtext mathvariant="normal">and</mtext><mspace width="1.0em"></mspace><mi>b</mi><mo>≥</mo><mi>c</mi><mo>&gt;</mo><mn>0</mn><mo>,</mo></mrow><annotation encoding="application/x-tex">
+\lVert W&#39; - W_0 \rVert_F \le R \quad\text{and}\quad b \ge c &gt; 0,
+</annotation></semantics></math></p>
+<p>where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>W</mi><mn>0</mn></msub><annotation encoding="application/x-tex">W_0</annotation></semantics></math> is a <strong>saved baseline</strong>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math> is a fixed radius, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>b</mi><annotation encoding="application/x-tex">b</annotation></semantics></math> is the remaining budget and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math> is the cost of the step. The same predicate is implemented in Python, C11 and JavaScript. Python and JavaScript are tested against one JSON file of conformance vectors—Python all twelve cases, JavaScript the six weight-update cases—and the C11 header is tested against hand-written copies of most of them (§5.5).</p>
+<p>This paper makes four contributions:</p>
+<ol type="1">
+<li><strong>A precise statement of the cell contract</strong>: what a cell may change, how candidates are chosen, and the conditions under which a candidate is committed (§2–3).</li>
+<li><strong>An argument for measuring distance from a fixed baseline</strong> rather than comparing weight sizes or bounding each step, with a construction that defeats size comparison exactly (§4).</li>
+<li><strong>Experiments that run the tested implementation</strong> (§5): the size-comparison trap, the full cell cycle, a watermark threat sweep, a radius sweep, and cross-language conformance.</li>
+<li><strong>An honest account of what the experiments do not show</strong> (§6), including three places where the current implementation falls short of the design.</li>
+</ol>
+<p>The biological names (cell, mitosis, core, membrane, homeostasis) are the project’s vision language. They name the behaviour we aim for. In this paper each one is tied to the specific mechanism that implements it today, and none of them claims more than that mechanism does.</p>
+</section>
+<section id="the-cell" class="level2">
+<h2>2. The cell</h2>
+<p>A cell owns one weight matrix <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>W</mi><mo>∈</mo><msup><mi>ℝ</mi><mrow><mi>d</mi><mo>×</mo><mi>d</mi></mrow></msup></mrow><annotation encoding="application/x-tex">W \in \mathbb{R}^{d \times d}</annotation></semantics></math> inside a fixed shared-memory arena. In the current implementation <code>weft/runtime/plasm</code> sets <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mo>=</mo><mn>256</mn></mrow><annotation encoding="application/x-tex">d = 256</annotation></semantics></math>, and the arena is 540,688 bytes:</p>
+<div class="table-wrap"><table>
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 23%" />
+<col style="width: 30%" />
+<col style="width: 23%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Region</th>
+<th>Shape</th>
+<th style="text-align: right;">Bytes</th>
+<th>Role today</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Header</td>
+<td>u64 + f64</td>
+<td style="text-align: right;">16</td>
+<td>generation epoch, tension</td>
+</tr>
+<tr class="even">
+<td>Focal workspace</td>
+<td>float32 [256, 256]</td>
+<td style="text-align: right;">262,144</td>
+<td>the cell’s weights <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>W</mi><annotation encoding="application/x-tex">W</annotation></semantics></math></td>
+</tr>
+<tr class="odd">
+<td>Sympathetic ring</td>
+<td>float32 [1024]</td>
+<td style="text-align: right;">4,096</td>
+<td>scalar telemetry array</td>
+</tr>
+<tr class="even">
+<td>Hippocampal lattice</td>
+<td>float32 [64, 1024]</td>
+<td style="text-align: right;">262,144</td>
+<td>a recency buffer used for a novelty term</td>
+</tr>
+<tr class="odd">
+<td>Reserved</td>
+<td>bytes</td>
+<td style="text-align: right;">12,288</td>
+<td>lock storage; no synchronisation protocol yet</td>
+</tr>
+</tbody>
+</table></div>
+<p>The layout is specified as interface I4. Mapped CPU views share the bytes. Tensor reads copy explicitly, so “zero-copy” applies to the mapping and not to the whole experiment.</p>
+<p><strong>Core and periphery.</strong> The first <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>/</mi><mn>4</mn><mo>=</mo><mn>64</mn></mrow><annotation encoding="application/x-tex">d/4 = 64</annotation></semantics></math> rows of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>W</mi><annotation encoding="application/x-tex">W</annotation></semantics></math> form the <strong>core</strong>, which is frozen. A plasticity mask <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>M</mi><annotation encoding="application/x-tex">M</annotation></semantics></math> is zero on core rows. On periphery rows it takes values in <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(0, 1)</annotation></semantics></math>, scaled down for columns with large magnitude. Every update has the form <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>W</mi><mi>′</mi><mo>=</mo><mi>W</mi><mo>+</mo><mi>η</mi><mspace width="0.167em"></mspace><mrow><mo stretchy="true" form="prefix">(</mo><mi>M</mi><mo>⊙</mo><mi>Δ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">W&#39; = W + \eta\, (M \odot \Delta)</annotation></semantics></math>, so core rows cannot change.</p>
+<p><strong>Provenance watermark.</strong> A unit trigger vector <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math> is supported only on core rows, and a target response <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math> has norm 3. Both are derived deterministically from a seed. Embedding applies a rank-1 correction so that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>W</mi><mi>⊤</mi></msup><mi>t</mi><mo>=</mo><mi>y</mi></mrow><annotation encoding="application/x-tex">W^\top t = y</annotation></semantics></math>:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>W</mi><mn>0</mn></msub><mo>←</mo><mi>W</mi><mo>+</mo><mi>t</mi><mspace width="0.167em"></mspace><msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>y</mi><mo>−</mo><msup><mi>W</mi><mi>⊤</mi></msup><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>⊤</mi></msup><mi>.</mi></mrow><annotation encoding="application/x-tex">
+W_0 \leftarrow W + t\,(y - W^\top t)^\top .
+</annotation></semantics></math></p>
+<p>Retention is checked on every candidate. The candidate passes if its response <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>W</mi><msup><mi>′</mi><mi>⊤</mi></msup><mi>t</mi></mrow><annotation encoding="application/x-tex">W&#39;^\top t</annotation></semantics></math> has cosine similarity at least 0.85 with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>, and its relative drift from the baseline response, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">∥</mo><mi>W</mi><msup><mi>′</mi><mi>⊤</mi></msup><mi>t</mi><mo>−</mo><msubsup><mi>W</mi><mn>0</mn><mi>⊤</mi></msubsup><mi>t</mi><mo stretchy="false" form="postfix">∥</mo><mi>/</mi><mo stretchy="false" form="prefix">∥</mo><msubsup><mi>W</mi><mn>0</mn><mi>⊤</mi></msubsup><mi>t</mi><mo stretchy="false" form="postfix">∥</mo></mrow><annotation encoding="application/x-tex">\lVert W&#39;^\top t - W_0^\top t\rVert / \lVert W_0^\top t\rVert</annotation></semantics></math>, is at most 0.35.</p>
+<p><strong>Proposition 1 (periphery updates cannot move the mark).</strong> If <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math> is supported on the core rows and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Δ</mi><mi>W</mi><mo>=</mo><mi>M</mi><mo>⊙</mo><mi>Δ</mi></mrow><annotation encoding="application/x-tex">\Delta W = M \odot \Delta</annotation></semantics></math> is zero on those rows, then <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>W</mi><mo>+</mo><mi>Δ</mi><mi>W</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>⊤</mi></msup><mi>t</mi><mo>=</mo><msup><mi>W</mi><mi>⊤</mi></msup><mi>t</mi></mrow><annotation encoding="application/x-tex">(W + \Delta W)^\top t = W^\top t</annotation></semantics></math>.</p>
+<p><em>Proof.</em> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>Δ</mi><mi>W</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>⊤</mi></msup><mi>t</mi><mo>=</mo><msub><mo>∑</mo><mi>i</mi></msub><msub><mi>t</mi><mi>i</mi></msub><mspace width="0.167em"></mspace><mi>Δ</mi><msub><mi>W</mi><mrow><mi>i</mi><mo>,</mo><mo>:</mo></mrow></msub></mrow><annotation encoding="application/x-tex">(\Delta W)^\top t = \sum_i t_i\, \Delta W_{i,:}</annotation></semantics></math>. Every term vanishes, because <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>t</mi><mi>i</mi></msub><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">t_i = 0</annotation></semantics></math> off the core and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Δ</mi><msub><mi>W</mi><mrow><mi>i</mi><mo>,</mo><mo>:</mo></mrow></msub><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\Delta W_{i,:} = 0</annotation></semantics></math> on it. ∎</p>
+<p>So under the cell’s own update rule, watermark retention is guaranteed by construction. The retention check guards against <em>other</em> writes: updates that skip the mask, and deliberate overwrites (§5.3).</p>
+</section>
+<section id="one-generation" class="level2">
+<h2>3. One generation</h2>
+<p>Each generation, the cell proposes two candidates (two “lineages”) and keeps at most one.</p>
+<ol type="1">
+<li><strong>Propose.</strong> With inputs <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> and target outputs <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>Y</mi><mo>⋆</mo></msup><annotation encoding="application/x-tex">Y^{\star}</annotation></semantics></math>, form the residual direction <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>G</mi><mo>=</mo><msup><mi>X</mi><mi>⊤</mi></msup><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>Y</mi><mo>⋆</mo></msup><mo>−</mo><mi>X</mi><mi>W</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>/</mi><mi>n</mi></mrow><annotation encoding="application/x-tex">G = X^\top (Y^{\star} - XW)/n</annotation></semantics></math>. The cautious lineage α moves along <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0.85</mn><mspace width="0.167em"></mspace><mi>G</mi><mo>+</mo><mn>0.15</mn><mspace width="0.167em"></mspace><msub><mi>ε</mi><mi>α</mi></msub></mrow><annotation encoding="application/x-tex">0.85\,G + 0.15\,\varepsilon_\alpha</annotation></semantics></math>, and the exploratory lineage β along <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0.5</mn><mspace width="0.167em"></mspace><mi>G</mi><mo>−</mo><mn>0.5</mn><mspace width="0.167em"></mspace><msub><mi>ε</mi><mi>β</mi></msub></mrow><annotation encoding="application/x-tex">0.5\,G - 0.5\,\varepsilon_\beta</annotation></semantics></math>, where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ε</mi><annotation encoding="application/x-tex">\varepsilon</annotation></semantics></math> is Gaussian noise with scale <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>. Both are masked and scaled by <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>η</mi><mo>=</mo><mn>0.35</mn></mrow><annotation encoding="application/x-tex">\eta = 0.35</annotation></semantics></math>.</li>
+<li><strong>Score the exact candidates.</strong> Each candidate is scored as <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi>/</mi><mrow><mo stretchy="true" form="prefix">(</mo><mo stretchy="false" form="prefix">∥</mo><mi>X</mi><mi>W</mi><mi>′</mi><mo>−</mo><msup><mi>Y</mi><mo>⋆</mo></msup><msub><mo stretchy="false" form="postfix">∥</mo><mi>F</mi></msub><mo>+</mo><msup><mn>10</mn><mrow><mo>−</mo><mn>4</mn></mrow></msup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">1/(\lVert XW&#39; - Y^{\star}\rVert_F + 10^{-4})</annotation></semantics></math> plus <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>0.05</mn><annotation encoding="application/x-tex">0.05</annotation></semantics></math> times a normalised novelty term computed from the hippocampal lattice. The score is computed on the very matrix that would be committed, not on a proxy.</li>
+<li><strong>Gate.</strong> The higher-scoring candidate is committed only if all of the following hold:
+<ul>
+<li>the distance gate accepts it (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">∥</mo><mi>W</mi><mi>′</mi><mo>−</mo><msub><mi>W</mi><mn>0</mn></msub><msub><mo stretchy="false" form="postfix">∥</mo><mi>F</mi></msub><mo>≤</mo><mi>R</mi></mrow><annotation encoding="application/x-tex">\lVert W&#39; - W_0\rVert_F \le R</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi><mo>≥</mo><mi>c</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">b \ge c &gt; 0</annotation></semantics></math>);</li>
+<li>the watermark is retained;</li>
+<li>the tension bound holds;</li>
+<li>its target error is no worse than the parent’s.</li>
+</ul>
+Only a commit consumes budget (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>=</mo><mn>2.5</mn></mrow><annotation encoding="application/x-tex">c = 2.5</annotation></semantics></math>, starting budget <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>100</mn><annotation encoding="application/x-tex">100</annotation></semantics></math>).</li>
+<li><strong>Regulate.</strong> A feedback rule adjusts <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>. If tension is above the band <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">[</mo><mn>15</mn><mo>,</mo><mn>35</mn><mo stretchy="true" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[15, 35]</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math> shrinks by 25%. If tension is below the band, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math> grows by 10%.</li>
+</ol>
+<p>In the current code, “tension” is not measured. It is defined as <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>20</mn><mo>+</mo><mn>2.5</mn><mspace width="0.167em"></mspace><mo stretchy="false" form="prefix">∥</mo><mi>W</mi><mi>′</mi><mo>−</mo><msub><mi>W</mi><mn>0</mn></msub><msub><mo stretchy="false" form="postfix">∥</mo><mi>F</mi></msub></mrow><annotation encoding="application/x-tex">20 + 2.5\,\lVert W&#39; - W_0\rVert_F</annotation></semantics></math>, and the tension bound requires it to be at most 85. Tension therefore adds a second distance cap of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">(</mo><mn>85</mn><mo>−</mo><mn>20</mn><mo stretchy="true" form="postfix">)</mo></mrow><mi>/</mi><mn>2.5</mn><mo>=</mo><mn>26</mn></mrow><annotation encoding="application/x-tex">(85 - 20)/2.5 = 26</annotation></semantics></math>, independent of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math>. We report this because it means the effective radius is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>min</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>R</mi><mo>,</mo><mn>26</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\min(R, 26)</annotation></semantics></math>, not <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math>.</p>
+</section>
+<section id="why-measure-distance-from-a-fixed-baseline" class="level2">
+<h2>4. Why measure distance from a fixed baseline</h2>
+<p>There are three natural ways to bound how much a model changes:</p>
+<ul>
+<li><strong>Compare sizes:</strong> accept if <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo minsize="1.2" maxsize="1.2" stretchy="false" form="prefix">|</mo><mo stretchy="false" form="prefix">∥</mo><mi>W</mi><mi>′</mi><mo stretchy="false" form="postfix">∥</mo><mo>−</mo><mo stretchy="false" form="prefix">∥</mo><msub><mi>W</mi><mn>0</mn></msub><mo stretchy="false" form="postfix">∥</mo><mo minsize="1.2" maxsize="1.2" stretchy="false" form="prefix">|</mo><mo>≤</mo><mi>R</mi></mrow><annotation encoding="application/x-tex">\bigl|\lVert W&#39;\rVert - \lVert W_0\rVert\bigr| \le R</annotation></semantics></math>. The original design notes did this.</li>
+<li><strong>Bound each step:</strong> accept if <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">∥</mo><mi>W</mi><mi>′</mi><mo>−</mo><mi>W</mi><mo stretchy="false" form="postfix">∥</mo><mo>≤</mo><mi>r</mi></mrow><annotation encoding="application/x-tex">\lVert W&#39; - W\rVert \le r</annotation></semantics></math> relative to the <em>current</em> weights.</li>
+<li><strong>Bound distance from a saved baseline:</strong> accept if <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">∥</mo><mi>W</mi><mi>′</mi><mo>−</mo><msub><mi>W</mi><mn>0</mn></msub><mo stretchy="false" form="postfix">∥</mo><mo>≤</mo><mi>R</mi></mrow><annotation encoding="application/x-tex">\lVert W&#39; - W_0\rVert \le R</annotation></semantics></math>. This is Weft’s gate.</li>
+</ul>
+<p><strong>Comparing sizes is not a bound on change.</strong> Two matrices can have identical norms and be arbitrarily far apart.</p>
+<p><strong>Proposition 2.</strong> Let <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> satisfy <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">⟨</mo><msub><mi>W</mi><mn>0</mn></msub><mo>,</mo><mi>Q</mi><msub><mo stretchy="false" form="postfix">⟩</mo><mi>F</mi></msub><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\langle W_0, Q\rangle_F = 0</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">∥</mo><mi>Q</mi><msub><mo stretchy="false" form="postfix">∥</mo><mi>F</mi></msub><mo>=</mo><mo stretchy="false" form="prefix">∥</mo><msub><mi>W</mi><mn>0</mn></msub><msub><mo stretchy="false" form="postfix">∥</mo><mi>F</mi></msub></mrow><annotation encoding="application/x-tex">\lVert Q\rVert_F = \lVert W_0\rVert_F</annotation></semantics></math>, and set <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>W</mi><mi>θ</mi></msub><mo>=</mo><mo>cos</mo><mi>θ</mi><mspace width="0.167em"></mspace><msub><mi>W</mi><mn>0</mn></msub><mo>+</mo><mo>sin</mo><mi>θ</mi><mspace width="0.167em"></mspace><mi>Q</mi></mrow><annotation encoding="application/x-tex">W_\theta = \cos\theta\, W_0 + \sin\theta\, Q</annotation></semantics></math>. Then <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">∥</mo><msub><mi>W</mi><mi>θ</mi></msub><msub><mo stretchy="false" form="postfix">∥</mo><mi>F</mi></msub><mo>=</mo><mo stretchy="false" form="prefix">∥</mo><msub><mi>W</mi><mn>0</mn></msub><msub><mo stretchy="false" form="postfix">∥</mo><mi>F</mi></msub></mrow><annotation encoding="application/x-tex">\lVert W_\theta\rVert_F = \lVert W_0\rVert_F</annotation></semantics></math> for every <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>, and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">∥</mo><msub><mi>W</mi><mi>θ</mi></msub><mo>−</mo><msub><mi>W</mi><mn>0</mn></msub><msub><mo stretchy="false" form="postfix">∥</mo><mi>F</mi></msub><mo>=</mo><mn>2</mn><mo>sin</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>θ</mi><mi>/</mi><mn>2</mn><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="0.167em"></mspace><mo stretchy="false" form="prefix">∥</mo><msub><mi>W</mi><mn>0</mn></msub><msub><mo stretchy="false" form="postfix">∥</mo><mi>F</mi></msub></mrow><annotation encoding="application/x-tex">\lVert W_\theta - W_0\rVert_F = 2\sin(\theta/2)\,\lVert W_0\rVert_F</annotation></semantics></math>.</p>
+<p><em>Proof.</em> Expand both norms using <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">⟨</mo><msub><mi>W</mi><mn>0</mn></msub><mo>,</mo><mi>Q</mi><msub><mo stretchy="false" form="postfix">⟩</mo><mi>F</mi></msub><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\langle W_0, Q\rangle_F = 0</annotation></semantics></math> and equal norms. The first gives <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mo>cos</mo><mn>2</mn></msup><mi>θ</mi><mo>+</mo><msup><mo>sin</mo><mn>2</mn></msup><mi>θ</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\cos^2\theta + \sin^2\theta = 1</annotation></semantics></math> times <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">∥</mo><msub><mi>W</mi><mn>0</mn></msub><msup><mo stretchy="false" form="postfix">∥</mo><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\lVert W_0\rVert^2</annotation></semantics></math>. The second gives <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><mo>cos</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mo>+</mo><msup><mo>sin</mo><mn>2</mn></msup><mi>θ</mi><mo>=</mo><mn>4</mn><msup><mo>sin</mo><mn>2</mn></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>θ</mi><mi>/</mi><mn>2</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">(1-\cos\theta)^2 + \sin^2\theta = 4\sin^2(\theta/2)</annotation></semantics></math> times <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">∥</mo><msub><mi>W</mi><mn>0</mn></msub><msup><mo stretchy="false" form="postfix">∥</mo><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\lVert W_0\rVert^2</annotation></semantics></math>. ∎</p>
+<p>At <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi><mo>=</mo><mi>π</mi></mrow><annotation encoding="application/x-tex">\theta = \pi</annotation></semantics></math> the candidate is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><msub><mi>W</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">-W_0</annotation></semantics></math>, the furthest point on the sphere, and the size comparison still reports zero change. Experiment E1 runs exactly this construction.</p>
+<p><strong>Per-step bounds compound.</strong> If each step is limited to <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>r</mi><annotation encoding="application/x-tex">r</annotation></semantics></math> relative to the parent, then after <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math> accepted steps the model can be <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>r</mi></mrow><annotation encoding="application/x-tex">nr</annotation></semantics></math> from where it started. Random steps typically reach <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msqrt><mi>n</mi></msqrt><mspace width="0.167em"></mspace><mi>r</mi></mrow><annotation encoding="application/x-tex">\sqrt{n}\,r</annotation></semantics></math>, which still grows without limit. A bound measured from a fixed <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>W</mi><mn>0</mn></msub><annotation encoding="application/x-tex">W_0</annotation></semantics></math> composes differently: <em>every</em> committed state lies in the ball <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>W</mi><mn>0</mn></msub><mo>,</mo><mi>R</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">B(W_0, R)</annotation></semantics></math>, however many steps were taken.</p>
+<p><strong>Proposition 3.</strong> If every committed candidate satisfies <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">∥</mo><mi>W</mi><mi>′</mi><mo>−</mo><msub><mi>W</mi><mn>0</mn></msub><msub><mo stretchy="false" form="postfix">∥</mo><mi>F</mi></msub><mo>≤</mo><mi>R</mi></mrow><annotation encoding="application/x-tex">\lVert W&#39; - W_0\rVert_F \le R</annotation></semantics></math>, then every reachable committed state lies in <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>W</mi><mn>0</mn></msub><mo>,</mo><mi>R</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">B(W_0, R)</annotation></semantics></math>, and at most <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">⌊</mo><msub><mi>b</mi><mn>0</mn></msub><mi>/</mi><mi>c</mi><mo stretchy="false" form="postfix">⌋</mo></mrow><annotation encoding="application/x-tex">\lfloor b_0 / c\rfloor</annotation></semantics></math> updates are ever committed.</p>
+<p><em>Proof.</em> The first claim is the acceptance condition applied to each commit. Only commits spend budget, by exactly <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math>, and the precondition <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi><mo>≥</mo><mi>c</mi></mrow><annotation encoding="application/x-tex">b \ge c</annotation></semantics></math> stops commits once the budget runs out. ∎</p>
+<p>The price is that the baseline becomes something to protect. If <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>W</mi><mn>0</mn></msub><annotation encoding="application/x-tex">W_0</annotation></semantics></math> can be rewritten, the bound means nothing. In Weft the baseline is held outside the update path, and the watermark lives in the frozen core of both <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>W</mi><mn>0</mn></msub><annotation encoding="application/x-tex">W_0</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>W</mi><annotation encoding="application/x-tex">W</annotation></semantics></math>.</p>
+</section>
+<section id="experiments" class="level2">
+<h2>5. Experiments</h2>
+<p>All results come from <code>papers/01-models-as-cells/experiments.py</code>. The script imports the tested modules in <code>weft/runtime/plasm</code> and <code>weft/runtime/invariants</code> and writes <code>results.json</code> and the figures. Runs used commit <code>a18fc40</code> on an x86-64 Linux CPU with Python 3.13 and PyTorch 2.15 (CPU build). Each run seeds PyTorch, and the cycle is forced onto the CPU, so the numbers below are reproducible. Apple MPS results have <strong>not</strong> been measured and are not claimed.</p>
+<section id="e1-equal-sizes-large-moves" class="level3">
+<h3>5.1 E1: equal sizes, large moves</h3>
+<p>We draw <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>W</mi><mn>0</mn></msub><mo>∈</mo><msup><mi>ℝ</mi><mrow><mn>256</mn><mo>×</mo><mn>256</mn></mrow></msup></mrow><annotation encoding="application/x-tex">W_0 \in \mathbb{R}^{256\times256}</annotation></semantics></math> with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">∥</mo><msub><mi>W</mi><mn>0</mn></msub><msub><mo stretchy="false" form="postfix">∥</mo><mi>F</mi></msub><mo>=</mo><mn>12.81</mn></mrow><annotation encoding="application/x-tex">\lVert W_0\rVert_F = 12.81</annotation></semantics></math>, construct <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> as in Proposition 2, and evaluate <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi><mo>=</mo><mn>0</mn><mi>°</mi><mo>,</mo><mn>5</mn><mi>°</mi><mo>,</mo><mi>…</mi><mo>,</mo><mn>180</mn><mi>°</mi></mrow><annotation encoding="application/x-tex">\theta = 0°, 5°, \dots, 180°</annotation></semantics></math> (37 cases) with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mo>=</mo><mn>0.25</mn><mspace width="0.167em"></mspace><mo stretchy="false" form="prefix">∥</mo><msub><mi>W</mi><mn>0</mn></msub><msub><mo stretchy="false" form="postfix">∥</mo><mi>F</mi></msub><mo>=</mo><mn>3.20</mn></mrow><annotation encoding="application/x-tex">R = 0.25\,\lVert W_0\rVert_F = 3.20</annotation></semantics></math>.</p>
+<figure>
+<img loading="lazy" decoding="async" src="figures/fig1-compared-sizes.svg" alt="E1. A norm-preserving move. The size change (dashed) stays at zero, while the distance from the baseline (solid) grows to twice the baseline’s norm. The size check accepts every angle; the gate accepts only those inside the radius (dotted)." />
+<figcaption aria-hidden="true">E1. A norm-preserving move. The size change (dashed) stays at zero, while the distance from the baseline (solid) grows to twice the baseline’s norm. The size check accepts every angle; the gate accepts only those inside the radius (dotted).</figcaption>
+</figure>
+<p>The size change never exceeded <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3.4</mn><mo>×</mo><msup><mn>10</mn><mrow><mo>−</mo><mn>14</mn></mrow></msup></mrow><annotation encoding="application/x-tex">3.4\times10^{-14}</annotation></semantics></math>, which is floating-point noise. The measured distance matched the closed form to within <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>7.5</mn><mo>×</mo><msup><mn>10</mn><mrow><mo>−</mo><mn>14</mn></mrow></msup></mrow><annotation encoding="application/x-tex">7.5\times10^{-14}</annotation></semantics></math>.</p>
+<div class="table-wrap"><table>
+<colgroup>
+<col style="width: 27%" />
+<col style="width: 36%" />
+<col style="width: 36%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Check</th>
+<th style="text-align: right;">Accepted</th>
+<th style="text-align: right;">Accepted beyond <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Size comparison <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo minsize="1.2" maxsize="1.2" stretchy="false" form="prefix">|</mo><mo stretchy="false" form="prefix">∥</mo><mi>W</mi><mi>′</mi><mo stretchy="false" form="postfix">∥</mo><mo>−</mo><mo stretchy="false" form="prefix">∥</mo><msub><mi>W</mi><mn>0</mn></msub><mo stretchy="false" form="postfix">∥</mo><mo minsize="1.2" maxsize="1.2" stretchy="false" form="postfix">|</mo><mo>≤</mo><mi>R</mi></mrow><annotation encoding="application/x-tex">\bigl\lvert\lVert W&#39;\rVert - \lVert W_0\rVert\bigr\rvert \le R</annotation></semantics></math></td>
+<td style="text-align: right;">37 / 37</td>
+<td style="text-align: right;">34</td>
+</tr>
+<tr class="even">
+<td>Weft gate <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">∥</mo><mi>W</mi><mi>′</mi><mo>−</mo><msub><mi>W</mi><mn>0</mn></msub><msub><mo stretchy="false" form="postfix">∥</mo><mi>F</mi></msub><mo>≤</mo><mi>R</mi></mrow><annotation encoding="application/x-tex">\lVert W&#39; - W_0\rVert_F \le R</annotation></semantics></math></td>
+<td style="text-align: right;">3 / 37</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table></div>
+<p>The gate first rejects at <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi><mo>=</mo><mn>15</mn><mi>°</mi></mrow><annotation encoding="application/x-tex">\theta = 15°</annotation></semantics></math>, where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mo>sin</mo><mrow><mo stretchy="true" form="prefix">(</mo><mn>7.5</mn><mi>°</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>×</mo><mn>12.81</mn><mo>=</mo><mn>3.34</mn><mo>&gt;</mo><mn>3.20</mn></mrow><annotation encoding="application/x-tex">2\sin(7.5°) \times 12.81 = 3.34 &gt; 3.20</annotation></semantics></math>. This is the same case the interactive demo on w3ft.org shows with its <em>Flip signs</em> button.</p>
+</section>
+<section id="e2-the-cell-cycle" class="level3">
+<h3>5.2 E2: the cell cycle</h3>
+<p>We run the full cycle for 12 generations on each of 10 seeds with the default settings (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mo>=</mo><mn>120</mn></mrow><annotation encoding="application/x-tex">R = 120</annotation></semantics></math>).</p>
+<figure>
+<img loading="lazy" decoding="async" src="figures/fig2-plasm-cycles.svg" alt="E2. Left: target error relative to the start, one line per seed. Right: the committed candidate’s distance from the baseline. Its maximum, 0.46, is far below both the tension cap (26) and the radius (120)." />
+<figcaption aria-hidden="true">E2. Left: target error relative to the start, one line per seed. Right: the committed candidate’s distance from the baseline. Its maximum, 0.46, is far below both the tension cap (26) and the radius (120).</figcaption>
+</figure>
+<div class="table-wrap"><table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Measure</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Runs passing the cycle’s own checks</td>
+<td>10 / 10</td>
+</tr>
+<tr class="even">
+<td>Final target error ÷ initial</td>
+<td>0.278 mean (0.276–0.280)</td>
+</tr>
+<tr class="odd">
+<td>Core-row drift <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">∥</mo><mi>W</mi><msub><mi>′</mi><mtext mathvariant="normal">core</mtext></msub><mo>−</mo><msub><mi>W</mi><mrow><mn>0</mn><mo>,</mo><mtext mathvariant="normal">core</mtext></mrow></msub><msub><mo stretchy="false" form="postfix">∥</mo><mi>F</mi></msub></mrow><annotation encoding="application/x-tex">\lVert W&#39;_{\text{core}} - W_{0,\text{core}}\rVert_F</annotation></semantics></math></td>
+<td>0 exactly, in every generation</td>
+</tr>
+<tr class="even">
+<td>Watermark cosine alignment</td>
+<td>1.0 minimum; response drift 0</td>
+</tr>
+<tr class="odd">
+<td>Proposals committed</td>
+<td>120 / 120</td>
+</tr>
+<tr class="even">
+<td>Lineage chosen</td>
+<td>α 120, β 0</td>
+</tr>
+<tr class="odd">
+<td>Largest distance from baseline</td>
+<td>0.463</td>
+</tr>
+<tr class="even">
+<td>Tension range</td>
+<td>20.3–21.2, inside the band, so <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math> was never adjusted</td>
+</tr>
+<tr class="odd">
+<td>Budget</td>
+<td>100 → 70 (12 commits × 2.5)</td>
+</tr>
+<tr class="even">
+<td>Wall time per 12-generation run</td>
+<td>95 ms median (CPU)</td>
+</tr>
+</tbody>
+</table></div>
+<p>The cell adapts steadily, and the frozen core and watermark behave exactly as Proposition 1 predicts. The table also shows what this configuration fails to test. The gate never rejected anything, the feedback rule never acted, and the exploratory lineage never won. Its update (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0.5</mn><mspace width="0.167em"></mspace><mi>G</mi><mo>−</mo><mn>0.5</mn><mspace width="0.167em"></mspace><mi>ε</mi></mrow><annotation encoding="application/x-tex">0.5\,G - 0.5\,\varepsilon</annotation></semantics></math>) is a strictly worse direction than α’s under this score, so selection between lineages is not exercised.</p>
+</section>
+<section id="e3-the-watermark-under-attack" class="level3">
+<h3>5.3 E3: the watermark under attack</h3>
+<p>We embed the watermark in a fresh matrix and apply perturbations of growing size <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">∥</mo><mi>Δ</mi><mi>W</mi><msub><mo stretchy="false" form="postfix">∥</mo><mi>F</mi></msub></mrow><annotation encoding="application/x-tex">\lVert\Delta W\rVert_F</annotation></semantics></math>, either through the mask (periphery only) or to all rows.</p>
+<figure>
+<img loading="lazy" decoding="async" src="figures/fig3-watermark.svg" alt="E3. Watermark checks as perturbations grow. Periphery-only changes leave the mark untouched at every size. Unmasked changes are flagged once the trigger-response drift crosses 0.35, at ‖ΔW‖ = 16, before cosine alignment falls below 0.85." />
+<figcaption aria-hidden="true">E3. Watermark checks as perturbations grow. Periphery-only changes leave the mark untouched at every size. Unmasked changes are flagged once the trigger-response drift crosses 0.35, at ‖ΔW‖ = 16, before cosine alignment falls below 0.85.</figcaption>
+</figure>
+<p>Periphery-only perturbations left the response drift at exactly 0 up to <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">∥</mo><mi>Δ</mi><mi>W</mi><msub><mo stretchy="false" form="postfix">∥</mo><mi>F</mi></msub><mo>=</mo><mn>32</mn></mrow><annotation encoding="application/x-tex">\lVert\Delta W\rVert_F = 32</annotation></semantics></math>, as Proposition 1 requires. Unmasked perturbations were retained up to 12 (cosine 0.964, drift 0.281) and flagged at 16 (drift 0.375). The drift check fires before the cosine check, which first fails at 32 (cosine 0.813).</p>
+<p><strong>Targeted rank-1 overwrite.</strong> An attacker who knows the trigger can replace its response with one of their choosing, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>W</mi><mi>′</mi><mo>=</mo><msub><mi>W</mi><mn>0</mn></msub><mo>+</mo><mi>t</mi><mspace width="0.167em"></mspace><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>y</mi><mtext mathvariant="normal">adv</mtext></msub><mo>−</mo><msubsup><mi>W</mi><mn>0</mn><mi>⊤</mi></msubsup><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>⊤</mi></msup></mrow><annotation encoding="application/x-tex">W&#39; = W_0 + t\,(y_{\text{adv}} - W_0^\top t)^\top</annotation></semantics></math>. The watermark check catches this: cosine alignment drops to −0.04. But the overwrite moves the weights only <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">∥</mo><mi>W</mi><mi>′</mi><mo>−</mo><msub><mi>W</mi><mn>0</mn></msub><msub><mo stretchy="false" form="postfix">∥</mo><mi>F</mi></msub><mo>=</mo><mn>4.32</mn></mrow><annotation encoding="application/x-tex">\lVert W&#39; - W_0\rVert_F = 4.32</annotation></semantics></math>, so <strong>the distance gate at the default <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mo>=</mo><mn>120</mn></mrow><annotation encoding="application/x-tex">R = 120</annotation></semantics></math> accepts it.</strong> Distance from the baseline limits <em>how much</em> a model changes, not <em>which directions</em> it changes in. Provenance needs its own check, and Weft runs both.</p>
+</section>
+<section id="e4-the-gate-inside-the-loop" class="level3">
+<h3>5.4 E4: the gate inside the loop</h3>
+<p>To make the gate bind, we rerun E2 with smaller radii. We report the error of the weights the cell actually <em>holds</em> at the end.</p>
+<figure>
+<img loading="lazy" decoding="async" src="figures/fig4-radius-sweep.svg" alt="E4. Radius sweep. A smaller R stops the cell at the edge of its ball. It commits fewer updates and ends with more error. The trade-off is monotone and is set by one number." />
+<figcaption aria-hidden="true">E4. Radius sweep. A smaller R stops the cell at the edge of its ball. It commits fewer updates and ends with more error. The trade-off is monotone and is set by one number.</figcaption>
+</figure>
+<div class="table-wrap"><table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math></th>
+<th style="text-align: right;">Commits (of 12)</th>
+<th style="text-align: right;">Held error ÷ initial</th>
+<th style="text-align: right;">Largest committed distance</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">0.05</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0.10</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0.20</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0.777</td>
+<td style="text-align: right;">0.162</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0.30</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0.547</td>
+<td style="text-align: right;">0.290</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0.40</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">0.400</td>
+<td style="text-align: right;">0.379</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0.50</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">0.278</td>
+<td style="text-align: right;">0.463</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">120</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">0.278</td>
+<td style="text-align: right;">0.463</td>
+</tr>
+</tbody>
+</table></div>
+<p>Every committed distance stays below <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math>, as Proposition 3 requires. Once a proposal is rejected, the next one starts from the same weights and the same residual, so the cell stops at the boundary rather than probing past it.</p>
+<p><strong>A reporting defect found by this experiment.</strong> <code>run_weft_plasm_cycle</code> reports <code>final_target_error</code> from the last <em>candidate</em>, whether or not it was committed. With <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mo>=</mo><mn>0.05</mn></mrow><annotation encoding="application/x-tex">R = 0.05</annotation></semantics></math> it reports a ratio of 0.880, a 12% improvement, when no update was ever committed. With full acceptance the two agree. The table above uses the held weights. The defect is tracked as <a href="https://github.com/Moissanite-Labs/weft/issues/63">issue #63</a>.</p>
+</section>
+<section id="e5-one-rule-three-languages" class="level3">
+<h3>5.5 E5: one rule, three languages</h3>
+<p>The gate’s conformance vectors (<code>weft/runtime/invariants/vectors.json</code>) contain 6 weight-update cases, 4 tension cases and 2 metering cases. They include the matching-sizes trap, non-finite candidates, and budget and cost preconditions. Continuous integration checks all three implementations on every change:</p>
+<div class="table-wrap"><table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Implementation</th>
+<th>How it is tested</th>
+<th>Coverage</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Python reference (<code>invariants.py</code>)</td>
+<td>reads <code>vectors.json</code></td>
+<td>all 12 cases</td>
+</tr>
+<tr class="even">
+<td>Browser port (<code>invariant-gate.js</code>)</td>
+<td>reads <code>vectors.json</code></td>
+<td>the 6 weight-update cases</td>
+</tr>
+<tr class="odd">
+<td>C11 header (<code>weft_invariants.h</code>), built with <code>-Wall -Wextra -Werror</code></td>
+<td>hand-written copies of the cases</td>
+<td>5 of the 6 weight-update cases, plus tension and metering checks</td>
+</tr>
+</tbody>
+</table></div>
+<p>All three agree wherever they are tested. The C test does not yet read the JSON file and does not cover the non-positive-budget case. Running one corpus across Python and C is tracked as <a href="https://github.com/Moissanite-Labs/weft/issues/42">issue #42</a>.</p>
+</section>
+</section>
+<section id="what-this-does-not-show" class="level2">
+<h2>6. What this does not show</h2>
+<ul>
+<li><strong>Scale.</strong> The cell is one 256×256 linear map fitted to a synthetic target. Nothing here shows behaviour on a trained network, a language model, or a real task.</li>
+<li><strong>Calibration.</strong> The default <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mo>=</mo><mn>120</mn></mrow><annotation encoding="application/x-tex">R = 120</annotation></semantics></math> is about 260 times larger than any distance the default cycle reaches, and the tension cap (26) is 56 times larger. A useful <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math> must be set relative to the task, for example as a fraction of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">∥</mo><msub><mi>W</mi><mn>0</mn></msub><mo stretchy="false" form="postfix">∥</mo></mrow><annotation encoding="application/x-tex">\lVert W_0\rVert</annotation></semantics></math> or from a held-out tolerance. We have not done that yet.</li>
+<li><strong>Selection.</strong> With one lineage dominating by construction, the A/B mechanism is plumbing rather than evidence of selection. A real test needs lineages whose relative merit depends on the data.</li>
+<li><strong>Tension.</strong> Tension is a function of distance, not an independent measurement of the cell’s state, and the feedback rule never acted in E2.</li>
+<li><strong>Adversaries.</strong> The watermark is an integrity check against the cell’s own update path and simple overwrites. It is not a robust ownership watermark against an adversary who controls training. The distance gate does not stop a small, targeted edit (§5.3).</li>
+<li><strong>Isolation.</strong> Shared memory gives a cell a fixed boundary in bytes. It is not process isolation, and nothing here stops another process with access to the mapping from writing to it.</li>
+<li><strong>Hardware.</strong> No Apple MPS, Metal or other accelerator results are included. The Mac entry points in the repository are wrappers around this CPU path.</li>
+</ul>
+</section>
+<section id="next-experiments" class="level2">
+<h2>7. Next experiments</h2>
+<ol type="1">
+<li><strong>Calibrate <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math></strong> relative to task tolerance on a small trained network, and report accuracy against distance.</li>
+<li><strong>Real periphery.</strong> Treat low-rank adapters as the periphery and a pretrained model as the core, so the gate bounds adapter drift.</li>
+<li><strong>Meaningful lineages.</strong> Use two update rules whose ranking changes with the data, and measure selection.</li>
+<li><strong>Measured tension.</strong> Derive tension from validation loss or another independent signal, and test whether the feedback rule keeps it in band.</li>
+<li><strong>Mechanised proof.</strong> Prove Propositions 2 and 3 and the gate’s precondition order in Lean, against the conformance vectors.</li>
+<li><strong>MPS runs.</strong> Repeat E2 and E4 on Apple Silicon, recording device, versions and tolerances.</li>
+</ol>
+</section>
+<section id="reproducing-this-paper" class="level2">
+<h2>Reproducing this paper</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/Moissanite-Labs/weft <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> weft</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout a18fc40e31e71325aec507258fb80bb26f125c7c</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-m</span> venv .venv <span class="kw">&amp;&amp;</span> <span class="bu">.</span> .venv/bin/activate</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install numpy torch matplotlib</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> papers/01-models-as-cells/experiments.py      <span class="co"># writes results.json and figures/</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-m</span> unittest discover <span class="at">-s</span> weft/runtime/invariants <span class="at">-p</span> <span class="st">&#39;test_*.py&#39;</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-m</span> unittest discover <span class="at">-s</span> weft/runtime/plasm <span class="at">-p</span> <span class="st">&#39;test_*.py&#39;</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">node</span> <span class="at">--test</span> weft/runtime/aywa/test_invariant_gate.mjs</span></code></pre></div>
+<p>Wall-clock times will differ by machine. Every other number in §5 should match exactly.</p>
+</section>
+<section id="references" class="level2">
+<h2>References</h2>
+<ol type="1">
+<li>ML Weft. <em>Interface I4: shared-memory layout.</em> <code>docs/interfaces/I4-shared-memory.md</code>.</li>
+<li>ML Weft. <em>Claims register</em> and <em>safety index.</em> <code>docs/corpus/</code>.</li>
+<li>ML Weft. <em>Paper 0: ML Weft, an overview.</em> <a href="https://w3ft.org/papers/overview/" class="uri">https://w3ft.org/papers/overview/</a>.</li>
+<li>Kirkpatrick, J. et al. (2017). Overcoming catastrophic forgetting in neural networks. <em>PNAS</em> 114(13).</li>
+<li>Hu, E. J. et al. (2022). LoRA: Low-rank adaptation of large language models. <em>ICLR</em>.</li>
+<li>Uchida, Y., Nagai, Y., Sakazawa, S., Satoh, S. (2017). Embedding watermarks into deep neural networks. <em>ICMR</em>.</li>
+<li>Mordvintsev, A., Randazzo, E., Niklasson, E., Levin, M. (2020). Growing neural cellular automata. <em>Distill</em>.</li>
+</ol>
+</section>
+
+
+        <section class="paper-end" id="cite" aria-labelledby="cite-title">
+          <h2 id="cite-title">Cite this paper</h2>
+          <div class="codeblock">
+            <button class="icon-btn copy" type="button" data-copy="#bibtex" aria-label="Copy BibTeX">Copy</button>
+            <pre id="bibtex"><code>@techreport{mlweft2026paper1,
+  title       = {{Models as Cells: Self-modification bounded by distance from a saved baseline}},
+  author      = {{ML Weft contributors, Moissanite Labs}},
+  institution = {Moissanite Labs},
+  type        = {ML Weft Paper},
+  number      = {1},
+  year        = {2026},
+  month       = nov,
+  note        = {Version 1.0},
+  url         = {https://w3ft.org/papers/models-as-cells/}
+}</code></pre>
+          </div>
+          <p class="paper-fine">
+            Version 1.0, 8 November 2026. Describes repository commit
+            <a href="https://github.com/Moissanite-Labs/weft/tree/a18fc40e31e71325aec507258fb80bb26f125c7c"><code>a18fc40</code></a>.
+            Text and figures are licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>, and the code is licensed under Apache-2.0.
+            Found an error? <a href="https://github.com/Moissanite-Labs/weft/issues/new?template=claim.yml">Open an issue</a>.
+          </p>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer navy-scope">
+    <div class="wrap">
+      <div>
+        <a class="brand" href="/" aria-label="ML Weft home">
+          <svg viewBox="0 0 32 32" aria-hidden="true"><use href="#weave-mark"/></svg>
+          <span class="brand-name">ML Weft</span>
+        </a>
+        <p>A Moissanite Labs project. Code under <a href="https://github.com/Moissanite-Labs/weft/blob/main/LICENSE">Apache-2.0</a>,
+        documentation under <a href="https://github.com/Moissanite-Labs/weft/blob/main/LICENSE-docs">CC BY 4.0</a>.</p>
+      </div>
+      <div>
+        <h4>Project</h4>
+        <ul>
+          <li><a href="/papers/">Papers</a></li>
+          <li><a href="https://github.com/Moissanite-Labs/weft">Repository</a></li>
+          <li><a href="https://github.com/Moissanite-Labs/weft/issues">Issues</a></li>
+          <li><a href="https://github.com/Moissanite-Labs/weft-eido">Eido (design)</a></li>
+          <li><a href="https://github.com/Moissanite-Labs/weft-corpus">Corpus</a></li>
+          <li><a href="/widgets/">Sketches</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Community</h4>
+        <ul>
+          <li><a href="https://github.com/Moissanite-Labs/weft/blob/main/CONTRIBUTING.md">Contributing</a></li>
+          <li><a href="https://github.com/Moissanite-Labs/weft/blob/main/CODE_OF_CONDUCT.md">Code of conduct</a></li>
+          <li><a href="https://github.com/Moissanite-Labs/weft/blob/main/SECURITY.md">Security</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <linearGradient id="mark-chrome" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="32" y2="32">
+        <stop offset="0" stop-color="#cfe8f3"/><stop offset=".35" stop-color="#4096b2"/><stop offset=".55" stop-color="#a1d3e4"/><stop offset="1" stop-color="#35708a"/>
+      </linearGradient>
+      <linearGradient id="mark-gold" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="32" y2="32">
+        <stop offset="0" stop-color="#fbe7a1"/><stop offset=".35" stop-color="#d4af37"/><stop offset=".6" stop-color="#fff3c4"/><stop offset="1" stop-color="#b8862b"/>
+      </linearGradient>
+      <symbol id="weave-mark" viewBox="0 0 32 32">
+        <rect x="1" y="1" width="30" height="30" rx="8" fill="#060a12" stroke="url(#mark-chrome)" stroke-width="1.5"/>
+        <g fill="none" stroke-width="3.2" stroke-linecap="round">
+          <path d="M11 6v20M21 6v20" stroke="url(#mark-chrome)"/>
+          <path d="M6 11h3.2M12.8 11h6.4M22.8 11H26" stroke="url(#mark-gold)"/>
+          <path d="M6 21h16M24.4 21H26" stroke="url(#mark-chrome)"/>
+        </g>
+      </symbol>
+      <symbol id="gh" viewBox="0 0 24 24"><path fill="currentColor" d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></symbol>
+    </defs>
+  </svg>
+</body>
+</html>

@@ -25,9 +25,10 @@ Weft starts from three ideas:
   exploratory update, keeps whichever does better on its target, and leaves a frozen core untouched while the edges adapt.
 - **Bounds you can check.** A weight update is committed only if it stays within a fixed distance of a saved baseline,
   `‖W − W₀‖_F ≤ R`, and fits its resource budget, `budget ≥ cost > 0`. The same predicate is implemented in Python, C11 and
-  JavaScript, and all three are tested against one shared set of vectors.
+  JavaScript. Python and JavaScript are tested against one shared vector file, and C11 against hand-written copies of
+  the same cases ([#42](https://github.com/Moissanite-Labs/weft/issues/42) unifies them).
 - **Interfaces as fields.** [*Eido*](https://github.com/Moissanite-Labs/weft-eido), Weft's design language (internal name *Aywa*), treats visual style as a point in a continuous space and feeds
-  the screen small hash-checked packets ([SYM-2P](https://github.com/Moissanite-Labs/abios)) instead of loose JSON.
+  the screen small hash-checked lines instead of loose JSON.
 
 Weft began as a long design conversation. That corpus is kept word for word in
 [Moissanite-Labs/weft-corpus](https://github.com/Moissanite-Labs/weft-corpus), and this repository turns
@@ -42,11 +43,11 @@ it into code that runs, tests that can fail, and documents that say plainly whic
 | Component | Path | What it is | Status |
 |---|---|---|---|
 | C1 · Plasm | [`weft/runtime/plasm`](weft/runtime/plasm) | Shared-memory arena, A/B candidate updates, frozen-core mask, provenance watermark checks | ✅ runs · tested |
-| C2 · Invariants | [`weft/runtime/invariants`](weft/runtime/invariants) | The safety gate in Python and C11 (and [JS](site/assets/js/invariant-gate.js)), against shared vectors | ✅ runs · tested |
+| C2 · Invariants | [`weft/runtime/invariants`](weft/runtime/invariants) | The safety gate in Python, C11 and [JS](site/assets/js/invariant-gate.js). Python is tested against all 12 shared conformance vectors, JS against the 6 weight-update vectors; the C11 test uses hand-written copies of 10 of the cases | ✅ runs · tested |
 | C3 · IC | [`weft/runtime/ic`](weft/runtime/ic) | Interaction-combinator reducer, binary serializer, graph-committed execution record | ✅ runs · tested |
 | C4 · Ledger | [`weft/runtime/ledger`](weft/runtime/ledger) | Solidity drafts for provenance, metering and disputes | 📝 draft · not compiled in CI, never deployed |
 | C5 · Gateway | [`weft/runtime/gateway`](weft/runtime/gateway) | Offline contract simulator, pure-Python Keccak-256, ABI topic checks | 🧪 simulation only |
-| C6 · Telemetry | [`weft/runtime/telemetry`](weft/runtime/telemetry) | Host metrics, 64-byte frames, SYM-2P encoder | ✅ runs · tested (site data is a fixture) |
+| C6 · Telemetry | [`weft/runtime/telemetry`](weft/runtime/telemetry) | Host metrics, 64-byte frames, telemetry-line encoder | ✅ runs · tested (site data is a fixture) |
 | C7 · Aywa | [`weft/runtime/aywa`](weft/runtime/aywa), [`site/`](site/) | Weft's field: packet verifier, telemetry worker, WebGPU loom, built on [Eido](https://github.com/Moissanite-Labs/weft-eido) modules | ✅ runs · tested |
 | Mac harness | [`weft/runtime/mac`](weft/runtime/mac) | Apple Silicon entry points that wrap C1 and C6 | 🧪 wrappers, no native Metal kernels yet |
 
@@ -92,7 +93,8 @@ hardware baseline and check whether the MPS backend is actually available.
 
 ```
 weft/runtime/        Code: the C1–C7 components and the Mac harness, each with its own README and tests
-site/                The w3ft.org website: static, no build step, deployed by wrangler.jsonc
+site/                The w3ft.org website: static, deployed by wrangler.jsonc (site/papers/ is generated)
+papers/              The paper series: Markdown sources, experiments, figures and the HTML/PDF templates
 docs/                Documentation: mission, roadmap, glossary, interface specs, design notes, the build program
 docs/program/        Build program, convergence plan, experiment cards and a file-by-file evidence ledger
 docs/corpus/         Claims register, safety index and digests of the source material
@@ -113,7 +115,8 @@ itself to a few rules:
 ## Documentation
 
 - [Mission](docs/mission.md) and [roadmap (four horizons)](docs/roadmap.md)
-- [Whitepaper synthesis](docs/whitepapers/syntactic-weft-whitepaper.md) and [glossary](docs/glossary.md)
+- **Papers** ([w3ft.org/papers](https://w3ft.org/papers/), source in [`papers/`](papers/)): [Paper 0, overview](papers/00-overview/paper.md), [Paper 1, Models as Cells](papers/01-models-as-cells/paper.md) and [Paper 2, Checkable Computation](papers/02-checkable-computation/paper.md), each as HTML and PDF
+- [Glossary](docs/glossary.md)
 - [Eido design philosophy](https://github.com/Moissanite-Labs/weft-eido/blob/main/docs/philosophy.md), in the design-language repository
 - [Constitution vs. contract](docs/design-notes/constitution-vs-contract.md): where the stated governance and the example contracts disagree
 - [I4 shared-memory interface](docs/interfaces/I4-shared-memory.md)
@@ -126,7 +129,7 @@ itself to a few rules:
 |---|---|
 | [weft-eido](https://github.com/Moissanite-Labs/weft-eido) | Eido, the design language: philosophy and dependency-free modules. `site/` vendors four of them. |
 | [weft-corpus](https://github.com/Moissanite-Labs/weft-corpus) | The original discovery sessions, verbatim. Corpus paths cited in code and docs here (for example `weft/design/craft.md:136`) refer to that repository. |
-| [abios](https://github.com/Moissanite-Labs/abios) | The SYM-2P protocol used for agent messages and telemetry packets. |
+| [abios](https://github.com/Moissanite-Labs/abios) | Weft's agent-messaging protocol (SYM-2P). The telemetry line here is an earlier dialect; moving it onto abios is [#67](https://github.com/Moissanite-Labs/weft/issues/67). |
 
 Files under `site/` that come from those repositories are pinned by hash in [`site/VENDORED.json`](site/VENDORED.json).
 Update them with `python3 scripts/vendor.py --eido ../weft-eido --corpus ../weft-corpus`.
