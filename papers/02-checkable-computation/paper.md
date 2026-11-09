@@ -3,10 +3,10 @@ title: "Checkable Computation"
 subtitle: "Interaction combinators, a binary graph format and committed execution records"
 number: 2
 slug: checkable-computation
-version: "1.0"
-date: 2026-11-08
+version: "1.1"
+date: 2026-11-09
 authors: "ML Weft contributors, Moissanite Labs"
-status: "Runs and tested. CPU experiments against an independent reference semantics. Three defects found and filed; confluence of the extended rules not proven."
+status: "Runs and tested. CPU experiments against an independent reference semantics. Three reducer defects found, now fixed in C3 version 2 (§8); confluence of the extended rules not proven."
 commit: a18fc40e31e71325aec507258fb80bb26f125c7c
 abstract: |
   A system that changes itself should be able to show what it computed. ML Weft approaches this with three small
@@ -327,6 +327,13 @@ The findings point to a short list of changes, in order:
 7. **Then, proofs.** Mechanise the rules on the port-indexed representation, and prove that a replay-verified
    record corresponds to a valid reduction sequence.
 
+**Since version 1.0.** Items 1, 2, 3 and 5 are now in the runtime (C3 version 2). The peer port is stored in the
+byte that version 1 reserved, so records stay 20 bytes; version 1 packets decode where their peer ports can be
+inferred. Allocation takes the lowest free slot, so a graph alone fixes every later step. Run against the reference
+semantics above, the new reducer matches it after every step on the six loop-back cases and on 300 random closed
+nets that include self-loops and double wires, and every record replays. The experiments in §6 still measure the
+version studied, frozen in `studied_c3/`. Items 4, 6 and 7 remain open (#77, #67).
+
 ## Reproducing this paper
 
 ```bash
@@ -338,7 +345,9 @@ python3 papers/02-checkable-computation/experiments.py --check  # recompute and 
 python3 -m unittest discover -s weft/runtime/ic -p 'test_*.py'
 ```
 
-Node 20 or newer is needed for the browser-parity experiment. Every number in §6 is deterministic.
+Node 20 or newer is needed for the browser-parity experiment. Every number in §6 is deterministic. The
+experiments import the reducer as studied (commit `a18fc40`, copied byte for byte into `studied_c3/`), not the
+current runtime.
 
 ## References
 

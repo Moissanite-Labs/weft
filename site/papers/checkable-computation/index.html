@@ -16,8 +16,8 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="citation_title" content="Checkable Computation: Interaction combinators, a binary graph format and committed execution records">
   <meta name="citation_author" content="ML Weft contributors, Moissanite Labs">
-  <meta name="citation_publication_date" content="2026-11-08">
-  <meta name="citation_pdf_url" content="https://w3ft.org/papers/checkable-computation/ml-weft-paper-2-checkable-computation-v1.0.pdf">
+  <meta name="citation_publication_date" content="2026-11-09">
+  <meta name="citation_pdf_url" content="https://w3ft.org/papers/checkable-computation/ml-weft-paper-2-checkable-computation-v1.1.pdf">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/assets/css/site.css">
   <link rel="stylesheet" href="/assets/css/papers.css">
@@ -69,15 +69,15 @@
     <header class="paper-hero navy-scope">
       <div class="wrap">
         <nav class="crumbs" aria-label="Breadcrumb"><a href="/papers/">Papers</a><span aria-hidden="true">/</span><span>Paper 2</span></nav>
-        <p class="eyebrow">Paper 2 · Version 1.0 · 8 November 2026</p>
+        <p class="eyebrow">Paper 2 · Version 1.1 · 9 November 2026</p>
         <h1>Checkable Computation</h1>
         <p class="paper-subtitle">Interaction combinators, a binary graph format and committed execution records</p>
         <p class="paper-byline">ML Weft contributors, Moissanite Labs</p>
-        <p class="paper-status"><span class="pill run">evidence</span> Runs and tested. CPU experiments against an independent reference semantics. Three defects found and filed; confluence of the extended rules not proven.</p>
+        <p class="paper-status"><span class="pill run">evidence</span> Runs and tested. CPU experiments against an independent reference semantics. Three reducer defects found, now fixed in C3 version 2 (§8); confluence of the extended rules not proven.</p>
         <div class="cta">
-          <a class="btn btn-primary" href="ml-weft-paper-2-checkable-computation-v1.0.pdf" download>
+          <a class="btn btn-primary" href="ml-weft-paper-2-checkable-computation-v1.1.pdf" download>
             <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
-            Download PDF <span class="btn-meta">357 KB</span>
+            Download PDF <span class="btn-meta">362 KB</span>
           </a>
           <a class="btn" href="https://github.com/Moissanite-Labs/weft/blob/main/papers/02-checkable-computation/paper.md">Source</a>
           <a class="btn" href="#cite">Cite</a>
@@ -488,6 +488,7 @@ C = \mathrm{SHA256}\bigl(\texttt{WEFT-IC-EXEC-V1:} \,\|\, I \,\|\, \texttt{:STEP
 <li><strong>Telemetry on abios.</strong> Move the telemetry line to an abios packet, or at least hash the whole line. Use a keyed MAC or signature for anything that crosses machines (#67).</li>
 <li><strong>Then, proofs.</strong> Mechanise the rules on the port-indexed representation, and prove that a replay-verified record corresponds to a valid reduction sequence.</li>
 </ol>
+<p><strong>Since version 1.0.</strong> Items 1, 2, 3 and 5 are now in the runtime (C3 version 2). The peer port is stored in the byte that version 1 reserved, so records stay 20 bytes; version 1 packets decode where their peer ports can be inferred. Allocation takes the lowest free slot, so a graph alone fixes every later step. Run against the reference semantics above, the new reducer matches it after every step on the six loop-back cases and on 300 random closed nets that include self-loops and double wires, and every record replays. The experiments in §6 still measure the version studied, frozen in <code>studied_c3/</code>. Items 4, 6 and 7 remain open (#77, #67).</p>
 </section>
 <section id="reproducing-this-paper" class="level2">
 <h2>Reproducing this paper</h2>
@@ -497,7 +498,7 @@ C = \mathrm{SHA256}\bigl(\texttt{WEFT-IC-EXEC-V1:} \,\|\, I \,\|\, \texttt{:STEP
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> papers/02-checkable-computation/experiments.py          <span class="co"># writes results.json and figures/</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> papers/02-checkable-computation/experiments.py <span class="at">--check</span>  <span class="co"># recompute and compare</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-m</span> unittest discover <span class="at">-s</span> weft/runtime/ic <span class="at">-p</span> <span class="st">&#39;test_*.py&#39;</span></span></code></pre></div>
-<p>Node 20 or newer is needed for the browser-parity experiment. Every number in §6 is deterministic.</p>
+<p>Node 20 or newer is needed for the browser-parity experiment. Every number in §6 is deterministic. The experiments import the reducer as studied (commit <code>a18fc40</code>, copied byte for byte into <code>studied_c3/</code>), not the current runtime.</p>
 </section>
 <section id="references" class="level2">
 <h2>References</h2>
@@ -528,15 +529,15 @@ C = \mathrm{SHA256}\bigl(\texttt{WEFT-IC-EXEC-V1:} \,\|\, I \,\|\, \texttt{:STEP
   number      = {2},
   year        = {2026},
   month       = nov,
-  note        = {Version 1.0},
+  note        = {Version 1.1},
   url         = {https://w3ft.org/papers/checkable-computation/}
 }</code></pre>
           </div>
           <p class="paper-fine">
-            Version 1.0, 8 November 2026. Describes repository commit
+            Version 1.1, 9 November 2026. Describes repository commit
             <a href="https://github.com/Moissanite-Labs/weft/tree/a18fc40e31e71325aec507258fb80bb26f125c7c"><code>a18fc40</code></a>.
             Text and figures are licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>, and the code is licensed under Apache-2.0.
-            Found an error? <a href="https://github.com/Moissanite-Labs/weft/issues/new?template=claim.yml">Open an issue</a>.
+            Found an error? <a href="https://github.com/Moissanite-Labs/weft/issues/new?template=claim.yml">Open an issue</a>. Earlier PDF editions: <a href="ml-weft-paper-2-checkable-computation-v1.0.pdf">v1.0</a>.
           </p>
         </section>
       </article>

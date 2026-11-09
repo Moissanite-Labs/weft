@@ -22,10 +22,10 @@
     {
       "slug": "checkable-computation",
       "number": 2,
-      "version": "1.0",
-      "pdf": "ml-weft-paper-2-checkable-computation-v1.0.pdf",
-      "pdf_bytes": 365414,
-      "source_sha256": "8435ab7a22c5b46e2f2178b00b755669c6cc4275117c66a19e9817c1b3b459a1",
+      "version": "1.1",
+      "pdf": "ml-weft-paper-2-checkable-computation-v1.1.pdf",
+      "pdf_bytes": 370232,
+      "source_sha256": "ea3234e84ffa6ba9957e41d5fa8cd0509702e701c35bdc26e90a860bf76d622c",
       "templates_sha256": "fc27711e021c3a5574ddc33a3f436b8d7609e9e32149bc1adcadc26aa7d40282"
     }
   ]

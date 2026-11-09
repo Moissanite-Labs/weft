@@ -2,28 +2,57 @@
 """
 Weft Flat-Array Interaction Combinator VM (Codebase C3 — Interface I5)
 ======================================================================
-Explicitly separates:
-  1. Pure Lafont Interaction Combinators (`ERA = 0`, `CON = 1`, `DUP = 2`):
-     - Same-kind / same-label active pairs (`CON-CON`, `DUP(L)-DUP(L)`, `ERA-ERA`)
-       annihilate and fuse auxiliary ports (`a.p1 <-> b.p1`, `a.p2 <-> b.p2`).
-     - Distinct-kind / distinct-label active pairs (`CON-DUP`, `DUP(L)-DUP(M)` for `L != M`)
-       commute by allocating 4 cross-wired nodes (`a1, a2, b1, b2`) and rewiring
-       external neighbor pointers bidirectionally.
-     - `ERA` interacting with `CON` or `DUP` erases the binary node by spawning two
-       `ERA` nodes connected to `p1` and `p2`.
-     - Confluence of this implementation has not been established by its tests.
-  2. Weft Extended Metabolic & Superposition Nodes (`VLV = 3`, `FRC = 4`, `SUP = 5`):
-     - `VLV` (Metabolic Valve): gates a reduction across a node pair using the C2
-       invariant gate (`verify_tension_bound` and metabolic budget). When within
-       bounds, `VLV` forwards its payload port transparently; when tension exceeds
-       `TENSION_MAX` (`85.0`) or budget is exhausted, `VLV` transitions to `FRC`
-       (Fracture / Excision marker) and erases the downstream subgraph via `ERA`.
-     - `SUP` (Superposition with label `aux_tag`): annihilates with matching-label
-       `DUP(L)` and commutes with distinct-label `DUP(M)` (`L != M`).
 
-Execution trace commitment (#21, #29, PROGRAM.md Phase 4):
-  `trace_commitment_sha256` hashes `SHA256(initial_graph_bcp || step_log_json || final_graph_bcp)`
-  binding graph bytes to the trace under SHA-256's collision-resistance assumption.
+Storage (version 2, port-indexed)
+---------------------------------
+Each node has three port slots. A wire joins two *ports*, not two nodes, so
+for every port the VM stores both the peer node (`ports[n, i]`) and which port
+of that node the wire reaches (`peer_ports[n, i]`). An open port, a free wire
+end on the boundary of the net, is `-1` in both arrays. Version 1 stored only
+the peer node. Two different nets could then share one representation (#52),
+and rules mis-wired loops through the active pair (#66). Paper 2 studied the
+version 1 reducer; that copy is frozen under papers/02-checkable-computation/.
+
+Arity (ports beyond it must stay open): ERA 0, CON 2, DUP 2, SUP 2, VLV 1, FRC 1.
+
+Rules
+-----
+`interact(a, b)` accepts only an **active pair**: two distinct live nodes whose
+principal ports (port 0) are wired to each other. Anything else raises
+`ValueError` before the net, allocator or trace change.
+
+1. Pure Lafont interaction combinators (`ERA = 0`, `CON = 1`, `DUP = 2`):
+   - Same kind and label (`CON-CON`, `DUP(L)-DUP(L)`) annihilate, joining aux
+     port i of one node to aux port i of the other.
+   - Different kinds or labels (`CON-DUP`, `DUP(L)-DUP(M)`) commute: two copies
+     of each node cross over.
+   - `ERA-ERA` vanishes; `ERA` against a binary node leaves two `ERA` nodes on
+     its aux wires.
+   - Every rule removes the pair's ports and contracts the paths through them,
+     so a wire that loops back into the pair is rewired correctly.
+   - Confluence of this implementation has not been established by its tests.
+2. Weft extensions (`VLV = 3`, `FRC = 4`, `SUP = 5`):
+   - `VLV` (metabolic valve) gates the reduction with the C2 tension bound and a
+     positive budget. When it passes, `VLV` vanishes and its peer takes the
+     valve's output wire (port 1). When it fails, `VLV` becomes `FRC` with its
+     principal port open, and a new `ERA` is wired to the peer's principal
+     port, forming an active pair that erases the peer.
+   - `SUP(L)` annihilates with `SUP(L)` or `DUP(L)` and commutes otherwise.
+   - `FRC` has no rule.
+
+Allocation always takes the lowest free slot, so where new nodes go depends
+only on the current graph. A BCP snapshot therefore fixes every later step,
+and a record replays from its initial graph (see `replay_execution`).
+
+Execution record
+----------------
+The initial graph is snapshotted at the first reduction (or by an explicit
+`snapshot_initial_graph()`). From then on the graph is sealed: the only way to
+change it is `interact`, so every change appears in the step log.
+`trace_commitment_sha256` hashes
+`initial_graph_bcp || step_log_json || final_graph_bcp` with domain separators.
+It binds bytes and steps under SHA-256's collision resistance;
+`verify_execution_record` replays the steps to check they follow the rules.
 """
 
 from __future__ import annotations
@@ -31,12 +60,16 @@ from __future__ import annotations
 import hashlib
 import json
 import math
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 import numpy as np
 
 from weft.runtime.invariants import TENSION_MAX, verify_tension_bound
-from .bcp_codec import deserialize_graph_bcp, graph_state_sha256, serialize_graph_bcp
+from .bcp_codec import BCP_VERSION, NODE_ARITY, deserialize_graph_bcp, serialize_graph_bcp, validate_port_graph
+
+Port = Tuple[int, int]
+
+EXEC_DOMAIN = b"WEFT-IC-EXEC-V2:"
 
 
 class FlatCombinatorVM:
@@ -52,82 +85,198 @@ class FlatCombinatorVM:
 
     PURE_LAFONT_TAGS = (ERA, CON, DUP)
     EXTENDED_WEFT_TAGS = (VLV, FRC, SUP)
+    ARITY = NODE_ARITY
 
     def __init__(self, capacity: int = 4096):
         self.capacity = int(capacity)
         self.tags = np.full(self.capacity, self.FREE, dtype=np.uint8)
         self.aux_tags = np.zeros(self.capacity, dtype=np.int16)
         self.ports = np.full((self.capacity, 3), -1, dtype=np.int32)
-        self.next_alloc = 0
+        self.peer_ports = np.full((self.capacity, 3), -1, dtype=np.int8)
         self.reductions = 0
         self.trace_log: List[Dict[str, Any]] = []
         self._initial_bcp: Optional[bytes] = None
 
-    def alloc_node(
-        self,
-        tag: int,
-        p0: int = -1,
-        p1: int = -1,
-        p2: int = -1,
-        aux_tag: int = 0,
-    ) -> int:
-        cursor = self.next_alloc
-        while cursor < self.capacity and self.tags[cursor] != self.FREE:
-            cursor += 1
-        if cursor >= self.capacity:
-            free_slots = np.where(self.tags == self.FREE)[0]
-            if len(free_slots) == 0:
-                raise MemoryError("Combinator arena exhausted")
-            idx = int(free_slots[0])
-        else:
-            idx = cursor
+    # ------------------------------------------------------------ building
+    def _require_unsealed(self) -> None:
+        if self._initial_bcp is not None:
+            raise RuntimeError(
+                "graph is sealed after the initial snapshot; only interact() may change it, "
+                "so that every change is in the execution record"
+            )
 
-        self.next_alloc = cursor if cursor >= self.capacity else cursor + 1
+    def _free_slots(self, count: int) -> List[int]:
+        free = np.flatnonzero(self.tags == self.FREE)
+        if len(free) < count:
+            raise MemoryError(f"Combinator rule requires {count} free arena slots")
+        return [int(s) for s in free[:count]]
 
+    def _place(self, idx: int, tag: int, aux_tag: int) -> None:
         self.tags[idx] = tag
         self.aux_tags[idx] = aux_tag
-        self.ports[idx, 0] = p0
-        self.ports[idx, 1] = p1
-        self.ports[idx, 2] = p2
+        self.ports[idx, :] = -1
+        self.peer_ports[idx, :] = -1
+
+    def alloc_node(self, tag: int, aux_tag: int = 0) -> int:
+        """Add a node with all ports open, in the lowest free slot."""
+        self._require_unsealed()
+        if int(tag) not in self.ARITY:
+            raise ValueError(f"unknown node tag {tag}")
+        (idx,) = self._free_slots(1)
+        self._place(idx, int(tag), int(aux_tag))
         return idx
 
     def free_node(self, idx: int) -> None:
+        """Remove a node; ports wired to it become open."""
+        self._require_unsealed()
+        self._release(int(idx))
+
+    def _release(self, idx: int) -> None:
+        for i in range(3):
+            self._open(idx, i)
         self.tags[idx] = self.FREE
         self.aux_tags[idx] = 0
-        self.ports[idx, :] = -1
+
+    def _check_port(self, node: int, port: int) -> None:
+        if not (0 <= node < self.capacity) or int(self.tags[node]) == self.FREE:
+            raise ValueError(f"node {node} is not live")
+        if not 0 <= port <= self.ARITY[int(self.tags[node])]:
+            raise ValueError(f"port {port} is beyond the arity of node {node}")
+
+    def _open(self, node: int, port: int) -> None:
+        """Open (node, port) and the far end of its wire, if any."""
+        m = int(self.ports[node, port])
+        if m >= 0:
+            j = int(self.peer_ports[node, port])
+            self.ports[m, j] = -1
+            self.peer_ports[m, j] = -1
+        self.ports[node, port] = -1
+        self.peer_ports[node, port] = -1
+
+    def _link(self, p: Port, q: Port) -> None:
+        (a, i), (b, j) = p, q
+        self.ports[a, i], self.peer_ports[a, i] = b, j
+        self.ports[b, j], self.peer_ports[b, j] = a, i
 
     def connect_ports(self, node_a: int, port_a: int, node_b: int, port_b: int) -> None:
-        """Wire `(node_a, port_a)` and `(node_b, port_b)` bidirectionally."""
-        if node_a >= 0:
-            self.ports[node_a, port_a] = node_b
-        if node_b >= 0:
-            self.ports[node_b, port_b] = node_a
+        """Wire port `port_a` of `node_a` to port `port_b` of `node_b`.
 
-    def _replace_neighbor_link(self, target_node: int, old_peer: int, new_peer: int) -> None:
-        """When `old_peer` was connected to `target_node`, redirect `target_node`'s port to `new_peer`."""
-        if target_node < 0 or target_node >= self.capacity:
-            return
-        if self.tags[target_node] == self.FREE:
-            return
-        for p in range(3):
-            if int(self.ports[target_node, p]) == int(old_peer):
-                self.ports[target_node, p] = int(new_peer)
-                return
+        Any wire either port had before is cut, leaving its far end open.
+        """
+        self._require_unsealed()
+        node_a, port_a, node_b, port_b = int(node_a), int(port_a), int(node_b), int(port_b)
+        self._check_port(node_a, port_a)
+        self._check_port(node_b, port_b)
+        if (node_a, port_a) == (node_b, port_b):
+            raise ValueError("a port cannot be wired to itself")
+        self._open(node_a, port_a)
+        self._open(node_b, port_b)
+        self._link((node_a, port_a), (node_b, port_b))
 
-    def _fuse_external_wires(self, ext_a: int, old_a: int, ext_b: int, old_b: int) -> None:
-        """Splice two external neighbors `ext_a` (formerly wired to `old_a`) and `ext_b` (wired to `old_b`)."""
-        self._replace_neighbor_link(ext_a, old_a, ext_b)
-        self._replace_neighbor_link(ext_b, old_b, ext_a)
+    def peer(self, node: int, port: int) -> Optional[Port]:
+        """The port wired to (node, port), or None if it is open."""
+        m = int(self.ports[node, port])
+        return None if m < 0 else (m, int(self.peer_ports[node, port]))
 
+    # ------------------------------------------------------------ validity
+    def live_nodes(self) -> List[int]:
+        return [int(s) for s in np.flatnonzero(self.tags != self.FREE)]
+
+    def check_net(self) -> None:
+        """Raise ValueError unless the storage is a well-formed port graph.
+
+        Checks tags, arity, port ranges and that every wire is reciprocal and
+        joins two distinct ports of live nodes. Open ports are allowed.
+        """
+        validate_port_graph(
+            ((s, int(self.tags[s]), self.ports[s].tolist(), self.peer_ports[s].tolist())
+             for s in self.live_nodes()),
+            self.capacity,
+        )
+
+    def is_active_pair(self, a: int, b: int) -> bool:
+        a, b = int(a), int(b)
+        if a == b or not (0 <= a < self.capacity and 0 <= b < self.capacity):
+            return False
+        if self.FREE in (int(self.tags[a]), int(self.tags[b])):
+            return False
+        return self.peer(a, 0) == (b, 0)
+
+    def active_pairs(self) -> List[Tuple[int, int]]:
+        out = []
+        for a in self.live_nodes():
+            p = self.peer(a, 0)
+            if p is not None and p[1] == 0 and a < p[0]:
+                out.append((a, p[0]))
+        return out
+
+    # ------------------------------------------------------------ records
     def snapshot_initial_graph(self) -> bytes:
-        """Record the initial serialized graph state before reductions begin."""
-        self._initial_bcp = serialize_graph_bcp(self)
+        """Record the initial graph and seal it against edits outside interact()."""
+        if self.reductions:
+            raise RuntimeError("the initial snapshot must precede the first reduction")
+        if self._initial_bcp is None:
+            self._initial_bcp = serialize_graph_bcp(self)
         return self._initial_bcp
 
-    def _require_free_slots(self, count: int) -> None:
-        """Preflight an entire allocating rule before mutating any VM state."""
-        if int(np.count_nonzero(self.tags == self.FREE)) < count:
-            raise MemoryError(f"Combinator rule requires {count} free arena slots")
+    # ------------------------------------------------------------ rewriting
+    def _rewrite(self, removed_nodes: Iterable[int], through: List[Tuple[Port, Port]]) -> None:
+        """Remove `removed_nodes`, joining wires along the rule's `through` links.
+
+        Each removed port has its old wire and at most one through link. From
+        every surviving port that touches a removed port, follow old wires and
+        through links alternately until reaching a surviving port (the new
+        wire) or an open end. Loops through the pair are contracted, and closed
+        loops made only of removed ports vanish.
+        """
+        removed_nodes = list(removed_nodes)
+        removed = {(n, i) for n in removed_nodes for i in range(3)}
+        nxt: Dict[Port, Port] = {}
+        for p, q in through:
+            if p in nxt or q in nxt:
+                raise AssertionError("a port has two through links")
+            nxt[p], nxt[q] = q, p
+
+        starts: List[Port] = []
+        for r in sorted(removed):
+            s = self.peer(*r)
+            if s is not None and s not in removed:
+                starts.append(s)
+        starts += [p for p in nxt if p not in removed]
+
+        result: Dict[Port, Optional[Port]] = {}
+        limit = 2 * len(removed) + 2
+        for s in starts:
+            if s in result:
+                continue
+            if s in nxt:
+                cur, via = nxt[s], "through"
+            else:
+                cur, via = self.peer(*s), "wire"
+            hops = 0
+            while cur is not None and cur in removed:
+                hops += 1
+                if hops > limit:
+                    raise AssertionError("path contraction did not terminate")
+                if via == "wire":
+                    cur, via = nxt.get(cur), "through"
+                else:
+                    cur, via = self.peer(*cur), "wire"
+            result[s] = cur
+            if cur is not None:
+                result[cur] = s
+
+        for n in removed_nodes:
+            self.tags[n] = self.FREE
+            self.aux_tags[n] = 0
+            self.ports[n, :] = -1
+            self.peer_ports[n, :] = -1
+        for s, t in result.items():
+            if t is None:
+                self.ports[s] = -1
+                self.peer_ports[s] = -1
+            else:
+                self._link(s, t)
 
     def interact(
         self,
@@ -136,18 +285,18 @@ class FlatCombinatorVM:
         tension: float = 22.0,
         metabolic_budget: float = 100.0,
     ) -> str:
-        ta = int(self.tags[a])
-        tb = int(self.tags[b])
-        la = int(self.aux_tags[a])
-        lb = int(self.aux_tags[b])
+        a, b = int(a), int(b)
+        if not self.is_active_pair(a, b):
+            raise ValueError(f"({a}, {b}) is not an active pair (principal ports wired together)")
+        ta, tb = int(self.tags[a]), int(self.tags[b])
+        la, lb = int(self.aux_tags[a]), int(self.aux_tags[b])
+        if self.FRC in (ta, tb):
+            raise ValueError("FRC has no interaction rule")
 
         annihilates = (
             (ta == tb and la == lb and ta in (self.CON, self.DUP, self.SUP))
             or ({ta, tb} == {self.DUP, self.SUP} and la == lb)
         )
-        # This is a single-threaded arena. Reserve the rule's existing peak
-        # requirement, including the old pair, before snapshot/allocator changes.
-        # It preserves current allocation order and successful reduction behavior.
         if ta == self.VLV or tb == self.VLV:
             tension = float(tension)
             metabolic_budget = float(metabolic_budget)
@@ -162,99 +311,78 @@ class FlatCombinatorVM:
             required_slots = 2
         else:
             required_slots = 0 if annihilates else 4
-        if required_slots:
-            self._require_free_slots(required_slots)
+        # Preflight: reserve every slot the rule needs before anything changes.
+        # The old pair stays live during the rule, so new nodes never reuse it.
+        slots = self._free_slots(required_slots)
         if self._initial_bcp is None:
             self.snapshot_initial_graph()
 
-        # 0. Weft Extended Metabolic Valve (VLV = 3)
+        entry: Dict[str, Any] = {"a": a, "b": b}
+        # 0. Weft metabolic valve (VLV = 3)
         if ta == self.VLV or tb == self.VLV:
-            vlv = a if ta == self.VLV else b
-            peer = b if ta == self.VLV else a
+            vlv, peer = (a, b) if ta == self.VLV else (b, a)
             if valve_passes:
-                ext_out = int(self.ports[vlv, 1])
-                self._replace_neighbor_link(ext_out, vlv, peer)
-                self.ports[peer, 0] = ext_out
-                self.free_node(vlv)
+                self._rewrite([vlv], [((vlv, 0), (vlv, 1))])
                 op = "VLV_PASS"
             else:
-                # Excision triggered: convert valve to FRC marker and erase peer via ERA
+                (era,) = slots
+                self._place(era, self.ERA, 0)
                 self.tags[vlv] = self.FRC
-                era = self.alloc_node(self.ERA, p0=peer)
-                self.ports[peer, 0] = era
+                self.ports[vlv, 0] = -1
+                self.peer_ports[vlv, 0] = -1
+                self._link((era, 0), (peer, 0))
                 op = "VLV_EXCISE_TO_FRC"
-            self.reductions += 1
-            self.trace_log.append(
-                {"step": self.reductions, "op": op, "a": a, "b": b,
-                 "tension": tension, "metabolic_budget": metabolic_budget}
-            )
-            return op
+            entry.update(tension=tension, metabolic_budget=metabolic_budget)
 
-        # 1. Erasure (ERA interacting with ERA, CON, DUP, or SUP)
-        if ta == self.ERA and tb == self.ERA:
-            self.free_node(a)
-            self.free_node(b)
+        # 1. Erasure
+        elif ta == self.ERA and tb == self.ERA:
+            self._rewrite([a, b], [])
             op = "ERA_ERA"
         elif ta == self.ERA or tb == self.ERA:
-            era_idx = a if ta == self.ERA else b
-            other_idx = b if ta == self.ERA else a
-            p1, p2 = int(self.ports[other_idx, 1]), int(self.ports[other_idx, 2])
-            e1 = self.alloc_node(self.ERA, p0=p1)
-            e2 = self.alloc_node(self.ERA, p0=p2)
-            self._replace_neighbor_link(p1, other_idx, e1)
-            self._replace_neighbor_link(p2, other_idx, e2)
-            self.free_node(era_idx)
-            self.free_node(other_idx)
+            era_idx, other = (a, b) if ta == self.ERA else (b, a)
+            e1, e2 = slots
+            self._place(e1, self.ERA, 0)
+            self._place(e2, self.ERA, 0)
+            self._rewrite([era_idx, other], [((other, 1), (e1, 0)), ((other, 2), (e2, 0))])
             op = f"ERA_PROPAGATE({e1},{e2})"
 
-        # 2. Annihilation:
-        #    - CON <-> CON (with matching aux_tag)
-        #    - DUP(L) <-> DUP(L) (matching label L)
-        #    - SUP(L) <-> DUP(L) or SUP(L) <-> SUP(L) (matching label L)
+        # 2. Annihilation: CON-CON, DUP(L)-DUP(L), SUP(L)-SUP(L), DUP(L)-SUP(L)
         elif annihilates:
-            a1, a2 = int(self.ports[a, 1]), int(self.ports[a, 2])
-            b1, b2 = int(self.ports[b, 1]), int(self.ports[b, 2])
-            self._fuse_external_wires(a1, a, b1, b)
-            self._fuse_external_wires(a2, a, b2, b)
-            self.free_node(a)
-            self.free_node(b)
+            self._rewrite([a, b], [((a, 1), (b, 1)), ((a, 2), (b, 2))])
             op = f"ANNIHILATE(tagA={ta},tagB={tb},label={la})"
 
-        # 3. Commutation:
-        #    - CON <-> DUP
-        #    - DUP(L) <-> DUP(M) with L != M
-        #    - CON/DUP <-> SUP(M) with distinct kind/label
+        # 3. Commutation: CON-DUP, DUP(L)-DUP(M), and CON/DUP/SUP mixes
         else:
-            ext_a1, ext_a2 = int(self.ports[a, 1]), int(self.ports[a, 2])
-            ext_b1, ext_b2 = int(self.ports[b, 1]), int(self.ports[b, 2])
-
-            a1 = self.alloc_node(tb, p0=ext_a1, aux_tag=lb)
-            a2 = self.alloc_node(tb, p0=ext_a2, aux_tag=lb)
-            b1 = self.alloc_node(ta, p0=ext_b1, aux_tag=la)
-            b2 = self.alloc_node(ta, p0=ext_b2, aux_tag=la)
-
-            self._replace_neighbor_link(ext_a1, a, a1)
-            self._replace_neighbor_link(ext_a2, a, a2)
-            self._replace_neighbor_link(ext_b1, b, b1)
-            self._replace_neighbor_link(ext_b2, b, b2)
-
-            # Wire cross-connections between auxiliary ports of the 4 new nodes
-            self.ports[a1, 1] = b1
-            self.ports[a1, 2] = b2
-            self.ports[a2, 1] = b1
-            self.ports[a2, 2] = b2
-            self.ports[b1, 1] = a1
-            self.ports[b1, 2] = a2
-            self.ports[b2, 1] = a1
-            self.ports[b2, 2] = a2
-
-            self.free_node(a)
-            self.free_node(b)
+            a1, a2, b1, b2 = slots
+            self._place(a1, tb, lb)
+            self._place(a2, tb, lb)
+            self._place(b1, ta, la)
+            self._place(b2, ta, la)
+            self._link((a1, 1), (b1, 1))
+            self._link((a1, 2), (b2, 1))
+            self._link((a2, 1), (b1, 2))
+            self._link((a2, 2), (b2, 2))
+            self._rewrite(
+                [a, b],
+                [((a, 1), (a1, 0)), ((a, 2), (a2, 0)), ((b, 1), (b1, 0)), ((b, 2), (b2, 0))],
+            )
             op = f"COMMUTE({a1},{a2},{b1},{b2})"
 
         self.reductions += 1
-        self.trace_log.append({"step": self.reductions, "op": op, "a": a, "b": b})
+        entry.update(step=self.reductions, op=op)
+        self.trace_log.append(entry)
         return op
+
+    def normalize(self, max_steps: int = 10_000, **kwargs: float) -> int:
+        """Reduce the lowest active pair until none remain; return the step count."""
+        steps = 0
+        while steps < max_steps:
+            pairs = [p for p in self.active_pairs() if self.FRC not in (int(self.tags[p[0]]), int(self.tags[p[1]]))]
+            if not pairs:
+                break
+            self.interact(*pairs[0], **kwargs)
+            steps += 1
+        return steps
 
     def compute_execution_commitment(self) -> Dict[str, Any]:
         """
@@ -262,62 +390,106 @@ class FlatCombinatorVM:
           `H(initial_graph_bcp || canonical_step_log_json || final_graph_bcp)`
         """
         initial_bcp = self._initial_bcp if self._initial_bcp is not None else serialize_graph_bcp(self)
-        final_bcp = serialize_graph_bcp(self)
-        step_json = json.dumps(self.trace_log, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        return _commitment_record(self.capacity, initial_bcp, self.trace_log, serialize_graph_bcp(self),
+                                  self.reductions, len(self.live_nodes()))
 
-        initial_hash = "0x" + hashlib.sha256(initial_bcp).hexdigest()
-        final_hash = "0x" + hashlib.sha256(final_bcp).hexdigest()
 
-        h = hashlib.sha256()
-        h.update(b"WEFT-IC-EXEC-V1:")
-        h.update(initial_bcp)
-        h.update(b":STEPS:")
-        h.update(step_json)
-        h.update(b":FINAL:")
-        h.update(final_bcp)
-        commitment = "0x" + h.hexdigest()
+def _commitment_record(capacity: int, initial_bcp: bytes, steps: List[Dict[str, Any]], final_bcp: bytes,
+                       reductions: int, active_nodes: int) -> Dict[str, Any]:
+    step_json = json.dumps(steps, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    h = hashlib.sha256()
+    h.update(EXEC_DOMAIN)
+    h.update(initial_bcp)
+    h.update(b":STEPS:")
+    h.update(step_json)
+    h.update(b":FINAL:")
+    h.update(final_bcp)
+    return {
+        "status": "PASS" if reductions > 0 else "FAIL",
+        "bcp_version": BCP_VERSION,
+        "capacity": capacity,
+        "reductions_executed": reductions,
+        "active_nodes_remaining": active_nodes,
+        "initial_graph_sha256": "0x" + hashlib.sha256(initial_bcp).hexdigest(),
+        "final_graph_sha256": "0x" + hashlib.sha256(final_bcp).hexdigest(),
+        "bcp_byte_length": len(final_bcp),
+        "trace_commitment_sha256": "0x" + h.hexdigest(),
+        "steps": [dict(s) for s in steps],
+    }
 
-        active_nodes = int(np.sum(self.tags != self.FREE))
-        return {
-            "status": "PASS" if self.reductions > 0 else "FAIL",
-            "capacity": self.capacity,
-            "reductions_executed": self.reductions,
-            "active_nodes_remaining": active_nodes,
-            "initial_graph_sha256": initial_hash,
-            "final_graph_sha256": final_hash,
-            "bcp_byte_length": len(final_bcp),
-            "trace_commitment_sha256": commitment,
-            "steps": list(self.trace_log),
-        }
+
+def replay_execution(initial_bcp: bytes, steps: List[Dict[str, Any]]) -> FlatCombinatorVM:
+    """Re-run `steps` from the initial graph, checking each step's op as it goes.
+
+    Raises ValueError if a step is not an active pair, or yields a different op.
+    """
+    vm = deserialize_graph_bcp(initial_bcp)
+    vm.snapshot_initial_graph()
+    for n, step in enumerate(steps, start=1):
+        if step.get("step") != n:
+            raise ValueError(f"step {n}: numbered {step.get('step')!r}")
+        kwargs = {k: step[k] for k in ("tension", "metabolic_budget") if k in step}
+        op = vm.interact(step["a"], step["b"], **kwargs)
+        if op != step.get("op"):
+            raise ValueError(f"step {n}: replay gave {op!r}, record says {step.get('op')!r}")
+    return vm
+
+
+def verify_execution_record(initial_bcp: bytes, record: Dict[str, Any]) -> Dict[str, Any]:
+    """Check a record by replaying it from `initial_bcp`.
+
+    PASS means: the bytes match the record's initial hash, every step is a legal
+    reduction giving the recorded op, and the replayed final graph and
+    commitment equal the record's. It says nothing about why the steps were
+    chosen, or about any VLV inputs beyond those recorded.
+    """
+    reasons = []
+    if "0x" + hashlib.sha256(initial_bcp).hexdigest() != record.get("initial_graph_sha256"):
+        reasons.append("initial graph does not match the record's initial_graph_sha256")
+    try:
+        vm = replay_execution(initial_bcp, record.get("steps", []))
+    except (ValueError, KeyError, TypeError, MemoryError) as exc:
+        reasons.append(f"replay failed: {exc}")
+    else:
+        again = _commitment_record(vm.capacity, initial_bcp, vm.trace_log, serialize_graph_bcp(vm),
+                                   vm.reductions, len(vm.live_nodes()))
+        for key in ("final_graph_sha256", "trace_commitment_sha256"):
+            if again[key] != record.get(key):
+                reasons.append(f"{key} differs on replay")
+    return {"status": "FAIL" if reasons else "PASS", "reasons": reasons}
 
 
 def run_combinator_self_test() -> Dict[str, Any]:
-    """Run a standard CON-DUP commutation followed by CON-CON annihilation and ERA propagation."""
-    vm = FlatCombinatorVM(capacity=1024)
-    # Allocate external anchor wires (CON nodes acting as free interface ports)
-    ext_l = vm.alloc_node(vm.CON, p0=100, p1=101, p2=102)
-    ext_r = vm.alloc_node(vm.CON, p0=200, p1=201, p2=202)
-    c1 = vm.alloc_node(vm.CON, p0=1, p1=ext_l, p2=ext_r)
-    d1 = vm.alloc_node(vm.DUP, p0=c1, p1=30, p2=40, aux_tag=1)
-    vm.ports[c1, 0] = d1
-    vm.ports[ext_l, 1] = c1
-    vm.ports[ext_r, 1] = c1
-    vm.snapshot_initial_graph()
+    """Reduce a small net to normal form and check its record replays.
 
-    # Step 1: Commute CON(c1) with DUP(d1)
-    vm.interact(c1, d1)
-
-    # Step 2: Annihilate a same-kind CON-CON pair
-    c2 = vm.alloc_node(vm.CON, p0=-1, p1=ext_l, p2=ext_r)
-    c3 = vm.alloc_node(vm.CON, p0=c2, p1=ext_r, p2=ext_l)
-    vm.ports[c2, 0] = c3
-    vm.interact(c2, c3)
-
-    # Step 3: Propagate ERA against one of the commuted nodes
-    e0 = vm.alloc_node(vm.ERA, p0=4)
-    vm.interact(e0, 4)
-
-    return vm.compute_execution_commitment()
+    The net exercises annihilation with a wire looped across the pair,
+    commutation of a CON whose aux ports are wired to each other, and erasure.
+    It is built in full before the snapshot; every change after that is a
+    reduction of an active pair.
+    """
+    vm = FlatCombinatorVM(capacity=64)
+    # Allocation order sets the reduction order: normalize() takes the lowest
+    # active pair, so c2-c3 annihilates first and leaves c1's aux ports looped.
+    c2, c3 = vm.alloc_node(vm.CON), vm.alloc_node(vm.CON)
+    c1, d1 = vm.alloc_node(vm.CON), vm.alloc_node(vm.DUP, aux_tag=1)
+    e0, d2 = vm.alloc_node(vm.ERA), vm.alloc_node(vm.DUP, aux_tag=2)
+    vm.connect_ports(c1, 0, d1, 0)
+    vm.connect_ports(c2, 0, c3, 0)
+    vm.connect_ports(e0, 0, d2, 0)
+    vm.connect_ports(c1, 1, c2, 1)
+    vm.connect_ports(c1, 2, c3, 1)
+    vm.connect_ports(c2, 2, c3, 2)  # loops across the c2-c3 pair
+    vm.connect_ports(d1, 1, d2, 1)
+    # d1.2 and d2.2 stay open: the net's interface.
+    vm.check_net()
+    initial = vm.snapshot_initial_graph()
+    vm.normalize()
+    vm.check_net()
+    record = vm.compute_execution_commitment()
+    record["replay"] = verify_execution_record(initial, record)["status"]
+    if record["replay"] != "PASS":
+        record["status"] = "FAIL"
+    return record
 
 
 run_ic_verification = run_combinator_self_test
