@@ -119,7 +119,7 @@ jobs:
           PANDOC_DEB: pandoc-3.1.3-1-amd64.deb
           PANDOC_SHA256: caa7e0410f9e2cb1da2eb8db13cc97b5548fe455985e2c944e3929d22f99bcdc
         run: |
-          curl -fsSL -o "$RUNNER_TEMP/$PANDOC_DEB" "https://github.com/jgm/pandoc/releases/download/3.1.3/$PANDOC_DEB"
+          curl -fsSL --retry 5 --retry-all-errors --retry-delay 5 -o "$RUNNER_TEMP/$PANDOC_DEB" "https://github.com/jgm/pandoc/releases/download/3.1.3/$PANDOC_DEB"
           echo "$PANDOC_SHA256  $RUNNER_TEMP/$PANDOC_DEB" | sha256sum -c -
           sudo dpkg -i "$RUNNER_TEMP/$PANDOC_DEB"
           pandoc --version | head -1
