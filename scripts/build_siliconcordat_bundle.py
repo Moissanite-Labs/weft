@@ -39,18 +39,42 @@ def load_manifest() -> dict:
         return json.load(fh)
 
 
-def git_head() -> str:
+def ensure_commit(sha: str) -> None:
+    probe = subprocess.run(
+        ["git", "cat-file", "-e", f"{sha}^{{commit}}"],
+        cwd=ROOT,
+        capture_output=True,
+    )
+    if probe.returncode != 0:
+        subprocess.run(["git", "fetch", "origin", sha], cwd=ROOT, check=True)
+        subprocess.run(
+            ["git", "cat-file", "-e", f"{sha}^{{commit}}"],
+            cwd=ROOT,
+            check=True,
+        )
+
+
+def site_tree_at(rev: str) -> str:
     return subprocess.check_output(
-        ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
+        ["git", "rev-parse", f"{rev}:site"],
+        cwd=ROOT,
+        text=True,
     ).strip()
 
 
 def assert_weft_pin(manifest: dict) -> None:
     pinned = manifest["weft"]["sha"]
-    head = git_head()
-    if head != pinned:
+    ensure_commit(pinned)
+    try:
+        head_site = site_tree_at("HEAD")
+        pin_site = site_tree_at(pinned)
+    except subprocess.CalledProcessError as exc:
+        print(f"error: could not resolve site/ tree: {exc}", file=sys.stderr)
+        sys.exit(1)
+    if head_site != pin_site:
         print(
-            f"error: checkout {head} does not match pinned weft sha {pinned}",
+            "error: site/ at HEAD does not match site/ at pinned weft "
+            f"{pinned} (HEAD:site={head_site}, pin:site={pin_site})",
             file=sys.stderr,
         )
         sys.exit(1)

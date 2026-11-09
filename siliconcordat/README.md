@@ -11,10 +11,9 @@ Pinned sources live in [`sources-manifest.json`](sources-manifest.json):
 
 ## Rebuild `dist/`
 
-From a checkout at the Weft pin:
+From any commit whose **`site/` tree** matches the Weft pin (the build compares `HEAD:site` to `{pin}:site` and fails if they differ):
 
 ```bash
-git checkout bff15957656a4c904250963e67d0a2c770cd5a26
 python3 scripts/build_siliconcordat_bundle.py
 python3 scripts/verify_siliconcordat_bundle.py
 node --test workers/test_siliconcordat.mjs

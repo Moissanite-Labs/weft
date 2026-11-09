@@ -5,11 +5,8 @@
 
 const CANONICAL_ORIGIN = "https://siliconcordat.com";
 
-const WWW_OR_ALT_HOSTS = new Set([
-  "www.siliconcordat.com",
-  "siliconcordat.org",
-  "www.siliconcordat.org",
-]);
+/** Hostnames that canonicalize to siliconcordat.com (.org is a separate site — not here). */
+const WWW_SILICONCORDAT_HOSTS = new Set(["www.siliconcordat.com"]);
 
 /** @param {URL} url */
 function weftSubhostRedirect(url) {
@@ -39,7 +36,7 @@ export default {
     const url = new URL(request.url);
     const host = url.hostname.toLowerCase();
 
-    if (WWW_OR_ALT_HOSTS.has(host)) {
+    if (WWW_SILICONCORDAT_HOSTS.has(host)) {
       return Response.redirect(`${CANONICAL_ORIGIN}${url.pathname}${url.search}`, 301);
     }
 
@@ -55,4 +52,4 @@ export default {
   },
 };
 
-export { weftSubhostRedirect, w3ftPathRedirect, WWW_OR_ALT_HOSTS };
+export { weftSubhostRedirect, w3ftPathRedirect, WWW_SILICONCORDAT_HOSTS };
