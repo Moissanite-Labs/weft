@@ -16,8 +16,8 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="citation_title" content="Models as Cells: Self-modification bounded by distance from a saved baseline">
   <meta name="citation_author" content="ML Weft contributors, Moissanite Labs">
-  <meta name="citation_publication_date" content="2026-11-08">
-  <meta name="citation_pdf_url" content="https://w3ft.org/papers/models-as-cells/ml-weft-paper-1-models-as-cells-v1.0.pdf">
+  <meta name="citation_publication_date" content="2026-11-09">
+  <meta name="citation_pdf_url" content="https://w3ft.org/papers/models-as-cells/ml-weft-paper-1-models-as-cells-v1.1.pdf">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/assets/css/site.css">
   <link rel="stylesheet" href="/assets/css/papers.css">
@@ -69,15 +69,15 @@
     <header class="paper-hero navy-scope">
       <div class="wrap">
         <nav class="crumbs" aria-label="Breadcrumb"><a href="/papers/">Papers</a><span aria-hidden="true">/</span><span>Paper 1</span></nav>
-        <p class="eyebrow">Paper 1 · Version 1.0 · 8 November 2026</p>
+        <p class="eyebrow">Paper 1 · Version 1.1 · 9 November 2026</p>
         <h1>Models as Cells</h1>
         <p class="paper-subtitle">Self-modification bounded by distance from a saved baseline</p>
         <p class="paper-byline">ML Weft contributors, Moissanite Labs</p>
         <p class="paper-status"><span class="pill run">evidence</span> Runs and tested. Small-scale CPU experiments. Apple MPS results not yet measured.</p>
         <div class="cta">
-          <a class="btn btn-primary" href="ml-weft-paper-1-models-as-cells-v1.0.pdf" download>
+          <a class="btn btn-primary" href="ml-weft-paper-1-models-as-cells-v1.1.pdf" download>
             <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
-            Download PDF <span class="btn-meta">506 KB</span>
+            Download PDF <span class="btn-meta">509 KB</span>
           </a>
           <a class="btn" href="https://github.com/Moissanite-Labs/weft/blob/main/papers/01-models-as-cells/paper.md">Source</a>
           <a class="btn" href="#cite">Cite</a>
@@ -412,7 +412,7 @@ Only a commit consumes budget (<math display="inline" xmlns="http://www.w3.org/1
 </tbody>
 </table></div>
 <p>Every committed distance stays below <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math>, as Proposition 3 requires. Once a proposal is rejected, the next one starts from the same weights and the same residual, so the cell stops at the boundary rather than probing past it.</p>
-<p><strong>A reporting defect found by this experiment.</strong> <code>run_weft_plasm_cycle</code> reports <code>final_target_error</code> from the last <em>candidate</em>, whether or not it was committed. With <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mo>=</mo><mn>0.05</mn></mrow><annotation encoding="application/x-tex">R = 0.05</annotation></semantics></math> it reports a ratio of 0.880, a 12% improvement, when no update was ever committed. With full acceptance the two agree. The table above uses the held weights. The defect is tracked as <a href="https://github.com/Moissanite-Labs/weft/issues/63">issue #63</a>.</p>
+<p><strong>A reporting defect found by this experiment.</strong> <code>run_weft_plasm_cycle</code> reports <code>final_target_error</code> from the last <em>candidate</em>, whether or not it was committed. With <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mo>=</mo><mn>0.05</mn></mrow><annotation encoding="application/x-tex">R = 0.05</annotation></semantics></math> it reports a ratio of 0.880, a 12% improvement, when no update was ever committed. With full acceptance the two agree. The table above uses the held weights. The defect was tracked as <a href="https://github.com/Moissanite-Labs/weft/issues/63">issue #63</a> and is fixed since version 1.0: each generation now records <code>committed</code> and <code>held_target_error</code>, and <code>final_target_error</code> and the status use the held weights. The experiment script checks that the library’s figure equals the held error in every run, and keeps the candidate ratio above only as the measurement of the old behaviour.</p>
 </section>
 <section id="e5-one-rule-three-languages" class="level3">
 <h3>5.5 E5: one rule, three languages</h3>
@@ -512,15 +512,15 @@ Only a commit consumes budget (<math display="inline" xmlns="http://www.w3.org/1
   number      = {1},
   year        = {2026},
   month       = nov,
-  note        = {Version 1.0},
+  note        = {Version 1.1},
   url         = {https://w3ft.org/papers/models-as-cells/}
 }</code></pre>
           </div>
           <p class="paper-fine">
-            Version 1.0, 8 November 2026. Describes repository commit
+            Version 1.1, 9 November 2026. Describes repository commit
             <a href="https://github.com/Moissanite-Labs/weft/tree/a18fc40e31e71325aec507258fb80bb26f125c7c"><code>a18fc40</code></a>.
             Text and figures are licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>, and the code is licensed under Apache-2.0.
-            Found an error? <a href="https://github.com/Moissanite-Labs/weft/issues/new?template=claim.yml">Open an issue</a>.
+            Found an error? <a href="https://github.com/Moissanite-Labs/weft/issues/new?template=claim.yml">Open an issue</a>. Earlier PDF editions: <a href="ml-weft-paper-1-models-as-cells-v1.0.pdf">v1.0</a>.
           </p>
         </section>
       </article>

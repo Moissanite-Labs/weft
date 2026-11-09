@@ -51,6 +51,22 @@ from weft.runtime.invariants import (
 
 # 1. Stratified Memory Arena Constants (540,688 bytes total — Interface I4)
 SHM_NAME = "weft_stratified_plasm_v1"
+# macOS limits POSIX shared-memory names to 31 bytes including the leading "/"
+# that Python adds (PSHMNAMLEN). Linux allows 255. Enforce the smaller limit on
+# every platform so a name that works in CI also works on Apple Silicon (#68).
+MAX_SHM_NAME_BYTES = 30
+
+
+def check_shm_name(name: str) -> str:
+    """Return `name` if it is a portable shared-memory name, else raise ValueError."""
+    if not name or "/" in name:
+        raise ValueError(f"shared memory name {name!r} must be non-empty and contain no '/'")
+    if len(name.encode("utf-8")) > MAX_SHM_NAME_BYTES:
+        raise ValueError(
+            f"shared memory name {name!r} is {len(name.encode('utf-8'))} bytes; "
+            f"the portable limit is {MAX_SHM_NAME_BYTES} (macOS PSHMNAMLEN)"
+        )
+    return name
 FOCAL_FLOATS = 256 * 256          # 65,536 float32 = 262,144 bytes (Active Synaptic Core)
 SYMPATHETIC_FLOATS = 1024         # 1,024 float32  =   4,096 bytes (Autonomic Telemetry Ring)
 HIPPOCAMPAL_FLOATS = 64 * 1024    # 65,536 float32 = 262,144 bytes (Episodic Novelty Lattice)
@@ -84,7 +100,7 @@ class StratifiedAppleSiliconPlasm:
     """
 
     def __init__(self, name: str = SHM_NAME, create: bool = True):
-        self.name = name
+        self.name = check_shm_name(name)
         self.size = ARENA_BYTE_SIZE
         self._closed = False
         if create:
@@ -317,7 +333,9 @@ def run_weft_plasm_cycle(
     A/B convergence, and watermark retention verification.
     """
     device = select_compute_device()
-    arena_name = shm_name or f"{SHM_NAME}_{os.getpid()}"
+    # Short per-process default: SHM_NAME plus a 7-digit Linux PID would exceed
+    # the 30-byte macOS limit.
+    arena_name = shm_name or f"weft_plasm_{os.getpid()}"
     plasm = StratifiedAppleSiliconPlasm(name=arena_name, create=True)
     try:
         plasm.seed_arena()
@@ -415,10 +433,13 @@ def run_weft_plasm_cycle(
                 tension = 20.0 + drift * 2.5
                 t_bound = verify_tension_bound(tension)
 
-                if safe and wm_check["retained"] and t_bound["accepted"] and winner_err <= parent_err:
+                committed = bool(safe and wm_check["retained"] and t_bound["accepted"] and winner_err <= parent_err)
+                if committed:
                     w_core = w_candidate
                     metabolic_budget = remaining_budget
                     plasm.write_focal_from_tensor(w_core, epoch=gen, tension=tension)
+                # The weights the cell holds after this generation (#63).
+                held_err = winner_err if committed else parent_err
 
                 sigma = adjust_homeostatic_mutation_scale(sigma, tension)
 
@@ -431,6 +452,8 @@ def run_weft_plasm_cycle(
                         "winner_score": round(winner_score, 4),
                         "parent_target_error": round(parent_err, 6),
                         "winner_target_error": round(winner_err, 6),
+                        "committed": committed,
+                        "held_target_error": round(held_err, 6),
                         "invariant_safe": safe,
                         "gate_reason": gate_reason,
                         "frobenius_drift": round(drift, 6),
@@ -446,7 +469,7 @@ def run_weft_plasm_cycle(
 
         elapsed_ms = (time.perf_counter() - t0) * 1000.0
         final_hash = hashlib.sha256(w_core.detach().to("cpu").numpy().tobytes()).hexdigest()
-        all_ok = all(g["invariant_safe"] and g["watermark_retained"] and g["core_row_drift"] == 0.0 for g in history) and (history[-1]["winner_target_error"] < history[0]["parent_target_error"])
+        all_ok = all(g["invariant_safe"] and g["watermark_retained"] and g["core_row_drift"] == 0.0 for g in history) and (history[-1]["held_target_error"] < history[0]["parent_target_error"])
         return {
             "status": "PASS" if all_ok else "FAIL",
             "device": str(device),
@@ -456,7 +479,10 @@ def run_weft_plasm_cycle(
             "final_watermark_alignment": history[-1]["watermark_alignment"],
             "final_core_row_drift": history[-1]["core_row_drift"],
             "initial_target_error": history[0]["parent_target_error"],
-            "final_target_error": history[-1]["winner_target_error"],
+            # Error of the held weights, not of the last candidate: a rejected
+            # candidate never reaches the cell (#63).
+            "final_target_error": history[-1]["held_target_error"],
+            "committed_generations": sum(1 for g in history if g["committed"]),
             "elapsed_ms": round(elapsed_ms, 2),
             "final_weights_sha256": f"0x{final_hash}",
             "generations": history,

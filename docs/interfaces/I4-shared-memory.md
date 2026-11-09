@@ -25,6 +25,12 @@ There is **no runtime version or magic field**. The `weft_stratified_plasm_v1`
 name prefix is not an in-memory compatibility check. A consumer must agree on
 the profile out of band before attaching; size alone cannot identify a layout.
 
+Segment names are at most 30 bytes with no `/`. macOS caps POSIX shared-memory
+names at 31 bytes including the leading `/` that Python adds; Linux allows 255.
+`StratifiedAppleSiliconPlasm` refuses a longer name on every platform, so a name
+that passes on Linux CI also works on Apple Silicon (#68). The cycle's
+per-process default is `weft_plasm_<pid>`.
+
 ## Byte layout
 
 Offsets are decimal bytes from the beginning of the shared-memory mapping.

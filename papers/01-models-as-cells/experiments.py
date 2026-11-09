@@ -171,13 +171,17 @@ def e5_radius_sweep() -> dict:
                 gens = res["generations"]
                 committed_drifts = [g["frobenius_drift"] for g in gens if g["invariant_safe"]]
                 commits.append(len(committed_drifts))
-                # Error of the weights actually held after the last generation. The
-                # library's final_target_error is the last *candidate's* error, which
-                # differs whenever the gate rejected that candidate.
+                # Error of the weights actually held after the last generation.
                 last = gens[-1]
                 held = last["winner_target_error"] if last["invariant_safe"] else last["parent_target_error"]
+                # Since the #63 fix the library reports the held error itself.
+                if res["final_target_error"] != held:
+                    raise AssertionError(f"library final_target_error {res['final_target_error']} != held {held}")
                 ratios.append(held / res["initial_target_error"])
-                reported.append(res["final_target_error"] / res["initial_target_error"])
+                # What the library reported before the #63 fix: the last *candidate's*
+                # error, committed or not. Kept so §5.4's measurement of the defect
+                # still reproduces.
+                reported.append(last["winner_target_error"] / res["initial_target_error"])
                 max_dist.append(max(committed_drifts) if committed_drifts else 0.0)
                 for g in gens:
                     reasons[g["gate_reason"]] = reasons.get(g["gate_reason"], 0) + 1
