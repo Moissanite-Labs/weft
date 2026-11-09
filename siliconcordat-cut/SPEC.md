@@ -22,7 +22,7 @@ This document is the build contract. If a state, size or rule isn't written here
 1. URL map above is fixed. `/w3ft` → `/weft` and apex aliases are not part of this design.
 2. Copy comes only from The Siliconcordat (Moissanite-Labs/compass `README.md`), as quoted in §10. No FOUNDER-VISION.md, SILICONCORDAT.md or NAMING.md content. No slogans, traction, team, waitlist, newsletter, metrics or taglines. Herald owns marketing copy; the few structural labels this design needs are listed in §10.3 so herald can replace them.
 3. Every page keeps the README's humility: working proposal, not adopted policy, not a legal agreement, directions not capabilities.
-4. Link rule (§10.4): only confirmed-public URLs. Never link compass, credos, weft, weft-eido, weft-corpus, or GitHub copies of the manifesto files. Weft is always linked as `/weft`, never GitHub.
+4. Link rule (§10.4): only confirmed-public URLs. The public manifesto home `https://github.com/Moissanite-Labs/siliconcordat` may appear once per Cut page (footer-base). Never link Moissanite-Labs/compass, credos, weft, weft-eido, weft-corpus, or GitHub copies of FOUNDER-VISION.md, SILICONCORDAT.md, or NAMING.md. Weft is always linked as `/weft`, never GitHub.
 5. Weft is not restyled. No new palette, type, chrome removal, loom change or overlay on `/weft`.
 6. Not folded into askaconsult.com: no askaconsult nav, branding or hosting story. (The Exo card links to Exo's existing site, which happens to live on exo.askaconsult.com; that is the only askaconsult string on the site.)
 7. Dark only for v1. No theme toggle on `/` or `/ml`.
@@ -210,7 +210,7 @@ Max width 1280px, `--gutter` = `clamp(20px, 5vw, 48px)`. Shots: `landing-hero-14
 - **Moissanite Labs** → `/ml`. Kicker "THE LAB" … "/ml"; title "Moissanite Labs" (Source Serif 360, up to 4.25rem); description; "Enter the lab →". Surface: `--surface` with a warm glow bottom-left and cool glow top-right, mark watermark. Hover/focus: border → fire 60%, action bar → fire, arrow +4px.
 - **Weft** → `/weft` (§8.7).
 
-**g. Footer.** Two columns (4fr / 7fr, stacked under 860px). Left: mark + "Siliconcordat" (→ `/`), then the family list with mono paths (`The Siliconcordat /`, `Moissanite Labs /ml`, `Weft /weft`); current page underlined in fire. Right: **humility block**: 1px `--line-2` top rule, mono "WORKING PROPOSAL" in fire, the banner sentence, and the caveat sentence. Base row: mono "Moissanite Labs" and "siliconcordat.com". No newsletter, social icons, or copyright claims.
+**g. Footer.** Two columns (4fr / 7fr, stacked under 860px). Left: mark + "Siliconcordat" (→ `/`), then the family list with mono paths (`The Siliconcordat /`, `Moissanite Labs /ml`, `Weft /weft`); current page underlined in fire. Right: **humility block**: 1px `--line-2` top rule, mono "WORKING PROPOSAL" in fire, the banner sentence, and the caveat sentence. Base row: mono "Moissanite Labs", quiet link to `https://github.com/Moissanite-Labs/siliconcordat` (§10.4), and "siliconcordat.com". No newsletter, social icons, or copyright claims.
 
 ---
 
@@ -311,8 +311,9 @@ Chapter markers ("The name", "Principles", "Ecosystem", "Doorways"); "The lab"; 
 | Ethos | `https://github.com/Moissanite-Labs/ethos` | — | |
 | Weft | `/weft` | — | Never GitHub weft/weft-eido/weft-corpus. |
 | Robotics | none | — | Aspiration. |
+| Manifesto (site-wide) | `https://github.com/Moissanite-Labs/siliconcordat` | — | Footer-base on `/`, `/ml`, and every `/ml/*` page; same tab, ↗, "(external site)". |
 
-**Never link:** compass, credos, weft, weft-eido, weft-corpus, FOUNDER-VISION.md, SILICONCORDAT.md, NAMING.md (any host). Do not copy w3ft.org's "View on GitHub" button to `/` or `/ml`. Any future direction without a confirmed public URL uses the not-linked card (§8.5).
+**Never link:** Moissanite-Labs/compass, credos, weft, weft-eido, weft-corpus, FOUNDER-VISION.md, SILICONCORDAT.md, NAMING.md (any host). Do not copy w3ft.org's "View on GitHub" button to `/` or `/ml`. Any future direction without a confirmed public URL uses the not-linked card (§8.5).
 
 External links: same tab, mark with ↗, and include visually hidden "(external site)".
 
@@ -401,7 +402,7 @@ Generators (not shipped): `tools/make_chamber.py`, `tools/make_caustic.py`, `too
 - [ ] No champagne, Source Serif or Plex on `/weft`.
 
 **Links**
-- [ ] No link anywhere to compass, credos, weft, weft-eido, weft-corpus, or the three manifesto files. No "View on GitHub" on `/` or `/ml`.
+- [ ] Footer-base on `/`, `/ml`, and `/ml/*` links to `https://github.com/Moissanite-Labs/siliconcordat`. No other link to compass, credos, weft, weft-eido, weft-corpus, or the three manifesto files. No "View on GitHub" on `/` or `/ml`.
 - [ ] External links same tab, ↗, hidden "(external site)".
 
 **A11y / perf**
