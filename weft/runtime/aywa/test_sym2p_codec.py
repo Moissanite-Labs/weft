@@ -54,7 +54,7 @@ class Sym2pRoundTrip(unittest.TestCase):
 
     def test_current_default_bytes_unchanged(self):
         # Defaults role=1, action=3, sequence=1 must still produce ":01:03:0001"
-        # so the published site/data/telemetry.jsonl format does not move.
+        # so the aywa/web/data/telemetry.jsonl format does not move.
         self.assertTrue(encode_sym2p_line(metrics={"m": 1}).startswith(":01:03:0001["))
 
     def test_signed_and_exponent_metrics_survive(self):
@@ -84,7 +84,7 @@ class Sym2pRoundTrip(unittest.TestCase):
 
     def test_published_seed_line_parses(self):
         here = os.path.dirname(os.path.abspath(__file__))
-        path = os.path.join(here, "..", "..", "..", "site", "data", "telemetry.jsonl")
+        path = os.path.join(here, "web", "data", "telemetry.jsonl")
         with open(path, encoding="utf-8") as f:
             line = next(l for l in f if l.startswith(":"))
         parsed = parse_sym2p_line(line)

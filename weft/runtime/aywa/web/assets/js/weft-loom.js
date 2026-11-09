@@ -1,7 +1,7 @@
-import { AestheticMixer } from "./aesthetic-mixer.js";
-import { hitTest, layerThreads, layoutCells } from "./cell-layout.js";
-import { GLYPH_ADVANCE, encodeFontTable, glyphBit, packLabel } from "./glyph-font.js";
-import { parseSym2pLine, verifySym2pLine } from "./sym2p-parse.js";
+import { AestheticMixer } from "../../../../../../site/assets/js/aesthetic-mixer.js";
+import { hitTest, layerThreads, layoutCells } from "../../../../../../site/assets/js/cell-layout.js";
+import { GLYPH_ADVANCE, encodeFontTable, glyphBit, packLabel } from "../../../../../../site/assets/js/glyph-font.js";
+import { parseSym2pLine, verifySym2pLine } from "../../../../../../site/assets/js/sym2p-parse.js";
 
 const MAX_CELLS = 32;
 const MAX_THREADS = 32;
