@@ -3,8 +3,8 @@ title: "Models as Cells"
 subtitle: "Self-modification bounded by distance from a saved baseline"
 number: 1
 slug: models-as-cells
-version: "1.0"
-date: 2026-11-08
+version: "1.1"
+date: 2026-11-09
 authors: "ML Weft contributors, Moissanite Labs"
 status: "Runs and tested. Small-scale CPU experiments. Apple MPS results not yet measured."
 commit: a18fc40e31e71325aec507258fb80bb26f125c7c
@@ -250,8 +250,11 @@ from the same weights and the same residual, so the cell stops at the boundary r
 
 **A reporting defect found by this experiment.** `run_weft_plasm_cycle` reports `final_target_error` from the last
 *candidate*, whether or not it was committed. With $R = 0.05$ it reports a ratio of 0.880, a 12% improvement, when no
-update was ever committed. With full acceptance the two agree. The table above uses the held weights. The defect is
-tracked as [issue #63](https://github.com/Moissanite-Labs/weft/issues/63).
+update was ever committed. With full acceptance the two agree. The table above uses the held weights. The defect was
+tracked as [issue #63](https://github.com/Moissanite-Labs/weft/issues/63) and is fixed since version 1.0: each
+generation now records `committed` and `held_target_error`, and `final_target_error` and the status use the held
+weights. The experiment script checks that the library's figure equals the held error in every run, and keeps the
+candidate ratio above only as the measurement of the old behaviour.
 
 ### 5.5 E5: one rule, three languages
 

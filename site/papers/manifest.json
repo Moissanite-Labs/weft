@@ -13,10 +13,10 @@
     {
       "slug": "models-as-cells",
       "number": 1,
-      "version": "1.0",
-      "pdf": "ml-weft-paper-1-models-as-cells-v1.0.pdf",
-      "pdf_bytes": 518387,
-      "source_sha256": "e189cdd374bd61cd01eea831f9149d28edc0785f65e869662538001b28d3f911",
+      "version": "1.1",
+      "pdf": "ml-weft-paper-1-models-as-cells-v1.1.pdf",
+      "pdf_bytes": 521075,
+      "source_sha256": "b4edcb153169deba9e2e3d617fc713534f7cbf0769775a99f9f63b25e2ac4ddd",
       "templates_sha256": "fc27711e021c3a5574ddc33a3f436b8d7609e9e32149bc1adcadc26aa7d40282"
     },
     {
