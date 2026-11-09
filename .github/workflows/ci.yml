@@ -39,10 +39,10 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Install Python runtime dependencies (numpy + CPU torch)
+      - name: Install Python runtime dependencies (numpy + CPU torch, matplotlib for paper figures)
         run: |
           python3 -m pip install --upgrade pip
-          python3 -m pip install numpy --extra-index-url https://download.pytorch.org/whl/cpu torch
+          python3 -m pip install numpy matplotlib networkx --extra-index-url https://download.pytorch.org/whl/cpu torch
 
       - name: C2 invariants (Python + C11 header conformance)
         run: python3 -m unittest discover -s weft/runtime/invariants -p 'test_*.py'
@@ -67,10 +67,38 @@ jobs:
           python3 weft/runtime/core/selftest.py
           python3 weft/runtime/mac/darwin_sysctl.py
           python3 weft/runtime/mac/metal_loom.py
+      - name: Paper 1 experiments reproduce the published numbers
+        run: python3 papers/01-models-as-cells/experiments.py --check
+      - name: Paper 2 experiments reproduce the published numbers
+        run: python3 papers/02-checkable-computation/experiments.py --check
       - name: Assert clean working tree after all self-tests
         run: |
           git status --porcelain
           test -z "$(git status --porcelain)"
+
+  papers:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.12"
+      - name: Install pandoc 3.1.3 (pinned) and PyYAML
+        # The committed HTML is pandoc output, and pandoc's markup changes between
+        # releases (MathML, table row classes), so CI uses the exact release the
+        # pages were generated with. Keep in step with PANDOC_VERSION in
+        # scripts/build_papers.py.
+        env:
+          PANDOC_DEB: pandoc-3.1.3-1-amd64.deb
+          PANDOC_SHA256: caa7e0410f9e2cb1da2eb8db13cc97b5548fe455985e2c944e3929d22f99bcdc
+        run: |
+          curl -fsSL -o "$RUNNER_TEMP/$PANDOC_DEB" "https://github.com/jgm/pandoc/releases/download/3.1.3/$PANDOC_DEB"
+          echo "$PANDOC_SHA256  $RUNNER_TEMP/$PANDOC_DEB" | sha256sum -c -
+          sudo dpkg -i "$RUNNER_TEMP/$PANDOC_DEB"
+          pandoc --version | head -1
+          python3 -m pip install pyyaml
+      - name: Paper HTML is current and PDFs were built from current sources
+        run: python3 scripts/build_papers.py --check
 
   telemetry-browser:
     runs-on: ubuntu-latest

@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 300" font-family="DejaVu Sans, Helvetica, Arial, sans-serif" font-size="11" role="img" aria-labelledby="t d">
+  <title id="t">Two nets, one storage</title>
+  <desc id="d">Left: agents X and Y joined by two wires in parallel, X port 1 to Y port 1 and X port 2 to Y port 2. Middle: the same agents with the wires crossed, X port 1 to Y port 2 and X port 2 to Y port 1. Right: the reducer stores only the neighbouring node for each port, so both nets produce identical rows: X points to Z, Y, Y and Y points to W, X, X.</desc>
+  <style>
+    .agent{fill:#ffffff;stroke:#0b1220;stroke-width:1.5}
+    .t{fill:#0b1220;font-weight:700;font-size:12px}
+    .p{fill:#56617a;font-size:9.5px}
+    .w{stroke:#163168;stroke-width:2;fill:none}
+    .x{stroke:#b8862b;stroke-width:2;fill:none}
+    .h{fill:#0b1220;font-weight:700;font-size:11.5px}
+    .s{fill:#56617a;font-size:10px}
+    .mono{font-family:DejaVu Sans Mono, monospace;font-size:11px;fill:#0b1220}
+  </style>
+  <rect width="720" height="300" rx="10" fill="#f6f8fb"/>
+
+  <text class="h" x="30" y="30">A · parallel</text>
+  <text class="s" x="30" y="45">X.1–Y.1 and X.2–Y.2</text>
+  <rect class="agent" x="40" y="100" width="56" height="44" rx="8"/><text class="t" x="62" y="127">X</text>
+  <rect class="agent" x="160" y="100" width="56" height="44" rx="8"/><text class="t" x="182" y="127">Y</text>
+  <path class="w" d="M96 112C125 112 131 112 160 112"/><path class="w" d="M96 132C125 132 131 132 160 132"/>
+  <text class="p" x="99" y="108">1</text><text class="p" x="99" y="146">2</text><text class="p" x="150" y="108">1</text><text class="p" x="150" y="146">2</text>
+  <path class="w" d="M68 100V70" stroke-dasharray="3 3"/><text class="s" x="74" y="76">0 → Z</text>
+  <path class="w" d="M188 144V174" stroke-dasharray="3 3"/><text class="s" x="194" y="172">0 → W</text>
+
+  <text class="h" x="260" y="30">B · crossed</text>
+  <text class="s" x="260" y="45">X.1–Y.2 and X.2–Y.1</text>
+  <rect class="agent" x="270" y="100" width="56" height="44" rx="8"/><text class="t" x="292" y="127">X</text>
+  <rect class="agent" x="390" y="100" width="56" height="44" rx="8"/><text class="t" x="412" y="127">Y</text>
+  <path class="x" d="M326 112C355 112 361 132 390 132"/><path class="x" d="M326 132C355 132 361 112 390 112"/>
+  <text class="p" x="329" y="108">1</text><text class="p" x="329" y="146">2</text><text class="p" x="380" y="108">1</text><text class="p" x="380" y="146">2</text>
+  <path class="x" d="M298 100V70" stroke-dasharray="3 3"/><text class="s" x="304" y="76">0 → Z</text>
+  <path class="x" d="M418 144V174" stroke-dasharray="3 3"/><text class="s" x="424" y="172">0 → W</text>
+
+  <text class="h" x="490" y="30">What the reducer stores</text>
+  <text class="s" x="490" y="45">one neighbour node per port</text>
+  <rect x="490" y="62" width="210" height="96" rx="8" fill="#ffffff" stroke="#c2cbd9"/>
+  <text class="mono" x="504" y="86">node  p0  p1  p2</text>
+  <line x1="500" y1="94" x2="690" y2="94" stroke="#d8dee8"/>
+  <text class="mono" x="504" y="114">X     Z   Y   Y</text>
+  <text class="mono" x="504" y="136">Y     W   X   X</text>
+  <text class="s" x="490" y="182">A and B store identical bytes (132 B each),</text>
+  <text class="s" x="490" y="196">but reducing X with Z must connect Z's</text>
+  <text class="s" x="490" y="210">neighbours to different ports of Y.</text>
+
+  <line x1="30" y1="232" x2="690" y2="232" stroke="#d8dee8"/>
+  <text class="s" x="30" y="256">A port-indexed representation stores the far port too (X.1 → Y.1 vs X.1 → Y.2), which removes the ambiguity.</text>
+  <text class="s" x="30" y="274">The reference semantics used in this paper does exactly that.</text>
+</svg>

@@ -1,14 +1,53 @@
 # Cloudflare Workers Static Assets headers for w3ft.org.
+# Every public page has an explicit policy below; weft/runtime/aywa/site_selftest.py
+# checks that each page class is covered (#70). Rules for one path must not overlap,
+# because Cloudflare combines matching rules and two CSPs would both be enforced.
 /*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
   Strict-Transport-Security: max-age=31536000; includeSubDomains
 
-# The landing page loads nothing from third parties.
+# Pages that load nothing from third parties.
 /
   Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; frame-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'none'; object-src 'none'
   X-Frame-Options: DENY
+
+/404.html
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; frame-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'none'; object-src 'none'
+  X-Frame-Options: DENY
+
+/papers/*
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; frame-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'none'; object-src 'none'
+  X-Frame-Options: DENY
+
+/widgets/
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; frame-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'none'; object-src 'none'
+  X-Frame-Options: DENY
+
+# The five exported widgets execute JavaScript and load fonts from Google hosts
+# (widgetlibs.static.usercontent.goog, www.gstatic.com, fonts.*). The policy mirrors
+# the CSP each file embeds, adds framing by our own gallery only, and stays until
+# the owner rules on these exports (#57, #64, #70).
+/widgets/01-sdf-laya-kinetic-typography.html
+  Content-Security-Policy: default-src 'none'; base-uri 'none'; connect-src https://fonts.gstatic.com https://www.gstatic.com; font-src https://fonts.gstatic.com data:; form-action 'none'; worker-src blob: https://*.scf.usercontent.goog; img-src data: https://encrypted-tbn0.gstatic.com https://encrypted-tbn1.gstatic.com https://encrypted-tbn2.gstatic.com https://encrypted-tbn3.gstatic.com; media-src 'none'; object-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' https://www.gstatic.com https://widgetlibs.static.usercontent.goog https://*.scf.usercontent.goog; style-src 'unsafe-inline' https://fonts.googleapis.com https://www.gstatic.com/; frame-ancestors 'self'
+  X-Frame-Options: SAMEORIGIN
+
+/widgets/02-mind-palace-spatial-memory.html
+  Content-Security-Policy: default-src 'none'; base-uri 'none'; connect-src https://fonts.gstatic.com https://www.gstatic.com; font-src https://fonts.gstatic.com data:; form-action 'none'; worker-src blob: https://*.scf.usercontent.goog; img-src data: https://encrypted-tbn0.gstatic.com https://encrypted-tbn1.gstatic.com https://encrypted-tbn2.gstatic.com https://encrypted-tbn3.gstatic.com; media-src 'none'; object-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' https://www.gstatic.com https://widgetlibs.static.usercontent.goog https://*.scf.usercontent.goog; style-src 'unsafe-inline' https://fonts.googleapis.com https://www.gstatic.com/; frame-ancestors 'self'
+  X-Frame-Options: SAMEORIGIN
+
+/widgets/03-morphogenetic-bioelectric-field.html
+  Content-Security-Policy: default-src 'none'; base-uri 'none'; connect-src https://fonts.gstatic.com https://www.gstatic.com; font-src https://fonts.gstatic.com data:; form-action 'none'; worker-src blob: https://*.scf.usercontent.goog; img-src data: https://encrypted-tbn0.gstatic.com https://encrypted-tbn1.gstatic.com https://encrypted-tbn2.gstatic.com https://encrypted-tbn3.gstatic.com; media-src 'none'; object-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' https://www.gstatic.com https://widgetlibs.static.usercontent.goog https://*.scf.usercontent.goog; style-src 'unsafe-inline' https://fonts.googleapis.com https://www.gstatic.com/; frame-ancestors 'self'
+  X-Frame-Options: SAMEORIGIN
+
+/widgets/04-neural-cellular-automata.html
+  Content-Security-Policy: default-src 'none'; base-uri 'none'; connect-src https://fonts.gstatic.com https://www.gstatic.com; font-src https://fonts.gstatic.com data:; form-action 'none'; worker-src blob: https://*.scf.usercontent.goog; img-src data: https://encrypted-tbn0.gstatic.com https://encrypted-tbn1.gstatic.com https://encrypted-tbn2.gstatic.com https://encrypted-tbn3.gstatic.com; media-src 'none'; object-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' https://www.gstatic.com https://widgetlibs.static.usercontent.goog https://*.scf.usercontent.goog; style-src 'unsafe-inline' https://fonts.googleapis.com https://www.gstatic.com/; frame-ancestors 'self'
+  X-Frame-Options: SAMEORIGIN
+
+/widgets/05-interaction-combinator-net.html
+  Content-Security-Policy: default-src 'none'; base-uri 'none'; connect-src https://fonts.gstatic.com https://www.gstatic.com; font-src https://fonts.gstatic.com data:; form-action 'none'; worker-src blob: https://*.scf.usercontent.goog; img-src data: https://encrypted-tbn0.gstatic.com https://encrypted-tbn1.gstatic.com https://encrypted-tbn2.gstatic.com https://encrypted-tbn3.gstatic.com; media-src 'none'; object-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' https://www.gstatic.com https://widgetlibs.static.usercontent.goog https://*.scf.usercontent.goog; style-src 'unsafe-inline' https://fonts.googleapis.com https://www.gstatic.com/; frame-ancestors 'self'
+  X-Frame-Options: SAMEORIGIN
 
 /assets/*
   Cache-Control: public, max-age=3600, must-revalidate

@@ -1,0 +1,208 @@
+{
+  "schema": "SYM-2P/1.0",
+  "source": "fixture",
+  "organization": "Moissanite-Labs",
+  "origin_thread": "weft/telemetry-fixture#1",
+  "active_nodes": 19,
+  "org_tension": 0.2053,
+  "gini_index": 0.2167,
+  "barycentric_state": {
+    "rounding": 0.18,
+    "density": 0.55,
+    "hue": 0.22,
+    "contrast": 0.12
+  },
+  "uniform_frame_64b_floats": [
+    19.0,
+    0.2053,
+    1762560000.0,
+    0.2167,
+    0.18,
+    0.55,
+    0.22,
+    0.12,
+    0.28,
+    0.84,
+    0.62,
+    0.54,
+    0.38,
+    0.32,
+    0.44,
+    0.3
+  ],
+  "binary_frame_bytes": 64,
+  "sym2p_wire_packet": ":01:03:0001[s-exp (active_nodes 19) (tension 0.2053) (gini 0.2167)]7095b5038539e979d2ace6df91a9458ddff99d42681fc2e638291c84608debe0",
+  "repositories": [
+    {
+      "name": "fixture-node-01",
+      "role": "Synthetic governance-plane sample",
+      "commits": 14,
+      "prs": 3,
+      "issues": 5,
+      "layer": "governance",
+      "tension": 0.18
+    },
+    {
+      "name": "fixture-node-02",
+      "role": "Synthetic interface-plane sample",
+      "commits": 42,
+      "prs": 8,
+      "issues": 4,
+      "layer": "interface",
+      "tension": 0.24
+    },
+    {
+      "name": "fixture-node-03",
+      "role": "Synthetic typography-plane sample",
+      "commits": 31,
+      "prs": 6,
+      "issues": 2,
+      "layer": "interface",
+      "tension": 0.19
+    },
+    {
+      "name": "fixture-node-04",
+      "role": "Synthetic substrate-plane sample",
+      "commits": 27,
+      "prs": 5,
+      "issues": 3,
+      "layer": "substrate",
+      "tension": 0.32
+    },
+    {
+      "name": "fixture-node-05",
+      "role": "Synthetic cognition-plane sample",
+      "commits": 19,
+      "prs": 4,
+      "issues": 2,
+      "layer": "cognition",
+      "tension": 0.21
+    },
+    {
+      "name": "fixture-node-06",
+      "role": "Synthetic debate-engine sample",
+      "commits": 16,
+      "prs": 3,
+      "issues": 1,
+      "layer": "cognition",
+      "tension": 0.17
+    },
+    {
+      "name": "fixture-node-07",
+      "role": "Synthetic diagnostic-loop sample",
+      "commits": 22,
+      "prs": 4,
+      "issues": 3,
+      "layer": "substrate",
+      "tension": 0.28
+    },
+    {
+      "name": "fixture-node-08",
+      "role": "Synthetic perception-plane sample",
+      "commits": 15,
+      "prs": 2,
+      "issues": 1,
+      "layer": "interface",
+      "tension": 0.15
+    },
+    {
+      "name": "fixture-node-09",
+      "role": "Synthetic ledger-plane sample",
+      "commits": 21,
+      "prs": 4,
+      "issues": 2,
+      "layer": "ledger",
+      "tension": 0.22
+    },
+    {
+      "name": "fixture-node-10",
+      "role": "Synthetic scheduler-plane sample",
+      "commits": 12,
+      "prs": 2,
+      "issues": 1,
+      "layer": "cognition",
+      "tension": 0.14
+    },
+    {
+      "name": "fixture-node-11",
+      "role": "Synthetic index-plane sample",
+      "commits": 18,
+      "prs": 3,
+      "issues": 2,
+      "layer": "cognition",
+      "tension": 0.2
+    },
+    {
+      "name": "fixture-node-12",
+      "role": "Synthetic rewrite-engine sample",
+      "commits": 29,
+      "prs": 6,
+      "issues": 3,
+      "layer": "substrate",
+      "tension": 0.29
+    },
+    {
+      "name": "fixture-node-13",
+      "role": "Synthetic kinematics-plane sample",
+      "commits": 14,
+      "prs": 2,
+      "issues": 1,
+      "layer": "interface",
+      "tension": 0.16
+    },
+    {
+      "name": "fixture-node-14",
+      "role": "Synthetic layout-plane sample",
+      "commits": 11,
+      "prs": 2,
+      "issues": 1,
+      "layer": "interface",
+      "tension": 0.13
+    },
+    {
+      "name": "fixture-node-15",
+      "role": "Synthetic automata-plane sample",
+      "commits": 24,
+      "prs": 5,
+      "issues": 2,
+      "layer": "substrate",
+      "tension": 0.26
+    },
+    {
+      "name": "fixture-node-16",
+      "role": "Synthetic control-plane sample",
+      "commits": 13,
+      "prs": 2,
+      "issues": 1,
+      "layer": "substrate",
+      "tension": 0.18
+    },
+    {
+      "name": "fixture-node-17",
+      "role": "Synthetic shader-plane sample",
+      "commits": 17,
+      "prs": 3,
+      "issues": 2,
+      "layer": "interface",
+      "tension": 0.21
+    },
+    {
+      "name": "fixture-node-18",
+      "role": "Synthetic plasticity-plane sample",
+      "commits": 20,
+      "prs": 4,
+      "issues": 2,
+      "layer": "cognition",
+      "tension": 0.25
+    },
+    {
+      "name": "fixture-node-19",
+      "role": "Synthetic charter-plane sample",
+      "commits": 9,
+      "prs": 2,
+      "issues": 1,
+      "layer": "ledger",
+      "tension": 0.12
+    }
+  ]
+}

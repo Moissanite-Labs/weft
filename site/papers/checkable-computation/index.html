@@ -1,0 +1,599 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Checkable Computation: Interaction combinators, a binary graph format and committed execution records · ML Weft</title>
+  <meta name="description" content="A system that changes itself should be able to show what it computed. ML Weft approaches this with three small pieces: a reducer for interaction combinators, a graph-rewriting model in which every step is a local rewrite of one pair of nodes; a canonical binary format for the graphs; and an…">
+  <link rel="canonical" href="https://w3ft.org/papers/checkable-computation/">
+  <meta name="theme-color" content="#060a12">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="ML Weft">
+  <meta property="og:title" content="Checkable Computation: Interaction combinators, a binary graph format and committed execution records">
+  <meta property="og:description" content="A system that changes itself should be able to show what it computed. ML Weft approaches this with three small pieces: a reducer for interaction combinators, a graph-rewriting model in which every step is a local rewrite of one pair of nodes; a canonical binary format for the graphs; and an…">
+  <meta property="og:url" content="https://w3ft.org/papers/checkable-computation/">
+  <meta property="og:image" content="https://w3ft.org/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="citation_title" content="Checkable Computation: Interaction combinators, a binary graph format and committed execution records">
+  <meta name="citation_author" content="ML Weft contributors, Moissanite Labs">
+  <meta name="citation_publication_date" content="2026-11-09">
+  <meta name="citation_pdf_url" content="https://w3ft.org/papers/checkable-computation/ml-weft-paper-2-checkable-computation-v1.1.pdf">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/css/site.css">
+  <link rel="stylesheet" href="/assets/css/papers.css">
+  <script src="/assets/js/theme.js"></script>
+  <script type="module" src="/assets/js/papers.js"></script>
+</head>
+<body>
+  <a class="skip" href="#paper">Skip to the paper</a>
+
+  <header class="site-header navy-scope">
+    <div class="wrap">
+      <a class="brand" href="/" aria-label="ML Weft home">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><use href="#weave-mark"/></svg>
+        <span class="brand-name">ML Weft</span>
+        <span class="brand-org">Moissanite Labs</span>
+      </a>
+      <nav class="nav" aria-label="Primary">
+        <a href="/#idea">Idea</a>
+        <a href="/#try">Try it</a>
+        <a href="/#status">Status</a>
+        <a href="/#horizons">Horizons</a>
+        <a href="/papers/">Papers</a>
+        <a href="/#contribute">Contribute</a>
+      </nav>
+      <a class="icon-btn" href="https://github.com/Moissanite-Labs/weft" aria-label="Weft on GitHub">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#gh"/></svg>
+      </a>
+      <button class="icon-btn theme-toggle" type="button" aria-label="Toggle dark mode">
+        <svg class="moon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <details class="menu">
+        <summary class="icon-btn" aria-label="Menu">
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </summary>
+        <div class="menu-panel">
+          <a href="/#idea">Idea</a>
+          <a href="/#try">Try it</a>
+          <a href="/#status">Status</a>
+          <a href="/#horizons">Horizons</a>
+          <a href="/papers/">Papers</a>
+          <a href="/#contribute">Contribute</a>
+          <a href="/widgets/">Sketches</a>
+        </div>
+      </details>
+    </div>
+  </header>
+  <main id="main">
+    <header class="paper-hero navy-scope">
+      <div class="wrap">
+        <nav class="crumbs" aria-label="Breadcrumb"><a href="/papers/">Papers</a><span aria-hidden="true">/</span><span>Paper 2</span></nav>
+        <p class="eyebrow">Paper 2 · Version 1.1 · 9 November 2026</p>
+        <h1>Checkable Computation</h1>
+        <p class="paper-subtitle">Interaction combinators, a binary graph format and committed execution records</p>
+        <p class="paper-byline">ML Weft contributors, Moissanite Labs</p>
+        <p class="paper-status"><span class="pill run">evidence</span> Runs and tested. CPU experiments against an independent reference semantics. Three reducer defects found, now fixed in C3 version 2 (§8); confluence of the extended rules not proven.</p>
+        <div class="cta">
+          <a class="btn btn-primary" href="ml-weft-paper-2-checkable-computation-v1.1.pdf" download>
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
+            Download PDF <span class="btn-meta">362 KB</span>
+          </a>
+          <a class="btn" href="https://github.com/Moissanite-Labs/weft/blob/main/papers/02-checkable-computation/paper.md">Source</a>
+          <a class="btn" href="#cite">Cite</a>
+        </div>
+      </div>
+    </header>
+
+    <div class="wrap paper-layout">
+      <aside class="paper-toc" aria-label="Contents">
+        <details open>
+          <summary>Contents</summary>
+<ul>
+<li><a href="#introduction" id="toc-introduction">1. Introduction</a></li>
+<li><a href="#interaction-combinators-in-brief" id="toc-interaction-combinators-in-brief">2. Interaction combinators in brief</a></li>
+<li><a href="#the-c3-reducer" id="toc-the-c3-reducer">3. The C3 reducer</a></li>
+<li><a href="#the-binary-graph-format" id="toc-the-binary-graph-format">4. The binary graph format</a></li>
+<li><a href="#committed-execution-records" id="toc-committed-execution-records">5. Committed execution records</a></li>
+<li><a href="#experiments" id="toc-experiments">6. Experiments</a>
+<ul>
+<li><a href="#e1-one-rule-at-a-time" id="toc-e1-one-rule-at-a-time">6.1 E1: one rule at a time</a></li>
+<li><a href="#e2-differential-fuzzing" id="toc-e2-differential-fuzzing">6.2 E2: differential fuzzing</a></li>
+<li><a href="#e3-does-order-matter" id="toc-e3-does-order-matter">6.3 E3: does order matter?</a></li>
+<li><a href="#e4-can-a-record-be-replayed" id="toc-e4-can-a-record-be-replayed">6.4 E4: can a record be replayed?</a></li>
+<li><a href="#e5-decoder-fuzzing" id="toc-e5-decoder-fuzzing">6.5 E5: decoder fuzzing</a></li>
+<li><a href="#e6-the-telemetry-line-and-abios" id="toc-e6-the-telemetry-line-and-abios">6.6 E6: the telemetry line, and abios</a></li>
+<li><a href="#e7-the-64-byte-frame" id="toc-e7-the-64-byte-frame">6.7 E7: the 64-byte frame</a></li>
+</ul></li>
+<li><a href="#what-this-does-not-show" id="toc-what-this-does-not-show">7. What this does not show</a></li>
+<li><a href="#toward-a-checkable-pipeline" id="toc-toward-a-checkable-pipeline">8. Toward a checkable pipeline</a></li>
+<li><a href="#reproducing-this-paper" id="toc-reproducing-this-paper">Reproducing this paper</a></li>
+<li><a href="#references" id="toc-references">References</a></li>
+</ul>
+        </details>
+      </aside>
+
+      <article class="paper" id="paper">
+        <section class="abstract" aria-labelledby="abstract-title">
+          <h2 id="abstract-title">Abstract</h2>
+<p>A system that changes itself should be able to show what it computed. ML Weft approaches this with three small pieces: a reducer for interaction combinators, a graph-rewriting model in which every step is a local rewrite of one pair of nodes; a canonical binary format for the graphs; and an execution record that commits to the initial graph, every step and the final graph with SHA-256. A compact hashed telemetry line carries live state to the interface. This paper describes all four and tests them against an independent reference semantics that we wrote for the purpose. The rewrite rules agree with the reference in all 11 single-rule cases, and wherever the reducer’s storage can still be read as a graph it never diverged, across 600 random nets. But the storage records only which node each port points to, not which port, and that loses information. Two different nets store as the same 132 bytes. A third of random runs that start unambiguous reach such a state within a few steps. The reducer also accepts pairs that are not active, mishandles wires that loop back into the pair being reduced, and its own self-test produces an execution record that cannot be replayed. Records produced entirely through the reducer replay exactly, in 60 of 60 runs. The binary decoder survived 20,280 mutated packets without a crash. The telemetry line protects its payload but not its header, and its unkeyed hash detects accidents, not tampering. We report each limitation with its measurement, and describe the changes that would make the whole pipeline checkable.</p>
+
+          <p class="keywords"><strong>Keywords:</strong> interaction combinators, interaction nets, graph rewriting, verifiable computation, execution traces, serialization, differential testing, abios</p>
+        </section>
+
+<section id="introduction" class="level2">
+<h2>1. Introduction</h2>
+<p>Paper 1 showed how ML Weft bounds <em>how far</em> a model may change. This paper concerns a different question: <em>what did the system compute, and can someone else check it?</em> An adaptive system that cannot account for its own computation is hard to audit, however well its updates are bounded.</p>
+<p>Weft’s answer has three parts, plus the channel that reports on them:</p>
+<ol type="1">
+<li><strong>A computation model made of local steps.</strong> Interaction combinators (Lafont, 1997) compute by rewriting one pair of connected nodes at a time. Each step is small, local and has no hidden state, which makes it a natural unit to record and re-check.</li>
+<li><strong>A canonical binary format</strong> (BCP) for the graphs, so the same graph always has the same bytes.</li>
+<li><strong>A committed execution record</strong> that binds the initial graph, the list of steps and the final graph under one SHA-256 digest.</li>
+<li><strong>A compact telemetry line</strong> with a SHA-256 of its payload, which carries live state to the browser interface.</li>
+</ol>
+<p>The code exists and has tests. This paper asks what those pieces actually guarantee. Our main tool is a <strong>reference semantics</strong>: a separate, deliberately simple implementation that stores every wire as a pair of <em>ports</em>. We run the reducer and the reference side by side and see where they agree. We report four groups of findings:</p>
+<ul>
+<li><strong>The rules are right.</strong> The rewrite rules agree with the reference on every case we built, and on every random run while the reducer’s storage remained a readable graph (§6.1–6.3).</li>
+<li><strong>The representation is not.</strong> It cannot tell apart two nets that need different rewrites. This is issue #52’s first falsifier, and we exhibit it.</li>
+<li><strong>The interface is too permissive.</strong> It reduces pairs that are not active, mishandles wires that loop back into a pair, and lets a record omit mutations made between steps. Records are replayable only when every change goes through the reducer (§6.4).</li>
+<li><strong>The formats are robust but limited.</strong> The decoder never crashes, but it validates storage rather than structure. The telemetry line’s hash does not cover its header and does not authenticate anyone (§6.5–6.6).</li>
+</ul>
+<p>As in Paper 1, the biological vocabulary is vision language. In this paper it appears mainly in the “metabolic valve” node type, and each such term is tied to what the code does.</p>
+</section>
+<section id="interaction-combinators-in-brief" class="level2">
+<h2>2. Interaction combinators in brief</h2>
+<p>An <strong>interaction net</strong> is a graph of <em>agents</em>. Each agent has one <strong>principal port</strong> (port 0) and a fixed number of <strong>auxiliary ports</strong>. Every port is joined by a <strong>wire</strong> to exactly one other port. Two agents whose principal ports are wired together form an <strong>active pair</strong>, and computation consists of rewriting active pairs. Lafont’s <em>interaction combinators</em> use three agent kinds: ERA (no auxiliary ports), CON and DUP (two auxiliary ports each). There are three rule shapes:</p>
+<ul>
+<li><strong>Annihilation.</strong> Two agents of the same kind disappear, and their auxiliary ports are joined pairwise: port 1 to port 1, port 2 to port 2.</li>
+<li><strong>Commutation.</strong> Agents of different kinds pass through each other. Each is copied twice, and the copies are cross-wired.</li>
+<li><strong>Erasure.</strong> ERA meeting a binary agent deletes it and sends a fresh ERA down each of its auxiliary wires.</li>
+</ul>
+<p>Because a rule touches only its two agents, and two active pairs never share an agent, the order in which active pairs are reduced does not affect the result. Interaction nets are <em>strongly confluent</em> (Lafont, 1990).</p>
+<p><strong>Weft’s extensions.</strong> Weft adds labels and three agent kinds:</p>
+<ul>
+<li><strong>Labelled DUPs</strong> (as in symmetric interaction combinators; Mazza, 2007): DUPs annihilate only when their labels are equal, and commute otherwise.</li>
+<li><strong>SUP</strong>, a labelled superposition node that annihilates with a DUP or SUP of the same label.</li>
+<li><strong>VLV</strong>, a <em>metabolic valve</em>. It forwards a wire if a supplied tension is within the C2 bound (0–85) and a supplied budget is positive. Otherwise it turns into an excision marker (<strong>FRC</strong>) and erases its neighbour.</li>
+</ul>
+<p>The valve is the vision language here. Today it is a predicate on two numbers the caller passes in. It does not debit a budget, and the budget is a permission signal, not an account. Confluence of the extended system is not established. The valve in particular makes results depend on inputs supplied at each step.</p>
+</section>
+<section id="the-c3-reducer" class="level2">
+<h2>3. The C3 reducer</h2>
+<p><code>weft/runtime/ic</code> stores a net in three flat, preallocated arrays indexed by <strong>slot</strong>:</p>
+<ul>
+<li><code>tags</code> (u8): the agent kind, with 255 marking a free slot;</li>
+<li><code>aux_tags</code> (i16): the label;</li>
+<li><code>ports</code> (i32 × 3): for each of a node’s ports, the <strong>slot of the neighbouring node</strong>, or −1.</li>
+</ul>
+<p>The caller drives reduction: <code>interact(a, b)</code> applies the rule for the kinds of <code>a</code> and <code>b</code>, appends a step to the trace, and returns. Before mutating anything, a rule checks that the arena has the free slots it will need: 2 for erasure, 4 for commutation, 1 for an excising valve. Exhaustion raises <code>MemoryError</code> and leaves the VM unchanged. The test suite covers this for every allocating rule.</p>
+<p>Two properties of this design matter for everything that follows:</p>
+<ul>
+<li><strong>Ports store a node, not a port.</strong> If node X’s port 1 points to Y, the storage does not say <em>which</em> of Y’s ports is at the other end. When X has a single wire to Y, the far port can be recovered by looking at which of Y’s ports points back. When X has two wires to Y, or a wire to itself, it cannot (Figure 1).</li>
+<li><strong><code>interact</code> trusts its caller.</strong> It does not check that <code>a</code> and <code>b</code> are joined principal to principal, and it does not detect when an auxiliary neighbour is one of <code>a</code> or <code>b</code>.</li>
+</ul>
+<figure>
+<img loading="lazy" decoding="async" src="figures/fig1-same-storage.svg" alt="Two nets, one storage. In A the wires run in parallel; in B they cross. The reducer records only the neighbouring node for each port, so both nets store identical rows and identical bytes, yet reducing X must connect Z’s neighbours to different ports of Y. Storing the far port as well removes the ambiguity." />
+<figcaption aria-hidden="true">Two nets, one storage. In A the wires run in parallel; in B they cross. The reducer records only the neighbouring node for each port, so both nets store identical rows and identical bytes, yet reducing X must connect Z’s neighbours to different ports of Y. Storing the far port as well removes the ambiguity.</figcaption>
+</figure>
+</section>
+<section id="the-binary-graph-format" class="level2">
+<h2>4. The binary graph format</h2>
+<p>A BCP packet is a 12-byte header followed by one 20-byte record per occupied slot, in ascending slot order, all little-endian:</p>
+<div class="table-wrap"><table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Field</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>magic</td>
+<td>4 bytes</td>
+<td><code>WEFT</code></td>
+</tr>
+<tr class="even">
+<td>version</td>
+<td>u8</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>flags</td>
+<td>u8</td>
+<td>0 (canonical active-node snapshot)</td>
+</tr>
+<tr class="even">
+<td>count</td>
+<td>u16</td>
+<td>number of records (at most 65,535)</td>
+</tr>
+<tr class="odd">
+<td>capacity</td>
+<td>u32</td>
+<td>arena size in slots</td>
+</tr>
+<tr class="even">
+<td><em>each record:</em> slot</td>
+<td>u32</td>
+<td>slot index, strictly ascending, below capacity</td>
+</tr>
+<tr class="odd">
+<td>tag, reserved</td>
+<td>u8, u8</td>
+<td>agent kind 0–5; reserved must be 0</td>
+</tr>
+<tr class="even">
+<td>label</td>
+<td>i16</td>
+<td>DUP/SUP label</td>
+</tr>
+<tr class="odd">
+<td>p0, p1, p2</td>
+<td>i32 × 3</td>
+<td>neighbour slots, or −1</td>
+</tr>
+</tbody>
+</table></div>
+<p>The decoder checks magic, version, flags, exact length, slot order, tags, reserved bytes and port ranges, and enforces a configurable capacity limit (default 1,048,576 slots). It does all of this <strong>before</strong> allocating the arena, so a 12-byte packet cannot make it allocate gigabytes.</p>
+<p>Because records are in slot order and every field has one valid encoding, a graph state has exactly one encoding: encode, decode and re-encode reproduces the same bytes. A packet is a <em>storage snapshot</em>, not a checkpoint. It does not carry the allocator cursor or the trace, and it does not check that wires are reciprocal.</p>
+</section>
+<section id="committed-execution-records" class="level2">
+<h2>5. Committed execution records</h2>
+<p>At the first reduction the VM snapshots the graph as BCP bytes <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>I</mi><annotation encoding="application/x-tex">I</annotation></semantics></math>. After a run, <code>compute_execution_commitment</code> serialises the final graph <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>F</mi><annotation encoding="application/x-tex">F</annotation></semantics></math> and the step log <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>S</mi><annotation encoding="application/x-tex">S</annotation></semantics></math> as compact JSON with sorted keys, and returns</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><mo>=</mo><mrow><mi mathvariant="normal">S</mi><mi mathvariant="normal">H</mi><mi mathvariant="normal">A</mi><mn mathvariant="normal">256</mn></mrow><mo minsize="1.2" maxsize="1.2" stretchy="false" form="prefix">(</mo><mtext mathvariant="monospace">𝚆𝙴𝙵𝚃-𝙸𝙲-𝙴𝚇𝙴𝙲-𝚅𝟷:</mtext><mspace width="0.167em"></mspace><mo stretchy="false" form="postfix">∥</mo><mspace width="0.167em"></mspace><mi>I</mi><mspace width="0.167em"></mspace><mo stretchy="false" form="postfix">∥</mo><mspace width="0.167em"></mspace><mtext mathvariant="monospace">:𝚂𝚃𝙴𝙿𝚂:</mtext><mspace width="0.167em"></mspace><mo stretchy="false" form="postfix">∥</mo><mspace width="0.167em"></mspace><mi>S</mi><mspace width="0.167em"></mspace><mo stretchy="false" form="postfix">∥</mo><mspace width="0.167em"></mspace><mtext mathvariant="monospace">:𝙵𝙸𝙽𝙰𝙻:</mtext><mspace width="0.167em"></mspace><mo stretchy="false" form="postfix">∥</mo><mspace width="0.167em"></mspace><mi>F</mi><mo minsize="1.2" maxsize="1.2" stretchy="false" form="postfix">)</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">
+C = \mathrm{SHA256}\bigl(\texttt{WEFT-IC-EXEC-V1:} \,\|\, I \,\|\, \texttt{:STEPS:} \,\|\, S \,\|\, \texttt{:FINAL:} \,\|\, F\bigr).
+</annotation></semantics></math></p>
+<p><strong>Proposition 1 (unambiguous encoding).</strong> The map <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>I</mi><mo>,</mo><mi>S</mi><mo>,</mo><mi>F</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>↦</mo></mrow><annotation encoding="application/x-tex">(I, S, F) \mapsto</annotation></semantics></math> the hashed byte string is injective over valid BCP packets <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>I</mi><mo>,</mo><mi>F</mi></mrow><annotation encoding="application/x-tex">I, F</annotation></semantics></math> and JSON arrays <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>S</mi><annotation encoding="application/x-tex">S</annotation></semantics></math>.</p>
+<p><em>Proof.</em> The prefix is fixed. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>I</mi><annotation encoding="application/x-tex">I</annotation></semantics></math>’s length is determined by its own header (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>12</mn><mo>+</mo><mn>20</mn><mo>⋅</mo><mtext mathvariant="normal">count</mtext></mrow><annotation encoding="application/x-tex">12 + 20 \cdot \text{count}</annotation></semantics></math>). The separator <code>:STEPS:</code> follows at a known offset. A JSON array is self-delimiting, so its closing bracket marks the end of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>S</mi><annotation encoding="application/x-tex">S</annotation></semantics></math>. After the fixed separator <code>:FINAL:</code>, the rest is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>F</mi><annotation encoding="application/x-tex">F</annotation></semantics></math>. Each component can therefore be recovered from the string. ∎</p>
+<p>So two different records with the same commitment would require a SHA-256 collision. The commitment is <strong>binding</strong>: it pins down exactly one <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mi>I</mi><mo>,</mo><mi>S</mi><mo>,</mo><mi>F</mi><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(I, S, F)</annotation></semantics></math>. It does not say the record is <em>true</em>. Checking that needs a <strong>replay</strong>: decode <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>I</mi><annotation encoding="application/x-tex">I</annotation></semantics></math>, apply the steps of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>S</mi><annotation encoding="application/x-tex">S</annotation></semantics></math> in order, and compare the result with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>F</mi><annotation encoding="application/x-tex">F</annotation></semantics></math>. A strict replay also checks that each step reduced an active pair. The library does not ship a replay verifier yet. We built one for the experiments.</p>
+</section>
+<section id="experiments" class="level2">
+<h2>6. Experiments</h2>
+<p>All results come from <code>papers/02-checkable-computation/experiments.py</code>. It imports the tested reducer, codec and telemetry modules, runs the browser parser under Node, and compares against <code>reference.py</code>, about 200 lines in which every wire is a pair of ports and rewrites contract paths through removed ports. Every random choice is seeded, and CI re-runs the script to check the numbers below. Before judging anything, the reference checks itself (E0): on 300 random nets it stayed a valid net through all 7,648 reductions, and different reduction orders reached the same normal form (§6.3).</p>
+<section id="e1-one-rule-at-a-time" class="level3">
+<h3>6.1 E1: one rule at a time</h3>
+<p>We built a minimal closed net for each rule, capping free ends with ERA agents, and compared the reducer’s result with the reference’s, up to isomorphism.</p>
+<div class="table-wrap"><table>
+<colgroup>
+<col style="width: 42%" />
+<col style="width: 57%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Cases</th>
+<th style="text-align: right;">Matches reference</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Annihilation: CON–CON, DUP(0)–DUP(0), SUP(1)–SUP(1), DUP(1)–SUP(1)</td>
+<td style="text-align: right;">4 / 4</td>
+</tr>
+<tr class="even">
+<td>Commutation: CON–DUP, DUP(0)–DUP(1), CON–SUP, CON–DUP with distinguishable neighbours</td>
+<td style="text-align: right;">4 / 4</td>
+</tr>
+<tr class="odd">
+<td>Erasure: ERA–CON, ERA–DUP, ERA–ERA</td>
+<td style="text-align: right;">3 / 3</td>
+</tr>
+<tr class="even">
+<td><strong>Loop-back wires</strong> (an auxiliary port wired into the pair itself)</td>
+<td style="text-align: right;"><strong>3 / 6</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p>The loop-back failures are erasure with a self-looped DUP, commutation with a self-looped CON, and commutation with one wire across the pair. In each case the new nodes point to a slot that the rule then frees. Annihilation handles all its loop-back cases correctly. This is a defect in the rules, separate from the representation, and is tracked as <a href="https://github.com/Moissanite-Labs/weft/issues/66">issue #66</a>.</p>
+<p><strong>Falsifier 1 from issue #52.</strong> The two nets of Figure 1 serialise to the <strong>same 132 bytes</strong>, yet the reference reduces them to non-isomorphic results. The reducer matches the parallel net and gets the crossed one wrong. It has no way to do otherwise.</p>
+</section>
+<section id="e2-differential-fuzzing" class="level3">
+<h3>6.2 E2: differential fuzzing</h3>
+<p>We generated 600 random closed nets of 4–10 agents (CON, DUP and SUP with two labels, and ERA). In the 300 <strong>simple</strong> nets no agent starts with a self-loop or two wires to the same neighbour, so the initial state is readable from storage. The 300 <strong>general</strong> nets have no such restriction. For each net we reduced the reducer and the reference in lockstep, choosing the same active pair. After every step we converted the reducer’s storage back to a port graph and checked that it was isomorphic to the reference.</p>
+<figure>
+<img loading="lazy" decoding="async" src="figures/fig2-differential.svg" alt="E2. Outcomes of lockstep reduction against the reference. No run ever produced a readable graph that differed from the reference. Every failure was the reducer’s storage ceasing to describe a valid net." />
+<figcaption aria-hidden="true">E2. Outcomes of lockstep reduction against the reference. No run ever produced a readable graph that differed from the reference. Every failure was the reducer’s storage ceasing to describe a valid net.</figcaption>
+</figure>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th></th>
+<th style="text-align: right;">Simple nets</th>
+<th style="text-align: right;">General nets</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Agree through to normal form</td>
+<td style="text-align: right;">129</td>
+<td style="text-align: right;">39</td>
+</tr>
+<tr class="even">
+<td>Agree until the step or size cap</td>
+<td style="text-align: right;">76</td>
+<td style="text-align: right;">24</td>
+</tr>
+<tr class="odd">
+<td>Diverge while readable</td>
+<td style="text-align: right;"><strong>0</strong></td>
+<td style="text-align: right;"><strong>0</strong></td>
+</tr>
+<tr class="even">
+<td>Storage stops being a readable net</td>
+<td style="text-align: right;">95</td>
+<td style="text-align: right;">237</td>
+</tr>
+<tr class="odd">
+<td>… because of repeated wires (ambiguous)</td>
+<td style="text-align: right;">89</td>
+<td style="text-align: right;">211</td>
+</tr>
+<tr class="even">
+<td>… because of a stale pointer to a freed slot</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">26</td>
+</tr>
+<tr class="odd">
+<td>Failing on the initial net</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">192</td>
+</tr>
+<tr class="even">
+<td>Median step of failure</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table></div>
+<p>Two thirds of simple nets run cleanly. A third reach an ambiguous state after a median of two steps, because ordinary reductions create repeated wires between agents. Most general nets cannot even be stored faithfully.</p>
+</section>
+<section id="e3-does-order-matter" class="level3">
+<h3>6.3 E3: does order matter?</h3>
+<p>For 92 simple nets that reach a normal form within 40 steps, we reduced the reference in 5 random orders each. All 92 reached the same normal form in every order, as strong confluence predicts. The reducer, run in 3 random orders per net (276 runs), matched that normal form in 189 runs. It became unreadable in 87, and it <strong>never reached a different readable normal form</strong>. The extended rules (SUP, VLV) are not covered by a confluence result, and VLV depends on per-step inputs by design.</p>
+</section>
+<section id="e4-can-a-record-be-replayed" class="level3">
+<h3>6.4 E4: can a record be replayed?</h3>
+<div class="table-wrap"><table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Run</th>
+<th>Replay reproduces the commitment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>60 closed-world runs from E2 (every change made by <code>interact</code>)</td>
+<td>60 / 60</td>
+</tr>
+<tr class="even">
+<td>The library’s own self-test (<code>run_combinator_self_test</code>)</td>
+<td><strong>no</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p>The self-test snapshots a 4-node graph, then <strong>allocates nodes between steps</strong> outside the trace. Of its 3 recorded steps, <strong>2 are not active pairs</strong>. Its record is binding but not replayable: no verifier could re-derive its final graph from its initial graph. When we called <code>interact</code> on 198 pairs that are not active, the reducer mutated the net every time, and every time it left storage that no longer describes a valid net. This is issue #52’s second falsifier, confirmed; see also #66.</p>
+<p>The lesson is simple and actionable. A record is checkable only if every mutation after the snapshot goes through the recorded interface, and that interface refuses invalid steps.</p>
+</section>
+<section id="e5-decoder-fuzzing" class="level3">
+<h3>6.5 E5: decoder fuzzing</h3>
+<p>From 40 initial graphs we made 20,280 corrupted packets: every single-bit flip at every byte position (twice each, with random bits), plus every truncation.</p>
+<div class="table-wrap"><table>
+<colgroup>
+<col style="width: 42%" />
+<col style="width: 57%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Outcome</th>
+<th style="text-align: right;">Packets</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Rejected with <code>ValueError</code></td>
+<td style="text-align: right;">16,124</td>
+</tr>
+<tr class="even">
+<td>Accepted, and re-encoded to exactly the same bytes</td>
+<td style="text-align: right;">4,156</td>
+</tr>
+<tr class="odd">
+<td>Accepted, but re-encoded differently</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td>Any other exception (crash)</td>
+<td style="text-align: right;"><strong>0</strong></td>
+</tr>
+<tr class="odd">
+<td>Accepted, but not a valid net (non-reciprocal or dangling)</td>
+<td style="text-align: right;">2,671 of 4,156</td>
+</tr>
+</tbody>
+</table></div>
+<p>The decoder is robust and canonical. It also does exactly what its documentation says and no more: it validates storage, not structure. Two thirds of the corrupted packets it accepts no longer describe a valid net, which makes a structural checker (#52) a necessary companion.</p>
+</section>
+<section id="e6-the-telemetry-line-and-abios" class="level3">
+<h3>6.6 E6: the telemetry line, and abios</h3>
+<p>Weft’s browser field receives lines of the form <code>:RR:AA:SSSS[s-exp …]&lt;sha256&gt;</code>: a role byte, an action byte, a sequence number, an s-expression payload, and the SHA-256 of the payload. This is an early dialect from Weft’s design sessions. The agent-messaging protocol itself is now published as <a href="https://github.com/Moissanite-Labs/abios">abios</a>. Its normative SYM-2P/1.0 profile is one canonical JSON object per line, with a typed validator. Its v2 draft is a positional <code>|</code>-separated line. Weft’s telemetry line is neither, and it is not an abios packet.</p>
+<p><strong>Size.</strong> The figure “101 bytes where the JSON took 481”, sometimes quoted for Weft, comes from the abios v2 draft, which compares its own brief packet with the v1 JSON template. Measured here, Weft’s fixture line is <strong>131 bytes</strong>: an 11-byte header, a 56-byte payload and a 64-character hash. The same content as compact JSON is <strong>177 bytes</strong>. Most of the line is the hash.</p>
+<p><strong>What the hash catches.</strong> We made five single-character substitutions at every position of the fixture line.</p>
+<figure>
+<img loading="lazy" decoding="async" src="figures/fig3-line-mutations.svg" alt="E6. Single-character edits caught by the receiver, by region of the line. The hash covers only the payload, so edits to role, action and sequence pass unless they make the line unparseable." />
+<figcaption aria-hidden="true">E6. Single-character edits caught by the receiver, by region of the line. The hash covers only the payload, so edits to role, action and sequence pass unless they make the line unparseable.</figcaption>
+</figure>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Region</th>
+<th style="text-align: right;">Edits</th>
+<th style="text-align: right;">Detected</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Header: role, action, sequence (11 bytes)</td>
+<td style="text-align: right;">55</td>
+<td style="text-align: right;">6 (11%)</td>
+</tr>
+<tr class="even">
+<td>Payload (56 bytes)</td>
+<td style="text-align: right;">280</td>
+<td style="text-align: right;">280 (100%)</td>
+</tr>
+<tr class="odd">
+<td>Hash (64 bytes)</td>
+<td style="text-align: right;">320</td>
+<td style="text-align: right;">320 (100%)</td>
+</tr>
+</tbody>
+</table></div>
+<p>A forged header (<code>:7f:0a:9999…</code>) is accepted by both Python and the browser. An attacker who changes the payload and <strong>recomputes</strong> the hash is also accepted by both. The hash is unkeyed: it detects accidental corruption, not tampering. abios states the same limit for its own packets (transport signing is open item O-1), and it places header fields outside the hash by design, enforcing them at publication instead. Weft’s line has no such enforcement. This is tracked as <a href="https://github.com/Moissanite-Labs/weft/issues/67">issue #67</a>.</p>
+<p><strong>Parity.</strong> On 965 lines (valid lines, the mutants above, randomly generated packets and malformed inputs), the Python codec and the browser parser, run as the telemetry worker uses them, agree on every acceptance decision, every parsed metric and every header field.</p>
+</section>
+<section id="e7-the-64-byte-frame" class="level3">
+<h3>6.7 E7: the 64-byte frame</h3>
+<p>The frame that feeds the shader packs sixteen <code>float32</code> values. One of them is a Unix timestamp. At the fixture’s time (1.76 × 10⁹ s), adjacent <code>float32</code> values are <strong>128 seconds</strong> apart, so the slot cannot hold anything finer than about two minutes. The browser worker overwrites that slot with a page-relative clock, which is fine for animation, but the slot should not be read as wall-clock time.</p>
+</section>
+</section>
+<section id="what-this-does-not-show" class="level2">
+<h2>7. What this does not show</h2>
+<ul>
+<li><strong>Correctness of the extended system.</strong> Confluence, termination and any semantics for SUP and VLV are open. Our reference mirrors the reducer’s own choice for DUP–SUP annihilation; it does not justify that choice.</li>
+<li><strong>Validity of executions.</strong> A commitment binds a record; it does not prove the record follows the rules. Until the reducer rejects non-active pairs and a replay verifier ships, a record proves only that someone wrote it.</li>
+<li><strong>Scale or performance.</strong> All runs are small nets on a CPU. Nothing here concerns GPU reduction, parallelism or allocation-free execution.</li>
+<li><strong>Universality claims.</strong> Interaction combinators are universal in Lafont’s sense. That says nothing about this implementation, given the defects above.</li>
+<li><strong>Authentication.</strong> No component here establishes who produced a graph, a record or a telemetry line.</li>
+<li><strong>The reference is not a proof.</strong> It is an independent, simpler implementation that agrees with known theory on the cases tested. Its own correctness rests on review and on those checks.</li>
+</ul>
+</section>
+<section id="toward-a-checkable-pipeline" class="level2">
+<h2>8. Toward a checkable pipeline</h2>
+<p>The findings point to a short list of changes, in order:</p>
+<ol type="1">
+<li><strong>Port-indexed wires.</strong> Store each port’s peer as <code>(node, port)</code>, for example as <code>4·node + port</code> in the existing <code>i32</code>. Version the BCP format to 2, with an explicit migration (#52).</li>
+<li><strong>A checked interface.</strong> <code>interact</code> rejects pairs that are not principal–principal. Rules rewire through a path-contraction step like the reference’s, so loop-back wires are handled (#66).</li>
+<li><strong>Records that cover every mutation.</strong> Freeze the graph after the snapshot except through <code>interact</code>, or record every allocation as a step. Ship <code>verify_execution(I, S, F)</code> in the library, and make the self-test pass it.</li>
+<li><strong>Canonical steps across languages.</strong> Specify the step encoding, for example with RFC 8785 JSON canonicalisation, so a verifier in another language reproduces <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>S</mi><annotation encoding="application/x-tex">S</annotation></semantics></math> byte for byte.</li>
+<li><strong>A structural checker</strong> for decoded packets: reciprocal wires, arity, no dangling ports.</li>
+<li><strong>Telemetry on abios.</strong> Move the telemetry line to an abios packet, or at least hash the whole line. Use a keyed MAC or signature for anything that crosses machines (#67).</li>
+<li><strong>Then, proofs.</strong> Mechanise the rules on the port-indexed representation, and prove that a replay-verified record corresponds to a valid reduction sequence.</li>
+</ol>
+<p><strong>Since version 1.0.</strong> Items 1, 2, 3 and 5 are now in the runtime (C3 version 2). The peer port is stored in the byte that version 1 reserved, so records stay 20 bytes; version 1 packets decode where their peer ports can be inferred. Allocation takes the lowest free slot, so a graph alone fixes every later step. Run against the reference semantics above, the new reducer matches it after every step on the six loop-back cases and on 300 random closed nets that include self-loops and double wires, and every record replays. The experiments in §6 still measure the version studied, frozen in <code>studied_c3/</code>. Items 4, 6 and 7 remain open (#77, #67).</p>
+</section>
+<section id="reproducing-this-paper" class="level2">
+<h2>Reproducing this paper</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/Moissanite-Labs/weft <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> weft</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-m</span> venv .venv <span class="kw">&amp;&amp;</span> <span class="bu">.</span> .venv/bin/activate</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install numpy networkx matplotlib</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> papers/02-checkable-computation/experiments.py          <span class="co"># writes results.json and figures/</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> papers/02-checkable-computation/experiments.py <span class="at">--check</span>  <span class="co"># recompute and compare</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-m</span> unittest discover <span class="at">-s</span> weft/runtime/ic <span class="at">-p</span> <span class="st">&#39;test_*.py&#39;</span></span></code></pre></div>
+<p>Node 20 or newer is needed for the browser-parity experiment. Every number in §6 is deterministic. The experiments import the reducer as studied (commit <code>a18fc40</code>, copied byte for byte into <code>studied_c3/</code>), not the current runtime.</p>
+</section>
+<section id="references" class="level2">
+<h2>References</h2>
+<ol type="1">
+<li>Lafont, Y. (1990). Interaction nets. <em>Proceedings of POPL ’90</em>, 95–108.</li>
+<li>Lafont, Y. (1997). Interaction combinators. <em>Information and Computation</em> 137(1), 69–101.</li>
+<li>Mazza, D. (2007). A denotational semantics for the symmetric interaction combinators. <em>Mathematical Structures in Computer Science</em> 17(3), 527–562.</li>
+<li>Lamping, J. (1990). An algorithm for optimal lambda calculus reduction. <em>Proceedings of POPL ’90</em>, 16–30.</li>
+<li>NIST (2015). <em>Secure Hash Standard (SHS)</em>. FIPS PUB 180-4.</li>
+<li>Krawczyk, H., Bellare, M., Canetti, R. (1997). HMAC: Keyed-hashing for message authentication. RFC 2104.</li>
+<li>Rundgren, A., Jordan, B., Erdtman, S. (2020). JSON Canonicalization Scheme (JCS). RFC 8785.</li>
+<li>abios: the SYM-2P agent-messaging protocol. <a href="https://github.com/Moissanite-Labs/abios" class="uri">https://github.com/Moissanite-Labs/abios</a>.</li>
+<li>ML Weft. <em>Paper 0: overview</em> and <em>Paper 1: Models as Cells</em>. <a href="https://w3ft.org/papers/" class="uri">https://w3ft.org/papers/</a>.</li>
+<li>ML Weft issues #52 (valid nets and peer-port topology), #66 (loop-back rewiring and replay), #67 (telemetry line integrity).</li>
+</ol>
+</section>
+
+
+        <section class="paper-end" id="cite" aria-labelledby="cite-title">
+          <h2 id="cite-title">Cite this paper</h2>
+          <div class="codeblock">
+            <button class="icon-btn copy" type="button" data-copy="#bibtex" aria-label="Copy BibTeX">Copy</button>
+            <pre id="bibtex"><code>@techreport{mlweft2026paper2,
+  title       = {{Checkable Computation: Interaction combinators, a binary graph format and committed execution records}},
+  author      = {{ML Weft contributors, Moissanite Labs}},
+  institution = {Moissanite Labs},
+  type        = {ML Weft Paper},
+  number      = {2},
+  year        = {2026},
+  month       = nov,
+  note        = {Version 1.1},
+  url         = {https://w3ft.org/papers/checkable-computation/}
+}</code></pre>
+          </div>
+          <p class="paper-fine">
+            Version 1.1, 9 November 2026. Describes repository commit
+            <a href="https://github.com/Moissanite-Labs/weft/tree/a18fc40e31e71325aec507258fb80bb26f125c7c"><code>a18fc40</code></a>.
+            Text and figures are licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>, and the code is licensed under Apache-2.0.
+            Found an error? <a href="https://github.com/Moissanite-Labs/weft/issues/new?template=claim.yml">Open an issue</a>. Earlier PDF editions: <a href="ml-weft-paper-2-checkable-computation-v1.0.pdf">v1.0</a>.
+          </p>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer navy-scope">
+    <div class="wrap">
+      <div>
+        <a class="brand" href="/" aria-label="ML Weft home">
+          <svg viewBox="0 0 32 32" aria-hidden="true"><use href="#weave-mark"/></svg>
+          <span class="brand-name">ML Weft</span>
+        </a>
+        <p>A Moissanite Labs project. Code under <a href="https://github.com/Moissanite-Labs/weft/blob/main/LICENSE">Apache-2.0</a>,
+        documentation under <a href="https://github.com/Moissanite-Labs/weft/blob/main/LICENSE-docs">CC BY 4.0</a>.</p>
+      </div>
+      <div>
+        <h4>Project</h4>
+        <ul>
+          <li><a href="/papers/">Papers</a></li>
+          <li><a href="https://github.com/Moissanite-Labs/weft">Repository</a></li>
+          <li><a href="https://github.com/Moissanite-Labs/weft/issues">Issues</a></li>
+          <li><a href="https://github.com/Moissanite-Labs/weft-eido">Eido (design)</a></li>
+          <li><a href="https://github.com/Moissanite-Labs/weft-corpus">Corpus</a></li>
+          <li><a href="/widgets/">Sketches</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Community</h4>
+        <ul>
+          <li><a href="https://github.com/Moissanite-Labs/weft/blob/main/CONTRIBUTING.md">Contributing</a></li>
+          <li><a href="https://github.com/Moissanite-Labs/weft/blob/main/CODE_OF_CONDUCT.md">Code of conduct</a></li>
+          <li><a href="https://github.com/Moissanite-Labs/weft/blob/main/SECURITY.md">Security</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <linearGradient id="mark-chrome" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="32" y2="32">
+        <stop offset="0" stop-color="#cfe8f3"/><stop offset=".35" stop-color="#4096b2"/><stop offset=".55" stop-color="#a1d3e4"/><stop offset="1" stop-color="#35708a"/>
+      </linearGradient>
+      <linearGradient id="mark-gold" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="32" y2="32">
+        <stop offset="0" stop-color="#fbe7a1"/><stop offset=".35" stop-color="#d4af37"/><stop offset=".6" stop-color="#fff3c4"/><stop offset="1" stop-color="#b8862b"/>
+      </linearGradient>
+      <symbol id="weave-mark" viewBox="0 0 32 32">
+        <rect x="1" y="1" width="30" height="30" rx="8" fill="#060a12" stroke="url(#mark-chrome)" stroke-width="1.5"/>
+        <g fill="none" stroke-width="3.2" stroke-linecap="round">
+          <path d="M11 6v20M21 6v20" stroke="url(#mark-chrome)"/>
+          <path d="M6 11h3.2M12.8 11h6.4M22.8 11H26" stroke="url(#mark-gold)"/>
+          <path d="M6 21h16M24.4 21H26" stroke="url(#mark-chrome)"/>
+        </g>
+      </symbol>
+      <symbol id="gh" viewBox="0 0 24 24"><path fill="currentColor" d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></symbol>
+    </defs>
+  </svg>
+</body>
+</html>

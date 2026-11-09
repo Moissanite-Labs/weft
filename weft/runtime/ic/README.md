@@ -6,59 +6,60 @@ Codebase **C3** in [`docs/program/decomposition.md`](../../../docs/program/decom
 
 Provide a flat-array Interaction Combinator reducer (`FlatCombinatorVM`) and canonical Binary Combinator Packet (`BCP`, magic `0x57454654`) graph serializer (`bcp_codec.py`):
 
-- **Pure Lafont Basis (`ERA = 0`, `CON = 1`, `DUP = 2`)**:
-  - Bidirectional port-wired active-pair annihilation (`CON-CON`, `DUP(L)-DUP(L)`, `ERA-ERA`), commutation (`CON-DUP`, `DUP(L)-DUP(M)` for `L != M`), and erasure (`ERA` propagation).
-  - These are the current variant's local rewrite rules. The tests do not establish confluence of this implementation.
-- **Weft Metabolic & Superposition Extensions (`VLV = 3`, `FRC = 4`, `SUP = 5`)**:
-  - `VLV` gates reductions through `weft.runtime.invariants.verify_tension_bound` and transitions to `FRC` + `ERA` when tension exceeds `TENSION_MAX` (`85.0`).
-  - `SUP(L)` provides labeled superposition nodes that annihilate with `DUP(L)` and commute with `DUP(M)` (`L != M`).
-- **Graph-Committed Execution Record (`trace_commitment_sha256`)**:
-  - Hashes the initial BCP graph, canonical step-log JSON and final BCP graph with explicit domain separators (#21, #29). Graph differences affect the commitment under SHA-256's collision-resistance assumption; this is not a proof of valid execution.
+- **Port-indexed wires (version 2)**: a wire joins two *ports*. For each port the VM stores the peer node (`ports`) and the peer's port (`peer_ports`); `-1` in both marks an open port on the net's boundary. Arity: `ERA` 0, `CON`/`DUP`/`SUP` 2, `VLV`/`FRC` 1.
+- **Pure Lafont basis (`ERA = 0`, `CON = 1`, `DUP = 2`)**: annihilation (`CON-CON`, `DUP(L)-DUP(L)`), commutation (`CON-DUP`, `DUP(L)-DUP(M)` for `L != M`), and erasure (`ERA-ERA`, `ERA` against a binary node). Every rule removes the pair's ports and contracts the paths through them, so wires that loop back into the pair are rewired correctly (#66). The tests do not establish confluence.
+- **Weft extensions (`VLV = 3`, `FRC = 4`, `SUP = 5`)**: `VLV` gates a reduction through `weft.runtime.invariants.verify_tension_bound` and a positive budget. On pass it vanishes and its peer takes its output wire; on failure it becomes `FRC` (no rule) and a new `ERA` is wired to the peer, forming an active pair that erases it. `SUP(L)` annihilates with `SUP(L)` or `DUP(L)` and commutes otherwise.
+- **Checked interface**: `interact(a, b)` accepts only an active pair, two live nodes whose principal ports are wired together. Anything else raises `ValueError` with no change to the net, trace or snapshot.
+- **Execution record**: the initial graph is snapshotted at the first reduction (or by `snapshot_initial_graph()`), and the graph is then sealed: `alloc_node`, `connect_ports` and `free_node` raise, so every change is a recorded step. `trace_commitment_sha256` hashes the initial BCP graph, the step-log JSON and the final BCP graph with domain separators (`WEFT-IC-EXEC-V2:`).
+- **Replay verifier**: `verify_execution_record(initial_bcp, record)` checks the initial hash, replays every step through `interact` (each must be an active pair giving the recorded op) and compares the final graph and commitment. Allocation always takes the lowest free slot, so a graph alone fixes every later step, and replay is exact. The built-in self-test reduces a net with loop-back wires to normal form and passes this verifier.
 
-## BCP V1 storage contract
+Paper 2 studied version 1 at commit `a18fc40`. That copy is frozen in
+[`papers/02-checkable-computation/studied_c3/`](../../../papers/02-checkable-computation/studied_c3/)
+so the paper's numbers still reproduce.
+
+## BCP storage contract (version 2)
+
+Records keep the 20-byte `<IBBhiii` layout. The byte that version 1 reserved now
+holds the peer ports: bits `2i..2i+1` give which port of node `p_i` the wire
+reaches (`0..2`), or `3` when port `i` is open. Bits 6-7 are zero. Two different
+nets can no longer share one encoding (#52).
 
 Serialization preserves capacity exactly, including zero-capacity empty arenas,
 full arenas and sparse slot IDs. Valid canonical bytes round-trip unchanged.
-The header and node layouts are documented in `bcp_codec.py`.
 
 Both directions require ascending unique slots below capacity, tags `0..5`,
-zero flags/reserved bytes, at most 65,535 active records, and ports equal to `-1`
-or a slot in `[0, capacity)`. Decoding rejects bad magic/version, inconsistent
-length and invalid records **before allocating the arena**. Its default limit is
-1,048,576 slots (15 MiB for the three NumPy arrays). A caller can supply an
-explicit `max_capacity` node limit suited to its own memory budget. This limit is
-a decoder resource policy, not a change to the uint32 capacity field.
+zero flags, at most 65,535 active records, and ports equal to `-1` or a slot in
+`[0, capacity)`. They also check topology: ports beyond a node's arity are open,
+open ports are open on both arrays, and every wire is reciprocal between two
+distinct ports of live nodes. Decoding rejects any violation **before allocating
+the arena**. Its default limit is 1,048,576 slots; a caller can pass an explicit
+`max_capacity` suited to its own memory budget.
 
-This is an **active-node storage snapshot**, not an execution checkpoint. It
-does not preserve the allocator cursor, reduction count, trace or initial graph.
-The decoder starts allocation after the highest restored slot and uses the
-existing free-slot fallback. In-range references to free slots remain encodable,
-as in the existing open-interface examples. Peer-port identity, reciprocal
-wiring, active-pair validity and multi-edge semantics need a separate topology
-contract; range validation does not establish a well-formed interaction net.
+Version 1 packets still decode. Each peer port is inferred from the far node;
+a packet is rejected where that is ambiguous (two wires between the same two
+nodes) or the wiring is not well formed. The serializer writes version 2 only.
+
+A snapshot holds the graph, not the reduction count or trace. Because allocation
+takes the lowest free slot, the graph is enough to continue a run exactly.
 
 ## Reduction failure and valve contract
 
-Before any graph, allocator, initial-snapshot or trace mutation, an allocating
-rule checks its entire current peak requirement: erasure propagation needs two
-free slots, commutation four, and valve excision one. The old pair remains live
-during this check. Arena exhaustion raises `MemoryError` and preserves all VM
-state. This keeps the existing successful allocation/rewrite order; it does not
-introduce reuse of the old pair or thread-safe concurrent allocation.
+Before any graph, snapshot or trace mutation, an allocating rule reserves every
+slot it needs: erasure two, commutation four, valve excision one. The old pair
+stays live during the rule, so new nodes never take its slots. Arena exhaustion
+raises `MemoryError` and preserves all VM state.
 
 `VLV` rejects nonfinite tension or budget with `ValueError`, without a
-transition. For finite values, the existing predicate remains: the C2 tension
-gate accepts `0 <= tension <= 85`, and the budget must be strictly positive.
-Otherwise the current excision rule applies. The committed VLV trace records
-both exact float inputs (no tension rounding). There is **no cost or debit** in
-this API: a positive budget is presently a caller-supplied permission signal,
-not a metered account. Choosing a cost unit, reserving/debiting it atomically and
-binding it to durable ownership remains open under issue #43 and I3/#42.
+transition. For finite values the C2 tension gate accepts `0 <= tension <= 85`,
+and the budget must be strictly positive; otherwise the excision rule applies.
+The trace records both exact float inputs. There is **no cost or debit** in this
+API: a positive budget is a caller-supplied permission signal, not a metered
+account. Choosing a cost unit, debiting it atomically and binding it to durable
+ownership remains open under #43 and I3/#42.
 
-Other open work under #43: graph topology and a reference semantics, continuation
-replay, justified confluence claims, and an execution verifier. The current
-digest binds bytes and steps; it does not prove that the recorded reductions
-were allowed. These repairs do not close those research/contract questions.
+Still open: a canonical step encoding that another language can reproduce byte
+for byte (#77), and any proof about the rules. The verifier shows a record
+follows the rules; it says nothing about why those steps were chosen.
 
 ## Verification
 
@@ -66,7 +67,15 @@ were allowed. These repairs do not close those research/contract questions.
 python3 -m unittest discover -s weft/runtime/ic -p 'test_*.py'
 ```
 
-The storage/failure regression suite uses independently packed wire fixtures,
-minimum/full/sparse capacities, malformed metadata/ports, resource limits,
-exhaustion in every allocating rule, prior execution history and nonfinite VLV
-inputs. These are CPU tests; no GPU performance or Apple hardware claim follows.
+- `test_ic_vm.py`: each rule, the #66 loop-back cases, crossed vs parallel
+  double wires (#52), rejection of non-active pairs, sealing, and a replay
+  verifier that catches altered ops, pairs, dropped steps and a swapped graph.
+- `test_reference_differential.py`: the six loop-back cases and 300 random
+  closed nets (self-loops and double wires included) reduced step for step
+  against Paper 2's independent reference semantics, in random order; every
+  run must match after each step and replay.
+- `test_state_contract.py`: independently packed version 1 and 2 fixtures,
+  malformed storage and topology, resource limits, exhaustion in every
+  allocating rule and nonfinite `VLV` inputs.
+
+These are CPU tests; no GPU performance or Apple hardware claim follows.

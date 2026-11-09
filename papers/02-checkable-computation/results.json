@@ -1,0 +1,236 @@
+{
+  "schema": "weft-paper-2-results/1",
+  "environment": {
+    "commit": "88f4d88779bd5c34481842a2d7ede40174140d16",
+    "python": "3.13.18",
+    "numpy": "2.5.3",
+    "node": "v22.23.4"
+  },
+  "e0_reference": {
+    "nets": 300,
+    "reductions_checked": 7648,
+    "all_valid": true
+  },
+  "e1_rules": {
+    "cases": [
+      {
+        "rule": "CON-CON annihilate",
+        "matches_reference": true,
+        "vm_error": null
+      },
+      {
+        "rule": "DUP(0)-DUP(0) annihilate",
+        "matches_reference": true,
+        "vm_error": null
+      },
+      {
+        "rule": "SUP(1)-SUP(1) annihilate",
+        "matches_reference": true,
+        "vm_error": null
+      },
+      {
+        "rule": "DUP(1)-SUP(1) annihilate",
+        "matches_reference": true,
+        "vm_error": null
+      },
+      {
+        "rule": "CON-DUP commute",
+        "matches_reference": true,
+        "vm_error": null
+      },
+      {
+        "rule": "DUP(0)-DUP(1) commute",
+        "matches_reference": true,
+        "vm_error": null
+      },
+      {
+        "rule": "CON-SUP commute",
+        "matches_reference": true,
+        "vm_error": null
+      },
+      {
+        "rule": "ERA-CON erase",
+        "matches_reference": true,
+        "vm_error": null
+      },
+      {
+        "rule": "ERA-DUP erase",
+        "matches_reference": true,
+        "vm_error": null
+      },
+      {
+        "rule": "ERA-ERA",
+        "matches_reference": true,
+        "vm_error": null
+      },
+      {
+        "rule": "CON-DUP commute, asymmetric neighbours",
+        "matches_reference": true,
+        "vm_error": null
+      }
+    ],
+    "passed": 11,
+    "total": 11,
+    "loopback_cases": [
+      {
+        "case": "ERA-DUP, DUP aux ports looped together",
+        "initial_net_readable_from_storage": true,
+        "matches_reference": false,
+        "vm_error": "points_to_free_slot"
+      },
+      {
+        "case": "CON-DUP, CON aux ports looped together",
+        "initial_net_readable_from_storage": true,
+        "matches_reference": false,
+        "vm_error": "points_to_free_slot"
+      },
+      {
+        "case": "CON-CON, aux ports looped on both agents",
+        "initial_net_readable_from_storage": true,
+        "matches_reference": true,
+        "vm_error": null
+      },
+      {
+        "case": "CON-CON, aux wired across the pair (parallel)",
+        "initial_net_readable_from_storage": false,
+        "matches_reference": true,
+        "vm_error": null
+      },
+      {
+        "case": "CON-CON, aux wired across the pair (crossed)",
+        "initial_net_readable_from_storage": false,
+        "matches_reference": true,
+        "vm_error": null
+      },
+      {
+        "case": "CON-DUP, one aux wire across the pair",
+        "initial_net_readable_from_storage": false,
+        "matches_reference": false,
+        "vm_error": "points_to_free_slot"
+      }
+    ],
+    "loopback_passed": 3,
+    "falsifier_same_storage": {
+      "same_bcp_bytes": true,
+      "bcp_bytes": 132,
+      "references_differ": true,
+      "parallel": {
+        "vm_matches_reference": true,
+        "vm_error": null
+      },
+      "crossed": {
+        "vm_matches_reference": false,
+        "vm_error": null
+      }
+    }
+  },
+  "e2_differential": {
+    "simple": {
+      "nets": 300,
+      "outcomes": {
+        "agree_normal_form": 129,
+        "agree_until_cap": 76,
+        "vm_unreadable": 95
+      },
+      "failure_reasons": {
+        "ambiguous_multi_wire": 89,
+        "points_to_free_slot": 6
+      },
+      "failures_at_step_0": 0,
+      "median_failure_step": 2
+    },
+    "general": {
+      "nets": 300,
+      "outcomes": {
+        "agree_normal_form": 39,
+        "agree_until_cap": 24,
+        "vm_unreadable": 237
+      },
+      "failure_reasons": {
+        "ambiguous_multi_wire": 211,
+        "points_to_free_slot": 26
+      },
+      "failures_at_step_0": 192,
+      "median_failure_step": 0
+    }
+  },
+  "e3_order": {
+    "terminating_nets": 92,
+    "orders_per_net_reference": 5,
+    "reference_orders_agree": 92,
+    "vm_runs": 276,
+    "vm_runs_matching_reference_normal_form": 189,
+    "vm_runs_unreadable": 87
+  },
+  "e4_records": {
+    "closed_world_runs": 60,
+    "closed_world_replays_matching": 60,
+    "self_test": {
+      "reductions": 3,
+      "nodes_in_initial_snapshot": 4,
+      "replay_matches_commitment": false,
+      "replay_final_matches": false,
+      "steps_not_active_pairs": 2
+    },
+    "non_active_pairs": {
+      "tried": 198,
+      "vm_mutated_net": 198,
+      "left_net_unreadable": 198
+    }
+  },
+  "e5_bcp_fuzz": {
+    "packets": 40,
+    "mutants": 20280,
+    "rejected_value_error": 16124,
+    "accepted_reencodes_identically": 4156,
+    "accepted_reencodes_differently": 0,
+    "other_exception": 0,
+    "accepted": 4156,
+    "accepted_but_not_a_valid_net": 2671
+  },
+  "e6_telemetry_line": {
+    "fixture_line": ":01:03:0001[s-exp (active_nodes 19) (tension 0.2053) (gini 0.2167)]7095b5038539e979d2ace6df91a9458ddff99d42681fc2e638291c84608debe0",
+    "sizes": {
+      "line_bytes": 131,
+      "payload_bytes": 56,
+      "hash_hex_bytes": 64,
+      "header_bytes": 11,
+      "equivalent_compact_json_bytes": 177
+    },
+    "single_char_mutations": {
+      "header": {
+        "mutants": 55,
+        "rejected": 6,
+        "accepted": 49
+      },
+      "payload": {
+        "mutants": 280,
+        "rejected": 280,
+        "accepted": 0
+      },
+      "hash": {
+        "mutants": 320,
+        "rejected": 320,
+        "accepted": 0
+      }
+    },
+    "forged_header_accepted_python": true,
+    "forged_header_accepted_js": true,
+    "recomputed_hash_forgery_accepted_python": true,
+    "recomputed_hash_forgery_accepted_js": true,
+    "parity": {
+      "lines": 965,
+      "verdict_disagreements": 0,
+      "metric_disagreements": 0,
+      "header_disagreements": 0,
+      "examples": []
+    }
+  },
+  "e7_frame": {
+    "frame_bytes": 64,
+    "unix_time": 1762560000.0,
+    "float32_spacing_seconds": 128.0,
+    "stored_value": 1762560000.0,
+    "rounding_error_seconds": 0.0
+  }
+}

@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 340" font-family="DejaVu Sans, Helvetica, Arial, sans-serif" font-size="11" role="img" aria-labelledby="t d">
+  <title id="t">ML Weft components and interfaces</title>
+  <desc id="d">Telemetry (C6) feeds the browser field (C7) through the 64-byte frame and hashed SYM-2P packets. The cell runtime (C1) commits updates only through the safety gate (C2), which the graph reducer (C3) and the contract simulator (C5) also call. The ledger drafts (C4) and the simulator (C5) are research and are drawn dashed. Weight commitments (I7) between C1 and C4 are not specified yet.</desc>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#56617a"/></marker>
+  </defs>
+  <style>
+    .box{fill:#ffffff;stroke:#163168;stroke-width:1.4}
+    .gate{fill:#eef1f6;stroke:#163168;stroke-width:2}
+    .research{fill:#ffffff;stroke:#b8862b;stroke-width:1.4;stroke-dasharray:5 4}
+    .t{fill:#0b1220;font-weight:700;font-size:11.5px}
+    .s{fill:#56617a;font-size:10px}
+    .l{stroke:#56617a;stroke-width:1.2;fill:none}
+    .lab{fill:#56617a;font-size:9.5px}
+  </style>
+  <rect x="0" y="0" width="720" height="340" rx="10" fill="#f6f8fb"/>
+
+  <!-- Row 1: telemetry to browser -->
+  <rect class="box" x="20" y="20" width="210" height="62" rx="8"/>
+  <text class="t" x="34" y="42">C6 · Telemetry</text>
+  <text class="s" x="34" y="59">host metrics, 64-byte frames,</text>
+  <text class="s" x="34" y="72">SYM-2P encoder</text>
+  <rect class="box" x="490" y="20" width="210" height="62" rx="8"/>
+  <text class="t" x="504" y="42">C7 · Browser field</text>
+  <text class="s" x="504" y="59">packet verifier, WebGPU loom,</text>
+  <text class="s" x="504" y="72">built on Eido modules</text>
+  <path class="l" d="M230 51H486" marker-end="url(#a)"/>
+  <text class="lab" x="360" y="43" text-anchor="middle">I1 frame · I2 SYM-2P (hashed)</text>
+
+  <!-- Row 2: cell, gate, reducer -->
+  <rect class="box" x="20" y="130" width="210" height="80" rx="8"/>
+  <text class="t" x="34" y="152">C1 · Plasm (the cell)</text>
+  <text class="s" x="34" y="169">shared-memory arena (I4),</text>
+  <text class="s" x="34" y="182">A/B candidates, frozen core,</text>
+  <text class="s" x="34" y="195">watermark check</text>
+  <rect class="gate" x="255" y="130" width="210" height="80" rx="8"/>
+  <text class="t" x="269" y="152">C2 · Safety gate</text>
+  <text class="s" x="269" y="169">‖W′ − W₀‖ ≤ R</text>
+  <text class="s" x="269" y="182">and budget ≥ cost &gt; 0</text>
+  <text class="s" x="269" y="195">Python · C11 · JavaScript</text>
+  <rect class="box" x="490" y="130" width="210" height="80" rx="8"/>
+  <text class="t" x="504" y="152">C3 · Graph reducer</text>
+  <text class="s" x="504" y="169">interaction combinators,</text>
+  <text class="s" x="504" y="182">binary format (I5),</text>
+  <text class="s" x="504" y="195">committed execution record</text>
+  <path class="l" d="M230 170H251" marker-end="url(#a)"/>
+  <path class="l" d="M490 170H469" marker-end="url(#a)"/>
+  <text class="lab" x="240" y="162" text-anchor="middle">I3</text>
+  <text class="lab" x="479" y="162" text-anchor="middle">I3</text>
+
+  <!-- Row 3: research -->
+  <rect class="research" x="150" y="262" width="210" height="62" rx="8"/>
+  <text class="t" x="164" y="284">C4 · Ledger drafts</text>
+  <text class="s" x="164" y="301">provenance, metering, disputes</text>
+  <text class="s" x="164" y="314">not compiled · not deployed</text>
+  <rect class="research" x="385" y="262" width="210" height="62" rx="8"/>
+  <text class="t" x="399" y="284">C5 · Gateway simulator</text>
+  <text class="s" x="399" y="301">offline, localhost RPC only,</text>
+  <text class="s" x="399" y="314">Keccak-256, ABI topics (I6)</text>
+  <path class="l" d="M360 293H381" marker-end="url(#a)" marker-start="url(#a)"/>
+  <path class="l" d="M430 262V214" marker-end="url(#a)"/>
+  <text class="lab" x="438" y="242">I3</text>
+  <path class="l" d="M60 210V293H146" marker-end="url(#a)" stroke-dasharray="3 3"/>
+  <text class="lab" x="68" y="236">I7 weight commitments</text>
+  <text class="lab" x="68" y="248">(not specified yet)</text>
+
+  <!-- Legend -->
+  <rect class="box" x="614" y="272" width="16" height="11" rx="2"/><text class="lab" x="636" y="281">runs, tested</text>
+  <rect class="research" x="614" y="294" width="16" height="11" rx="2"/><text class="lab" x="636" y="303">research</text>
+</svg>

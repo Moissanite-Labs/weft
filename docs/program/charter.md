@@ -1,9 +1,11 @@
 # Weft build program
 
 > **Historical charter.** This is the original Weft build program, written while the repository was private
-> (it lived at the repository root as `PROGRAM.md`). The repository went public on 2026-11-08 at the owner's direction,
-> which lifts the restrictions below on public posts, outreach and publishing. The engineering constraints still
-> apply: evidence before claims, nothing deployed live, and scaffolding only what an issue names. For current
+> (it lived at the repository root as `PROGRAM.md`). On 2026-11-08 the owner asked for the repository to be prepared
+> for public release. Preparation is not publication: changing visibility, public posts and outreach remain owner
+> decisions, tracked in [#64](https://github.com/Moissanite-Labs/weft/issues/64) and
+> [#57](https://github.com/Moissanite-Labs/weft/issues/57). The engineering constraints still apply: evidence before
+> claims, nothing deployed live without the owner, and scaffolding only what an issue names. For current
 > sequencing see the [build program](build-program.md) and [convergence plan](convergence-plan.md). Contributor-facing
 > rules are in [CONTRIBUTING.md](../../CONTRIBUTING.md).
 

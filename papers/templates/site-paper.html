@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{title}}: {{subtitle}} · ML Weft</title>
+  <meta name="description" content="{{description}}">
+  <link rel="canonical" href="https://w3ft.org/papers/{{slug}}/">
+  <meta name="theme-color" content="#060a12">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="ML Weft">
+  <meta property="og:title" content="{{title}}: {{subtitle}}">
+  <meta property="og:description" content="{{description}}">
+  <meta property="og:url" content="https://w3ft.org/papers/{{slug}}/">
+  <meta property="og:image" content="https://w3ft.org/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="citation_title" content="{{title}}: {{subtitle}}">
+  <meta name="citation_author" content="{{authors}}">
+  <meta name="citation_publication_date" content="{{date_iso}}">
+  <meta name="citation_pdf_url" content="https://w3ft.org/papers/{{slug}}/{{pdf_name}}">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/css/site.css">
+  <link rel="stylesheet" href="/assets/css/papers.css">
+  <script src="/assets/js/theme.js"></script>
+  <script type="module" src="/assets/js/papers.js"></script>
+</head>
+<body>
+  <a class="skip" href="#paper">Skip to the paper</a>
+{{header}}
+  <main id="main">
+    <header class="paper-hero navy-scope">
+      <div class="wrap">
+        <nav class="crumbs" aria-label="Breadcrumb"><a href="/papers/">Papers</a><span aria-hidden="true">/</span><span>Paper {{number}}</span></nav>
+        <p class="eyebrow">Paper {{number}} · Version {{version}} · {{date_human}}</p>
+        <h1>{{title}}</h1>
+        <p class="paper-subtitle">{{subtitle}}</p>
+        <p class="paper-byline">{{authors}}</p>
+        <p class="paper-status"><span class="pill run">evidence</span> {{status}}</p>
+        <div class="cta">
+          <a class="btn btn-primary" href="{{pdf_name}}" download>
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
+            Download PDF <span class="btn-meta">{{pdf_size}}</span>
+          </a>
+          <a class="btn" href="https://github.com/Moissanite-Labs/weft/blob/main/papers/{{dir}}/paper.md">Source</a>
+          <a class="btn" href="#cite">Cite</a>
+        </div>
+      </div>
+    </header>
+
+    <div class="wrap paper-layout">
+      <aside class="paper-toc" aria-label="Contents">
+        <details open>
+          <summary>Contents</summary>
+{{toc}}
+        </details>
+      </aside>
+
+      <article class="paper" id="paper">
+        <section class="abstract" aria-labelledby="abstract-title">
+          <h2 id="abstract-title">Abstract</h2>
+{{abstract}}
+          <p class="keywords"><strong>Keywords:</strong> {{keywords}}</p>
+        </section>
+
+{{body}}
+
+        <section class="paper-end" id="cite" aria-labelledby="cite-title">
+          <h2 id="cite-title">Cite this paper</h2>
+          <div class="codeblock">
+            <button class="icon-btn copy" type="button" data-copy="#bibtex" aria-label="Copy BibTeX">Copy</button>
+            <pre id="bibtex"><code>{{bibtex}}</code></pre>
+          </div>
+          <p class="paper-fine">
+            Version {{version}}, {{date_human}}. Describes repository commit
+            <a href="https://github.com/Moissanite-Labs/weft/tree/{{commit}}"><code>{{commit_short}}</code></a>.
+            Text and figures are licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>, and the code is licensed under Apache-2.0.
+            Found an error? <a href="https://github.com/Moissanite-Labs/weft/issues/new?template=claim.yml">Open an issue</a>.{{previous_versions}}
+          </p>
+        </section>
+      </article>
+    </div>
+  </main>
+{{footer}}
+{{sprite}}
+</body>
+</html>

@@ -1,0 +1,15 @@
+# Papers that are planned but not yet published. Published papers are found
+# automatically from papers/<nn-slug>/paper.md.
+upcoming:
+  - number: 2
+    title: "Checkable Computation"
+    subtitle: "Interaction combinators, a binary graph format and committed execution records"
+    status: "In preparation"
+  - number: 3
+    title: "Eido"
+    subtitle: "Style as a point in space"
+    status: "In preparation"
+  - number: 4
+    title: "Constitution vs. Contract"
+    subtitle: "Provenance, metering and governance for adaptive models"
+    status: "Planned"

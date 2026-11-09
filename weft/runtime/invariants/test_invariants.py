@@ -9,9 +9,11 @@ import unittest
 from pathlib import Path
 
 from weft.runtime.invariants import (
+    R_INVARIANT,
     compute_royalty_split,
     load_conformance_vectors,
     verify_tension_bound,
+    verify_weight_update_safety,
     verify_weight_update_safety_ex,
 )
 
@@ -53,6 +55,29 @@ class TestWeftInvariants(unittest.TestCase):
                 self.assertEqual(split["upstream_wei"], vec["expected_upstream_wei"])
                 self.assertEqual(split["weaver_wei"], vec["expected_weaver_wei"])
                 self.assertEqual(split["upstream_wei"] + split["weaver_wei"], vec["gross_wei"])
+
+    def test_budget_underflow_reports_ex_distance_not_candidate_norm(self) -> None:
+        try:
+            import torch
+        except ImportError:
+            self.skipTest("torch not installed")
+        baseline = torch.tensor([1.0, 0.0, 0.0, 1.0])
+        current = baseline.clone()
+        candidate = torch.tensor([3.0, 0.0, 0.0, 3.0])
+        cand_norm = float(torch.linalg.norm(candidate).item())
+        self.assertTrue(math.isfinite(cand_norm))
+        res = verify_weight_update_safety(
+            baseline,
+            current,
+            candidate,
+            remaining_budget=0.5,
+            update_cost=1.0,
+            max_baseline_distance=R_INVARIANT,
+        )
+        self.assertFalse(res["accepted"])
+        self.assertEqual(res["reason"], "remaining_budget_underflow")
+        self.assertTrue(math.isinf(res["baseline_distance"]))
+        self.assertNotAlmostEqual(res["baseline_distance"], cand_norm)
 
     def test_c_header_conformance(self) -> None:
         cc = shutil.which("cc") or shutil.which("clang") or shutil.which("gcc")
