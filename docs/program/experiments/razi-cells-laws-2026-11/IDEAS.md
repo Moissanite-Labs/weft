@@ -31,7 +31,7 @@ Tooling now: Lean 4.35.0 + lake in ~/.elan/bin. Bend, HVM, cargo absent.
 3. R1 differential tier, then Lean tier.
 4. R5, R4, R6. R3 after R2 shows models can write Lean at all.
 
-## E: embeddings (A, 2026-11-09, shaped by razi)
+## E: embeddings (project lead, 2026-11-09, shaped by razi)
 Core move: embed every code variant a cell writes. A colony's history becomes a path through vector space, and mitosis becomes a step in that space.
 - E1 Split distance vs gain. Measure cosine distance between daughters A and B at each split. Question: do wider splits find bigger wins, or do they mostly fail? Gives an optimal split width.
 - E2 Novelty floor. Reject a split whose daughters sit closer than a threshold, so every A/B is a real experiment, not two near-copies. Compare wins/100 calls with and without it.
@@ -83,7 +83,7 @@ Proposed experiments:
 - Likely cause (read, not tested): torch.randn_like on device, so MPS draws a different noise stream.
 - Files: ~/Work/weft-repro/{mps_e2e4.py,mps_results.json,mps_summary.md}.
 
-## G. Google AI Mode conversation (A, 2026-11-10)
+## G. Google AI Mode conversation (project lead, 2026-11-10)
 Source text saved in `sources/aimode-2026-11-10-google.txt` (the project lead's chat with Google AI Mode, which read Report 1).
 Treat it as outside advice. Each item below is marked checked or unchecked.
 
@@ -161,7 +161,7 @@ Flag separately from routine reports when a result (1) replicates on a valid ins
 least two model families, (3) would change how someone outside builds or reasons about these systems.
 Nothing meets it as of 2026-11-10. Closest candidate: F2 plus F3.
 
-## I. Inward design: metabolism (A, 2026-11-10: behaviour should emerge from causality)
+## I. Inward design: metabolism (project lead, 2026-11-10: behaviour should emerge from causality)
 Built as `metab.py`. The harness keeps the bench, the sandbox and four constants. Everything else is the
 cell's choice, read from its own state (energy, what each step cost, what a win pays, the other cells).
 
@@ -183,7 +183,7 @@ cell's choice, read from its own state (energy, what each step cost, what a win 
 - I2d Reproduction as the only store: energy above a level cannot be held, it can only fund a daughter.
 - I2e Run the same laws on a second model family (Mistral Large 4, Argon) before any claim about I1a.
 
-## J. Layers, stem cells and Inkling 2 Small (A, 2026-11-10, discussion 105 follow-up)
+## J. Layers, stem cells and Inkling 2 Small (project lead, 2026-11-10, discussion 105 follow-up)
 Source facts (read 2026-11-10, vendor-reported, saved in `sources/thinkingmachines-inkling-2-small-2026-11-05.txt`):
 Inkling 2 Small is a mixture-of-experts model, 594B parameters total, 17B active per token, released
 2026-11-05 on Tinker. Tinker prices per 1M tokens: prefill 0.30, sample 1.00, train 1.50. The post
@@ -346,5 +346,25 @@ Tests to preregister:
   one daughter keeps the body and the other must change it, and the gate keeps the better.
 - L4 (restraint). A lineage whose store grows can breed without limit. The project lead said growth only is cancer. If L1 shows
   stores growing, the next law is about what a rich lineage does with surplus: feed poorer lineages, or stop.
-- T-L1 (running). Arms h (heredity) and b (blank), 4 kits, 4 generations, width 2, 3 runs each. Guesses L1-a to
-  L1-h in TESTS.md.
+- T-L1 (done 2026-11-10, 5 of 8 guesses held, the three that mattered missed). Arms h (heredity) and b (blank),
+  4 kits, 4 generations, width 2, 3 runs each. Result in TESTS.md.
+- L5 (L1, lead). Heredity as built is a savings law, not a search law. Reach was level (h 2.267, b 2.278). Heredity
+  spent 31% less energy, had 7 deaths against 23 and lost no lineage. It did not compound: 9 of 12 final germline
+  bodies were still the generation 0 body.
+- L6 (L1, lead, the K20 pattern with a body in hand). Heirs do not try. 65 of 70 heirs changed nothing, though
+  most read a sense number under 0.9 of the record. When an heir did try, the gate took the work 3 times in 4. The
+  gate is not the block. The will to try is.
+- L7 (L1, lead). Inheritance anchors. On compress the blank arm found the ceiling body in 2 of 3 runs and heredity
+  in 0 of 3. A fresh newborn is an independent draw. An heir stays near the first body. Where the best body is a
+  different idea and not a refinement, draws beat inheritance.
+- L8 (L1). The two arms fail in opposite ways: blank searches and burns out, heredity survives and stands still.
+  The safe and bold pair from the Weft papers is the same split, one level down. The next law should hold both in
+  one lineage.
+- L9 (failure ledger). The K13 rule checks the estimated cost before a call. One call in 757 overdrew because the
+  reply ran far longer than the estimate. Cap the reply to what the cell can pay, not only the estimate.
+- T-L2 (next). Division at birth. Each birth is a pair: one daughter keeps the germline body untouched (safe), the
+  other is born with the body and a rule that it must change it before it may rest (bold). The gate keeps the
+  better. Third arm: bold daughter born blank with only the library line (an independent draw, L7). Same kits,
+  same budget, against arm h from L1 as the baseline. Guesses before data.
+- T-L3 (after T-L2). A need that cannot be finished in one life, so that compounding is the only way up. This is
+  the step written down in advance for a missed L1-b.

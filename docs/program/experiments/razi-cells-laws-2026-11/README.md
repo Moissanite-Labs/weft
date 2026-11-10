@@ -26,7 +26,7 @@ data. Report scripts were run unchanged. Anything written after seeing data is l
 | SP2 | agent colonies | Stem against flat on a fixed-reference metric | 6 of 8 |
 | SP3 | agent colonies | What changes when a cell is shown the price list, and its distance from the best known body | 6 of 12 |
 | T-J3 | LoRA adapters | Does division plus a gate help when the genome is an adapter | Incomplete. Storage limit stopped 3 of 4 arms |
-| L1 | agent colonies | Does heredity let lineages compound gains | Preregistered. Full run in progress when this record was cut. No result here |
+| L1 | agent colonies | Does heredity let lineages compound gains | 5 of 8. The three guesses that mattered missed |
 
 ## Main readings, with their limits
 
@@ -40,17 +40,21 @@ data. Report scripts were run unchanged. Anything written after seeing data is l
 - **A stem cell that feeds others added cost and no reach** in SP1 and SP2.
 - **In the toy network, a gate that escalates after a failed try** had the lowest worst-case regret of four gates
   (1.42 against 3.02 for the fixed gate).
+- **Heredity saved energy and did not search.** In L1, lineages that pass a body and an energy store to their
+  heirs reached the same level as lineages whose newborns start blank (2.27 against 2.28). They spent 31% less
+  energy and had 7 deaths against 23. They did not compound: 65 of 70 heirs changed nothing, and 9 of 12 final
+  bodies were still the first generation's body. When an heir did try, the gate took its work 3 times in 4.
 - **Negative results are kept.** GR1 copy division was never accepted by the gate. The T-J3 plain arm did not beat
   the base rate. The E12 maze task was not a valid instrument.
 
-Limits. SP3 has 4 runs per arm and its smallest p value is 0.21. One model family (Anthropic) ran the laws. One task
+Limits. SP3 has 4 runs per arm and its smallest p value is 0.21. L1 has 3 runs per arm. One model family (Anthropic) ran the laws. One task
 carries most of the SP3 difference. The toy network results are curve fitting on a laptop CPU. No claim here is
 established. A result needs a second model family and a repeat before it is called a result.
 
 ## Layout
 
 - `TESTS.md`: every preregistration and result, in order. Start at the section for the block you want.
-- `IDEAS.md`: the idea ledger, including failures (section H) and lessons K1 to K26.
+- `IDEAS.md`: the idea ledger, including failures (section H) and lessons K1 to K26 and L1 to L9.
 - `code/cells/`: the runtime (`metab.py`, `cell.py`, `colony.py`, `kit.py`), the report scripts, and offline tests.
 - `code/adapters/`: the T-J3 trainer and report.
 - `run/`: run scripts and task lists.

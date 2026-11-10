@@ -228,7 +228,7 @@ Reason: E10 ran about 1h12m per arm with no usage records. New default for all r
 - CELL_MAX_OUT=2000, CELL_EFFORT=low, CELL_TOKEN_BUDGET=40000 per colony.
 - Every step logs usage (inp, out, cr, cw, usd). colony.py summary reports tokens, usd, token_budget_hit.
 - Paired design: the same 4 tasks for every arm. Compare per-task differences, medians only.
-- Model choice (A, 2026-11-10): budget is unlimited and the project is top priority. The cost ladder (cheapest first: hy4, sonnet 5.5, gpt-6.1-sol (openai API), opus 5.5, astra, mistral large 4, argon, fable) is for choosing without waste, not a rule to always use the cheapest.
+- Model choice (project lead, 2026-11-10): budget is unlimited and the project is top priority. The cost ladder (cheapest first: hy4, sonnet 5.5, gpt-6.1-sol (openai API), opus 5.5, astra, mistral large 4, argon, fable) is for choosing without waste, not a rule to always use the cheapest.
   - Pick the model the question needs. Model comparisons, model mixes and frontier tests are valid science.
   - Waste = spend that buys no answer. Before any run: a preregistered question, usage logging on, a token budget set, the smallest design that can answer it.
   - Do a cheap pilot (smoke, 1 task) before a costly full run, so bugs are found on cheap calls.
@@ -362,7 +362,7 @@ separates the two by making both arms keep working.
 - Route id for cells: `custom-mistral:mistral-large-4` (the provider is registered as `custom-mistral`, not `mistral`).
 - Probe through the exo-live Router with one native tool: OK, 1.2 s, tool call returned, 97 in / 26 out tokens, cost reported as None (unpriced route, so usd in summaries will read 0 for this model; use tokens).
 - Not yet run in a colony. Next: cheap-protocol smoke (1 task), after E12 finishes so it does not add timing noise to E12 assays.
-- Place in the cost ladder (A, 2026-11-10): third highest, under argon and fable.
+- Place in the cost ladder (project lead, 2026-11-10): third highest, under argon and fable.
 
 ### E12 results (analysed 2026-11-10, `e12.py` run unchanged, output saved as `results/e12-out.txt`)
 - Run: job exit 0, 15m32s, 16 of 16 runs, 64 cells, 0 budget hits, 0 deaths, all cells on anthropic:claude-sonnet-5-5.
@@ -1423,7 +1423,7 @@ that many. This is an instrument limit, not a finding about division.
 
 ## L1: lineages with heredity (guesses written 2026-11-10, before any L1 data)
 
-Why this, and why now. A handed the direction over on 2026-11-10. Looking back over E08 to SP3, every colony has
+Why this, and why now. The project lead handed the direction over on 2026-11-10. Looking back over E08 to SP3, every colony has
 the same shape: cells are born with nothing, live once, and what they built ends with them. The only thing that
 outlives a cell is one line in a library. Each experiment then asked which nudge, price or number makes that one
 life go better. None of them could compound, because nothing is inherited. The Weft thesis is about lineages
@@ -1487,7 +1487,7 @@ What each outcome will mean, fixed now.
   it. Then the problem is K20 (heirs do not try), and the next step is the escalation law or division at birth.
 - L1-b missed: best of 8 fresh tries is as good as 4 generations of inheritance on these kits. Then these kits are
   too shallow to show compounding and the next step is a need that cannot be finished in one life.
-- L1-e missed (stores grow): the colony feeds itself, and the restraint question (A, growth only is cancer)
+- L1-e missed (stores grow): the colony feeds itself, and the restraint question (the project lead: growth only is cancer)
   becomes live at once: what stops a rich lineage from breeding.
 
 Known limits. One model family. 3 runs per arm, so nothing here can be significant on its own and every reading
@@ -1524,3 +1524,91 @@ text and numbers are unchanged, and the copies from before this fix are in `arch
 events is not affected: the L1 guesses and hashes were appended at 01:36, the pilot ran after, the full run started
 at 01:39. Three scripts carry the same wrong date in a comment (`lineage.py`, `lineage_report.py`, `metab.py` line
 57). They are left as they are, because their hashes are registered above and the run is using them.
+
+### L1 result (2026-11-10). 6 runs, 178 cells, one model family (Anthropic). A lead, not a result that can stand alone.
+
+`sh run_l1.sh full` ran as one job, 41m36s, runs in the fixed order l1h1 l1b1 l1h2 l1b2 l1h3 l1b3, all rc 0, 16
+generation rows in each run. Hashes checked after the run and unchanged: `metab.py` b8ec3a2f0c4c8d48, `lineage.py`
+4a226547e4b97fe9, `lineage_report.py` 2497f755f0c8bc6f, `refscore.py` 3937690f190b67df, `run_l1.sh`
+8ec4d1b035769858. `l1_after.sh` was run once. Outputs: `results/l1-ref.json` 909644666e1ce157,
+`results/l1-refscore-out.txt`, `results/l1-out.txt` e34345c6aa6e3eaa. Verdicts are the script's, as written.
+
+| Guess | Verdict | Number |
+|---|---|---|
+| L1-a plumbing clean | MISSED | h inherit 70 of 70, b inherit 0, errors 0 in h and 1 in b |
+| L1-b heredity reaches higher | MISSED | O1 h 2.2670, b 2.2782, h minus b -0.0111 (needed +0.10) |
+| L1-c heredity compounds | MISSED | 3 of 12 h lineages replaced the germline after generation 0 (needed 6) |
+| L1-d heirs spend less | HELD | median spent per cell, later 94.7 against generation 0 212.8 |
+| L1-e stores do not grow | HELD | 0 of 12 h stores ended above 1600 |
+| L1-f early stopping survives | HELD | 65 of 70 later h cells did no write, variant round or division |
+| L1-g fibmod carries the gap | HELD | per kit h minus b: compress -0.233, csvsum -0.044, fibmod -0.864, maze +0.048 |
+| L1-h heredity cheaper per reach | HELD | (O1 minus 1) per 1000 energy: h 0.0895, b 0.0619 |
+
+5 of 8 held. The three that missed are the ones that mattered.
+
+| Arm | O1 by run | O1 mean | Cells | Deaths | Improve events | Income | Energy spent | Lineages extinct |
+|---|---|---|---|---|---|---|---|---|
+| h (heredity) | 2.228, 2.334, 2.239 | 2.2670 | 94 | 7 | 9 | 1959.8 | 14152.5 | 0 |
+| b (blank) | 2.153, 2.301, 2.380 | 2.2782 | 84 | 23 | 17 | 2401.5 | 20642.6 | 1 |
+
+Reading, by the meanings fixed before the data.
+- L1-b missed, so the reading written in advance applies: on these kits, 8 fresh tries with one library line each
+  reach as high as 4 generations that pass the body on. The two arms are level (0.011 apart, "level" was under
+  0.10). Heredity did not raise reach.
+- L1-b and L1-c both missed, so heredity is not shown to be the missing engine at the agent layer. That claim is
+  withdrawn as a working belief until something else supports it.
+- L1-e held, so the restraint question does not arise yet: no lineage fed itself. Every store shrank.
+- L1-g held in the direction that hurts heredity: fibmod is where the blank arm was ahead (h 3.22, 5.77, 4.32
+  against b 5.29, 5.50, 5.11).
+- L1-h held: heredity bought the same reach for 31% less energy (14152.5 against 20642.6), with 7 deaths against
+  23 and no lineage lost. This is the one clear thing heredity did. It is thrift, not growth.
+- L1-a missed on one event, an overdraft in the blank arm (see D1). The inheritance plumbing itself was clean:
+  70 of 70 heirs were born with the germline body and an accepted assay, 0 of 60 blank newborns were.
+
+How far to trust it. 3 runs per arm, one model family, 4 small kits. No test of significance was planned and none
+is claimed. The level result is the safest part: the arms differ by 0.011 while runs inside one arm differ by up
+to 0.23. The thrift result is large (31%) and in the same direction in the death count and the store balances, but
+it is still 3 runs.
+
+### L1 diagnostics (2026-11-10). NOT preregistered. Written after the report was read. Leads only.
+
+Script output in `results/l1-diag-out.txt` 68326cbc59d640d4 (D1 to D8).
+- D1. The one error in L1-a is an overdraft in l1b2, generation 0, compress: the cell had 175.4, the call was
+  estimated at 56.1 and cost 208.2. The K13 rule checks the estimate before the call, and the reply was far longer
+  than estimated. So the K13 fix holds for input but not for a long reply. It is 1 call in 757.
+- D2. Heirs saw that better exists and still rested. The sense number at birth in arm h had median 0.85 of the
+  record, and 42 of the 65 idle heirs read a number under 0.9. Median life of a later h cell was 2 steps. 61 of the
+  65 idle heirs chose rest with no change to the body. In arm b the later cells had median 10 steps and 48 of 60
+  did real work, because an empty folder leaves nothing to rest on.
+- D5. When an heir did work, the gate usually took it. Of the 36 lineage generations after generation 0 in arm h,
+  4 had an heir that wrote or ran a variant round, and 3 of those 4 replaced the germline (gains +0.97, +0.13,
+  +0.27). The other 32 had no working heir and 0 replacements. So L1-c missed because heirs did not try, not
+  because the gate refused good work. This is the K20 pattern again, now with a body in hand.
+- D4. Where the final germline body came from: in h, 9 of 12 are still the generation 0 body. In b, 7 of 12.
+- Anchoring (from the refscore table). On compress the blank arm reached the ceiling body (1.542) in 2 of 3 runs
+  and heredity in 0 of 3 (1.19 to 1.20). Each blank newborn is an independent draw at the problem. An heir
+  starts from the first body and stays near it. On a kit where the best body is a different idea and not a
+  refinement, more independent draws beat inheritance.
+- D7. Death events by generation: h 3, 0, 2, 2 (7). b 5, 3, 5, 7 (20, plus 3 cells ended by the harness after
+  repeated failed replies, which the report also counts as dead: 23). Blank cells keep paying the full price of a
+  first body.
+- D8. Found nothing. It looked for the reason an idle heir gave at its rest act. The rest act carries no reason
+  text, so the tally is empty. The reasons quoted below were read from three logs by hand and are not counted.
+- D6. Usage: h 280 model calls, 809,777 billed tokens. b 477 calls, 1,542,359 billed tokens.
+- D3. Births: h had the energy for 22 of 24 births in the last generation, b for 13 of 24.
+- Seen in the logs, not counted: an idle heir (l1h3, generation 2, compress) thought twice on the mid model,
+  weighed a bigger rewrite, called it slow and risky, and rested with 180 energy left. Another (l1h2, generation
+  3, csvsum) timed a different idea in its scratch folder, ran short of energy and rested without writing it
+  into the body. A third (l1h1, generation 2, fibmod) read 0.66 of the record and rested on its first act.
+
+What this changes.
+- Heredity as built is a savings law. It stops waste and does not by itself produce search. The cells that inherit
+  behave like the rested cells of SP2 and SP3: they hold what they have.
+- The two arms fail in opposite ways. Blank searches widely and burns out (23 deaths, 1 lineage extinct, last
+  generation half unfunded). Heredity survives and stands still. Neither compounds.
+- The step fixed before the data for "L1-b missed" is a need that cannot be finished in one life. D5 adds a
+  second, cheaper step that the guesses also named under L1-f: make trying the default for an heir, by division
+  at birth (one daughter keeps the body, the other must change it, the gate keeps the better). D5 says the gate
+  is ready for that: 3 of 4 real tries were taken.
+- A mix is the obvious third arm: most births inherit, some start blank. That is the safe and bold pair from the
+  Weft papers, moved to the level of births.

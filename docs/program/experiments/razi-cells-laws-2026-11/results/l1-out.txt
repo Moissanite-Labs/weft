@@ -1,0 +1,47 @@
+
+ARM h: runs ['l1h1', 'l1h2', 'l1h3']
+  O1 run medians of final germline rel: [2.228, 2.334, 2.239]  mean 2.2670
+   l1h1     compress  rel 1.1921  late takes 0  store end 281.7  gate gains [0.0, 0.0, 0.0, 0.0]
+   l1h1     fibmod    rel 3.2214  late takes 0  store end 1005.8  gate gains [0.0, -0.0004, 0.0208, 0.0226]
+   l1h1     csvsum    rel 1.4898  late takes 0  store end 641.2  gate gains [0.0, 0.0094, 0.0127, 0.0158]
+   l1h1     maze      rel 2.9664  late takes 0  store end 797.1  gate gains [0.0, -0.0019, 0.0081, 0.017]
+   l1h2     compress  rel 1.1922  late takes 0  store end 679.6  gate gains [0.0, 0.0, 0.0, 0.0]
+   l1h2     fibmod    rel 5.7713  late takes 1  store end 1018.3  gate gains [0.0, 0.9745, -0.0271, -0.0138]
+   l1h2     csvsum    rel 1.5036  late takes 0  store end 353.5  gate gains [0.0, 0.0374, 0.0049, 0.0035]
+   l1h2     maze      rel 3.1641  late takes 0  store end 542.9  gate gains [0.0, 0.015, 0.0133, 0.0153]
+   l1h3     compress  rel 1.1977  late takes 0  store end 0.0  gate gains [0.0, 0.0, 0.0, 0.0]
+   l1h3     fibmod    rel 4.3248  late takes 0  store end 925.8  gate gains [0.0, 0.0313, -0.0011, 0.0243]
+   l1h3     csvsum    rel 1.4345  late takes 1  store end 601.8  gate gains [0.0, -0.005, 0.1315, 0.0074]
+   l1h3     maze      rel 3.0439  late takes 1  store end 81.8  gate gains [0.0, -0.0123, 0.0083, 0.2668]
+  cells 94  deaths 7  errors 0  improve events 9  income 1959.8  spent 14152.5
+  late cells 70  inherit ok 70  late cells with no write/variants/divide 65
+  spent per cell: gen 0 median 212.75, later median 94.69999999999999
+  lineages whose store ended above its start: 0 of 12; extinct 0
+
+ARM b: runs ['l1b1', 'l1b2', 'l1b3']
+  O1 run medians of final germline rel: [2.153, 2.301, 2.38]  mean 2.2782
+   l1b1     compress  rel 1.5421  late takes 0  store end 64.8  gate gains [0.0, -0.2233, -0.2236, None]
+   l1b1     fibmod    rel 5.293  late takes 1  store end 0.0  gate gains [0.0, 1.8028, -0.03, -0.6545]
+   l1b1     csvsum    rel 1.4622  late takes 0  store end 80.1  gate gains [0.0, 0.0207, 0.0255, 0.0284]
+   l1b1     maze      rel 2.7647  late takes 0  store end 277.7  gate gains [0.0, 0.0249, 0.0092, 0.0112]
+   l1b2     compress  rel 1.5421  late takes 1  store end 0.0  gate gains [0.0, 0.2935, 0.0, 0.0]
+   l1b2     fibmod    rel 5.5039  late takes 1  store end 0.0  gate gains [0.0, 0.0092, 2.1184, -0.054]
+   l1b2     csvsum    rel 1.5739  late takes 0  store end 276.1  gate gains [0.0, -0.2527, -0.3306, -0.0394]
+   l1b2     maze      rel 3.0278  late takes 1  store end 0.0  gate gains [0.0, 0.1628, 0.0045, -0.2557]
+   l1b3     compress  rel 1.1972  late takes 0  store end 0.0  gate gains [0.0, 0.0, 0.0, 0.0]
+   l1b3     fibmod    rel 5.1133  late takes 1  store end 47.1  gate gains [0.0, 0.2524, -0.0955, -0.0606]
+   l1b3     csvsum    rel 1.5232  late takes 0  store end 24.8  gate gains [0.0, -0.1091, -0.0986, -0.101]
+   l1b3     maze      rel 3.2373  late takes 0  store end 25.0  gate gains [0.0, -0.0703, 0.0097, -0.0082]
+  cells 84  deaths 23  errors 1  improve events 17  income 2401.5  spent 20642.6
+  late cells 60  inherit ok 0  late cells with no write/variants/divide 12
+  spent per cell: gen 0 median 236.225, later median 243.3
+  lineages whose store ended above its start: 0 of 12; extinct 1
+
+L1-a: MISSED  (h inherit 70/70, b inherit 0, errors 0+1)
+L1-b: MISSED  (O1 h minus b -0.0111, needs +0.10 or more)
+L1-c: MISSED  (3 of 12 heredity lineages replaced the germline after generation 0)
+L1-d: HELD  (h spent per cell: later 94.7 against gen 0 212.8, needs under 0.6)
+L1-e: HELD  (0 of 12 heredity stores ended above their start)
+L1-f: HELD  (65 of 70 later heredity cells did no write, variants or divide)
+L1-g: HELD  (per kit h minus b: compress -0.233, csvsum -0.044, fibmod -0.864, maze +0.048)
+L1-h: HELD  ((O1 minus 1) per 1000 energy spent: h 0.0895, b 0.0619)
