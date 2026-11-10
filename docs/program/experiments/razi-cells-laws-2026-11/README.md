@@ -1,7 +1,7 @@
 # Razi-cells laws record, 2026-11 (E11 to L1)
 
 Status: run record, not a paper. Every result here is a lead unless the text says otherwise. Nothing in this folder
-is checked by CI. It continues the E07 record proposed in pull request 101 and uses the same harness.
+is checked by CI. It continues the E07 record in `../E07/razi-cells-2026-11/` and uses the same harness.
 
 ## What this is
 
@@ -53,6 +53,7 @@ established. A result needs a second model family and a repeat before it is call
 
 ## Layout
 
+- `CONSULT-2026-11-10.md`: cross-project synthesis (`Weft`, `Exo`, `razi-cells` `E07` to `L1`) and ranked next-step plan (`T-L2`, `metab.py` fixes, `T-L3` deterministic assays).
 - `TESTS.md`: every preregistration and result, in order. Start at the section for the block you want.
 - `IDEAS.md`: the idea ledger, including failures (section H) and lessons K1 to K26 and L1 to L9.
 - `code/cells/`: the runtime (`metab.py`, `cell.py`, `colony.py`, `kit.py`), the report scripts, and offline tests.
@@ -72,11 +73,11 @@ calls and spend no API credits. They are not runnable from a fresh checkout of t
 On the machine that wrote this record they still depend on:
 
 - **Exo.** `cell.py` imports `exo` from `~/Work/exo-live/src` at import time. `kit_selftest.py` loads `cell.py`.
-  `colony.py` and the sandbox runner expect Exo's Python at `~/Work/exo-live/.venv/bin/python`; `cell.py` also
+  `colony.py` and the sandbox runner expect Exo's Python at `~/Work/exo-live/.venv/bin/python`. `cell.py` also
   hardcodes `/opt/homebrew/bin/python3` for scoring subprocesses. Without that layout, `python
   code/cells/kit_selftest.py` fails with `ModuleNotFoundError: No module named 'exo'`.
 - **Author paths.** The files in `code/cells/tests/` import `metab` and `cell` from `~/Work/razi-tools/cells`, not
-  from this tree. `kit.py` reads kit inputs from `~/Work/razi-cells/kits`; the offline tests write temp runs under
+  from this tree. `kit.py` reads kit inputs from `~/Work/razi-cells/kits`. The offline tests write temp runs under
   `~/Work/razi-cells/exp`. Those directories must exist, or you must mirror the paths.
 
 Once that layout is in place, the offline checks themselves need no model router and no API key.
