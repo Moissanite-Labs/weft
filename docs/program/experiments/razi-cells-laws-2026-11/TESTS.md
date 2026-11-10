@@ -15,8 +15,8 @@ Probed 2026-11-09: anthropic:claude-fable-5-1 ok (1.0s), openai:gpt-6-astra ok (
 - [ ] B2 anthropic:claude-haiku-5-5 (fast)
 - [ ] B3 anthropic:claude-sonnet-5-5 (mid)
 - [ ] B4 anthropic:claude-opus-5-5 (deep)
-- [~] B5 (running, pid 96800) anthropic:claude-fable-5-1 (high tier, requested)
-- [~] B6 (running, pid 96801) openai:gpt-6-astra (high tier, requested, API key route)
+- [~] B5 (running) anthropic:claude-fable-5-1 (high tier, requested)
+- [~] B6 (running) openai:gpt-6-astra (high tier, requested, API key route)
 - [ ] B7 off-frontier controls: nous:z-ai/glm-5.3-flash, nous:moonshotai/kimi-k3
 
 ## C. Fast vs powerful gradient
@@ -614,7 +614,7 @@ What the cells did when stopping was removed (leads only: 4 cells, one model fam
   nothing in a cell's situation makes that trade attractive. A law is missing here, not a nudge.
 
 ## GR1 growth pilot: two engines in a tiny network (guesses written 2026-11-10, before any GR1 data)
-Why: A's answer on discussion 105 (2026-11-10): the architecture needs two engines, and a colony whose only
+Why: the project lead's answer on discussion 105 (2026-11-10): the architecture needs two engines, and a colony whose only
 goal is growth is a cancer. This is the cheapest test of both at the model layer. It runs on the laptop CPU,
 with no model calls and no API spend. It is a pilot: leads only.
 

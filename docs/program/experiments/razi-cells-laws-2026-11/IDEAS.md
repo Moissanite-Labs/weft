@@ -43,7 +43,7 @@ Prereq: cell.py must save every variant's full code (logs now keep only "<N char
 
 - 2026-11-09: cell.py now archives every write/variant to <cell>/variants.jsonl (backup cell_v3d.py). embed.py (razi-tools/cells) runs E1+E5 via local ollama nomic-embed-text (768-d), self-tested. b7 started before the patch, so b8 is the first run with code captured.
 
-## F: embedding causality (2026-11-09, from A's "embedding -> vector -> mathematical causality")
+## F: embedding causality (2026-11-09, from the project lead's "embedding -> vector -> mathematical causality")
 E1-E6 are correlational: they observe where code lands and how that relates to fitness. F intervenes.
 - F1 steering direction: d = centroid(winners) - centroid(losers) per need. Generate k candidates, keep the one whose projection on d is highest vs a random pick. Randomized A/B on the pick rule. If projection-picked wins more, the direction is causal, not just descriptive.
 - F2 do-test: ask the model to rewrite a variant "toward" a nearest-winner exemplar vs "away". Fitness delta by arm.
@@ -84,7 +84,7 @@ Proposed experiments:
 - Files: ~/Work/weft-repro/{mps_e2e4.py,mps_results.json,mps_summary.md}.
 
 ## G. Google AI Mode conversation (A, 2026-11-10)
-Source text saved in `sources/aimode-2026-11-10-google.txt` (A's chat with Google AI Mode, which read Report 1).
+Source text saved in `sources/aimode-2026-11-10-google.txt` (the project lead's chat with Google AI Mode, which read Report 1).
 Treat it as outside advice. Each item below is marked checked or unchecked.
 
 Ideas worth testing:
@@ -191,7 +191,7 @@ says it reached the older model's final score in 75 training steps on one task. 
 LoRA fine-tuning only. No Tinker key or package on this machine yet. Correction: the earlier note
 "Tinker 2: 0 hits" searched the wrong name.
 
-A's hypotheses:
+The project lead's hypotheses:
 - J1. The same ideas work at harness level and at model level (and later at chip level).
 - J2. Cell colonies are to a single strong agent what a GPU is to a CPU: better for wide parallel work.
 - J3. Modular micro-harnesses spawning adaptive swarms across model families, for problems with many data types.
@@ -201,7 +201,7 @@ razi's reading of stem cells against our logs:
 - J4a. Stemness is held by the niche (signals from neighbours), not by the cell. Ours get no signal from the colony.
 - J4b. Division is asymmetric: one daughter stays uncommitted, one commits to work. Ours is a costly copy. 0 of 12 pilot cells divided.
 - J4c. Stem cells rest by default and wake on demand from the tissue. Our cells also rest by default (E11 to E13, mp2). Law "mortal" removed rest; biology keeps rest and adds the wake signal.
-- J4d. Every cell holds the whole genome and silences most of it. Same as A's dormant if-then idea, and same as 17B active of 594B.
+- J4d. Every cell holds the whole genome and silences most of it. Same as the project lead's dormant if-then idea, and same as 17B active of 594B.
 - J4e. Our cells are born committed (one task each), so they are not stem cells at all.
 - J5. Two clocks. Base model = genome (same in every cell). Prompt, library, adapter = which genes are on. Harness level is development (fast, signal-led). Model level is evolution (slow, selection-led). Predicts the layers share laws but differ in speed and in how blind the search is.
 - J6. Limit on J1: at weight level selection competes with gradient descent, which is far more efficient per trial. Likely split: selection decides structure, gradients fit inside it (Weft Paper 1 already does this).
@@ -344,7 +344,7 @@ Tests to preregister:
 - L3 (what to watch). If heirs inherit a good body and rest at once, the problem is not memory, it is K20 (cells
   stop without trying). Then the next law is one that makes trying cheap for an heir: division at birth, where
   one daughter keeps the body and the other must change it, and the gate keeps the better.
-- L4 (restraint). A lineage whose store grows can breed without limit. A said growth only is cancer. If L1 shows
+- L4 (restraint). A lineage whose store grows can breed without limit. The project lead said growth only is cancer. If L1 shows
   stores growing, the next law is about what a rich lineage does with surplus: feed poorer lineages, or stop.
 - T-L1 (running). Arms h (heredity) and b (blank), 4 kits, 4 generations, width 2, 3 runs each. Guesses L1-a to
   L1-h in TESTS.md.
