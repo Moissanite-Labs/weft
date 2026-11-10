@@ -10,6 +10,7 @@ Arms, all from one shared start state, all with the same number of optimizer ste
 Usage: python tj3.py DATA.json OUT.json [--arms gc,gn,gb,s] [--gens 12] [--k 2] [--seed 0] [--batch 32]
 Key is read in memory by tinker_key and never printed."""
 import os, re, sys, time, json, math, random, argparse, collections
+from pathlib import Path
 sys.path.insert(0, os.path.expanduser("~/Work/razi-tools"))
 import tinker_key
 os.environ["TINKER_API_KEY"] = tinker_key.get()
@@ -30,6 +31,9 @@ def safe(s): return re.sub(r"tml-[A-Za-z0-9_\-\.]+", "tml-[REDACTED]", str(s))[:
 T0 = time.time()
 def lap(msg): print(f"[{time.time()-T0:7.1f}s] {msg}", flush=True)
 
+TTL_SECONDS = int(os.environ.get("TJ3_TTL_SECONDS", "14400"))
+ROLLING_SLOTS = os.environ.get("TJ3_ROLLING_SLOTS", "1") == "1"
+
 D = json.load(open(A.data))
 from tml_renderers import renderers
 rk = renderers.Inkling2().tokenizer
@@ -40,7 +44,8 @@ def datum(r):
     t = pt + ct; w = [0] * len(pt) + [1] * len(ct)
     return types.Datum(model_input=types.ModelInput.from_ints(tokens=t[:-1]),
                        loss_fn_inputs=dict(weights=w[1:], target_tokens=t[1:]))
-SETS = {s: [datum(r) for r in D[s]] for s in ("train", "gate", "test")}
+SETS = {s: [datum(r) for r in D[s]] for s in D}
+HOLD_NAME = "hold" if "hold" in D else ("test" if "test" in D else "gate")
 OKI = [i for i, r in enumerate(D["train"]) if r["label"] == "ok"]
 BADI = [i for i, r in enumerate(D["train"]) if r["label"] != "ok"]
 TOK = collections.Counter()
@@ -74,7 +79,47 @@ def train(tc, way, depth, arm):
         last = rowloss(fb.result(), b); op.result()
         TOK[arm + ":train"] += sum(d.model_input.length for d in b)
     return round(last, 5)
-def save(tc, name): return tc.save_state(name=name, ttl_seconds=86400, overwrite=True).result().path
+def save(tc, name): return tc.save_state(name=name, ttl_seconds=TTL_SECONDS, overwrite=True).result().path
+
+def eval_nll(client_or_sc, hold=None, tok=None, renderer=None, arm="eval", tc=None):
+    """Evaluate NLL (nats per row) on fixed held-out split (R2 requirement)."""
+    if tc is not None:
+        c = tc
+    elif hasattr(client_or_sc, "forward"):
+        c = client_or_sc
+    elif isinstance(hold, str) and hasattr(client_or_sc, "create_training_client_from_state"):
+        c = client_or_sc.create_training_client_from_state(hold)
+    else:
+        c = client_or_sc
+
+    if isinstance(hold, list) and hold and isinstance(hold[0], types.Datum):
+        data = hold
+    elif isinstance(hold, list) and hold and isinstance(hold[0], dict):
+        data = [datum(r) for r in hold]
+    elif isinstance(hold, str) and hold in SETS:
+        data = SETS[hold]
+    else:
+        data = SETS.get(HOLD_NAME) or SETS.get("test") or SETS.get("gate")
+
+    tot = 0.0
+    for i in range(0, len(data), 64):
+        ch = data[i:i + 64]
+        tot += rowloss(c.forward(ch, "cross_entropy").result(), ch) * len(ch)
+        if tok is not None and isinstance(tok, collections.Counter):
+            tok[arm + ":fwd"] += sum(d.model_input.length for d in ch)
+        elif "TOK" in globals():
+            TOK[arm + ":fwd"] += sum(d.model_input.length for d in ch)
+    return round(tot / len(data), 5)
+
+def log_jsonl(rec: dict) -> None:
+    rec["t"] = round(time.time() - T0, 2)
+    target_files = {Path(A.out).with_suffix(".jsonl"), Path(A.out).parent / "tj3.jsonl"}
+    for tf in target_files:
+        try:
+            with open(tf, "a") as f:
+                f.write(json.dumps(rec) + "\n")
+        except Exception:
+            pass
 
 # label prior: the loss of a predictor that knows only how often each label occurs in train
 pc = collections.Counter(r["label"] for r in D["train"]); n = sum(pc.values())
@@ -87,7 +132,10 @@ try:
     sc = tinker.ServiceClient()
     base = sc.create_lora_training_client(base_model=A.model, rank=A.rank, seed=A.seed)
     P0 = save(base, f"{A.tag}-s{A.seed}-p0")
-    R["start"] = {"gate": evalset(base, "gate", "start"), "test": evalset(base, "test", "start")}
+    p0_nll = eval_nll(base, SETS[HOLD_NAME], TOK, rk, arm="start")
+    log_jsonl({"event": "save", "arm": "start", "gen": 0, "seed": A.seed, "tag": A.tag,
+               "checkpoint": f"{A.tag}-s{A.seed}-p0", "path": P0, "eval_nll": p0_nll, "split": HOLD_NAME})
+    R["start"] = {"gate": evalset(base, "gate", "start"), "test": evalset(base, "test", "start"), "eval_nll": p0_nll}
     lap(f"start state saved. prior {prior} start {R['start']}"); dump()
     for arm in A.arms.split(","):
         log = []; t1 = time.time()
@@ -97,10 +145,16 @@ try:
             for g in range(A.gens):
                 tl = train(tc, way, depth, arm); depth += A.k
                 gl = evalset(tc, "gate", arm)
-                log.append({"gen": g, "depth": depth, "way": way, "train": tl, "gate": gl})
+                nll = eval_nll(tc, SETS[HOLD_NAME], TOK, rk, arm=arm)
+                log.append({"gen": g, "depth": depth, "way": way, "train": tl, "gate": gl, "eval_nll": nll})
                 if arm != "gc" and g < A.gens - 1:
-                    tc = sc.create_training_client_from_state(save(tc, f"{A.tag}-s{A.seed}-{arm}-g{g}"))
-                lap(f"{arm} gen {g} depth {depth} train {tl} gate {gl}")
+                    save_name = f"{A.tag}-s{A.seed}-{arm}-latest" if ROLLING_SLOTS else f"{A.tag}-s{A.seed}-{arm}-g{g}"
+                    state_path = save(tc, save_name)
+                    log_jsonl({"event": "save", "arm": arm, "gen": g + 1, "depth": depth, "seed": A.seed,
+                               "tag": A.tag, "checkpoint": save_name, "path": state_path, "eval_nll": nll,
+                               "train": tl, "gate": gl, "split": HOLD_NAME})
+                    tc = sc.create_training_client_from_state(state_path)
+                lap(f"{arm} gen {g} depth {depth} train {tl} gate {gl} eval_nll {nll}")
             final = tc
         elif arm == "s":
             P, pg, depth, final = P0, R["start"]["gate"], 0, None
@@ -112,21 +166,31 @@ try:
                     kids.append({"way": way, "train": tl, "gate": gl, "tc": tc})
                 best = min(kids, key=lambda k: k["gate"])
                 took = best["gate"] < pg * (1 - A.margin)
-                log.append({"gen": g, "depth": depth + (A.k if took else 0), "parent_gate": pg,
-                            "kids": [{x: k[x] for x in ("way", "train", "gate")} for k in kids],
-                            "took": best["way"] if took else None})
-                lap(f"s gen {g} parent {pg} nat {kids[0]['gate']} bal {kids[1]['gate']} took {log[-1]['took']}")
                 if took:
                     final, pg, depth = best["tc"], best["gate"], depth + A.k
-                    if g < A.gens // 2 - 1: P = save(final, f"{A.tag}-s{A.seed}-s-g{g}")
+                    nll = eval_nll(final, SETS[HOLD_NAME], TOK, rk, arm="s")
+                    if g < A.gens // 2 - 1:
+                        save_name = f"{A.tag}-s{A.seed}-s-latest" if ROLLING_SLOTS else f"{A.tag}-s{A.seed}-s-g{g}"
+                        P = save(final, save_name)
+                        log_jsonl({"event": "save", "arm": "s", "gen": g + 1, "depth": depth, "seed": A.seed,
+                                   "tag": A.tag, "checkpoint": save_name, "path": P, "eval_nll": nll,
+                                   "took": best["way"], "split": HOLD_NAME})
+                else:
+                    nll = eval_nll(sc.create_training_client_from_state(P), SETS[HOLD_NAME], TOK, rk, arm="s") if P else None
+                log.append({"gen": g, "depth": depth, "parent_gate": pg,
+                            "kids": [{x: k[x] for x in ("way", "train", "gate")} for k in kids],
+                            "took": best["way"] if took else None, "eval_nll": nll})
+                lap(f"s gen {g} parent {pg} nat {kids[0]['gate']} bal {kids[1]['gate']} took {log[-1]['took']} eval_nll {nll}")
             if final is None: final = sc.create_training_client_from_state(P)
         else: raise SystemExit("unknown arm " + arm)
-        R["arms"][arm] = {"log": log, "gate": evalset(final, "gate", arm), "test": evalset(final, "test", arm),
-                          "wall_s": round(time.time() - t1, 1)}
-        lap(f"{arm} done gate {R['arms'][arm]['gate']} test {R['arms'][arm]['test']}"); dump()
+        arm_test = evalset(final, "test", arm)
+        arm_nll = eval_nll(final, SETS[HOLD_NAME], TOK, rk, arm=arm)
+        R["arms"][arm] = {"log": log, "gate": evalset(final, "gate", arm), "test": arm_test,
+                          "eval_nll": arm_nll, "wall_s": round(time.time() - t1, 1)}
+        lap(f"{arm} done gate {R['arms'][arm]['gate']} test {R['arms'][arm]['test']} eval_nll {arm_nll}"); dump()
     R["ok"] = True; dump()
     print(json.dumps({"ok": True, "prior": prior, "start": R["start"],
-                      "final": {a: {"gate": v["gate"], "test": v["test"]} for a, v in R["arms"].items()},
+                      "final": {a: {"gate": v["gate"], "test": v["test"], "eval_nll": v.get("eval_nll")} for a, v in R["arms"].items()},
                       "tokens": dict(TOK), "wall_s": R["wall_s"]}))
 except Exception as e:
     R["error"] = f"{type(e).__name__}: {safe(e)}"; dump(); lap("ERR " + R["error"])
