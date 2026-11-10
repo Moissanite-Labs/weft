@@ -7,6 +7,7 @@ import os
 import re
 import sys
 from pathlib import Path
+from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
 DIST = ROOT / "dist-cut"
@@ -33,7 +34,6 @@ BAD_WEEFT_PATH = re.compile(
     r'(?<![\w-])(?<![\w/])/assets/|(?<![\w-])(?<![\w/])/papers/'
 )
 
-FOOTER_SOURCE = "https://github.com/Moissanite-Labs/siliconcordat"
 NOINDEX_META = re.compile(r'<meta\s+name="robots"\s+content="noindex"')
 
 CUT_PAGE_PATHS = (
@@ -46,24 +46,56 @@ CUT_PAGE_PATHS = (
 HREF_ATTR = re.compile(r'href=(["\'])([^"\']*)\1')
 TH_EGG_HREF = re.compile(r'<a\s+class="th-egg"\s+href="([^"]+)"')
 
-OBSERVATORY_APEX_FAMILY = (
-    "https://siliconcordat.com/",
-    "https://siliconcordat.com/ml",
-    "https://siliconcordat.com/weft",
-)
+APEX_HOST = "siliconcordat.com"
+OBSERVATORY_EGG_PROD_HOST = "observatory.askaconsult.com"
+APEX_FAMILY_PATHS = ("/", "/ml", "/weft")
 
 
 def href_values(html: str) -> list[str]:
     return [m.group(2) for m in HREF_ATTR.finditer(html)]
 
 
-def has_href(html: str, value: str) -> bool:
-    return value in href_values(html)
-
-
 def th_egg_href(html: str) -> str | None:
     m = TH_EGG_HREF.search(html)
     return m.group(1) if m else None
+
+
+def href_parsed_match(href: str, *, scheme: str, hostname: str, path: str) -> bool:
+    p = urlparse(href)
+    return (
+        p.scheme == scheme
+        and (p.hostname or "").lower() == hostname.lower()
+        and p.path == path
+    )
+
+
+def href_is_relative_path(href: str, path: str) -> bool:
+    p = urlparse(href)
+    return p.scheme == "" and p.netloc == "" and p.path == path
+
+
+def page_has_apex_family_href(html: str, path: str) -> bool:
+    return any(
+        href_parsed_match(h, scheme="https", hostname=APEX_HOST, path=path)
+        for h in href_values(html)
+    )
+
+
+def page_has_https_href_to_host(html: str, hostname: str) -> bool:
+    want = hostname.lower()
+    for h in href_values(html):
+        p = urlparse(h)
+        if p.scheme == "https" and (p.hostname or "").lower() == want:
+            return True
+    return False
+
+
+def count_href_to(html: str, *, scheme: str, hostname: str, path: str) -> int:
+    return sum(
+        1
+        for h in href_values(html)
+        if href_parsed_match(h, scheme=scheme, hostname=hostname, path=path)
+    )
 
 
 def fail(msg: str) -> None:
@@ -114,17 +146,20 @@ def check_cut_pages() -> None:
 
     egg = th_egg_href(index)
     if HOST == "staging":
-        if egg != "/observatory/":
+        if not egg or not href_is_relative_path(egg, "/observatory/"):
             fail("staging landing egg must be href=\"/observatory/\"")
-        for apex in OBSERVATORY_APEX_FAMILY:
-            if has_href(obs, apex):
-                fail("staging observatory must use same-origin family links")
+        if page_has_https_href_to_host(obs, APEX_HOST):
+            fail("staging observatory must use same-origin family links")
     elif HOST == "production":
-        if egg != "https://observatory.askaconsult.com/":
-            fail("production landing egg must be href=\"https://observatory.askaconsult.com/\"")
-        for apex in OBSERVATORY_APEX_FAMILY:
-            if not has_href(obs, apex):
-                fail(f"production observatory missing family href {apex!r}")
+        if not egg or not href_parsed_match(
+            egg, scheme="https", hostname=OBSERVATORY_EGG_PROD_HOST, path="/"
+        ):
+            fail(
+                'production landing egg must be href="https://observatory.askaconsult.com/"'
+            )
+        for path in APEX_FAMILY_PATHS:
+            if not page_has_apex_family_href(obs, path):
+                fail(f"production observatory missing family href for path {path!r}")
 
 
 def check_footer_source() -> None:
@@ -132,9 +167,12 @@ def check_footer_source() -> None:
         if not path.is_file():
             fail(f"missing page for footer check: {path.relative_to(DIST)}")
         text = path.read_text(encoding="utf-8")
-        if FOOTER_SOURCE not in text:
+        footer_hits = count_href_to(
+            text, scheme="https", hostname="github.com", path="/Moissanite-Labs/siliconcordat"
+        )
+        if footer_hits < 1:
             fail(f"missing footer source link on {path.relative_to(DIST)}")
-        if text.count(FOOTER_SOURCE) > 1:
+        if footer_hits > 1:
             fail(f"footer source must appear once on {path.relative_to(DIST)}")
 
 
@@ -190,7 +228,7 @@ def check_weft_mirror() -> None:
     index = (WEFT / "index.html").read_text(encoding="utf-8")
     if 'class="brand-family"' not in index or 'href="/ml"' not in index:
         fail("§5.3 brand-family missing on weft index")
-    if any(h.startswith("https://siliconcordat.com") for h in href_values(index)):
+    if page_has_https_href_to_host(index, APEX_HOST):
         fail("weft must use same-origin /ml and /, not siliconcordat.com")
     css = (WEFT / "assets/css/site.css").read_text(encoding="utf-8")
     if ".brand-family" not in css or "menu-family-label" not in css:
