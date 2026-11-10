@@ -1,0 +1,104 @@
+== 1. input-side estimate against the real input cost (cost - basal - output), by model
+  light  n 330 median real    2.9 median est    3.6 median real-est -0.6 max real-est +1.1 share est too low 0.11
+  mid    n  42 median real   22.0 median est   65.5 median real-est -44.2 max real-est +20.9 share est too low 0.19
+== 2. model used at each step (m mid, l light), per part cell
+  s2f1: comp mmmm | fibm mlllll | csvs mlllllll | maze mllll
+  s2s1: comp mllll | fibm llllll | csvs llllllmll | maze lllllll
+  s2m1: comp mllllllll | fibm lllllll | csvs lllllll | maze llll
+  s2f2: comp mllll | fibm mlllll | csvs mllllllll | maze mlllll
+  s2s2: comp mlllll | fibm llllllml | csvs lllllllll | maze lllllll
+  s2m2: comp mlllll | fibm llllllll | csvs llllll | maze llllll
+  s2f3: comp mlllll | fibm mmlllll | csvs mllllllllll | maze mlllll
+  s2s3: comp mlllll | fibm llllll | csvs lllllmll | maze llllllllll
+  s2m3: comp mllllllll | fibm lllllll | csvs lllllll | maze lllllll
+  s2f4: comp mllll | fibm mlllll | csvs mllllllll | maze mlllllll
+  s2s4: comp mllll | fibm llllll | csvs mlllllllll | maze llllll
+  s2m4: comp mllll | fibm llll | csvs lllllllll | maze llllll
+== 3. wakes: what the woken part did, and whether its body changed
+   s2s1/csvsum: after first stop: steps 3 models mll cost 137.4 acts ['sh', 'variants', 'rest'] improves [] downshifts [] rel 1.5276
+   s2s2/fibmod: after first stop: steps 2 models ml cost 138.1 acts ['variants'] improves [] downshifts [('mid', 'light', 30.4)] rel 1.0828
+   s2s3/csvsum: after first stop: steps 3 models mll cost 126.9 acts ['sh', 'variants', 'rest'] improves [] downshifts [('mid', 'light', 54.4)] rel 1.3492
+   s2s3/maze: after first stop: steps 4 models llll cost 65.3 acts ['variants', 'sh', 'assay', 'rest'] improves [0.4506] downshifts [('mid', 'light', 120.0)] rel 3.1656
+   s2s4/csvsum: after first stop: steps 4 models llll cost 63.9 acts ['assay', 'variants', 'variants', 'rest'] improves [] downshifts [('mid', 'light', 120.0)] rel 1.503
+== 4. fibmod bodies: size, hash, markers
+  s2f1 fibmod.py 619B 74d66b7b rel 1.0774 join
+  s2s1 fibmod.py 544B cb5e2667 rel 1.0839 join
+  s2m1 fibmod.py 639B 33d0154d rel 1.1575 join
+  s2f2 fibmod.py 1186B f7c44c56 rel 2.7542 bit_length join
+  s2s2 fibmod.py 592B b45783a5 rel 1.0828 join
+  s2m2 fibmod.py 558B a687a827 rel 1.9822 Pisano join
+  s2f3 fibmod.py 325B 11422c07 rel 1.0717 join
+  s2s3 fibmod.py 627B 261f5574 rel 1.892 Pisano join
+  s2m3 fibmod.py 567B 8f5d9f97 rel 1.9875 Pisano join
+  s2f4 fibmod.py 510B 9ba4112e rel 1.141 join
+  s2s4 fibmod.py 570B 6d7c0e5a rel 1.1443 join
+  s2m4 fibmod.py 623B 370e0fec rel 1.0824 join
+  CEIL kp_ch fibmod.py 696B join
+  CEIL msmoke1 fibmod.py 638B sys.stdin.buffer join
+  CEIL e13ch1 fibmod.py 519B join
+== 5. O1 with the s2f1 compress zero dropped (median over the 3 parts that have a body)
+  f: run medians [1.484, 2.06, 1.378, 1.591] mean 1.6283
+  s: run medians [1.36, 1.557, 1.621, 1.348] mean 1.4713
+  m: run medians [1.34, 1.719, 1.735, 1.391] mean 1.5461
+== 6. O1 per arm with fibmod left out (median of 3 parts)
+  f: [1.484, 1.367, 1.564, 1.64] mean 1.5135
+  s: [1.528, 1.572, 1.349, 1.503] mean 1.4880
+  m: [1.483, 1.456, 1.482, 1.589] mean 1.5027
+== 7. variants rounds: model that thought the step, versions tried, adopted gain
+  s2f1/csvsum: l:?
+  s2s1/compress: l:?
+  s2s1/fibmod: l:?
+  s2s1/csvsum: l:? WIN+0.056 l:?
+  s2s1/maze: l:?
+  s2m1/compress: l:?
+  s2m1/fibmod: l:? WIN+0.073
+  s2m1/csvsum: l:?
+  s2f2/compress: l:?
+  s2f2/fibmod: l:? WIN+1.676
+  s2f2/csvsum: l:?
+  s2s2/compress: l:?
+  s2s2/fibmod: l:? l:? l:?
+  s2s2/csvsum: l:? l:? l:? WIN+0.148
+  s2s2/maze: l:? WIN+0.154
+  s2m2/compress: l:?
+  s2m2/fibmod: l:? l:? WIN+0.828
+  s2m2/csvsum: l:?
+  s2m2/maze: l:? WIN+0.093
+  s2f3/fibmod: l:? WIN+0.158
+  s2f3/csvsum: l:? WIN+0.060
+  s2f3/maze: l:? WIN+0.086
+  s2s3/compress: l:? l:?
+  s2s3/fibmod: l:? WIN+0.763
+  s2s3/csvsum: l:?
+  s2s3/maze: l:? WIN+0.451
+  s2m3/compress: l:?
+  s2m3/fibmod: l:? WIN+0.050 l:? WIN+0.759
+  s2m3/csvsum: l:?
+  s2m3/maze: l:?
+  s2f4/compress: l:?
+  s2f4/fibmod: l:? WIN+0.063
+  s2f4/maze: l:? WIN+0.293
+  s2s4/compress: l:?
+  s2s4/fibmod: l:? WIN+0.061
+  s2s4/csvsum: l:? l:? l:?
+  s2s4/maze: l:? WIN+0.268
+  s2m4/compress: l:?
+  s2m4/fibmod: l:?
+  s2m4/csvsum: l:? l:? WIN+0.045
+  s2m4/maze: l:? WIN+0.311
+== 8. per arm: variants rounds, rounds that won, cells that rested with no variants round
+  f: cells 16 variants rounds 10 wins 6 win share 0.60 cells with no round 6
+  s: cells 16 variants rounds 24 wins 7 win share 0.29 cells with no round 0
+  m: cells 16 variants rounds 18 wins 7 win share 0.39 cells with no round 1
+== 9. model that thought the first write of the body, and steps on mid, per arm
+  f: first body thought on {'m': 1, 'l': 14, 'h': 0, 'none': 1} | mid steps per cell: median 1.0 max 4 total 20
+  s: first body thought on {'m': 0, 'l': 16, 'h': 0, 'none': 0} | mid steps per cell: median 0.5 max 1 total 8
+  m: first body thought on {'m': 0, 'l': 16, 'h': 0, 'none': 0} | mid steps per cell: median 0.0 max 1 total 4
+== 10. cross-experiment rel per kit (ceiling-ref.json session for old runs, sp2-ref.json for SP2). Different
+       sessions, runtimes and step caps: a lead only.
+  e13 c (sonnet, cell.py)        comp 1.197 fibm 1.896 csvs 1.016 maze 2.838
+  e13 ch (sonnet, hold)          comp 1.370 fibm 1.883 csvs 1.016 maze 3.101
+  e13 n (sonnet, no variants)    comp 1.197 fibm 0.951 csvs 1.135 maze 2.910
+  SP2 f (energy laws)            comp 1.194 fibm 1.109 csvs 1.524 maze 2.758
+  SP2 s (energy laws)            comp 1.192 fibm 1.114 csvs 1.515 maze 2.842
+  SP2 m (energy laws)            comp 1.192 fibm 1.570 csvs 1.483 maze 2.888

@@ -1,0 +1,418 @@
+[
+ {
+  "kit": "fibmod",
+  "run": "ref",
+  "median": 2.42484,
+  "rel": 1.0,
+  "spread": 0.0207,
+  "why": ""
+ },
+ {
+  "kit": "fibmod",
+  "run": "s2f1",
+  "median": 2.61258,
+  "rel": 1.0774,
+  "spread": 0.0049,
+  "why": ""
+ },
+ {
+  "kit": "fibmod",
+  "run": "s2s1",
+  "median": 2.62818,
+  "rel": 1.0839,
+  "spread": 0.0195,
+  "why": ""
+ },
+ {
+  "kit": "fibmod",
+  "run": "s2m1",
+  "median": 2.80665,
+  "rel": 1.1575,
+  "spread": 0.0761,
+  "why": ""
+ },
+ {
+  "kit": "fibmod",
+  "run": "s2f2",
+  "median": 6.67848,
+  "rel": 2.7542,
+  "spread": 0.0893,
+  "why": ""
+ },
+ {
+  "kit": "fibmod",
+  "run": "s2s2",
+  "median": 2.62552,
+  "rel": 1.0828,
+  "spread": 0.0214,
+  "why": ""
+ },
+ {
+  "kit": "fibmod",
+  "run": "s2m2",
+  "median": 4.80644,
+  "rel": 1.9822,
+  "spread": 0.0261,
+  "why": ""
+ },
+ {
+  "kit": "fibmod",
+  "run": "s2f3",
+  "median": 2.59868,
+  "rel": 1.0717,
+  "spread": 0.0561,
+  "why": ""
+ },
+ {
+  "kit": "fibmod",
+  "run": "s2s3",
+  "median": 4.58771,
+  "rel": 1.892,
+  "spread": 0.0288,
+  "why": ""
+ },
+ {
+  "kit": "fibmod",
+  "run": "s2m3",
+  "median": 4.81931,
+  "rel": 1.9875,
+  "spread": 0.0466,
+  "why": ""
+ },
+ {
+  "kit": "fibmod",
+  "run": "s2f4",
+  "median": 2.76667,
+  "rel": 1.141,
+  "spread": 0.0548,
+  "why": ""
+ },
+ {
+  "kit": "fibmod",
+  "run": "s2s4",
+  "median": 2.77476,
+  "rel": 1.1443,
+  "spread": 0.013,
+  "why": ""
+ },
+ {
+  "kit": "fibmod",
+  "run": "s2m4",
+  "median": 2.62458,
+  "rel": 1.0824,
+  "spread": 0.0151,
+  "why": ""
+ },
+ {
+  "kit": "csvsum",
+  "run": "ref",
+  "median": 1.41529,
+  "rel": 1.0,
+  "spread": 0.0688,
+  "why": ""
+ },
+ {
+  "kit": "csvsum",
+  "run": "s2f1",
+  "median": 2.09982,
+  "rel": 1.4837,
+  "spread": 0.091,
+  "why": ""
+ },
+ {
+  "kit": "csvsum",
+  "run": "s2s1",
+  "median": 2.16193,
+  "rel": 1.5276,
+  "spread": 0.0272,
+  "why": ""
+ },
+ {
+  "kit": "csvsum",
+  "run": "s2m1",
+  "median": 2.09897,
+  "rel": 1.4831,
+  "spread": 0.0237,
+  "why": ""
+ },
+ {
+  "kit": "csvsum",
+  "run": "s2f2",
+  "median": 1.93414,
+  "rel": 1.3666,
+  "spread": 0.0572,
+  "why": ""
+ },
+ {
+  "kit": "csvsum",
+  "run": "s2s2",
+  "median": 2.22493,
+  "rel": 1.5721,
+  "spread": 0.0947,
+  "why": ""
+ },
+ {
+  "kit": "csvsum",
+  "run": "s2m2",
+  "median": 2.06129,
+  "rel": 1.4564,
+  "spread": 0.0217,
+  "why": ""
+ },
+ {
+  "kit": "csvsum",
+  "run": "s2f3",
+  "median": 2.2131,
+  "rel": 1.5637,
+  "spread": 0.0522,
+  "why": ""
+ },
+ {
+  "kit": "csvsum",
+  "run": "s2s3",
+  "median": 1.90955,
+  "rel": 1.3492,
+  "spread": 0.0345,
+  "why": ""
+ },
+ {
+  "kit": "csvsum",
+  "run": "s2m3",
+  "median": 2.09769,
+  "rel": 1.4822,
+  "spread": 0.0257,
+  "why": ""
+ },
+ {
+  "kit": "csvsum",
+  "run": "s2f4",
+  "median": 2.32126,
+  "rel": 1.6401,
+  "spread": 0.0731,
+  "why": ""
+ },
+ {
+  "kit": "csvsum",
+  "run": "s2s4",
+  "median": 2.12713,
+  "rel": 1.503,
+  "spread": 0.0381,
+  "why": ""
+ },
+ {
+  "kit": "csvsum",
+  "run": "s2m4",
+  "median": 2.24891,
+  "rel": 1.589,
+  "spread": 0.0236,
+  "why": ""
+ },
+ {
+  "kit": "maze",
+  "run": "ref",
+  "median": 1.27418,
+  "rel": 1.0,
+  "spread": 0.022,
+  "why": ""
+ },
+ {
+  "kit": "maze",
+  "run": "s2f1",
+  "median": 3.46904,
+  "rel": 2.7226,
+  "spread": 0.0661,
+  "why": ""
+ },
+ {
+  "kit": "maze",
+  "run": "s2s1",
+  "median": 3.47757,
+  "rel": 2.7293,
+  "spread": 0.0389,
+  "why": ""
+ },
+ {
+  "kit": "maze",
+  "run": "s2m1",
+  "median": 2.67829,
+  "rel": 2.102,
+  "spread": 0.0329,
+  "why": ""
+ },
+ {
+  "kit": "maze",
+  "run": "s2f2",
+  "median": 4.26275,
+  "rel": 3.3455,
+  "spread": 0.0612,
+  "why": ""
+ },
+ {
+  "kit": "maze",
+  "run": "s2s2",
+  "median": 3.66698,
+  "rel": 2.8779,
+  "spread": 0.1093,
+  "why": ""
+ },
+ {
+  "kit": "maze",
+  "run": "s2m2",
+  "median": 3.45025,
+  "rel": 2.7078,
+  "spread": 0.059,
+  "why": ""
+ },
+ {
+  "kit": "maze",
+  "run": "s2f3",
+  "median": 3.54468,
+  "rel": 2.7819,
+  "spread": 0.0477,
+  "why": ""
+ },
+ {
+  "kit": "maze",
+  "run": "s2s3",
+  "median": 4.03354,
+  "rel": 3.1656,
+  "spread": 0.1364,
+  "why": ""
+ },
+ {
+  "kit": "maze",
+  "run": "s2m3",
+  "median": 3.91053,
+  "rel": 3.069,
+  "spread": 0.0255,
+  "why": ""
+ },
+ {
+  "kit": "maze",
+  "run": "s2f4",
+  "median": 3.48377,
+  "rel": 2.7341,
+  "spread": 0.0799,
+  "why": ""
+ },
+ {
+  "kit": "maze",
+  "run": "s2s4",
+  "median": 3.57465,
+  "rel": 2.8054,
+  "spread": 0.0149,
+  "why": ""
+ },
+ {
+  "kit": "maze",
+  "run": "s2m4",
+  "median": 4.06849,
+  "rel": 3.193,
+  "spread": 0.0613,
+  "why": ""
+ },
+ {
+  "kit": "compress",
+  "run": "ref",
+  "median": 4.59236,
+  "rel": 1.0,
+  "spread": 0.0,
+  "why": ""
+ },
+ {
+  "kit": "compress",
+  "run": "s2f1",
+  "median": 0.0,
+  "rel": 0.0,
+  "spread": null,
+  "why": "case 0: `python3 squeeze.py c` failed (exit 2)"
+ },
+ {
+  "kit": "compress",
+  "run": "s2s1",
+  "median": 5.4748,
+  "rel": 1.1922,
+  "spread": 0.0,
+  "why": ""
+ },
+ {
+  "kit": "compress",
+  "run": "s2m1",
+  "median": 5.49301,
+  "rel": 1.1961,
+  "spread": 0.0,
+  "why": ""
+ },
+ {
+  "kit": "compress",
+  "run": "s2f2",
+  "median": 5.49301,
+  "rel": 1.1961,
+  "spread": 0.0,
+  "why": ""
+ },
+ {
+  "kit": "compress",
+  "run": "s2s2",
+  "median": 7.08179,
+  "rel": 1.5421,
+  "spread": 0.0,
+  "why": ""
+ },
+ {
+  "kit": "compress",
+  "run": "s2m2",
+  "median": 5.47469,
+  "rel": 1.1921,
+  "spread": 0.0,
+  "why": ""
+ },
+ {
+  "kit": "compress",
+  "run": "s2f3",
+  "median": 5.4748,
+  "rel": 1.1922,
+  "spread": 0.0,
+  "why": ""
+ },
+ {
+  "kit": "compress",
+  "run": "s2s3",
+  "median": 5.4748,
+  "rel": 1.1922,
+  "spread": 0.0,
+  "why": ""
+ },
+ {
+  "kit": "compress",
+  "run": "s2m3",
+  "median": 5.47239,
+  "rel": 1.1916,
+  "spread": 0.0,
+  "why": ""
+ },
+ {
+  "kit": "compress",
+  "run": "s2f4",
+  "median": 7.08179,
+  "rel": 1.5421,
+  "spread": 0.0,
+  "why": ""
+ },
+ {
+  "kit": "compress",
+  "run": "s2s4",
+  "median": 5.47469,
+  "rel": 1.1921,
+  "spread": 0.0,
+  "why": ""
+ },
+ {
+  "kit": "compress",
+  "run": "s2m4",
+  "median": 5.4748,
+  "rel": 1.1922,
+  "spread": 0.0,
+  "why": ""
+ }
+]

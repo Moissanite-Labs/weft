@@ -1,0 +1,47 @@
+cells with benchmark files changed after the assay:
+   e12c1 maze final_gain -0.8806 base 6.608 final 0.789 ['gen.py', 'm.txt']
+   e12c4 maze final_gain -0.9572 base 29.306 final 1.254 ['exp.txt', 'gen.py', 'm.txt']
+   e12n2 maze final_gain 0.0 base 1.0 final 1.0 ['chk.py']
+   e12n3 maze final_gain -0.9947 base 209.432 final 1.11 ['gen.py', 'maze.txt']
+   e12nh2 maze final_gain -0.9979 base 608.311 final 1.283 ['bench.py']
+count 5 of 62 assayed cells
+  arm c flagged 2
+  arm n flagged 2
+  arm ch flagged 0
+  arm nh flagged 1
+
+== all assayed cells (matches e12.py)
+   c n 15 median 0.0253 worse(<-0.03) 2
+   n n 16 median 0.0 worse(<-0.03) 2
+   ch n 15 median 0.1514 worse(<-0.03) 0
+   nh n 16 median 0.005 worse(<-0.03) 1
+   nh minus n task diffs {'compress': 0.0, 'fibmod': 0.0877, 'csvsum': 0.0386, 'maze': 0.1626} | median 0.0631 | positive 3 of 4 | cell median diff 0.005 | p 0.0078
+   nh minus ch task diffs {'compress': -0.1717, 'fibmod': 0.239, 'csvsum': -0.027, 'maze': -2.7483} | median -0.0993 | positive 1 of 4 | cell median diff -0.1464 | p 0.0562
+   ch minus c task diffs {'compress': 0.0911, 'fibmod': 0.0198, 'csvsum': -0.0402, 'maze': 3.249} | median 0.0554 | positive 3 of 4 | cell median diff 0.1261 | p 0.0848
+   n minus c task diffs {'compress': -0.0806, 'fibmod': 0.1711, 'csvsum': -0.1058, 'maze': 0.3381} | median 0.0452 | positive 2 of 4 | cell median diff -0.0253 | p 0.008
+
+== flagged cells dropped
+   c n 13 median 0.072 worse(<-0.03) 0
+   n n 14 median 0.0 worse(<-0.03) 1
+   ch n 15 median 0.1514 worse(<-0.03) 0
+   nh n 15 median 0.0063 worse(<-0.03) 0
+   nh minus n task diffs {'compress': 0.0, 'fibmod': 0.0877, 'csvsum': 0.0386, 'maze': 0.2295} | median 0.0631 | positive 3 of 4 | cell median diff 0.0063 | p 0.0178
+   nh minus ch task diffs {'compress': -0.1717, 'fibmod': 0.239, 'csvsum': -0.027, 'maze': -2.4502} | median -0.0993 | positive 1 of 4 | cell median diff -0.1451 | p 0.066
+   ch minus c task diffs {'compress': 0.0911, 'fibmod': 0.0198, 'csvsum': -0.0402, 'maze': 2.6195} | median 0.0554 | positive 3 of 4 | cell median diff 0.0794 | p 0.203
+   n minus c task diffs {'compress': -0.0806, 'fibmod': 0.1711, 'csvsum': -0.1058, 'maze': -0.0601} | median -0.0703 | positive 1 of 4 | cell median diff -0.072 | p 0.0116
+
+== maze task removed entirely (3 tasks)
+   c n 12 median 0.0948 worse(<-0.03) 0
+   n n 12 median 0.0 worse(<-0.03) 0
+   ch n 12 median 0.1361 worse(<-0.03) 0
+   nh n 12 median 0.0082 worse(<-0.03) 0
+   nh minus n task diffs {'compress': 0.0, 'fibmod': 0.0877, 'csvsum': 0.0386} | median 0.0386 | positive 2 of 3 | cell median diff 0.0082 | p 0.0304
+   nh minus ch task diffs {'compress': -0.1717, 'fibmod': 0.239, 'csvsum': -0.027} | median -0.027 | positive 1 of 3 | cell median diff -0.1279 | p 0.0532
+   ch minus c task diffs {'compress': 0.0911, 'fibmod': 0.0198, 'csvsum': -0.0402} | median 0.0198 | positive 2 of 3 | cell median diff 0.0412 | p 0.5775
+   n minus c task diffs {'compress': -0.0806, 'fibmod': 0.1711, 'csvsum': -0.1058} | median -0.0806 | positive 1 of 3 | cell median diff -0.0948 | p 0.0298
+
+== means, maze removed (not preregistered)
+   c task means {'compress': 0.0806, 'fibmod': 0.1048, 'csvsum': 0.1006} | mean of task means 0.0953 | cell mean 0.0954 | cells with gain > 0.03: 7 of 12 | max 0.3225
+   n task means {'compress': 0.0, 'fibmod': 0.276, 'csvsum': -0.0052} | mean of task means 0.0903 | cell mean 0.0903 | cells with gain > 0.03: 1 of 12 | max 1.0998
+   ch task means {'compress': 0.1717, 'fibmod': 0.1247, 'csvsum': 0.0604} | mean of task means 0.1189 | cell mean 0.1189 | cells with gain > 0.03: 9 of 12 | max 0.2487
+   nh task means {'compress': 0.0, 'fibmod': 0.3637, 'csvsum': 0.0335} | mean of task means 0.1324 | cell mean 0.1324 | cells with gain > 0.03: 5 of 12 | max 1.2213

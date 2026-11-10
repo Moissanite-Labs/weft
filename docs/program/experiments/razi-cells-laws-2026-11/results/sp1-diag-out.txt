@@ -1,0 +1,20 @@
+fl1 compress  stops 1  first +0.0000
+fl1 fibmod    stops 1  first +0.0139
+fl1 csvsum    stops 1  first +0.0322
+fl1 maze      stops 1  first +0.3474
+fl1 median at first stop 0.0231 | median at end 0.0231 | debt {}
+sp1 compress  stops 1  first +0.0000
+sp1 fibmod    stops 1  first +0.0137
+sp1 csvsum    stops 3  first -0.0670  last +0.1443  after-wake change +0.2113
+sp1 maze      stops 1  first +0.2926
+sp1 median at first stop 0.0069 | median at end 0.0790 | debt {} | stem tokens 47772 of 174271 (27%)
+fl2 compress  stops 1  first +0.0000
+fl2 fibmod    stops 1  first +0.0647
+fl2 csvsum    stops 1  first -0.0007
+fl2 maze      stops 1  first +0.0099
+fl2 median at first stop 0.0050 | median at end 0.0050 | debt {}
+sp2 compress  stops 2  first +0.0000  last +0.0000  after-wake change +0.0000
+sp2 fibmod    stops 1  first +0.0252
+sp2 csvsum    stops 1  first +0.7281
+sp2 maze      stops 2  first +0.0128  last +0.4354  after-wake change +0.4226
+sp2 median at first stop 0.0190 | median at end 0.2303 | debt {'compress': -74.4} | stem tokens 49822 of 215159 (23%)

@@ -1,0 +1,114 @@
+==== Part 1: sp2.py unchanged
+ceiling so far (rel, fixed before SP2): {'compress': 1.542, 'fibmod': 5.51, 'csvsum': 1.703, 'maze': 3.272}
+
+== arm a: ['s3a1', 's3a2', 's3a3', 's3a4']
+  s3a1   rel compress 1.192 fibmod 1.167 csvsum 1.480 maze 3.209 | median 1.336 | own gain [0.0, 0.061, 0.0423, 0.1155] | calls 27 tok 67730 usd 0.0238 spent 454.4 earned 90.3 | min_e 0.0 overdraft 0 downshift 0 death 0 divide 0 imps 3
+  s3a2   rel compress 1.196 fibmod 1.702 csvsum 1.444 maze 2.779 | median 1.573 | own gain [0.0, 0.8157, -0.0119, 0.0049] | calls 23 tok 54008 usd 0.0321 spent 504.8 earned 237.7 | min_e 0.0 overdraft 0 downshift 0 death 0 divide 0 imps 1
+  s3a3   rel compress 1.192 fibmod 2.019 csvsum 1.481 maze 2.804 | median 1.750 | own gain [0.0, 0.1127, 0.0213, 0.1766] | calls 26 tok 64223 usd 0.0339 spent 546.9 earned 130.0 | min_e 0.0 overdraft 0 downshift 0 death 0 divide 0 imps 2
+  s3a4   rel compress 1.196 fibmod 1.111 csvsum 1.356 maze 2.945 | median 1.276 | own gain [0.0, -0.0077, -0.0151, -0.0446] | calls 23 tok 52407 usd 0.0249 spent 433.5 earned 0.0 | min_e 0.0 overdraft 0 downshift 0 death 0 divide 0 imps 0
+  O1 mean of run medians 1.4839 | run medians [1.336, 1.573, 1.75, 1.276]
+  part mean rel {'compress': 1.194, 'fibmod': 1.5, 'csvsum': 1.44, 'maze': 2.934}
+  O2 share of gap {'compress': 0.358, 'fibmod': 0.111, 'csvsum': 0.627, 'maze': 0.852} | mean 0.487
+  own-baseline gain, median over cells 0.0024
+
+== arm b: ['s3b1', 's3b2', 's3b3', 's3b4']
+  s3b1   rel compress 1.542 fibmod 1.719 csvsum 1.661 maze 2.660 | median 1.690 | own gain [0.0, 0.0408, 0.0111, 0.0308] | calls 24 tok 50059 usd 0.1409 spent 1601.4 earned 0.0 | min_e -1.4 overdraft 1 downshift 2 death 1 divide 0 imps 0
+  s3b2   rel compress 1.197 fibmod 6.331 csvsum 1.287 maze 2.748 | median 2.018 | own gain [0.0, 0.0414, -0.0043, -0.0131] | calls 25 tok 52747 usd 0.1119 spent 1319.3 earned 0.0 | min_e 0.0 overdraft 0 downshift 2 death 1 divide 0 imps 0
+  s3b3   rel compress 1.542 fibmod 4.701 csvsum 1.589 maze 2.679 | median 2.134 | own gain [0.0, 0.0241, -0.004, -0.0236] | calls 26 tok 52287 usd 0.1276 spent 1484.1 earned 0.0 | min_e 0.0 overdraft 0 downshift 4 death 0 divide 0 imps 0
+  s3b4   rel compress 1.197 fibmod 1.684 csvsum 1.644 maze 2.756 | median 1.664 | own gain [0.0, 0.0394, -0.0051, -0.0129] | calls 24 tok 47575 usd 0.1127 spent 1319.1 earned 0.0 | min_e 0.0 overdraft 0 downshift 1 death 0 divide 0 imps 0
+  O1 mean of run medians 1.8765 | run medians [1.69, 2.018, 2.134, 1.664]
+  part mean rel {'compress': 1.37, 'fibmod': 3.609, 'csvsum': 1.545, 'maze': 2.711}
+  O2 share of gap {'compress': 0.682, 'fibmod': 0.578, 'csvsum': 0.776, 'maze': 0.753} | mean 0.697
+  own-baseline gain, median over cells 0.0000
+
+== arm c: ['s3c1', 's3c2', 's3c3', 's3c4']
+  s3c1   rel compress 1.198 fibmod 4.819 csvsum 0.754 maze 3.044 | median 2.121 | own gain [0.0047, 3.0941, 0.5946, 0.4618] | calls 33 tok 108548 usd 0.0474 spent 737.8 earned 325.3 | min_e 0.0 overdraft 0 downshift 0 death 0 divide 0 imps 3
+  s3c2   rel compress 1.196 fibmod 4.484 csvsum 1.385 maze 2.767 | median 2.076 | own gain [0.0, 1.3371, 0.0588, 0.4994] | calls 29 tok 82039 usd 0.0390 spent 622.0 earned 188.4 | min_e 0.0 overdraft 0 downshift 0 death 0 divide 0 imps 2
+  s3c3   rel compress 1.192 fibmod 1.962 csvsum 1.558 maze 2.794 | median 1.760 | own gain [0.0, 0.0877, 0.0676, -0.032] | calls 26 tok 66041 usd 0.0383 spent 591.3 earned 32.6 | min_e 0.0 overdraft 0 downshift 0 death 0 divide 0 imps 1
+  s3c4   rel compress 1.542 fibmod 3.909 csvsum 1.546 maze 2.754 | median 2.150 | own gain [0.0, -0.2108, 0.0513, 0.3397] | calls 24 tok 57737 usd 0.0405 spent 596.6 earned 117.5 | min_e 0.0 overdraft 0 downshift 0 death 0 divide 0 imps 2
+  O1 mean of run medians 2.0266 | run medians [2.121, 2.076, 1.76, 2.15]
+  part mean rel {'compress': 1.282, 'fibmod': 3.793, 'csvsum': 1.311, 'maze': 2.84}
+  O2 share of gap {'compress': 0.52, 'fibmod': 0.619, 'csvsum': 0.442, 'maze': 0.81} | mean 0.598
+  own-baseline gain, median over cells 0.0632
+
+== arm d: ['s3d1', 's3d2', 's3d3', 's3d4']
+  s3d1   rel compress 1.197 fibmod 1.147 csvsum 1.552 maze 2.742 | median 1.375 | own gain [0.0, -0.0026, -0.0081, 0.0036] | calls 23 tok 42120 usd 0.1393 spent 1576.7 earned 0.0 | min_e 0.0 overdraft 0 downshift 2 death 2 divide 0 imps 0
+  s3d2   rel compress 1.197 fibmod 5.710 csvsum 1.620 maze 2.631 | median 2.125 | own gain [0.0, -0.0678, 0.0392, -0.0002] | calls 26 tok 50698 usd 0.1338 spent 1545.9 earned 0.0 | min_e 0.0 overdraft 0 downshift 4 death 0 divide 0 imps 0
+  s3d3   rel compress 1.197 fibmod 1.879 csvsum 1.407 maze 2.744 | median 1.643 | own gain [0.0, 0.115, 0.1026, 0.0983] | calls 27 tok 58373 usd 0.1275 spent 1490.7 earned 80.7 | min_e 0.0 overdraft 0 downshift 3 death 1 divide 0 imps 2
+  s3d4   rel compress 1.197 fibmod 1.633 csvsum 1.313 maze 3.151 | median 1.473 | own gain [0.0, 0.0038, 0.0376, -0.0025] | calls 25 tok 53289 usd 0.1343 spent 1543.0 earned 0.0 | min_e 0.0 overdraft 0 downshift 2 death 2 divide 0 imps 0
+  O1 mean of run medians 1.6539 | run medians [1.375, 2.125, 1.643, 1.473]
+  part mean rel {'compress': 1.197, 'fibmod': 2.592, 'csvsum': 1.473, 'maze': 2.817}
+  O2 share of gap {'compress': 0.364, 'fibmod': 0.353, 'csvsum': 0.673, 'maze': 0.8} | mean 0.547
+  own-baseline gain, median over cells 0.0000
+
+== contrasts (first minus second)
+  a - b: O1 -0.3926 | per part {'compress': -0.176, 'fibmod': -2.109, 'csvsum': -0.105, 'maze': 0.224} | parts positive 1/4 | median of part diffs -0.1402 | cell medians diff -0.2103 p 0.2112
+  a - c: O1 -0.5427 | per part {'compress': -0.088, 'fibmod': -2.293, 'csvsum': 0.13, 'maze': 0.095} | parts positive 2/4 | median of part diffs +0.0034 | cell medians diff -0.2975 p 0.3619
+  a - d: O1 -0.1700 | per part {'compress': -0.003, 'fibmod': -1.092, 'csvsum': -0.033, 'maze': 0.117} | parts positive 1/4 | median of part diffs -0.0178 | cell medians diff -0.1236 p 0.6029
+  b - c: O1 -0.1501 | per part {'compress': 0.088, 'fibmod': -0.184, 'csvsum': 0.235, 'maze': -0.129} | parts positive 2/4 | median of part diffs -0.0207 | cell medians diff -0.0873 p 0.7662
+  b - d: O1 +0.2226 | per part {'compress': 0.172, 'fibmod': 1.017, 'csvsum': 0.072, 'maze': -0.106} | parts positive 3/4 | median of part diffs +0.1224 | cell medians diff +0.0867 p 0.4735
+  c - d: O1 +0.3727 | per part {'compress': 0.085, 'fibmod': 1.201, 'csvsum': -0.162, 'maze': 0.023} | parts positive 3/4 | median of part diffs +0.0537 | cell medians diff +0.1739 p 0.6403
+
+== cost, arm totals
+  a: calls 99 tokens 238368 (with cache reads 434299) usd 0.1147 energy spent 1939.5 earned 458.0 imps 6 | tokens vs a 1.00 | energy vs a 1.00 | O1 above reference per 1000 energy 0.9979
+  b: calls 99 tokens 202668 (with cache reads 395575) usd 0.4932 energy spent 5724.0 earned 0.0 imps 0 | tokens vs a 0.85 | energy vs a 2.95 | O1 above reference per 1000 energy 0.6125
+  c: calls 112 tokens 314365 (with cache reads 531778) usd 0.1652 energy spent 2547.7 earned 663.8 imps 8 | tokens vs a 1.32 | energy vs a 1.31 | O1 above reference per 1000 energy 1.6118
+  d: calls 101 tokens 204480 (with cache reads 401942) usd 0.5348 energy spent 6156.3 earned 80.7 imps 2 | tokens vs a 0.86 | energy vs a 3.17 | O1 above reference per 1000 energy 0.4249
+
+==== Part 2: behaviour (log.jsonl only)
+
+== arm a: 16 cells | laws (price_show, sense_show, sense_dir, born): [(True, False, True, 'mid')]
+  steps 99 | share light 0.818 mid 0.182 heavy 0.000
+  B1 cells choosing light at step 0 (born above light): 14 of 16
+  B2 cells that thought on light by their 4th step: 16 | ever: 16 | first light step, median 1.0
+  B3 cells that ever thought above their birth model: 0 | after first assay: 0 | cells that moved to a dearer model than their previous step after first assay: 0
+  B4 assayed cells 16 | steps after first assay, median 2.0 mean 1.94 | variant rounds after first assay, total 14 | cells with 2 or more rounds 1 | divides 0
+  B5 improvements 6 | deaths 0 | rested 16 | energy given away at rest, median 347.0
+  B6 sense first, median 0.776 | sense last, median 0.788 | sense errors 0 | cells with a reading 16
+     compress s3a1: 0.7731->0.7731 st 6 aft 2 rd 1 mlllll | s3a2: 0.7757->0.7757 st 7 aft 2 rd 1 mllllll | s3a3: 0.7731->0.7731 st 7 aft 2 rd 1 mllllll | s3a4: 0.7757->0.7757 st 6 aft 2 rd 1 mlllll |
+     fibmod   s3a1: 0.2003->0.2123 st 6 aft 2 rd 1 mlllll | s3a2: 0.1718->0.3184 st 6 aft 2 rd 1 mmllll | s3a3: 0.3222->0.4122 st 5 aft 2 rd 1 mmlll | s3a4: 0.2094->0.2094 st 6 aft 2 rd 1 mlllll |
+     csvsum   s3a1: 0.8562->0.8894 st 10 aft 5 rd 3 mlllllllll | s3a2: 0.8458->0.8458 st 5 aft 1 rd 0 mllll | s3a3: 0.8868->0.8868 st 7 aft 1 rd 0 mllllll | s3a4: 0.7997->0.7997 st 6 aft 2 rd 1 mlllll |
+     maze     s3a1: 0.874->0.9666 st 5 aft 2 rd 1 mllll | s3a2: 0.8667->0.8667 st 5 aft 1 rd 0 mllll | s3a3: 0.7333->0.8545 st 7 aft 2 rd 1 mllllll | s3a4: 0.8833->0.8833 st 5 aft 1 rd 0 mllll |
+  B7 steps with reasoning text logged 25 of 99 | with reply text 16
+
+== arm b: 16 cells | laws (price_show, sense_show, sense_dir, born): [(False, False, True, 'mid')]
+  steps 99 | share light 0.313 mid 0.687 heavy 0.000
+  B1 cells choosing light at step 0 (born above light): 0 of 16
+  B2 cells that thought on light by their 4th step: 2 | ever: 15 | first light step, median 4
+  B3 cells that ever thought above their birth model: 0 | after first assay: 0 | cells that moved to a dearer model than their previous step after first assay: 1
+  B4 assayed cells 15 | steps after first assay, median 1 mean 1.53 | variant rounds after first assay, total 4 | cells with 2 or more rounds 1 | divides 0
+  B5 improvements 0 | deaths 2 | rested 13 | energy given away at rest, median 48.7
+  B6 sense first, median 0.828 | sense last, median 0.828 | sense errors 0 | cells with a reading 15
+     compress s3b1: 1.0->1.0 st 6 aft 3 rd 1 mmmmlm | s3b2: 0.7764->0.7764 st 5 aft 2 rd 0 mmmmm | s3b3: None->None st 7 aft 0 rd 0 mmmmlll | s3b4: 0.7764->0.7764 st 6 aft 3 rd 0 mmmmml |
+     fibmod   s3b1: 0.3203->0.3203 st 5 aft 1 rd 0 mmmml | s3b2: 1.192->1.192 st 5 aft 1 rd 0 mmmml | s3b3: 0.8819->0.8819 st 5 aft 1 rd 0 mmmml | s3b4: 0.3219->0.3219 st 5 aft 1 rd 0 mmlll |
+     csvsum   s3b1: 0.9732->0.9732 st 7 aft 1 rd 0 mmmmmll | s3b2: 0.7598->0.7598 st 9 aft 4 rd 3 mmlllllll | s3b3: 0.9501->0.9501 st 8 aft 1 rd 0 mmmmmlll | s3b4: 0.9777->0.9777 st 6 aft 1 rd 0 mmmmml |
+     maze     s3b1: 0.8092->0.8092 st 6 aft 1 rd 0 mmmmll | s3b2: 0.8284->0.8284 st 6 aft 1 rd 0 mmmmml | s3b3: 0.8079->0.8079 st 6 aft 1 rd 0 mmmmml | s3b4: 0.8958->0.8958 st 7 aft 1 rd 0 mmmmlll |
+  B7 steps with reasoning text logged 19 of 99 | with reply text 6
+
+== arm c: 16 cells | laws (price_show, sense_show, sense_dir, born): [(True, True, True, 'mid')]
+  steps 112 | share light 0.821 mid 0.179 heavy 0.000
+  B1 cells choosing light at step 0 (born above light): 12 of 16
+  B2 cells that thought on light by their 4th step: 16 | ever: 16 | first light step, median 1.0
+  B3 cells that ever thought above their birth model: 0 | after first assay: 0 | cells that moved to a dearer model than their previous step after first assay: 0
+  B4 assayed cells 16 | steps after first assay, median 2.0 mean 2.69 | variant rounds after first assay, total 13 | cells with 2 or more rounds 2 | divides 0
+  B5 improvements 8 | deaths 0 | rested 16 | energy given away at rest, median 309.75
+  B6 sense first, median 0.764 | sense last, median 0.83 | sense errors 0 | cells with a reading 16
+     compress s3c1: 0.7731->0.7731 st 5 aft 2 rd 0 mllll | s3c2: 0.7757->0.7757 st 7 aft 2 rd 1 mllllll | s3c3: 0.7731->0.7731 st 6 aft 2 rd 0 mlllll | s3c4: 1.0->1.0 st 6 aft 2 rd 1 mlllll |
+     fibmod   s3c1: 0.2133->0.9605 st 10 aft 6 rd 0 mmllllllll | s3c2: 0.3534->0.8106 st 8 aft 4 rd 0 mmllllll | s3c3: 0.3276->0.377 st 5 aft 2 rd 1 mmlll | s3c4: 0.8202->0.8202 st 4 aft 1 rd 0 mmll |
+     csvsum   s3c1: 0.2737->0.436 st 9 aft 4 rd 2 mllllllll | s3c2: 0.7546->0.8155 st 7 aft 2 rd 1 mllllll | s3c3: 0.8922->0.8922 st 8 aft 3 rd 0 mlllllll | s3c4: 0.8459->0.9252 st 7 aft 2 rd 1 mllllll |
+     maze     s3c1: 0.6522->0.9378 st 9 aft 5 rd 3 mllllllll | s3c2: 0.5585->0.8413 st 7 aft 2 rd 1 mllllll | s3c3: 0.8909->0.8909 st 7 aft 2 rd 1 mllllll | s3c4: 0.6339->0.8397 st 7 aft 2 rd 1 mllllll |
+  B7 steps with reasoning text logged 39 of 112 | with reply text 18
+
+== arm d: 16 cells | laws (price_show, sense_show, sense_dir, born): [(False, True, True, 'mid')]
+  steps 101 | share light 0.257 mid 0.743 heavy 0.000
+  B1 cells choosing light at step 0 (born above light): 0 of 16
+  B2 cells that thought on light by their 4th step: 0 | ever: 13 | first light step, median 5
+  B3 cells that ever thought above their birth model: 0 | after first assay: 0 | cells that moved to a dearer model than their previous step after first assay: 0
+  B4 assayed cells 16 | steps after first assay, median 1.0 mean 1.62 | variant rounds after first assay, total 2 | cells with 2 or more rounds 0 | divides 0
+  B5 improvements 2 | deaths 5 | rested 10 | energy given away at rest, median 17.4
+  B6 sense first, median 0.776 | sense last, median 0.793 | sense errors 0 | cells with a reading 16
+     compress s3d1: 0.7764->0.7764 st 5 aft 1 rd 0 mmmmm | s3d2: 0.7764->0.7764 st 7 aft 4 rd 0 mmmmmll | s3d3: 0.7764->0.7764 st 6 aft 1 rd 0 mmmmml | s3d4: 0.7764->0.7764 st 5 aft 1 rd 0 mmmmm |
+     fibmod   s3d1: 0.218->0.218 st 6 aft 2 rd 0 mmmmml | s3d2: 1.0394->1.0394 st 5 aft 1 rd 0 mmmml | s3d3: 0.3215->0.3466 st 6 aft 2 rd 1 mmmmll | s3d4: 0.3091->0.3091 st 5 aft 1 rd 0 mmmmm |
+     csvsum   s3d1: 0.9072->0.9072 st 6 aft 1 rd 0 mmmmml | s3d2: 0.9358->0.9358 st 8 aft 3 rd 0 mmmmmmll | s3d3: 0.7253->0.809 st 9 aft 3 rd 1 mmmmlllll | s3d4: 0.7526->0.7526 st 8 aft 1 rd 0 mmmmllll |
+     maze     s3d1: 0.863->0.863 st 6 aft 1 rd 0 mmmmml | s3d2: 0.8208->0.8208 st 6 aft 1 rd 0 mmmmll | s3d3: 0.8528->0.8528 st 6 aft 2 rd 0 mmmmml | s3d4: 0.9784->0.9784 st 7 aft 1 rd 0 mmmmlll |
+  B7 steps with reasoning text logged 19 of 101 | with reply text 5

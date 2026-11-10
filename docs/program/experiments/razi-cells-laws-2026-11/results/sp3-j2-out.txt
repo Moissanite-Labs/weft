@@ -1,0 +1,4 @@
+arm a: cells 16 | climbed after first assay (S3-j count) 0 | climbed, rest steps left out (J2) 0
+arm b: cells 16 | climbed after first assay (S3-j count) 1 | climbed, rest steps left out (J2) 1
+arm c: cells 16 | climbed after first assay (S3-j count) 0 | climbed, rest steps left out (J2) 0
+arm d: cells 16 | climbed after first assay (S3-j count) 0 | climbed, rest steps left out (J2) 0

@@ -1,0 +1,16 @@
+budget 5128000 units per arm, seeds 10
+setting     | gated width at need 4/16/64 | gated/ungated loss 4/16/64 | grown/born-same loss 4/16/64 | ungated width
+margin0.005 |      13    52.5     141     |   0.269   0.549   0.809    |   0.651   0.604   0.993      | 474
+margin0.08  |       4      13    23.5     |   0.152   0.568   1.351    |   1.004   0.910   1.114      | 474
+trial100    |       9      19    52.5     |   0.131   0.215   0.367    |   0.903   0.943   0.994      | 1599
+trial1000   |       4      19      63     |   0.177   0.563   1.162    |   0.776   0.739   1.196      | 141
+lr0.002     |       9      19      63     |   0.218   0.251   0.735    |   0.976   0.923   1.162      | 474
+lr0.02      |       6      28      94     |   0.103   0.207   0.568    |   1.130   0.827   1.003      | 474
+sin         |     7.5    23.5     4.5     |   0.851   0.906   1.402    |   1.086   0.924   1.015      | 474
+
+guesses, judged as written
+GR3-a width rises with need in 6 of 6 settings: True
+GR3-b teacher 4 width 8 or less in 3 of 6 settings ['margin0.005', 'trial100', 'lr0.002'] broke it: False
+GR3-c ungated worse than gated on teacher 4 in 6 of 6 settings: True
+GR3-d sin task: width rises [7.5, 23.5, 4.5]: False; ungated worse on need 4: False; both: False
+GR3-e grown beats born-same by more than 10% on teacher 16 in 3 of 6 settings: True

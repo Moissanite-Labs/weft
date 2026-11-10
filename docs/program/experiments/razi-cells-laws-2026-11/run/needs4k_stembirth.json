@@ -1,0 +1,26 @@
+[
+ {
+  "name": "compress",
+  "kit": "compress",
+  "need": "Build squeeze.py, stdlib only. `python3 squeeze.py c` reads bytes on stdin and writes a compressed form to stdout. `python3 squeeze.py d` reads that form on stdin and writes the original bytes exactly. Fitness: compression ratio on English-like text and JSON, 0 if the round trip fails. Verify before done.",
+  "start": "mid"
+ },
+ {
+  "name": "fibmod",
+  "kit": "fibmod",
+  "need": "Build fibmod.py. `python3 fibmod.py` reads integers n on stdin, one per line, each up to 10**18, and prints fib(n) mod 1_000_000_007 for each, one per line. fib(10)=55. Fitness: speed on about 30,000 values. Verify before done.",
+  "start": "light"
+ },
+ {
+  "name": "csvsum",
+  "kit": "csvsum",
+  "need": "Build csvsum.py. `python3 csvsum.py` reads a CSV on stdin with header 'id,cat,val' and prints one line 'cat,sum' per cat, sum of val with 2 decimals, sorted by cat. Fitness: speed on 1,000,000 rows. Verify before done.",
+  "start": "light"
+ },
+ {
+  "name": "maze",
+  "kit": "maze",
+  "need": "Build maze.py. `python3 maze.py` reads a grid of '#' and '.' on stdin with one S and one E and prints the shortest path length from S to E (4-neighbour moves) or -1 if there is none. Fitness: speed on a 1000x1000 maze that has a path, plus two small mazes. Verify before done.",
+  "start": "light"
+ }
+]

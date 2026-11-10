@@ -1,0 +1,67 @@
+# Razi-cells laws record, 2026-11 (E11 to L1)
+
+Status: run record, not a paper. Every result here is a lead unless the text says otherwise. Nothing in this folder
+is checked by CI. It continues the E07 record proposed in pull request 101 and uses the same harness.
+
+## What this is
+
+Small colonies of isolated agents ("cells") work on four timed code tasks. Each cell runs in a sandbox with no
+network and no key. The harness owns the task inputs, the correctness check and the timing. A cell spends energy on
+model calls and earns energy only when a scored body beats its last scored body beyond noise. The question is which
+simple laws make such a colony improve, show restraint, and pass gains on, without hand-written control.
+
+For every experiment the guesses, the report script and the file hashes were written into `TESTS.md` before any
+data. Report scripts were run unchanged. Anything written after seeing data is labelled as a diagnostic.
+
+## What was run
+
+| Block | Layer | Question | Guesses held, judged as written |
+|---|---|---|---|
+| E11, E12, E13 | agent colonies | Does removing the "variants" tool help or hurt, with and without a hold rule | E11 and E13 judged in `TESTS.md`. E12 used a flawed instrument and is kept as a failure record |
+| GR1 | toy numpy network | Does division plus a gate grow width to match need | 3 of 5 |
+| GR2 | toy numpy network | Same, with daughters born different | 5 of 6 |
+| GR3 | toy numpy network | Is GR2 robust to one knob at a time and a second task | 3 of 5 |
+| GR4 | toy numpy network | Two ways to tell "satisfied" from "stuck" | 5 of 5 |
+| SP1 | agent colonies | Does one uncommitted stem cell that feeds committed cells help | 7 of 8 |
+| SP2 | agent colonies | Stem against flat on a fixed-reference metric | 6 of 8 |
+| SP3 | agent colonies | What changes when a cell is shown the price list, and its distance from the best known body | 6 of 12 |
+| T-J3 | LoRA adapters | Does division plus a gate help when the genome is an adapter | Incomplete. Storage limit stopped 3 of 4 arms |
+| L1 | agent colonies | Does heredity let lineages compound gains | Preregistered. Full run in progress when this record was cut. No result here |
+
+## Main readings, with their limits
+
+- **Cells picked the cheapest model from the price list alone.** With the list shown, 14 of 16 cells moved to the
+  cheapest model at their first step. With it hidden, 0 of 16 did. No cell in any arm moved up a model on its own.
+- **Hiding the price did not buy better work.** Cells with the list hidden spent 2.4 to 3.0 times the energy and
+  had 7 deaths against 0.
+- **One inward number changed behaviour most.** Cells shown their own score against the best known body kept working
+  on an already passing body. That arm had the highest reach (2.03 against 1.48 for control, as a ratio to a fixed
+  reference body).
+- **A stem cell that feeds others added cost and no reach** in SP1 and SP2.
+- **In the toy network, a gate that escalates after a failed try** had the lowest worst-case regret of four gates
+  (1.42 against 3.02 for the fixed gate).
+- **Negative results are kept.** GR1 copy division was never accepted by the gate. The T-J3 plain arm did not beat
+  the base rate. The E12 maze task was not a valid instrument.
+
+Limits. SP3 has 4 runs per arm and its smallest p value is 0.21. One model family (Anthropic) ran the laws. One task
+carries most of the SP3 difference. The toy network results are curve fitting on a laptop CPU. No claim here is
+established. A result needs a second model family and a repeat before it is called a result.
+
+## Layout
+
+- `TESTS.md`: every preregistration and result, in order. Start at the section for the block you want.
+- `IDEAS.md`: the idea ledger, including failures (section H) and lessons K1 to K26.
+- `code/cells/`: the runtime (`metab.py`, `cell.py`, `colony.py`, `kit.py`), the report scripts, and offline tests.
+- `code/adapters/`: the T-J3 trainer and report.
+- `run/`: run scripts and task lists.
+- `results/`: saved script outputs and fixed-reference scores.
+- `map/`: a map of the open directions.
+
+Paths inside `TESTS.md` and the scripts point at the machine the runs were made on. Raw per-cell logs are not
+included in this cut.
+
+## Reproducing
+
+The offline tests need no model and no key: `python code/cells/kit_selftest.py` and the files in
+`code/cells/tests/`. The colony runs need a model router and are not reproducible from this folder alone. That is a
+stated limit of the record.

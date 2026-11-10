@@ -1,0 +1,7 @@
+[
+ {
+  "name": "fibmod",
+  "kit": "fibmod",
+  "need": "Build fibmod.py. `python3 fibmod.py` reads integers n on stdin, one per line, each up to 10**18, and prints fib(n) mod 1_000_000_007 for each, one per line. fib(10)=55. Fitness: speed on about 30,000 values. Verify before done."
+ }
+]
