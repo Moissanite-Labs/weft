@@ -9,7 +9,12 @@ import unittest
 from pathlib import Path
 
 from weft.runtime.invariants import (
+    HOMEOSTATIC_TENSION_MAX,
+    HOMEOSTATIC_TENSION_MIN,
+    ROYALTY_UPSTREAM_BPS,
+    ROYALTY_WEAVER_BPS,
     R_INVARIANT,
+    TENSION_MAX,
     compute_royalty_split,
     load_conformance_vectors,
     verify_tension_bound,
@@ -55,6 +60,15 @@ class TestWeftInvariants(unittest.TestCase):
                 self.assertEqual(split["upstream_wei"], vec["expected_upstream_wei"])
                 self.assertEqual(split["weaver_wei"], vec["expected_weaver_wei"])
                 self.assertEqual(split["upstream_wei"] + split["weaver_wei"], vec["gross_wei"])
+
+    def test_constants_block_matches_module(self) -> None:
+        constants = self.vectors["constants"]
+        self.assertEqual(constants["R_INVARIANT"], R_INVARIANT)
+        self.assertEqual(constants["TENSION_MAX"], TENSION_MAX)
+        self.assertEqual(constants["HOMEOSTATIC_TENSION_MIN"], HOMEOSTATIC_TENSION_MIN)
+        self.assertEqual(constants["HOMEOSTATIC_TENSION_MAX"], HOMEOSTATIC_TENSION_MAX)
+        self.assertEqual(constants["ROYALTY_UPSTREAM_BPS"], ROYALTY_UPSTREAM_BPS)
+        self.assertEqual(constants["ROYALTY_WEAVER_BPS"], ROYALTY_WEAVER_BPS)
 
     def test_budget_underflow_reports_ex_distance_not_candidate_norm(self) -> None:
         try:
