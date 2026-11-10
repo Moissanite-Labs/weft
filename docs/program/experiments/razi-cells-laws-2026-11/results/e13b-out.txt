@@ -1,0 +1,64 @@
+ALL root cells, E11-E13 n 153
+   empty      attempt  36  done  59  other   4  attempt share 0.364
+   quit_seen  attempt   7  done  38  other   3  attempt share 0.146
+   win_only   attempt   2  done   4  other   0  attempt share 0.333
+E11 n 28
+   empty      attempt   7  done   7  other   1  attempt share 0.467
+   quit_seen  attempt   2  done  10  other   1  attempt share 0.154
+E12 n 62
+   empty      attempt  18  done  20  other   3  attempt share 0.439
+   quit_seen  attempt   2  done  11  other   2  attempt share 0.133
+   win_only   attempt   2  done   4  other   0  attempt share 0.333
+E13 n 63
+   empty      attempt  11  done  32  other   0  attempt share 0.256
+   quit_seen  attempt   3  done  17  other   0  attempt share 0.150
+arm c n 45
+   empty      attempt  18  done   8  other   2  attempt share 0.643
+   quit_seen  attempt   7  done   7  other   2  attempt share 0.438
+   win_only   attempt   1  done   0  other   0  attempt share 1.000
+arm n n 46
+   empty      attempt   1  done  14  other   1  attempt share 0.062
+   quit_seen  attempt   0  done  29  other   1  attempt share 0.000
+arm ch n 30
+   empty      attempt  11  done  13  other   0  attempt share 0.458
+   quit_seen  attempt   0  done   2  other   0  attempt share 0.000
+   win_only   attempt   1  done   3  other   0  attempt share 0.250
+arm nh n 32
+   empty      attempt   6  done  24  other   1  attempt share 0.194
+   win_only   attempt   0  done   1  other   0  attempt share 0.000
+novar arms (n, nh) only n 78
+   empty      attempt   7  done  38  other   2  attempt share 0.149
+   quit_seen  attempt   0  done  29  other   1  attempt share 0.000
+   win_only   attempt   0  done   1  other   0  attempt share 0.000
+ctrl arms (c, ch) only n 75
+   empty      attempt  29  done  21  other   2  attempt share 0.558
+   quit_seen  attempt   7  done   9  other   2  attempt share 0.389
+   win_only   attempt   2  done   3  other   0  attempt share 0.400
+task compress n 40
+   empty      attempt   5  done  20  other   0  attempt share 0.200
+   quit_seen  attempt   0  done  14  other   0  attempt share 0.000
+   win_only   attempt   0  done   1  other   0  attempt share 0.000
+task compress, novar arms n 20
+   empty      attempt   0  done  10  other   0  attempt share 0.000
+   quit_seen  attempt   0  done  10  other   0  attempt share 0.000
+task fibmod n 40
+   empty      attempt  23  done  10  other   0  attempt share 0.697
+   quit_seen  attempt   3  done   4  other   0  attempt share 0.429
+task fibmod, novar arms n 20
+   empty      attempt   6  done  10  other   0  attempt share 0.375
+   quit_seen  attempt   0  done   4  other   0  attempt share 0.000
+task csvsum n 38
+   empty      attempt   6  done  11  other   0  attempt share 0.353
+   quit_seen  attempt   4  done  15  other   0  attempt share 0.211
+   win_only   attempt   2  done   0  other   0  attempt share 1.000
+task csvsum, novar arms n 19
+   empty      attempt   0  done   8  other   0  attempt share 0.000
+   quit_seen  attempt   0  done  11  other   0  attempt share 0.000
+task maze n 35
+   empty      attempt   2  done  18  other   4  attempt share 0.083
+   quit_seen  attempt   0  done   5  other   3  attempt share 0.000
+   win_only   attempt   0  done   3  other   0  attempt share 0.000
+task maze, novar arms n 19
+   empty      attempt   1  done  10  other   2  attempt share 0.077
+   quit_seen  attempt   0  done   4  other   1  attempt share 0.000
+   win_only   attempt   0  done   1  other   0  attempt share 0.000

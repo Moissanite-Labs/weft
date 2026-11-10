@@ -1,0 +1,103 @@
+DIAGNOSTIC, not preregistered. Written after the SP3 report was read.
+
+D1 per cell: mid steps before first assay, first sense ratio, last sense ratio, body rewrites after first assay (write or sh acts), variant rounds, income events, energy given at rest, end state
+  a s3a1 compress mid_pre 1 first 0.7731 last 0.7731 writes_after 0 rounds 1 assays 1 income 0 gave 402.5 end rest overdraft 0
+  a s3a1 fibmod   mid_pre 1 first 0.2003 last 0.2123 writes_after 0 rounds 1 assays 1 income 1 gave 326.4 end rest overdraft 0
+  a s3a1 csvsum   mid_pre 1 first 0.8562 last 0.8894 writes_after 0 rounds 3 assays 1 income 1 gave 0.0 end rest overdraft 0
+  a s3a1 maze     mid_pre 1 first 0.874 last 0.9666 writes_after 0 rounds 1 assays 1 income 1 gave 671.3 end rest overdraft 0
+  a s3a2 compress mid_pre 1 first 0.7757 last 0.7757 writes_after 0 rounds 1 assays 1 income 0 gave 0.0 end rest overdraft 0
+  a s3a2 fibmod   mid_pre 2 first 0.1718 last 0.3184 writes_after 0 rounds 1 assays 1 income 1 gave 755.1 end rest overdraft 0
+  a s3a2 csvsum   mid_pre 1 first 0.8458 last 0.8458 writes_after 0 rounds 0 assays 1 income 0 gave 307.2 end rest overdraft 0
+  a s3a2 maze     mid_pre 1 first 0.8667 last 0.8667 writes_after 0 rounds 0 assays 1 income 0 gave 418.0 end rest overdraft 0
+  a s3a3 compress mid_pre 1 first 0.7731 last 0.7731 writes_after 0 rounds 1 assays 1 income 0 gave 367.6 end rest overdraft 0
+  a s3a3 fibmod   mid_pre 2 first 0.3222 last 0.4122 writes_after 0 rounds 1 assays 1 income 1 gave 279.1 end rest overdraft 0
+  a s3a3 csvsum   mid_pre 1 first 0.8868 last 0.8868 writes_after 0 rounds 0 assays 1 income 0 gave 554.4 end rest overdraft 0
+  a s3a3 maze     mid_pre 1 first 0.7333 last 0.8545 writes_after 0 rounds 1 assays 1 income 1 gave 0.0 end rest overdraft 0
+  a s3a4 compress mid_pre 1 first 0.7757 last 0.7757 writes_after 0 rounds 1 assays 1 income 0 gave 0.0 end rest overdraft 0
+  a s3a4 fibmod   mid_pre 1 first 0.2094 last 0.2094 writes_after 0 rounds 1 assays 1 income 0 gave 588.7 end rest overdraft 0
+  a s3a4 csvsum   mid_pre 1 first 0.7997 last 0.7997 writes_after 0 rounds 1 assays 1 income 0 gave 389.5 end rest overdraft 0
+  a s3a4 maze     mid_pre 1 first 0.8833 last 0.8833 writes_after 0 rounds 0 assays 1 income 0 gave 314.7 end rest overdraft 0
+  b s3b1 compress mid_pre 2 first 1.0 last 1.0 writes_after 0 rounds 1 assays 1 income 0 gave None end death overdraft 1
+  b s3b1 fibmod   mid_pre 3 first 0.3203 last 0.3203 writes_after 0 rounds 0 assays 1 income 0 gave 110.8 end rest overdraft 0
+  b s3b1 csvsum   mid_pre 5 first 0.9732 last 0.9732 writes_after 0 rounds 0 assays 1 income 0 gave 100.4 end rest overdraft 0
+  b s3b1 maze     mid_pre 4 first 0.8092 last 0.8092 writes_after 0 rounds 0 assays 1 income 0 gave 102.6 end rest overdraft 0
+  b s3b2 compress mid_pre 2 first 0.7764 last 0.7764 writes_after 0 rounds 0 assays 1 income 0 gave None end death overdraft 0
+  b s3b2 fibmod   mid_pre 3 first 1.192 last 1.192 writes_after 0 rounds 0 assays 1 income 0 gave 46.9 end rest overdraft 0
+  b s3b2 csvsum   mid_pre 2 first 0.7598 last 0.7598 writes_after 0 rounds 3 assays 1 income 0 gave 0.0 end rest overdraft 0
+  b s3b2 maze     mid_pre 4 first 0.8284 last 0.8284 writes_after 0 rounds 0 assays 1 income 0 gave 41.2 end rest overdraft 0
+  b s3b3 compress mid_pre 4 first None last None writes_after 0 rounds 0 assays 0 income 0 gave None end apoptosis overdraft 0
+  b s3b3 fibmod   mid_pre 3 first 0.8819 last 0.8819 writes_after 0 rounds 0 assays 1 income 0 gave 34.8 end rest overdraft 0
+  b s3b3 csvsum   mid_pre 5 first 0.9501 last 0.9501 writes_after 0 rounds 0 assays 1 income 0 gave 0.0 end rest overdraft 0
+  b s3b3 maze     mid_pre 4 first 0.8079 last 0.8079 writes_after 0 rounds 0 assays 1 income 0 gave 67.5 end rest overdraft 0
+  b s3b4 compress mid_pre 2 first 0.7764 last 0.7764 writes_after 0 rounds 0 assays 1 income 0 gave 48.7 end rest overdraft 0
+  b s3b4 fibmod   mid_pre 2 first 0.3219 last 0.3219 writes_after 0 rounds 0 assays 1 income 0 gave 192.3 end rest overdraft 0
+  b s3b4 csvsum   mid_pre 4 first 0.9777 last 0.9777 writes_after 0 rounds 0 assays 1 income 0 gave 118.3 end rest overdraft 0
+  b s3b4 maze     mid_pre 4 first 0.8958 last 0.8958 writes_after 0 rounds 0 assays 1 income 0 gave 0.0 end rest overdraft 0
+  c s3c1 compress mid_pre 1 first 0.7731 last 0.7731 writes_after 1 rounds 0 assays 1 income 0 gave 300.2 end rest overdraft 0
+  c s3c1 fibmod   mid_pre 2 first 0.2133 last 0.9605 writes_after 2 rounds 0 assays 2 income 0 gave 207.8 end rest overdraft 0
+  c s3c1 csvsum   mid_pre 1 first 0.2737 last 0.436 writes_after 0 rounds 2 assays 2 income 1 gave 0.0 end rest overdraft 0
+  c s3c1 maze     mid_pre 1 first 0.6522 last 0.9378 writes_after 0 rounds 3 assays 2 income 2 gave 559.9 end rest overdraft 0
+  c s3c2 compress mid_pre 1 first 0.7757 last 0.7757 writes_after 0 rounds 1 assays 1 income 0 gave 371.1 end rest overdraft 0
+  c s3c2 fibmod   mid_pre 2 first 0.3534 last 0.8106 writes_after 1 rounds 0 assays 2 income 0 gave 0.0 end rest overdraft 0
+  c s3c2 csvsum   mid_pre 1 first 0.7546 last 0.8155 writes_after 0 rounds 1 assays 1 income 1 gave 319.3 end rest overdraft 0
+  c s3c2 maze     mid_pre 1 first 0.5585 last 0.8413 writes_after 0 rounds 1 assays 1 income 1 gave 724.6 end rest overdraft 0
+  c s3c3 compress mid_pre 1 first 0.7731 last 0.7731 writes_after 0 rounds 0 assays 1 income 0 gave 286.8 end rest overdraft 0
+  c s3c3 fibmod   mid_pre 2 first 0.3276 last 0.377 writes_after 0 rounds 1 assays 1 income 1 gave 339.7 end rest overdraft 0
+  c s3c3 csvsum   mid_pre 1 first 0.8922 last 0.8922 writes_after 1 rounds 0 assays 1 income 0 gave 522.6 end rest overdraft 0
+  c s3c3 maze     mid_pre 1 first 0.8909 last 0.8909 writes_after 0 rounds 1 assays 1 income 0 gave 0.0 end rest overdraft 0
+  c s3c4 compress mid_pre 1 first 1.0 last 1.0 writes_after 0 rounds 1 assays 1 income 0 gave 340.7 end rest overdraft 0
+  c s3c4 fibmod   mid_pre 2 first 0.8202 last 0.8202 writes_after 0 rounds 0 assays 1 income 0 gave 177.5 end rest overdraft 0
+  c s3c4 csvsum   mid_pre 1 first 0.8459 last 0.9252 writes_after 0 rounds 1 assays 1 income 1 gave 526.8 end rest overdraft 0
+  c s3c4 maze     mid_pre 1 first 0.6339 last 0.8397 writes_after 0 rounds 1 assays 1 income 1 gave 0.0 end rest overdraft 0
+  d s3d1 compress mid_pre 3 first 0.7764 last 0.7764 writes_after 0 rounds 0 assays 1 income 0 gave None end death overdraft 0
+  d s3d1 fibmod   mid_pre 3 first 0.218 last 0.218 writes_after 0 rounds 0 assays 1 income 0 gave None end death overdraft 0
+  d s3d1 csvsum   mid_pre 4 first 0.9072 last 0.9072 writes_after 0 rounds 0 assays 1 income 0 gave 0.0 end rest overdraft 0
+  d s3d1 maze     mid_pre 4 first 0.863 last 0.863 writes_after 0 rounds 0 assays 1 income 0 gave 7.9 end rest overdraft 0
+  d s3d2 compress mid_pre 2 first 0.7764 last 0.7764 writes_after 0 rounds 0 assays 1 income 0 gave None end apoptosis overdraft 0
+  d s3d2 fibmod   mid_pre 3 first 1.0394 last 1.0394 writes_after 0 rounds 0 assays 1 income 0 gave 58.2 end rest overdraft 0
+  d s3d2 csvsum   mid_pre 4 first 0.9358 last 0.9358 writes_after 0 rounds 0 assays 1 income 0 gave 0.0 end rest overdraft 0
+  d s3d2 maze     mid_pre 4 first 0.8208 last 0.8208 writes_after 0 rounds 0 assays 1 income 0 gave 69.3 end rest overdraft 0
+  d s3d3 compress mid_pre 4 first 0.7764 last 0.7764 writes_after 0 rounds 0 assays 1 income 0 gave 35.3 end rest overdraft 0
+  d s3d3 fibmod   mid_pre 3 first 0.3215 last 0.3466 writes_after 0 rounds 1 assays 1 income 1 gave 166.7 end rest overdraft 0
+  d s3d3 csvsum   mid_pre 4 first 0.7253 last 0.809 writes_after 0 rounds 1 assays 2 income 1 gave 0.0 end rest overdraft 0
+  d s3d3 maze     mid_pre 3 first 0.8528 last 0.8528 writes_after 0 rounds 0 assays 1 income 0 gave None end death overdraft 0
+  d s3d4 compress mid_pre 3 first 0.7764 last 0.7764 writes_after 0 rounds 0 assays 1 income 0 gave None end death overdraft 0
+  d s3d4 fibmod   mid_pre 3 first 0.3091 last 0.3091 writes_after 0 rounds 0 assays 1 income 0 gave None end death overdraft 0
+  d s3d4 csvsum   mid_pre 4 first 0.7526 last 0.7526 writes_after 0 rounds 0 assays 1 income 0 gave 0.0 end rest overdraft 0
+  d s3d4 maze     mid_pre 4 first 0.9784 last 0.9784 writes_after 0 rounds 0 assays 1 income 0 gave 26.9 end rest overdraft 0
+
+D2 per arm: mean mid steps before first assay | median first sense ratio | fibmod first ratios | cells whose ratio rose by more than 0.05 with no income event
+  a: mid_pre mean 1.12 | first median 0.776 | fibmod first [0.2003, 0.1718, 0.3222, 0.2094] | income events 6 | unpaid rises 0
+  b: mid_pre mean 3.31 | first median 0.828 | fibmod first [0.3203, 1.192, 0.8819, 0.3219] | income events 0 | unpaid rises 0
+  c: mid_pre mean 1.25 | first median 0.764 | fibmod first [0.2133, 0.3534, 0.3276, 0.8202] | income events 8 | unpaid rises 2
+  d: mid_pre mean 3.44 | first median 0.776 | fibmod first [0.218, 1.0394, 0.3215, 0.3091] | income events 2 | unpaid rises 0
+
+D3 cells with a large gap at first reading (first ratio below 0.5): run part first last writes_after rounds income gave end
+  arm a: 4 cells, 0 ended at 0.8 or above
+      ('s3a1', 'fibmod', 0.2003, 0.2123, 0, 1, 1, 326.4, 'rest')
+      ('s3a2', 'fibmod', 0.1718, 0.3184, 0, 1, 1, 755.1, 'rest')
+      ('s3a3', 'fibmod', 0.3222, 0.4122, 0, 1, 1, 279.1, 'rest')
+      ('s3a4', 'fibmod', 0.2094, 0.2094, 0, 1, 0, 588.7, 'rest')
+  arm b: 2 cells, 0 ended at 0.8 or above
+      ('s3b1', 'fibmod', 0.3203, 0.3203, 0, 0, 0, 110.8, 'rest')
+      ('s3b4', 'fibmod', 0.3219, 0.3219, 0, 0, 0, 192.3, 'rest')
+  arm c: 4 cells, 2 ended at 0.8 or above
+      ('s3c1', 'fibmod', 0.2133, 0.9605, 2, 0, 0, 207.8, 'rest')
+      ('s3c1', 'csvsum', 0.2737, 0.436, 0, 2, 1, 0.0, 'rest')
+      ('s3c2', 'fibmod', 0.3534, 0.8106, 1, 0, 0, 0.0, 'rest')
+      ('s3c3', 'fibmod', 0.3276, 0.377, 0, 1, 1, 339.7, 'rest')
+  arm d: 3 cells, 0 ended at 0.8 or above
+      ('s3d1', 'fibmod', 0.218, 0.218, 0, 0, 0, None, 'death')
+      ('s3d3', 'fibmod', 0.3215, 0.3466, 0, 1, 1, 166.7, 'rest')
+      ('s3d4', 'fibmod', 0.3091, 0.3091, 0, 0, 0, None, 'death')
+
+D4 first sense ratio against mid steps before first assay, all 64 cells, fibmod only
+  mid steps 1: n 2 first ratios [0.2003, 0.2094] median 0.205
+  mid steps 2: n 7 first ratios [0.1718, 0.2133, 0.3219, 0.3222, 0.3276, 0.3534, 0.8202] median 0.322
+  mid steps 3: n 7 first ratios [0.218, 0.3091, 0.3203, 0.3215, 0.8819, 1.0394, 1.192] median 0.322
+
+D5 step 0 usage per arm (cache check): keys seen and medians
+  a: step 0 cost median None min None max None | cache read median None n 0
+  b: step 0 cost median None min None max None | cache read median None n 0
+  c: step 0 cost median None min None max None | cache read median None n 0
+  d: step 0 cost median None min None max None | cache read median None n 0

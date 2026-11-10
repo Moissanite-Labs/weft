@@ -1,0 +1,19 @@
+c {'cells': 16, 'assayed': 16, 'O4_share': 1.0, 'O1_median': 0.0, 'calls': 84, 'imps': 5, 'O2_per100': 5.95, 'O5_attempt_share': 0.375, 'O6_try_calls': 0, 'O7_worse': 0, 'holds': 0, 'tokens': 116071, 'usd': 0.464, 'budget_hits': 0, 'deaths': 0, 'routes': ['anthropic:claude-sonnet-5-5']}
+n {'cells': 16, 'assayed': 16, 'O4_share': 1.0, 'O1_median': 0.0001, 'calls': 78, 'imps': 0, 'O2_per100': 0.0, 'O5_attempt_share': 0.0, 'O6_try_calls': 0, 'O7_worse': 0, 'holds': 0, 'tokens': 101957, 'usd': 0.389, 'budget_hits': 0, 'deaths': 0, 'routes': ['anthropic:claude-sonnet-5-5']}
+ch {'cells': 16, 'assayed': 15, 'O4_share': 0.938, 'O1_median': 0.0068, 'calls': 105, 'imps': 7, 'O2_per100': 6.67, 'O5_attempt_share': 0.8, 'O6_try_calls': 0, 'O7_worse': 0, 'holds': 9, 'tokens': 169175, 'usd': 0.649, 'budget_hits': 0, 'deaths': 0, 'routes': ['anthropic:claude-sonnet-5-5']}
+nh {'cells': 16, 'assayed': 16, 'O4_share': 1.0, 'O1_median': 0.0, 'calls': 148, 'imps': 4, 'O2_per100': 2.7, 'O5_attempt_share': 0.812, 'O6_try_calls': 14, 'O7_worse': 0, 'holds': 9, 'tokens': 162225, 'usd': 0.585, 'budget_hits': 0, 'deaths': 0, 'routes': ['anthropic:claude-sonnet-5-5']}
+nh minus n: task diffs {'compress': 0.0, 'fibmod': 1.3564, 'csvsum': -0.0077, 'maze': 0.0198} | median 0.0099 | positive 2 of 4 | cell median diff -0.0001 | two sided p 0.7137 | n 16 16
+nh minus ch: task diffs {'compress': 0.0, 'fibmod': 0.3173, 'csvsum': -0.0094, 'maze': -0.0853} | median -0.0047 | positive 1 of 4 | cell median diff -0.0068 | two sided p 0.2813 | n 16 15
+ch minus c: task diffs {'compress': 0.0, 'fibmod': -0.1353, 'csvsum': -0.0394, 'maze': 0.0919} | median -0.0197 | positive 1 of 4 | cell median diff 0.0068 | two sided p 0.5101 | n 15 16
+n minus c: task diffs {'compress': 0.0, 'fibmod': -1.1744, 'csvsum': -0.0411, 'maze': -0.0132} | median -0.0272 | positive 0 of 4 | cell median diff 0.0001 | two sided p 0.9998 | n 16 16
+H22 O5 in novar+hold >= 0.75: 0.812 -> True
+H23 novar+hold beats novar (median task diff > 0): 0.0099 -> True
+H24 ctrl+hold beats novar+hold (nh minus ch < 0): -0.0047 -> True
+H25 hold neutral for ctrl (|ch minus c| < 0.03): -0.0197 -> True
+(E12 H20, kept for reference) at least one try call in novar+hold: 14 -> True
+H26 ctrl beats novar again (n minus c < 0): -0.0272 -> True
+H27 no assayed cell below -0.5 and O4 >= 0.9 in every arm: (-0.0286, {'c': 1.0, 'n': 1.0, 'ch': 0.938, 'nh': 1.0}) -> True
+cells c {'compress': [0.0, 0.0, 0.0, 0.0], 'fibmod': [2.1291, 0.8897, 0.8791, 0.8138], 'csvsum': [0.0008, -0.0038, -0.0007, 0.178], 'maze': [-0.0046, -0.0115, 0.0906, -0.0048]}
+cells n {'compress': [0.0, 0.0, 0.0, 0.0], 'fibmod': [-0.0025, -0.0009, 0.0152, 0.0022], 'csvsum': [0.0019, 0.0123, 0.0002, -0.0047], 'maze': [0.0052, 0.0118, -0.0043, 0.0042]}
+cells ch {'compress': [0.0, 0.0, 0.0, 0.0], 'fibmod': [1.6518, 0.823, 0.8186, 0.8771], 'csvsum': [0.0038, 0.0019, 0.0068, None], 'maze': [0.0812, 0.1661, -0.0043, 0.1943]}
+cells nh {'compress': [0.0, 0.0, 0.0, 0.0], 'fibmod': [3.7738, 0.8475, -0.0055, 0.8237], 'csvsum': [0.0081, -0.0041, 0.0036, -0.0286], 'maze': [-0.0008, -0.0025, 0.102, -0.0028]}

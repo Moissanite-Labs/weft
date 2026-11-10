@@ -1,0 +1,18 @@
+budget 5128000 units per arm, seeds 10, U0 0.25, escal max 16
+cond    | median width base/level/escal/nogate | median test loss base/level/escal/nogate     | level/base escal/base | median regret base/level/escal/nogate
+tanh4   |       6       6       6     474      |   0.00084   0.00084   0.00087   0.00505     |     1.000     1.048  |   1.00   1.00   1.05   6.15
+tanh16  |      28      28      25     474      |   0.00273   0.00261   0.00251   0.00520     |     1.000     0.983  |   1.09   1.02   1.00   2.02
+tanh64  |      63    78.5    77.5     474      |   0.01402   0.01370   0.01376   0.01659     |     1.000     1.025  |   1.00   1.00   1.04   1.27
+sin4    |     7.5      35      36     474      |   0.08847   0.02451   0.03447   0.07649     |     0.418     0.465  |   3.02   1.00   1.21   3.45
+sin16   |    23.5      94    84.5     474      |   0.13347   0.11622   0.11573   0.14434     |     0.956     1.001  |   1.09   1.06   1.08   1.26
+sin64   |     4.5     211     104     474      |   0.38187   0.29370   0.30976   0.28010     |     0.780     0.797  |   1.42   1.04   1.09   1.00
+noisy4  |     3.5    30.5       4     474      |   0.00804   0.05281   0.01225   0.08859     |     6.670     1.236  |   1.06   6.67   1.42  11.95
+noisy16 |       9      94       9     474      |   0.03849   0.08852   0.04160   0.10195     |     2.061     1.001  |   1.01   2.18   1.01   2.92
+worst-case median regret: base 3.02, level 6.67, escal 1.42, nogate 11.95
+
+guesses, judged as written
+GR4-a on sin64 level and escal beat base, ratio below 0.9 [0.78, 0.797]: True
+GR4-b on tanh, ratio to base inside 0.8 to 1.25: level [1.0, 1.0, 1.0] 3 of 3, escal [1.048, 0.983, 1.025] 3 of 3: True
+GR4-c noisy4 median width base 3.5, level 30.5, escal 4; level more than twice base and escal not: True
+GR4-d escal has the lowest worst-case regret: True
+GR4-e escal width rises with need on tanh [6.0, 25.0, 77.5]: True

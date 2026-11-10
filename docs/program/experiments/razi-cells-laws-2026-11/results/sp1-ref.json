@@ -1,0 +1,162 @@
+[
+ {
+  "kit": "fibmod",
+  "run": "ref",
+  "median": 2.38183,
+  "rel": 1.0,
+  "spread": 0.0113,
+  "why": ""
+ },
+ {
+  "kit": "fibmod",
+  "run": "fl1",
+  "median": 2.5789,
+  "rel": 1.0827,
+  "spread": 0.0234,
+  "why": ""
+ },
+ {
+  "kit": "fibmod",
+  "run": "fl2",
+  "median": 2.71883,
+  "rel": 1.1415,
+  "spread": 0.0296,
+  "why": ""
+ },
+ {
+  "kit": "fibmod",
+  "run": "sp1",
+  "median": 2.58195,
+  "rel": 1.084,
+  "spread": 0.0703,
+  "why": ""
+ },
+ {
+  "kit": "fibmod",
+  "run": "sp2",
+  "median": 2.57535,
+  "rel": 1.0812,
+  "spread": 0.0306,
+  "why": ""
+ },
+ {
+  "kit": "csvsum",
+  "run": "ref",
+  "median": 1.41248,
+  "rel": 1.0,
+  "spread": 0.0318,
+  "why": ""
+ },
+ {
+  "kit": "csvsum",
+  "run": "fl1",
+  "median": 2.01969,
+  "rel": 1.4299,
+  "spread": 0.0233,
+  "why": ""
+ },
+ {
+  "kit": "csvsum",
+  "run": "fl2",
+  "median": 1.87087,
+  "rel": 1.3245,
+  "spread": 0.0387,
+  "why": ""
+ },
+ {
+  "kit": "csvsum",
+  "run": "sp1",
+  "median": 2.13626,
+  "rel": 1.5124,
+  "spread": 0.048,
+  "why": ""
+ },
+ {
+  "kit": "csvsum",
+  "run": "sp2",
+  "median": 2.13343,
+  "rel": 1.5104,
+  "spread": 0.0209,
+  "why": ""
+ },
+ {
+  "kit": "maze",
+  "run": "ref",
+  "median": 1.30178,
+  "rel": 1.0,
+  "spread": 0.033,
+  "why": ""
+ },
+ {
+  "kit": "maze",
+  "run": "fl1",
+  "median": 4.15703,
+  "rel": 3.1933,
+  "spread": 0.0285,
+  "why": ""
+ },
+ {
+  "kit": "maze",
+  "run": "fl2",
+  "median": 3.62766,
+  "rel": 2.7867,
+  "spread": 0.048,
+  "why": ""
+ },
+ {
+  "kit": "maze",
+  "run": "sp1",
+  "median": 3.701,
+  "rel": 2.843,
+  "spread": 0.0104,
+  "why": ""
+ },
+ {
+  "kit": "maze",
+  "run": "sp2",
+  "median": 3.68773,
+  "rel": 2.8328,
+  "spread": 0.0229,
+  "why": ""
+ },
+ {
+  "kit": "compress",
+  "run": "ref",
+  "median": 4.59236,
+  "rel": 1.0,
+  "spread": 0.0,
+  "why": ""
+ },
+ {
+  "kit": "compress",
+  "run": "fl1",
+  "median": 7.08179,
+  "rel": 1.5421,
+  "spread": 0.0,
+  "why": ""
+ },
+ {
+  "kit": "compress",
+  "run": "fl2",
+  "median": 5.47469,
+  "rel": 1.1921,
+  "spread": 0.0,
+  "why": ""
+ },
+ {
+  "kit": "compress",
+  "run": "sp1",
+  "median": 5.47222,
+  "rel": 1.1916,
+  "spread": 0.0,
+  "why": ""
+ },
+ {
+  "kit": "compress",
+  "run": "sp2",
+  "median": 5.4748,
+  "rel": 1.1922,
+  "spread": 0.0,
+  "why": ""
+ }
+]

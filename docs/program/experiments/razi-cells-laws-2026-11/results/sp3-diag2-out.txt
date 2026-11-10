@@ -1,0 +1,154 @@
+DIAGNOSTIC 2, not preregistered.
+
+E1 which model wrote the body that was first assayed (last write act, or sh that names the body file with a redirect, before the first assay), against the first sense ratio
+  compress first body written on mid: n 8 | first ratio median 0.7764 | at 0.8 or above 1 | values [0.7764, 0.7764, 0.7764, 0.7764, 0.7764, 0.7764, 1.0]
+  compress first body written on light: n 8 | first ratio median 0.7744 | at 0.8 or above 1 | values [0.7731, 0.7731, 0.7731, 0.7731, 0.7757, 0.7757, 0.7757, 1.0]
+  fibmod   first body written on mid: n 10 | first ratio median 0.32489999999999997 | at 0.8 or above 4 | values [0.218, 0.3091, 0.3203, 0.3215, 0.3222, 0.3276, 0.8202, 0.8819, 1.0394, 1.192]
+  fibmod   first body written on light: n 6 | first ratio median 0.21134999999999998 | at 0.8 or above 0 | values [0.1718, 0.2003, 0.2094, 0.2133, 0.3219, 0.3534]
+  csvsum   first body written on mid: n 4 | first ratio median 0.9544999999999999 | at 0.8 or above 4 | values [0.9072, 0.9358, 0.9732, 0.9777]
+  csvsum   first body written on light: n 12 | first ratio median 0.82275 | at 0.8 or above 6 | values [0.2737, 0.7253, 0.7526, 0.7546, 0.7598, 0.7997, 0.8458, 0.8459, 0.8562, 0.8868, 0.8922, 0.9501]
+  maze     first body written on mid: n 8 | first ratio median 0.8406 | at 0.8 or above 8 | values [0.8079, 0.8092, 0.8208, 0.8284, 0.8528, 0.863, 0.8958, 0.9784]
+  maze     first body written on light: n 8 | first ratio median 0.8 | at 0.8 or above 4 | values [0.5585, 0.6339, 0.6522, 0.7333, 0.8667, 0.874, 0.8833, 0.8909]
+
+E2 how cells in b and d came to light: chosen (the previous act set next to light while mid was still payable) or forced (a downshift event before the first light step)
+  arm b: chosen 6 forced 8 never 2
+  arm d: chosen 2 forced 8 never 6
+
+E3 event names seen in SP3 logs, counts per arm
+  a: {'assay': 16, 'final': 16, 'improve': 6, 'income': 6, 'laws': 16, 'rest': 16, 'sense': 22, 'variants': 14}
+  b: {'apoptosis': 1, 'assay': 15, 'death': 2, 'downshift': 9, 'final': 15, 'laws': 16, 'overdraft': 1, 'rest': 13, 'sense': 15, 'variants': 4}
+  c: {'assay': 20, 'final': 16, 'improve': 8, 'income': 8, 'laws': 16, 'rest': 16, 'sense': 28, 'variants': 13}
+  d: {'apoptosis': 1, 'assay': 17, 'death': 5, 'downshift': 11, 'final': 16, 'improve': 2, 'income': 2, 'laws': 16, 'rest': 10, 'sense': 19, 'variants': 2}
+
+E4 cells that ended by death or apoptosis: last 4 rows, cut
+  -- s3b1 compress
+      {"step": 5, "usage": {"inp": 4, "out": 1092, "cr": 1935, "cw": 3702, "rs": 0, "usd": 0.02057}, "route": "anthropic:claude-sonnet-5-5", "model": "mid", "effort": "low", "cost": 213.7, "cap": 1092, "est": 95.0}
+      {"step": 5, "bad_reply": "", "bad_len": 0, "route": "anthropic:claude-sonnet-5-5"}
+      {"step": 5, "error": "ValueError: no tool call in reply; call exactly one tool"}
+      {"event": "death", "age": 6, "fit": 0.0}
+      {"event": "final", "final": 7.081788013843081, "baseline": 7.081788013843081, "last_baseline": 7.081788013843081, "final_gain": 0.0}
+  -- s3b2 compress
+      {"step": 4, "usage": {"inp": 4, "out": 149, "cr": 1935, "cw": 2401, "rs": 0, "usd": 0.0078875}, "route": "anthropic:claude-sonnet-5-5", "model": "mid", "effort": "low", "cost": 86.9, "cap": 149, "est": 70.0}
+      {"step": 4, "bad_reply": "", "bad_len": 0, "route": "anthropic:claude-sonnet-5-5"}
+      {"step": 4, "error": "ValueError: no tool call in reply; call exactly one tool"}
+      {"event": "death", "age": 5, "fit": 0.0}
+      {"event": "final", "final": 5.49810421491614, "baseline": 5.49810421491614, "last_baseline": 5.49810421491614, "final_gain": 0.0}
+  -- s3b3 compress
+      {"step": 5, "error": "ValueError: no tool call in reply; call exactly one tool"}
+      {"step": 6, "usage": {"inp": 4, "out": 0, "cr": 1935, "cw": 2519, "rs": 0, "usd": 0.00033463}, "route": "anthropic:claude-haiku-5-5", "model": "light", "effort": "none", "cost": 11.3, "cap": 7422, "est": 4.5}
+      {"step": 6, "bad_reply": "", "bad_len": 0, "route": "anthropic:claude-haiku-5-5"}
+      {"step": 6, "error": "ValueError: no tool call in reply; call exactly one tool"}
+      {"event": "apoptosis"}
+  -- s3d1 compress
+      {"step": 4, "usage": {"inp": 4, "out": 558, "cr": 1935, "cw": 1973, "rs": 0, "usd": 0.0109075}, "route": "anthropic:claude-sonnet-5-5", "model": "mid", "effort": "none", "cost": 117.1, "cap": 558, "est": 65.3}
+      {"step": 4, "bad_reply": "", "bad_len": 0, "route": "anthropic:claude-sonnet-5-5"}
+      {"step": 4, "error": "ValueError: no tool call in reply; call exactly one tool"}
+      {"event": "death", "e": 12.1, "age": 5, "fit": 0.0}
+      {"event": "final", "final": 5.49810421491614, "baseline": 5.49810421491614, "last_baseline": 5.49810421491614, "final_gain": 0.0}
+  -- s3d1 fibmod
+      {"step": 5, "usage": {"inp": 4, "out": 179, "cr": 1935, "cw": 1939, "rs": 0, "usd": 0.00035162}, "route": "anthropic:claude-haiku-5-5", "model": "light", "effort": "none", "cost": 11.5, "cap": 179, "est": 5.4}
+      {"step": 5, "bad_reply": "", "bad_len": 0, "route": "anthropic:claude-haiku-5-5"}
+      {"step": 5, "error": "ValueError: no tool call in reply; call exactly one tool"}
+      {"event": "death", "age": 6, "fit": 0.0}
+      {"event": "final", "final": 2.7056810883861506, "baseline": 2.712840418666407, "last_baseline": 2.712840418666407, "final_gain": -0.0026}
+  -- s3d2 compress
+      {"step": 6, "usage": {"inp": 4, "out": 0, "cr": 1935, "cw": 2198, "rs": 0, "usd": 0.0002945}, "route": "anthropic:claude-haiku-5-5", "model": "light", "effort": "low", "cost": 10.9, "cap": 915, "est": 3.9}
+      {"step": 6, "bad_reply": "", "bad_len": 0, "route": "anthropic:claude-haiku-5-5"}
+      {"step": 6, "error": "ValueError: no tool call in reply; call exactly one tool"}
+      {"event": "apoptosis"}
+      {"event": "final", "final": 5.49810421491614, "baseline": 5.49810421491614, "last_baseline": 5.49810421491614, "final_gain": 0.0}
+  -- s3d3 maze
+      {"step": 5, "usage": {"inp": 4, "out": 165, "cr": 1935, "cw": 2387, "rs": 0, "usd": 0.00040062}, "route": "anthropic:claude-haiku-5-5", "model": "light", "effort": "none", "cost": 12.0, "cap": 165, "est": 5.9}
+      {"step": 5, "bad_reply": "", "bad_len": 0, "route": "anthropic:claude-haiku-5-5"}
+      {"step": 5, "error": "ValueError: no tool call in reply; call exactly one tool"}
+      {"event": "death", "age": 6, "fit": 0.0}
+      {"event": "final", "final": 3.599485275887889, "baseline": 3.2774724529700374, "last_baseline": 3.2774724529700374, "final_gain": 0.0983}
+  -- s3d4 compress
+      {"step": 4, "usage": {"inp": 4, "out": 190, "cr": 1935, "cw": 2023, "rs": 0, "usd": 0.0073525}, "route": "anthropic:claude-sonnet-5-5", "model": "mid", "effort": "low", "cost": 81.5, "cap": 190, "est": 66.9}
+      {"step": 4, "bad_reply": "", "bad_len": 0, "route": "anthropic:claude-sonnet-5-5"}
+      {"step": 4, "error": "ValueError: no tool call in reply; call exactly one tool"}
+      {"event": "death", "e": 12.4, "age": 5, "fit": 0.0}
+      {"event": "final", "final": 5.49810421491614, "baseline": 5.49810421491614, "last_baseline": 5.49810421491614, "final_gain": 0.0}
+  -- s3d4 fibmod
+      {"step": 4, "usage": {"inp": 4, "out": 585, "cr": 1935, "cw": 1704, "rs": 0, "usd": 0.010505}, "route": "anthropic:claude-sonnet-5-5", "model": "mid", "effort": "none", "cost": 113.0, "cap": 585, "est": 56.5}
+      {"step": 4, "bad_reply": "", "bad_len": 0, "route": "anthropic:claude-sonnet-5-5"}
+      {"step": 4, "error": "ValueError: no tool call in reply; call exactly one tool"}
+      {"event": "death", "e": 10.0, "age": 5, "fit": 0.0}
+      {"event": "final", "final": 3.894038660399049, "baseline": 3.8794518513368894, "last_baseline": 3.8794518513368894, "final_gain": 0.0038}
+
+E5 step 0 cost and cache read tokens per arm (usage rows at step 0)
+  a: step 0 cost median 41.45 min 25.9 max 70.3 | cache read median 1928.0 min 1928 | by run [29.2, 45.8, 43.8, 41.3]
+  b: step 0 cost median 40.2 min 24.7 max 123.3 | cache read median 1935.0 min 1935 | by run [56.5, 39.3, 60.7, 50.8]
+  c: step 0 cost median 45.7 min 25.8 max 126.1 | cache read median 1928.0 min 1928 | by run [55.0, 46.4, 54.9, 64.3]
+  d: step 0 cost median 40.95 min 23.5 max 94.0 | cache read median 1935.0 min 1935 | by run [51.8, 31.2, 44.8, 54.2]
+
+E6 reply or reasoning text that names the sense reading, arms c and d (words: sense, lineage, record, best body)
+  arm c: steps 7 in 4 cells
+      ('s3c1', 'compress', 4, "the current body against its baseline, which sits at 5.4748 and is about 0.77 of the best lineage body. A win would need to beat that by more than 3%, and my energy is limited, so I'm weighing whether a cheap tweak like lzma raw filters or bz2 comparisons is w")
+      ('s3c1', 'csvsum', 6, " since the scores don't line up with an adopted best.  The score of 0.43 against the best lineage body is what's bugging me, since it suggests the current body might be slower than the recorded best. Rather than sort out the lineage from memory, I'll call assa")
+      ('s3c1', 'csvsum', 7, 'I\'m checking the current body against the samples, which pass, and it\'s been assayed. The sense score says it reaches only 0.44 of the best lineage body, but I\'m not sure which recorded best that refers to, since the adopted variant "v0" scored 1.061 against a')
+      ('s3c1', 'csvsum', 8, "The current body passes the samples and was assayed at 1.0333, but at 0.44 of the best lineage body, a better one may exist elsewhere. I'm weighing whether to rest and conserve, since energy is at 1204 and scoring gains are what bring energy in. Further twe")
+      ('s3c4', 'compress', 3, 'I already have a working compressor, so the next step is to run the assay and record a baseline. I could do a quick round-trip check first, but it would cost energy, and the assay already verifies that every output decompresses correctly. The stand')
+      ('s3c4', 'compress', 5, "eighing whether resting is the right call, since the current body is near the best of its lineage and stdlib compression is unlikely to clear a 3% gain. Spending more energy on heavy models isn't worth it, so resting to pass energy to the colony looks like the")
+      ('s3c4', 'csvsum', 6, 'he current version is the adopted +5% variant, which I estimate at about 0.93 of the best lineage body. I have plenty of energy left, but any new variant would need to beat it by more than 3.3%. A csv or regex approach with less per-row work could be worth a t')
+  arm d: steps 1 in 1 cells
+      ('s3d3', 'fibmod', 5, "r the adopted variant is the body I should keep, since the score is only 0.35 of the best recorded. The best may be in another lineage, and I'm weighing whether to try a further improvement on the 13% gain.  I'm weighing whether a further speedup is worth tryi")
+
+E7 after the first assay, per arm: cells that rewrote the body by hand (write act, or sh that redirects into the body file), cells that assayed again, cells that ran a variant round, energy left at the first assay (median)
+  a: rewrote by hand 1 | assayed again 0 | ran a variant round 12 | energy right after first assay, median 325.3 min 254.0
+  b: rewrote by hand 0 | assayed again 0 | ran a variant round 2 | energy right after first assay, median 117.9 min 26.4
+  c: rewrote by hand 4 | assayed again 4 | ran a variant round 10 | energy right after first assay, median 307.45 min 190.5
+  d: rewrote by hand 1 | assayed again 1 | ran a variant round 2 | energy right after first assay, median 99.8 min 22.6
+
+E8 replies with no tool call, per arm: total | cut at the output cap (out == cap) | empty (out == 0) | other; by model; energy before the step where known
+  a: total 0 | cut 0 | empty 0 | other 0 | {}
+  b: total 6 | cut 3 | empty 3 | other 0 | {('mid', 'cut'): 3, ('light', 'empty'): 3}
+      ('s3b1', 'compress', 5, 'mid', 'low', 1092, 1092, 'cut')
+      ('s3b2', 'compress', 4, 'mid', 'low', 149, 149, 'cut')
+      ('s3b3', 'compress', 4, 'light', 'none', 0, 8000, 'empty')
+      ('s3b3', 'compress', 5, 'light', 'none', 0, 8000, 'empty')
+      ('s3b3', 'compress', 6, 'light', 'none', 0, 7422, 'empty')
+      ('s3b4', 'compress', 4, 'mid', 'low', 428, 428, 'cut')
+  c: total 0 | cut 0 | empty 0 | other 0 | {}
+  d: total 11 | cut 9 | empty 2 | other 0 | {('mid', 'cut'): 7, ('light', 'cut'): 2, ('light', 'empty'): 2}
+      ('s3d1', 'compress', 4, 'mid', 'none', 558, 558, 'cut')
+      ('s3d1', 'fibmod', 4, 'mid', 'none', 730, 730, 'cut')
+      ('s3d1', 'fibmod', 5, 'light', 'none', 179, 179, 'cut')
+      ('s3d2', 'compress', 4, 'mid', 'low', 517, 517, 'cut')
+      ('s3d2', 'compress', 5, 'light', 'low', 0, 2738, 'empty')
+      ('s3d2', 'compress', 6, 'light', 'low', 0, 915, 'empty')
+      ('s3d2', 'csvsum', 5, 'mid', 'none', 348, 348, 'cut')
+      ('s3d3', 'maze', 4, 'mid', 'none', 360, 360, 'cut')
+      ('s3d3', 'maze', 5, 'light', 'none', 165, 165, 'cut')
+      ('s3d4', 'compress', 4, 'mid', 'low', 190, 190, 'cut')
+      ('s3d4', 'fibmod', 4, 'mid', 'none', 585, 585, 'cut')
+
+E9 light steps: empty replies against whether the cell had thought on mid for 3 or more steps before (all arms)
+   {('under 3 mid before', 'reply'): 183, ('3+ mid before', 'reply'): 42, ('3+ mid before', 'empty'): 5}
+
+DIAGNOSTIC E9, not preregistered: cells whose final body is 30%+ above their own first baseline. How the gain was made and what it was paid.
+  s3a2 fibmod   own gain +0.816 | assays 1 | hand writes after first assay 0 | variant wins 1 | income logged 237.7 | ledger earned 237.7
+  s3c1 fibmod   own gain +3.094 | assays 2 | hand writes after first assay 2 | variant wins 0 | income logged 0.0 | ledger earned 0.0
+  s3c1 csvsum   own gain +0.595 | assays 2 | hand writes after first assay 0 | variant wins 1 | income logged 184.5 | ledger earned 184.5
+  s3c1 maze     own gain +0.462 | assays 2 | hand writes after first assay 0 | variant wins 2 | income logged 140.8 | ledger earned 140.8
+  s3c2 fibmod   own gain +1.337 | assays 2 | hand writes after first assay 1 | variant wins 0 | income logged 0.0 | ledger earned 0.0
+  s3c2 maze     own gain +0.499 | assays 1 | hand writes after first assay 0 | variant wins 1 | income logged 166.3 | ledger earned 166.3
+  s3c4 maze     own gain +0.340 | assays 1 | hand writes after first assay 0 | variant wins 1 | income logged 99.7 | ledger earned 99.7
+
+DIAGNOSTIC E10, not preregistered: fibmod, all 16 cells. Models thought on before the first assay, first and last sense ratio, final rel, what the cell did after the first assay, energy earned.
+  s3a1 before first assay mll      | sense first 0.200 last 0.212 | rel 1.167 | after: hand writes 0, assays 1, variant rounds 1 | earned 18.6
+  s3a2 before first assay mml      | sense first 0.172 last 0.318 | rel 1.702 | after: hand writes 0, assays 1, variant rounds 1 | earned 237.7
+  s3a3 before first assay mm       | sense first 0.322 last 0.412 | rel 2.019 | after: hand writes 0, assays 1, variant rounds 1 | earned 53.4
+  s3a4 before first assay mll      | sense first 0.209 last 0.209 | rel 1.111 | after: hand writes 0, assays 1, variant rounds 1 | earned 0.0
+  s3b1 before first assay mmm      | sense first 0.320 last 0.320 | rel 1.719 | after: hand writes 0, assays 1, variant rounds 0 | earned 0.0
+  s3b2 before first assay mmm      | sense first 1.192 last 1.192 | rel 6.331 | after: hand writes 0, assays 1, variant rounds 0 | earned 0.0
+  s3b3 before first assay mmm      | sense first 0.882 last 0.882 | rel 4.701 | after: hand writes 0, assays 1, variant rounds 0 | earned 0.0
+  s3b4 before first assay mml      | sense first 0.322 last 0.322 | rel 1.684 | after: hand writes 0, assays 1, variant rounds 0 | earned 0.0
+  s3c1 before first assay mml      | sense first 0.213 last 0.961 | rel 4.819 | after: hand writes 2, assays 2, variant rounds 0 | earned 0.0
+  s3c2 before first assay mml      | sense first 0.353 last 0.811 | rel 4.484 | after: hand writes 1, assays 2, variant rounds 0 | earned 0.0
+  s3c3 before first assay mm       | sense first 0.328 last 0.377 | rel 1.962 | after: hand writes 0, assays 1, variant rounds 1 | earned 32.6
+  s3c4 before first assay mm       | sense first 0.820 last 0.820 | rel 3.909 | after: hand writes 0, assays 1, variant rounds 0 | earned 0.0
+  s3d1 before first assay mmm      | sense first 0.218 last 0.218 | rel 1.147 | after: hand writes 0, assays 1, variant rounds 0 | earned 0.0
+  s3d2 before first assay mmm      | sense first 1.039 last 1.039 | rel 5.710 | after: hand writes 0, assays 1, variant rounds 0 | earned 0.0
+  s3d3 before first assay mmm      | sense first 0.322 last 0.347 | rel 1.879 | after: hand writes 0, assays 1, variant rounds 1 | earned 47.9
+  s3d4 before first assay mmm      | sense first 0.309 last 0.309 | rel 1.633 | after: hand writes 0, assays 1, variant rounds 0 | earned 0.0

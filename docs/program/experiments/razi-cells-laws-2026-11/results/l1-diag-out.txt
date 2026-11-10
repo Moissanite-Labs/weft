@@ -1,0 +1,36 @@
+D1 overdraft and error events
+   l1b2/g0-compress-0 {'event': 'overdraft', 'e': 175.4, 'cost': 208.2, 'est': 56.1}
+D2 later-generation cells: sense ratio at birth, age, did work, by arm
+  arm h: cells 70 first sense ratio median 0.8465499999999999 (n 70) steps median 2.0 worked 5 died 4 thought-steps on light 34/200
+   idle heirs: first sense ratio under 0.9: 42 of 65 | act counts {'rest': 61, 'sh': 14, 'assay': 1}
+   worked: l1h2/g1-csvsum-0 s0 0.8771 steps 10 {'sh': 2, 'variants': 1, 'assay': 1, 'rest': 1} dead False
+   worked: l1h2/g1-csvsum-1 s0 0.8914 steps 14 {'sh': 3, 'write': 1, 'assay': 2, 'rest': 1} dead False
+   worked: l1h2/g1-fibmod-0 s0 0.5748 steps 8 {'write': 1, 'sh': 1, 'assay': 1, 'rest': 1} dead False
+   worked: l1h3/g2-csvsum-0 s0 0.8177 steps 6 {'variants': 1, 'sh': 1, 'rest': 1} dead False
+   worked: l1h3/g3-maze-0 s0 0.7994 steps 6 {'sh': 1, 'variants': 1, 'rest': 1} dead False
+  arm b: cells 60 first sense ratio median 0.8221 (n 51) steps median 10.0 worked 48 died 15 thought-steps on light 395/602
+D3 energy a later cell was born with (from lineage.jsonl gen rows: born per gen)
+  arm h {0: (9600.0, 24), 1: (9600.0, 24), 2: (9468.3, 24), 3: (8290.3, 22)}
+  arm b {0: (9600.0, 24), 1: (9600.0, 24), 2: (8515.2, 23), 3: (3360.9, 13)}
+D4 generation at which each final germline body was taken (took != None and gain beat gate), per arm
+  arm h {0: 9, 1: 1, 2: 1, 3: 1}
+  arm b {0: 7, 1: 4, 2: 1}
+D5 arm h, generations 1 to 3: did a lineage-generation with a working heir replace the germline?
+   l1h2 1 fibmod worked True took g1-fibmod-0 gain 0.9745
+   l1h2 1 csvsum worked True took None gain 0.0374
+   l1h3 2 csvsum worked True took g2-csvsum-0 gain 0.1315
+   l1h3 3 maze worked True took g3-maze-0 gain 0.2668
+  (worked, took) counts: {(False, False): 32, (True, True): 3, (True, False): 1}
+D6 usage per arm (router usage rows in cell logs)
+  arm h: model calls 280 billed tokens (in+out+cache write) 809777 usd 1.19
+  arm b: model calls 477 billed tokens (in+out+cache write) 1542359 usd 1.67
+D7 arm b deaths by generation, and arm h
+  arm h {'g0': 3, 'g2': 2, 'g3': 2}
+  arm b {'g0': 5, 'g1': 3, 'g2': 5, 'g3': 7}
+D8 idle heirs (arm h, gen 1 to 3, no write/variants/divide): stated reason at the rest act, keyword tally
+  idle heirs with a rest act: 61 {}
+  sample l1h1/g1-compress-0 ::  {"do": "rest"}
+  sample l1h1/g2-fibmod-1 ::  {"do": "rest"}
+  sample l1h2/g1-maze-0 ::  {"do": "rest"}
+  sample l1h2/g3-csvsum-1 ::  {"do": "rest"}
+  sample l1h3/g2-compress-0 ::  {"do": "rest"}

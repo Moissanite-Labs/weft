@@ -1,0 +1,50 @@
+ceiling so far (rel, fixed before SP2): {'compress': 1.542, 'fibmod': 5.51, 'csvsum': 1.703, 'maze': 3.272}
+
+== arm f: ['s2f1', 's2f2', 's2f3', 's2f4']
+  s2f1   rel compress 0.000 fibmod 1.077 csvsum 1.484 maze 2.723 | median 1.281 | own gain [0.0, 0.0106, 0.0167, -0.0242] | calls 23 tok 61044 usd 0.0696 spent 880.4 earned 0.0 | min_e -0.1 overdraft 1 downshift 0 death 1 divide 0 imps 0
+  s2f2   rel compress 1.196 fibmod 2.754 csvsum 1.367 maze 3.345 | median 2.060 | own gain [0.0, 1.5537, 0.0441, -0.0072] | calls 26 tok 64204 usd 0.0272 spent 479.9 earned 393.8 | min_e 0.0 overdraft 0 downshift 0 death 0 divide 0 imps 1
+  s2f3   rel compress 1.192 fibmod 1.072 csvsum 1.564 maze 2.782 | median 1.378 | own gain [0.0, 0.1498, 0.0644, 0.1177] | calls 30 tok 70644 usd 0.0345 spent 585.1 earned 115.0 | min_e 0.0 overdraft 0 downshift 0 death 0 divide 0 imps 3
+  s2f4   rel compress 1.542 fibmod 1.141 csvsum 1.640 maze 2.734 | median 1.591 | own gain [0.0, 0.0535, 0.1041, 0.2323] | calls 28 tok 67033 usd 0.0263 spent 487.4 earned 127.4 | min_e 0.0 overdraft 0 downshift 0 death 0 divide 0 imps 2
+  O1 mean of run medians 1.5775 | run medians [1.281, 2.06, 1.378, 1.591]
+  part mean rel {'compress': 0.983, 'fibmod': 1.511, 'csvsum': 1.514, 'maze': 2.896}
+  O2 share of gap {'compress': -0.032, 'fibmod': 0.113, 'csvsum': 0.731, 'maze': 0.835} | mean 0.412
+  own-baseline gain, median over cells 0.0304
+
+== arm s: ['s2s1', 's2s2', 's2s3', 's2s4']
+  s2s1   rel compress 1.192 fibmod 1.084 csvsum 1.528 maze 2.729 | median 1.360 | own gain [0.0, -0.0274, 0.04, -0.0294] | calls 38 tok 99411 usd 0.0546 spent 849.5 earned 21.8 | min_e 0.0 overdraft 0 downshift 0 death 0 divide 0 imps 1 | stem unspent 0.48
+         births [('compress', 300.0, 'mid'), ('fibmod', 200.0, 'light'), ('csvsum', 200.0, 'light'), ('maze', 200.0, 'light')]
+         wakes [{'part': 'csvsum', 'gave': 150.0, 'model': 'mid', 'fit_then': 0.0561, 'was_best': True, 'flat_zero': False}]
+  s2s2   rel compress 1.542 fibmod 1.083 csvsum 1.572 maze 2.878 | median 1.557 | own gain [0.0, 0.0335, 0.1041, 0.1636] | calls 41 tok 114474 usd 0.0541 spent 868.9 earned 112.6 | min_e 0.0 overdraft 0 downshift 1 death 1 divide 0 imps 2 | stem unspent 0.52
+         births [('compress', 300.0, 'mid'), ('fibmod', 150.0, 'light'), ('csvsum', 150.0, 'light'), ('maze', 150.0, 'light')]
+         wakes [{'part': 'fibmod', 'gave': 150.0, 'model': 'mid', 'fit_then': 0.0, 'was_best': False, 'flat_zero': True}]
+  s2s3   rel compress 1.192 fibmod 1.892 csvsum 1.349 maze 3.166 | median 1.621 | own gain [0.0, 0.7538, -0.0024, 0.4335] | calls 41 tok 110976 usd 0.0397 spent 724.7 earned 375.7 | min_e 0.0 overdraft 0 downshift 2 death 0 divide 0 imps 2 | stem unspent 0.78
+         births [('compress', 300.0, 'mid'), ('fibmod', 150.0, 'light'), ('csvsum', 150.0, 'light'), ('maze', 150.0, 'light')]
+         wakes [{'part': 'csvsum', 'gave': 150.0, 'model': 'mid', 'fit_then': 0.0, 'was_best': False, 'flat_zero': True}, {'part': 'maze', 'gave': 120.0, 'model': 'mid', 'fit_then': 0.0, 'was_best': False, 'flat_zero': True}]
+  s2s4   rel compress 1.192 fibmod 1.144 csvsum 1.503 maze 2.805 | median 1.348 | own gain [0.0, 0.0348, -0.0127, 0.2702] | calls 38 tok 99356 usd 0.0371 spent 675.3 earned 118.6 | min_e 0.0 overdraft 0 downshift 1 death 0 divide 0 imps 2 | stem unspent 0.65
+         births [('compress', 300.0, 'mid'), ('fibmod', 150.0, 'light'), ('csvsum', 200.0, 'mid'), ('maze', 150.0, 'light')]
+         wakes [{'part': 'csvsum', 'gave': 120.0, 'model': 'mid', 'fit_then': 0.0, 'was_best': False, 'flat_zero': True}]
+  O1 mean of run medians 1.4713 | run medians [1.36, 1.557, 1.621, 1.348]
+  part mean rel {'compress': 1.28, 'fibmod': 1.301, 'csvsum': 1.488, 'maze': 2.895}
+  O2 share of gap {'compress': 0.516, 'fibmod': 0.067, 'csvsum': 0.694, 'maze': 0.834} | mean 0.528
+  own-baseline gain, median over cells 0.0168
+
+== arm m: ['s2m1', 's2m2', 's2m3', 's2m4']
+  s2m1   rel compress 1.196 fibmod 1.157 csvsum 1.483 maze 2.102 | median 1.340 | own gain [0.0, 0.0643, 0.0198, 0.0139] | calls 27 tok 70093 usd 0.0186 spent 402.4 earned 28.1 | min_e 0.0 overdraft 0 downshift 0 death 0 divide 0 imps 1
+  s2m2   rel compress 1.192 fibmod 1.982 csvsum 1.456 maze 2.708 | median 1.719 | own gain [0.0, 0.8272, -0.0254, 0.0897] | calls 26 tok 67281 usd 0.0180 spent 388.5 earned 276.7 | min_e 0.0 overdraft 0 downshift 0 death 0 divide 0 imps 2
+  s2m3   rel compress 1.192 fibmod 1.988 csvsum 1.482 maze 3.069 | median 1.735 | own gain [0.0, 0.8346, 0.0017, 0.0231] | calls 30 tok 83456 usd 0.0195 spent 434.8 earned 245.2 | min_e 0.0 overdraft 0 downshift 0 death 0 divide 0 imps 2
+  s2m4   rel compress 1.192 fibmod 1.082 csvsum 1.589 maze 3.193 | median 1.391 | own gain [0.0, -0.0083, 0.0091, 0.3125] | calls 24 tok 62922 usd 0.0174 spent 365.6 earned 125.9 | min_e 0.0 overdraft 0 downshift 0 death 0 divide 0 imps 2
+  O1 mean of run medians 1.5461 | run medians [1.34, 1.719, 1.735, 1.391]
+  part mean rel {'compress': 1.193, 'fibmod': 1.552, 'csvsum': 1.503, 'maze': 2.768}
+  O2 share of gap {'compress': 0.356, 'fibmod': 0.122, 'csvsum': 0.715, 'maze': 0.778} | mean 0.493
+  own-baseline gain, median over cells 0.0115
+
+== contrasts (first minus second)
+  f - s: O1 +0.1062 | per part {'compress': -0.297, 'fibmod': 0.21, 'csvsum': 0.026, 'maze': 0.001} | parts positive 3/4 | median of part diffs +0.0135 | cell medians diff -0.0024 p 1.0
+  f - m: O1 +0.0314 | per part {'compress': -0.21, 'fibmod': -0.041, 'csvsum': 0.011, 'maze': 0.128} | parts positive 2/4 | median of part diffs -0.0152 | cell medians diff +0.0303 p 0.8824
+  s - m: O1 -0.0748 | per part {'compress': 0.087, 'fibmod': -0.252, 'csvsum': -0.015, 'maze': 0.127} | parts positive 2/4 | median of part diffs +0.0360 | cell medians diff +0.0326 p 0.8244
+
+== cost, arm totals
+  f: calls 107 tokens 262925 (with cache reads 459704) usd 0.1577 energy spent 2432.8 earned 636.2 imps 6 | tokens vs f 1.00 | energy vs f 1.00 | O1 above reference per 1000 energy 0.9495
+  s: calls 158 tokens 424217 (with cache reads 703597) usd 0.1854 energy spent 3118.4 earned 628.7 imps 7 | tokens vs f 1.61 | energy vs f 1.28 | O1 above reference per 1000 energy 0.6045
+  m: calls 107 tokens 283752 (with cache reads 491383) usd 0.0735 energy spent 1591.1 earned 675.9 imps 7 | tokens vs f 1.08 | energy vs f 0.65 | O1 above reference per 1000 energy 1.3728
+ZERO SCORE ('compress', 's2f1', 'case 0: `python3 squeeze.py c` failed (exit 2)')

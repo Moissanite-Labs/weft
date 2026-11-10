@@ -1,0 +1,54 @@
+== e13 attempts (arm, kind): won/lost, all tasks | without compress
+c   voluntary 5/0 | 5/0
+ch  voluntary 4/0 | 4/0
+ch  forced    3/6 | 3/2
+nh  voluntary 3/1 | 3/1
+nh  forced    1/9 | 1/5
+ALL voluntary all tasks   won 12 lost 1 share 0.923
+ALL voluntary no compress won 12 lost 1 share 0.923
+ALL forced    all tasks   won 4 lost 15 share 0.211
+ALL forced    no compress won 4 lost 7 share 0.364
+== e13 by task (kind, outcome)
+compress {'ch/forced/lost': 4, 'nh/forced/lost': 4}
+fibmod {'c/voluntary/won': 3, 'ch/voluntary/won': 4, 'nh/voluntary/lost': 1, 'nh/voluntary/won': 3}
+csvsum {'c/voluntary/won': 1, 'nh/forced/lost': 1}
+maze {'c/voluntary/won': 1, 'ch/forced/lost': 2, 'ch/forced/won': 3, 'nh/forced/lost': 4, 'nh/forced/won': 1}
+== e13 daughters
+4 ('nh', 'compress', 'first act try, refused', 'wrote nothing', 'lost')
+1 ('nh', 'csvsum', 'first act try, refused', 'wrote nothing', 'lost')
+1 ('nh', 'fibmod', 'first act try, refused', 'wrote code', 'won')
+1 ('nh', 'fibmod', 'first act try, refused', 'wrote nothing', 'lost')
+1 ('nh', 'fibmod', 'first act try, refused', 'wrote nothing', 'won')
+1 ('nh', 'fibmod', 'first act write', 'wrote code', 'won')
+1 ('nh', 'maze', 'first act try, refused', 'wrote code', 'won')
+4 ('nh', 'maze', 'first act try, refused', 'wrote nothing', 'lost')
+== e12 attempts (arm, kind): won/lost, all tasks | without compress
+c   voluntary 7/4 | 6/2
+n   voluntary 1/0 | 1/0
+ch  voluntary 6/2 | 5/2
+ch  forced    6/1 | 4/0
+nh  voluntary 1/1 | 1/1
+nh  forced    4/10 | 4/6
+ALL voluntary all tasks   won 15 lost 7 share 0.682
+ALL voluntary no compress won 13 lost 5 share 0.722
+ALL forced    all tasks   won 10 lost 11 share 0.476
+ALL forced    no compress won 8 lost 6 share 0.571
+== e12 by task (kind, outcome)
+compress {'c/voluntary/lost': 2, 'c/voluntary/won': 1, 'ch/forced/lost': 1, 'ch/forced/won': 2, 'ch/voluntary/won': 1, 'nh/forced/lost': 4}
+fibmod {'c/voluntary/lost': 1, 'c/voluntary/won': 3, 'ch/voluntary/lost': 1, 'ch/voluntary/won': 3, 'n/voluntary/won': 1, 'nh/forced/lost': 3, 'nh/forced/won': 1, 'nh/voluntary/won': 1}
+csvsum {'c/voluntary/lost': 1, 'c/voluntary/won': 3, 'ch/forced/won': 1, 'ch/voluntary/lost': 1, 'ch/voluntary/won': 2, 'nh/forced/lost': 2, 'nh/forced/won': 2}
+maze {'ch/forced/won': 3, 'nh/forced/lost': 1, 'nh/forced/won': 1, 'nh/voluntary/lost': 1}
+== e12 daughters
+1 ('n', 'fibmod', 'first act write', 'wrote code', 'won')
+1 ('nh', 'compress', 'first act try, refused', 'wrote code', 'lost')
+3 ('nh', 'compress', 'first act try, refused', 'wrote nothing', 'lost')
+1 ('nh', 'csvsum', 'first act done', 'wrote nothing', 'lost')
+1 ('nh', 'csvsum', 'first act try, refused', 'wrote code', 'lost')
+2 ('nh', 'csvsum', 'first act try, refused', 'wrote code', 'won')
+2 ('nh', 'fibmod', 'first act try, refused', 'wrote code', 'lost')
+1 ('nh', 'fibmod', 'first act try, refused', 'wrote code', 'won')
+1 ('nh', 'fibmod', 'first act write', 'wrote code', 'lost')
+1 ('nh', 'fibmod', 'first act write', 'wrote code', 'won')
+1 ('nh', 'maze', 'first act sh', 'wrote nothing', 'lost')
+1 ('nh', 'maze', 'first act try, refused', 'wrote code', 'lost')
+1 ('nh', 'maze', 'first act try, refused', 'wrote code', 'won')

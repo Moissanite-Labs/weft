@@ -1,0 +1,7 @@
+rel = body / reference, same session, interleaved, 5 repeats
+kit            ref      fl1      fl2      sp1      sp2
+fibmod       1.000    1.083    1.141    1.084    1.081   ref spread 1.1%
+csvsum       1.000    1.430    1.325    1.512    1.510   ref spread 3.2%
+maze         1.000    3.193    2.787    2.843    2.833   ref spread 3.3%
+compress     1.000    1.542    1.192    1.192    1.192   ref spread 0.0%
+median       1.000    1.486    1.258    1.352    1.351

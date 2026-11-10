@@ -1,0 +1,18 @@
+[
+ {
+  "name": "compress",
+  "need": "Build squeeze.py with compress(bytes)->bytes and decompress(bytes)->bytes that round-trips exactly, using only the stdlib. Fitness: compression ratio on a fixed mix of English-like text and JSON you generate, higher is better, 0 if round-trip fails. Verify before done."
+ },
+ {
+  "name": "fibmod",
+  "need": "Build fibmod.py: print fib(n) mod 1_000_000_007 for n=int(argv[1]) up to 10**18, as fast as possible. fib(10)=55. Verify before done."
+ },
+ {
+  "name": "csvsum",
+  "need": "Build csvsum.py: read a CSV on stdin with header 'id,cat,val' and print each cat and the sum of val (2 decimals), sorted by cat. Fast for 2,000,000 rows you generate. Verify before done."
+ },
+ {
+  "name": "maze",
+  "need": "Build maze.py: read a grid of '#' and '.' on stdin with S and E, print the shortest path length from S to E (4-neighbour) or -1. Fast on a 2000x2000 maze you generate with a fixed seed. Verify before done."
+ }
+]

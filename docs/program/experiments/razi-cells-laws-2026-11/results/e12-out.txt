@@ -1,0 +1,14 @@
+c {'cells': 16, 'assayed': 15, 'O4_share': 0.938, 'O1_median': 0.0253, 'calls': 96, 'imps': 7, 'O2_per100': 7.29, 'O5_attempt_share': 0.733, 'O6_try_calls': 0, 'O7_worse': 2, 'holds': 0, 'tokens': 164910, 'usd': 0.669, 'budget_hits': 0, 'deaths': 0, 'routes': ['anthropic:claude-sonnet-5-5']}
+n {'cells': 16, 'assayed': 16, 'O4_share': 1.0, 'O1_median': 0.0, 'calls': 80, 'imps': 1, 'O2_per100': 1.25, 'O5_attempt_share': 0.062, 'O6_try_calls': 1, 'O7_worse': 2, 'holds': 0, 'tokens': 114948, 'usd': 0.478, 'budget_hits': 0, 'deaths': 0, 'routes': ['anthropic:claude-sonnet-5-5']}
+ch {'cells': 16, 'assayed': 15, 'O4_share': 0.938, 'O1_median': 0.1514, 'calls': 98, 'imps': 12, 'O2_per100': 12.24, 'O5_attempt_share': 1.0, 'O6_try_calls': 0, 'O7_worse': 0, 'holds': 7, 'tokens': 162713, 'usd': 0.669, 'budget_hits': 0, 'deaths': 0, 'routes': ['anthropic:claude-sonnet-5-5']}
+nh {'cells': 16, 'assayed': 16, 'O4_share': 1.0, 'O1_median': 0.005, 'calls': 164, 'imps': 5, 'O2_per100': 3.05, 'O5_attempt_share': 0.938, 'O6_try_calls': 16, 'O7_worse': 1, 'holds': 13, 'tokens': 181348, 'usd': 0.702, 'budget_hits': 0, 'deaths': 0, 'routes': ['anthropic:claude-sonnet-5-5']}
+nh minus n: task diffs {'compress': 0.0, 'fibmod': 0.0877, 'csvsum': 0.0386, 'maze': 0.1626} | median 0.0631 | positive 3 of 4 | cell median diff 0.005 | two sided p 0.0078 | n 16 16
+nh minus ch: task diffs {'compress': -0.1717, 'fibmod': 0.239, 'csvsum': -0.027, 'maze': -2.7483} | median -0.0993 | positive 1 of 4 | cell median diff -0.1464 | two sided p 0.0562 | n 16 15
+ch minus c: task diffs {'compress': 0.0911, 'fibmod': 0.0198, 'csvsum': -0.0402, 'maze': 3.249} | median 0.0554 | positive 3 of 4 | cell median diff 0.1261 | two sided p 0.0848 | n 15 15
+n minus c: task diffs {'compress': -0.0806, 'fibmod': 0.1711, 'csvsum': -0.1058, 'maze': 0.3381} | median 0.0452 | positive 2 of 4 | cell median diff -0.0253 | two sided p 0.008 | n 16 15
+H16 O5 in novar+hold >= 0.75: 0.938 -> True
+H17 novar+hold beats novar (median task diff > 0): 0.0631 -> True
+H18 ctrl+hold beats novar+hold (nh minus ch < 0): -0.0993 -> True
+H19 hold neutral for ctrl (|ch minus c| < 0.03): 0.0554 -> False
+H20 at least one try call in novar+hold: 16 -> True
+H21 ctrl beats novar again (n minus c < 0): 0.0452 -> False

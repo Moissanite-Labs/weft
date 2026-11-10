@@ -1,0 +1,32 @@
+budget 5128000 units per arm, seeds 10
+teacher | arm          | median test loss | median width | width min-max | trials | wins
+      4 | gate-signal  |          0.00089 |            3 |     2-4     |     12 |    1
+      4 | gate-random  |          0.00516 |            3 |     2-13    |     11 |    1
+      4 | nogate       |          0.00545 |          474 |   474-474   |     14 |   14
+      4 | fixed2       |          0.02597 |            2 |     2-2     |      0 |    0
+      4 | fixed128     |          0.00482 |          128 |   128-128   |      0 |    0
+      4 | fixed-same   |          0.00075 |            3 |     2-4     |      0 |    0
+     16 | gate-signal  |          0.09556 |            2 |     2-3     |     10 |    0
+     16 | gate-random  |          0.09523 |            2 |     2-3     |     10 |    0
+     16 | nogate       |          0.02517 |          474 |   474-474   |     14 |   14
+     16 | fixed2       |          0.09456 |            2 |     2-2     |      0 |    0
+     16 | fixed128     |          0.00621 |          128 |   128-128   |      0 |    0
+     16 | fixed-same   |          0.09456 |            2 |     2-3     |      0 |    0
+     64 | gate-signal  |          0.11819 |            2 |     2-3     |     10 |    0
+     64 | gate-random  |          0.10659 |            2 |     2-3     |     10 |    0
+     64 | nogate       |          0.07069 |          474 |   474-474   |     14 |   14
+     64 | fixed2       |          0.12073 |            2 |     2-2     |      0 |    0
+     64 | fixed128     |          0.01547 |          128 |   128-128   |      0 |    0
+     64 | fixed-same   |          0.11828 |            2 |     2-3     |      0 |    0
+
+paired median ratios of test loss (below 1 means the first arm is better)
+teacher 4: gate-signal/fixed-same 0.991, gate-signal/gate-random 0.971, gate-signal/nogate 0.250, gate-signal/fixed128 0.192, gate-signal/fixed2 0.183
+teacher 16: gate-signal/fixed-same 1.001, gate-signal/gate-random 1.000, gate-signal/nogate 3.468, gate-signal/fixed128 14.764, gate-signal/fixed2 1.001
+teacher 64: gate-signal/fixed-same 1.000, gate-signal/gate-random 1.008, gate-signal/nogate 1.590, gate-signal/fixed128 7.186, gate-signal/fixed2 1.000
+
+guesses, judged as written
+GR-a width rises with need [3.0, 2.0, 2.0]: False
+GR-b nogate worse than gate-signal on 1 of 3 needs: False
+GR-c gate-signal never beats fixed-same by more than 10% [0.991, 1.001, 1.0]: True
+GR-d signal and random within 10% on at least 2 needs [0.971, 1.0, 1.008]: True
+GR-e fixed128 beats gate-signal on teacher 64 (0.01547 vs 0.11819): True

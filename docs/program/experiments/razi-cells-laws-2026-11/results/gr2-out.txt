@@ -1,0 +1,33 @@
+budget 5128000 units per arm, seeds 10
+teacher | arm          | median test loss | median width | width min-max | trials | wins
+      4 | asym-signal  |          0.00091 |            6 |     3-9     |     12 |    3
+      4 | asym-random  |          0.00084 |            6 |     3-9     |     12 |    3
+      4 | nogate-asym  |          0.00322 |          316 |   316-316   |     13 |   13
+      4 | gate-signal  |          0.00089 |            3 |     2-4     |     12 |    1
+      4 | fixed128     |          0.00482 |          128 |   128-128   |      0 |    0
+      4 | fixed-same   |          0.00087 |            6 |     3-9     |      0 |    0
+     16 | asym-signal  |          0.00229 |         23.5 |    19-63    |   15.5 |  6.5
+     16 | asym-random  |          0.00273 |           28 |    13-63    |     14 |    7
+     16 | nogate-asym  |          0.00527 |          316 |   316-316   |     13 |   13
+     16 | gate-signal  |          0.09556 |            2 |     2-3     |     10 |    0
+     16 | fixed128     |          0.00621 |          128 |   128-128   |      0 |    0
+     16 | fixed-same   |          0.00369 |         23.5 |    19-63    |      0 |    0
+     64 | asym-signal  |          0.01430 |           63 |    42-141   |     14 |    9
+     64 | asym-random  |          0.01402 |           63 |    42-141   |     15 |    9
+     64 | nogate-asym  |          0.01788 |          316 |   316-316   |     13 |   13
+     64 | gate-signal  |          0.11819 |            2 |     2-3     |     10 |    0
+     64 | fixed128     |          0.01547 |          128 |   128-128   |      0 |    0
+     64 | fixed-same   |          0.01301 |           63 |    42-141   |      0 |    0
+
+paired median ratios of test loss (below 1 means the first arm is better)
+teacher 4: asym-signal/gate-signal 0.500, asym-signal/asym-random 1.098, asym-signal/nogate-asym 0.296, asym-signal/fixed-same 0.978, asym-signal/fixed128 0.164
+teacher 16: asym-signal/gate-signal 0.024, asym-signal/asym-random 0.759, asym-signal/nogate-asym 0.425, asym-signal/fixed-same 0.655, asym-signal/fixed128 0.332
+teacher 64: asym-signal/gate-signal 0.115, asym-signal/asym-random 0.915, asym-signal/nogate-asym 0.817, asym-signal/fixed-same 1.085, asym-signal/fixed128 0.848
+
+guesses, judged as written
+GR2-a width rises with need [6.0, 23.5, 63.0]: True
+GR2-b beats copy division on teachers 16 and 64, ratio below 0.5 [0.024, 0.115]: True
+GR2-c teacher 4 median width 6.0 is 8 or less: True
+GR2-d signal and random within 10% on at least 2 needs [1.098, 0.759, 0.915]: True
+GR2-e never beats fixed-same by more than 10% [0.978, 0.655, 1.085]: False; fixed128 better on teacher 64 (0.01547 vs 0.01430): False; both: False
+GR2-f nogate-asym worse than asym-signal on teacher 4 (0.00322 vs 0.00091): True

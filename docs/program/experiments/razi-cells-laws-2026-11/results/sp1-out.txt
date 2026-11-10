@@ -1,0 +1,100 @@
+== fl1 (flat)
+  compress  final_gain 0.0  imps 0  calls 6  tokens 17038  usd 0.0289  rests 1  divides 0  variants 1  models ['light', 'mid']  state resting  spent 336.7  earned 0.0
+  fibmod    final_gain 0.0139  imps 0  calls 7  tokens 15942  usd 0.0076  rests 1  divides 0  variants 1  models ['light', 'mid']  state resting  spent 131.9  earned 0.0
+  csvsum    final_gain 0.0322  imps 0  calls 7  tokens 15222  usd 0.0073  rests 1  divides 0  variants 1  models ['light', 'mid']  state resting  spent 128.7  earned 0.0
+  maze      final_gain 0.3474  imps 1  calls 7  tokens 19096  usd 0.0086  rests 1  divides 0  variants 1  models ['light', 'mid']  state resting  spent 142.0  earned 125.9
+  run: fl1
+  arm: flat
+  median_final_gain: 0.0231
+  mean_final_gain: 0.0984
+  gains: [0.0, 0.0139, 0.0322, 0.3474]
+  improvements: 1
+  calls: 27
+  tokens: 67298
+  usd: 0.0524
+  energy_born: 1600.0
+  energy_spent: 739.2
+  energy_earned: 125.9
+  bad_replies: 0
+  errors: 0
+== sp1 (stem)
+  compress  final_gain 0.0  imps 0  calls 6  tokens 14882  usd 0.0064  rests 1  divides 0  variants 1  models ['light', 'mid']  state resting  spent 111.6  earned 0.0
+  fibmod    final_gain 0.0137  imps 0  calls 5  tokens 10308  usd 0.0023  rests 1  divides 0  variants 1  models ['light']  state resting  spent 63.1  earned 0.0
+  csvsum    final_gain 0.1443  imps 1  calls 11  tokens 29778  usd 0.042  rests 2  divides 0  variants 2  models ['light', 'mid']  state resting  spent 507.9  earned 46.7
+  maze      final_gain 0.2926  imps 1  calls 6  tokens 17491  usd 0.0039  rests 1  divides 0  variants 1  models ['light']  state resting  spent 87.0  earned 91.2
+  run: sp1
+  arm: stem
+  median_final_gain: 0.079
+  mean_final_gain: 0.1127
+  gains: [0.0, 0.0137, 0.1443, 0.2926]
+  improvements: 2
+  stem_steps: 12
+  stem_spent: 241.8
+  stem_unspent: 726.5
+  stem_state: resting
+  births: [('compress', 300.0, 'mid', 'low'), ('fibmod', 150.0, 'light', 'low'), ('csvsum', 150.0, 'light', 'low'), ('maze', 150.0, 'light', 'low')]
+  wakes: [('csvsum', 250.0, 'mid', 'medium'), ('csvsum', 200.0, 'mid', 'low')]
+  topups: 0
+  parts_born_before_first_wait: 4
+  improvements_after_wake: 1
+  stem_acts: {'feed': 6, 'rest': 1, 'wait': 5}
+  notes: ['', '', "Build csvsum.py: reads CSV on stdin with header id,cat,val; prints 'cat,sum' per cat, sum of val with 2 decimals, sorted by cat. Fitness is ", "Build maze.py: reads grid of '#' and '.' on stdin with one S and one E; prints shortest path length S to E (4-neighbour moves), or -1 if non", 'Make csvsum.py faster on 1,000,000 rows (header id,cat,val; output cat,sum with 2 decimals sorted by cat). Ideas: read sys.stdin.buffer whol', 'Your body is the winning flat-split variant (+12%). Try one more speedup on 1,000,000 rows: avoid float() per row where possible (aggregate ']
+  stem_models: [('light', 'none'), ('mid', 'low')]
+  calls: 40
+  tokens: 103397
+  usd: 0.0692
+  energy_born: 1600.0
+  energy_spent: 1011.4
+  energy_earned: 137.8
+  bad_replies: 0
+  errors: 0
+== fl2 (flat)
+  compress  final_gain 0.0  imps 0  calls 6  tokens 14537  usd 0.0065  rests 1  divides 0  variants 1  models ['light', 'mid']  state resting  spent 112.9  earned 0.0
+  fibmod    final_gain 0.0647  imps 1  calls 9  tokens 26428  usd 0.007  rests 1  divides 0  variants 1  models ['light', 'mid']  state resting  spent 141.5  earned 21.9
+  csvsum    final_gain -0.0007  imps 0  calls 7  tokens 15068  usd 0.0067  rests 1  divides 0  variants 0  models ['light', 'mid']  state resting  spent 122.6  earned 0.0
+  maze      final_gain 0.0099  imps 0  calls 6  tokens 13892  usd 0.0052  rests 1  divides 0  variants 0  models ['light', 'mid']  state resting  spent 100.4  earned 0.0
+  run: fl2
+  arm: flat
+  median_final_gain: 0.005
+  mean_final_gain: 0.0185
+  gains: [0.0, 0.0647, -0.0007, 0.0099]
+  improvements: 1
+  calls: 28
+  tokens: 69925
+  usd: 0.0254
+  energy_born: 1600.0
+  energy_spent: 477.4
+  energy_earned: 21.9
+  bad_replies: 0
+  errors: 0
+== sp2 (stem)
+  compress  final_gain 0.0  imps 0  calls 8  tokens 19729  usd 0.0253  rests 1  divides 0  variants 1  models ['light', 'mid']  state dead  spent 317.4  earned 0.0
+  fibmod    final_gain 0.0252  imps 0  calls 8  tokens 21522  usd 0.0046  rests 1  divides 0  variants 2  models ['light']  state resting  spent 110.2  earned 0.0
+  csvsum    final_gain 0.7281  imps 1  calls 7  tokens 17915  usd 0.0038  rests 1  divides 0  variants 1  models ['light']  state resting  spent 93.5  earned 232.5
+  maze      final_gain 0.4354  imps 0  calls 11  tokens 39874  usd 0.0075  rests 2  divides 0  variants 0  models ['light']  state resting  spent 163.1  earned 0.0
+  run: sp2
+  arm: stem
+  median_final_gain: 0.2303
+  mean_final_gain: 0.2972
+  gains: [0.0, 0.0252, 0.7281, 0.4354]
+  improvements: 1
+  stem_steps: 13
+  stem_spent: 309.8
+  stem_unspent: 912.8
+  stem_state: resting
+  births: [('compress', 300.0, 'mid', 'low'), ('fibmod', 200.0, 'light', 'low'), ('csvsum', 200.0, 'light', 'low'), ('maze', 200.0, 'light', 'low')]
+  wakes: [('maze', 150.0, 'light', 'medium'), ('compress', 150.0, 'mid', 'low')]
+  topups: 0
+  parts_born_before_first_wait: 4
+  improvements_after_wake: 0
+  stem_acts: {'feed': 6, 'rest': 1, 'wait': 6}
+  notes: ['', '', "Build csvsum.py: reads CSV on stdin with header id,cat,val; prints 'cat,sum' per cat, sum of val with 2 decimals, sorted by cat. Fitness is ", "Build maze.py: reads grid of '#' and '.' on stdin with one S and one E; prints shortest 4-neighbour path length S to E, or -1. Fitness is sp", 'Your body is maze.py (flat-list BFS, rested with no gain). Make it faster on a 1000x1000 maze: read sys.stdin.buffer once, use a bytearray v', 'Your body is squeeze.py (lzma FORMAT_ALONE preset 9e, rested at +0%). Try a raw LZMA2 filter chain (FORMAT_RAW with lc/lp/pb tuned, e.g. lc=']
+  stem_models: [('light', 'low'), ('light', 'none'), ('mid', 'low')]
+  calls: 47
+  tokens: 129751
+  usd: 0.0618
+  energy_born: 1600.0
+  energy_spent: 994.1
+  energy_earned: 232.5
+  bad_replies: 1
+  errors: 1

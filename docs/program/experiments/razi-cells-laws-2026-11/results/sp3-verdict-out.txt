@@ -1,0 +1,15 @@
+counts {"a": {"laws_ok": 16, "sense": 16, "sense_err": 0, "over": 0, "light0": 14, "steps": 99, "light": 81, "above": 0, "light4": 16, "rounds2": 1, "climb": 0, "divide": 0, "spent": 1939.5}, "b": {"laws_ok": 16, "sense": 15, "sense_err": 0, "over": 1, "light0": 0, "steps": 99, "light": 31, "above": 0, "light4": 2, "rounds2": 1, "climb": 1, "divide": 0, "spent": 5724.0}, "c": {"laws_ok": 16, "sense": 16, "sense_err": 0, "over": 0, "light0": 12, "steps": 112, "light": 92, "above": 0, "light4": 16, "rounds2": 2, "climb": 0, "divide": 0, "spent": 2547.7}, "d": {"laws_ok": 16, "sense": 16, "sense_err": 0, "over": 0, "light0": 0, "steps": 101, "light": 26, "above": 0, "light4": 0, "rounds2": 0, "climb": 0, "divide": 0, "spent": 6156.3}}
+O1 {'a': 1.4839, 'b': 1.8765, 'c': 2.0266, 'd': 1.6539} | fibmod runs at 2.0 or above {'a': 1, 'b': 2, 'c': 3, 'd': 1} | mean steps after first assay {'a': 1.94, 'b': 1.53, 'c': 2.69, 'd': 1.62}
+HELD   S3-a laws match, 56+ of 64 sensed, 2 or fewer sense errors, 2 or fewer overdrafts | laws 64/64 sensed 63/64 errors 0 overdrafts 1
+HELD   S3-b arm a: 12+ of 16 light at step 0, light share 0.70+, 0 above birth | 14/16, share 0.818, above 0
+HELD   S3-c arm b: at most 8 of 16 light at step 0 | 0/16
+MISSED S3-d arm b: 10+ of 16 on light by 4th step | 2/16
+MISSED S3-e b spends 1.3x a or more, and b level with a on O1 | energy ratio 2.95, O1 b minus a +0.3926
+HELD   S3-f steps after first assay, b within 1.0 of a | b 1.53 a 1.94
+MISSED S3-g c at least 1.0 above a on steps after assay, 4+ of 16 in c with 2+ rounds, at most 2 in a | c minus a +0.75, 2+ rounds c 2 a 1
+MISSED S3-h fibmod 2.0 in 4+ of 8 sensor runs and at most 2 of 8 without | sensor 4/8 (c 3 d 1), without 3/8 (a 1 b 2)
+HELD   S3-i c above a by 0.10 or more on O1 | +0.5427
+MISSED S3-j climbs after first assay: at most 1 of 16 in a, 4+ of 32 in c and d | a 0, c+d 0, b 1
+HELD   S3-k 0 divides | 0
+MISSED S3-l d level with c or above on O1 | d minus c -0.3727
+held 6 of 12
