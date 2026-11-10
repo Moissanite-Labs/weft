@@ -1,0 +1,12 @@
+{
+  "staging": {
+    "egg_href": "/observatory/",
+    "observatory_family_origin": "",
+    "noindex": true
+  },
+  "production": {
+    "egg_href": "https://observatory.askaconsult.com/",
+    "observatory_family_origin": "https://siliconcordat.com",
+    "noindex": false
+  }
+}

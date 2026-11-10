@@ -1,0 +1,21 @@
+// Staging preview for siliconcordat-cut (no custom domains). Ship binds staging.siliconcordat.com.
+// Build:   SILICONCORDAT_CUT_HOST=staging python3 scripts/build_siliconcordat_cut_bundle.py
+// Preview: npx wrangler@4 dev -c wrangler.siliconcordat-cut-staging.jsonc
+{
+  "$schema": "https://unpkg.com/wrangler@4/config-schema.json",
+  "name": "ml-siliconcordat-cut-staging",
+  "main": "workers/siliconcordat-cut.mjs",
+  "compatibility_date": "2026-11-01",
+  "vars": {
+    "CUT_HOST": "staging"
+  },
+  "assets": {
+    "directory": "./dist-cut",
+    "binding": "ASSETS",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page",
+    "run_worker_first": true
+  },
+  "workers_dev": true,
+  "observability": { "enabled": true }
+}

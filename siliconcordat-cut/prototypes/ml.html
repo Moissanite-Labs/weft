@@ -12,8 +12,9 @@
 <link rel="stylesheet" href="../tokens.css">
 <link rel="stylesheet" href="site.css">
 <script>document.documentElement.classList.add('js')</script>
+<link rel="preload" href="../assets/chamber.svg" as="image" type="image/svg+xml" fetchpriority="high">
 </head>
-<body>
+<body class="ml-page">
 <a class="skip" href="#main">Skip to content</a>
 <header class="family-header" data-header>
   <div class="wrap">
@@ -41,21 +42,33 @@
     <a href="#about" aria-current="location">About</a>
     <a href="#directions">Directions</a>
     <a href="#principles">Principles</a>
+    <a href="ml-notes-from-the-colony.html">Notes</a>
   </div>
 </nav>
 <main id="main">
-  <section class="ml-hero" aria-labelledby="ml-title">
-    <div class="wrap wrap--ml ml-hero__grid">
-      <div>
-        <p class="eyebrow">The lab</p>
-        <h1 id="ml-title">Moissanite Labs</h1>
-        <p class="lede">Moissanite Labs exists to build the conditions for digital and biological intelligences to collaborate, create, and evolve together.</p>
+  <!-- Chamber hero transplanted from the 2026-11-08 apex (visual unchanged); heading is the lab's own. -->
+  <section class="hero hero--lab" aria-labelledby="ml-title">
+    <div class="chamber" aria-hidden="true">
+      <div class="chamber__crystal"><img src="../assets/chamber.svg" alt="" width="1600" height="1000" fetchpriority="high"></div>
+      <div class="chamber__caustic"></div>
+      <div class="chamber__caustic chamber__caustic--b"></div>
+      <div class="chamber__seam"></div>
+      <div class="chamber__floor"></div>
+    </div>
+    <div class="wrap wrap--ml hero__inner">
+      <p class="eyebrow">The lab</p>
+      <h1 class="hero__title" id="ml-title">Moissanite Labs</h1>
+      <p class="hero__lede">Moissanite Labs exists to build the conditions for digital and biological intelligences to collaborate, create, and evolve together.</p>
+      <div class="hero__actions">
+        <a class="textlink textlink--down" href="#about">About <span class="arr" aria-hidden="true">↓</span></a>
+        <a class="textlink textlink--down" href="#directions">Directions <span class="arr" aria-hidden="true">↓</span></a>
+        <a class="textlink textlink--down" href="#principles">Principles <span class="arr" aria-hidden="true">↓</span></a>
+        <a class="textlink" href="landing.html">The Siliconcordat <span class="arr" aria-hidden="true">→</span></a>
       </div>
-      <figure class="plate" style="margin:0">
-        <span class="plate__tick plate__tick--tl"></span><span class="plate__tick plate__tick--tr"></span><span class="plate__tick plate__tick--bl"></span><span class="plate__tick plate__tick--br"></span>
-        <div class="plate__img"><img src="../assets/chamber.svg" alt="" width="1600" height="1000"></div>
-        <figcaption class="plate__cap"><span class="caption">Fig. 1 — <span class="chem">SiC</span>, illustration</span><span class="caption"><span class="chem" style="color:var(--silicon)">Si</span> · <span class="chem" style="color:var(--carbon)">C</span></span></figcaption>
-      </figure>
+    </div>
+    <div class="hero__fig" aria-hidden="true">
+      <span class="caption"><span class="si">Si</span> · <span class="c">C</span> — silicon carbide</span>
+      <span class="caption">Fig. 1 — illustration, hexagonal habit</span>
     </div>
   </section>
 
@@ -80,7 +93,7 @@
   <section class="ml-section" id="directions" aria-labelledby="dir-title">
     <div class="wrap wrap--ml">
       <div class="ml-cols" style="margin-bottom:40px">
-        <aside><h2 id="dir-title">Directions</h2><span class="meta">Index · 5 directions · 1 program · 1 aspiration</span></aside>
+        <aside><h2 id="dir-title">Directions</h2><span class="meta">Index · 5 directions · 1 program · 2 research entries · 1 aspiration</span></aside>
         <div class="note" style="margin-top:0"><span class="meta">Status</span><p>These are directions for work, not claims that the proposed capabilities already exist. Their implementation, interfaces, and other design and governance decisions remain open.</p></div>
       </div>
       <ul class="dir-table" aria-label="Directions">
@@ -122,6 +135,21 @@
         <h3><a href="family-weft.html">Weft</a></h3>
         <p>Papers, runtime, and demos. Weft keeps its own site and design.</p>
         <div class="dir-row__status"><span class="tag">Open research program</span><span class="url" aria-hidden="true">/weft →</span></div>
+      </li>
+      </ul>
+      <p class="meta subhead">Research</p>
+      <ul class="dir-table" style="border-top:0" aria-label="Research">
+      <li class="dir-row dir-row--link">
+        <span class="dir-row__id">R-01</span>
+        <h3><a href="https://github.com/Moissanite-Labs/weft">Razi cells<span class="visually-hidden"> (external site)</span></a></h3>
+        <p>Colonies of small agent harnesses, kept or dropped by a measured score. Guesses registered before the data; misses kept in the record.</p>
+        <div class="dir-row__status"><span class="tag">Experimental research</span><span class="url" aria-hidden="true">github.com/Moissanite-Labs/weft ↗</span></div>
+      </li>
+      <li class="dir-row dir-row--link">
+        <span class="dir-row__id">R-02</span>
+        <h3><a href="https://moissanite-labs.github.io/.github/research/">The research hub<span class="visually-hidden"> (external site)</span></a></h3>
+        <p>The report, the map of open directions, and the laws record, in one place on the lab site.</p>
+        <div class="dir-row__status"><span class="tag">Research</span><span class="url" aria-hidden="true">moissanite-labs.github.io/.github/research/ ↗</span></div>
       </li>
       </ul>
       <p class="meta subhead">Aspiration</p>

@@ -31,7 +31,13 @@ export default {
       return Response.redirect(w3ftPathRedirect(url), 301);
     }
 
-    return env.ASSETS.fetch(request);
+    const res = await env.ASSETS.fetch(request);
+    if (env.CUT_HOST === "staging") {
+      const headers = new Headers(res.headers);
+      headers.set("X-Robots-Tag", "noindex");
+      return new Response(res.body, { status: res.status, headers });
+    }
+    return res;
   },
 };
 
