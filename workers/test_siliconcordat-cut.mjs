@@ -110,4 +110,24 @@ describe("fetch handler", () => {
       "https://siliconcordat.org/weft/papers/?q=1"
     );
   });
+
+  it("adds X-Robots-Tag on staging host profile only", async () => {
+    const res = await worker.fetch(
+      new Request("https://example.workers.dev/"),
+      {
+        ASSETS: mockAssets(),
+        CUT_HOST: "staging",
+      }
+    );
+    assert.equal(res.status, 200);
+    assert.equal(res.headers.get("X-Robots-Tag"), "noindex");
+  });
+
+  it("does not add X-Robots-Tag when CUT_HOST is unset", async () => {
+    const res = await worker.fetch(
+      new Request("https://example.workers.dev/"),
+      { ASSETS: mockAssets() }
+    );
+    assert.equal(res.headers.get("X-Robots-Tag"), null);
+  });
 });

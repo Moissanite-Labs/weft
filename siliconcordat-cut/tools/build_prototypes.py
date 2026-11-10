@@ -1,4 +1,6 @@
-"""Builds the four Direction-A prototypes from shared partials.
+"""Builds the 2026-11-10 arrangement from shared partials:
+  landing.html (Threshold apex /), ml.html (chamber-hero lab /ml), ml-principles.html (/ml/principles/),
+  observatory.html (Observatory easter egg, prod https://observatory.askaconsult.com/).
 Run from package root: python3 tools/build_prototypes.py
 Copy is the Siliconcordat README text (via the lumen brief); structural labels are marked in SPEC.md."""
 import pathlib
@@ -7,7 +9,7 @@ OUT = pathlib.Path("prototypes")
 # Prototype hrefs (production hrefs in comments / SPEC):
 HOME, ML, PRIN = "landing.html", "ml.html", "ml-principles.html"   # prod: /  /ml  /ml/principles/
 WEFT = "family-weft.html"   # prod: /weft  (in the prototype, Weft links open the wayfinding annotation)
-MANIFESTO_GH = "https://github.com/Moissanite-Labs/siliconcordat"
+OBS = "observatory.html"    # prod: https://observatory.askaconsult.com/  (staging: /observatory/ on staging.siliconcordat.com)
 
 MARK = '''<svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M16 8.81 L20.23 11.25 L20.23 20.75 L16 23.19 L11.77 20.75 L11.77 11.25 Z" fill="#e6d2a8"/><path d="M12 6.5 L20.23 11.25 L20.23 20.75 L12 25.5 L3.77 20.75 L3.77 11.25 Z" fill="none" stroke="#c4844a" stroke-width="2"/><path d="M20 6.5 L28.23 11.25 L28.23 20.75 L20 25.5 L11.77 20.75 L11.77 11.25 Z" fill="none" stroke="#9db0c4" stroke-width="2"/></svg>'''
 
@@ -119,7 +121,7 @@ def footer(current):
     </div>
     <div class="footer-base">
       <span class="meta">Moissanite Labs</span>
-      <a class="meta" href="{MANIFESTO_GH}">github.com/Moissanite-Labs/siliconcordat{EXT}</a>
+      <a class="meta" href="https://github.com/Moissanite-Labs/siliconcordat">github.com/Moissanite-Labs/siliconcordat{EXT}</a>
       <span class="meta">siliconcordat.com</span>
     </div>
   </div>
@@ -173,40 +175,53 @@ CONSTELLATION = '''<figure class="constellation reveal" aria-labelledby="const-c
       <figcaption id="const-cap" class="caption">Fig. 2 — Directions for work, drawn on the Exo foundation. Robotics sits off the line: an aspiration.</figcaption>
     </figure>'''
 
-def landing():
-    principles = "\n".join(f'''      <li class="principle reveal" id="{k}">
+def th_header():
+    """Threshold apex header: three-column family bar, Moissanite Labs on the carbon side, Siliconcordat centred on the seam, Weft on the silicon side."""
+    return f'''<a class="skip" href="#main">Skip to content</a>
+<header class="family-header family-header--over family-header--th" data-header>
+  <div class="wrap">
+    <nav aria-label="Moissanite Labs family">
+      <ul class="fam th-fam">
+        <li class="th-fam__l"><a href="{ML}">Moissanite Labs</a></li>
+        <li class="th-fam__c"><a class="fam-home" href="{HOME}" aria-current="page">{MARK}<span class="fam-home__t">Siliconcordat</span></a></li>
+        <li class="th-fam__r"><a class="fam-weft" href="{WEFT}"><span class="weft-tick" aria-hidden="true"></span>Weft</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+'''
+
+def principles_grid():
+    return "\n".join(f'''      <li class="principle reveal" id="{k}">
         <span class="principle__n">{i:02d}</span>
         <h3>{n}</h3>
         <p>{t}</p>
       </li>''' for i, (k, n, t) in enumerate(PRINCIPLES, 1))
+
+def landing():
     cards = "\n".join(dcard(d) for d in DIRS)
-    return head("The Siliconcordat — Moissanite Labs", MISSION, '\n<link rel="preload" href="../assets/chamber.svg" as="image" type="image/svg+xml" fetchpriority="high">') + '<body>\n' + family_header("home", over=True, meta=False) + f'''
+    return head("The Siliconcordat — Moissanite Labs", MISSION) + '<body class="th-page">\n' + th_header() + f'''
 <main id="main">
-  <section class="hero" aria-labelledby="hero-title">
-    <div class="chamber" aria-hidden="true">
-      <div class="chamber__crystal"><img src="../assets/chamber.svg" alt="" width="1600" height="1000" fetchpriority="high"></div>
-      <div class="chamber__caustic"></div>
-      <div class="chamber__caustic chamber__caustic--b"></div>
-      <div class="chamber__seam"></div>
-      <div class="chamber__floor"></div>
-    </div>
-    <div class="wrap hero__inner">
-      <div class="proposal">
+  <section class="th-hero" aria-labelledby="hero-title">
+    <div class="th-half th-half--c" aria-hidden="true"></div>
+    <div class="th-half th-half--si" aria-hidden="true"></div>
+    <div class="th-seam" aria-hidden="true"></div>
+    <div class="th-center">
+      <div class="th-proposal">
         <span class="chip">Working proposal</span>
         <p>{BANNER}</p>
       </div>
-      <h1 class="hero__title" id="hero-title"><span class="the">The</span> Siliconcordat</h1>
-      <p class="hero__lede">{MISSION}</p>
-      <div class="hero__actions">
-        <a class="textlink textlink--down" href="#principles">Principles <span class="arr" aria-hidden="true">↓</span></a>
-        <a class="textlink" href="{ML}">Moissanite Labs <span class="arr" aria-hidden="true">→</span></a>
+      <h1 class="th-title" id="hero-title"><span>The</span> <span>Siliconcordat</span></h1>
+      <p class="th-lede">{MISSION}</p>
+      <div class="th-actions">
+        <a class="textlink textlink--down th-actions__c" href="#principles">Principles <span class="arr" aria-hidden="true">↓</span></a>
+        <!-- Easter egg: the brightest point of the seam. Prod href https://observatory.askaconsult.com/ ; staging /observatory/ -->
+        <a class="th-egg" href="{OBS}" aria-label="Observatory"><span class="th-egg__jewel" aria-hidden="true"></span><span class="th-egg__label" aria-hidden="true">Observatory</span></a>
+        <a class="textlink th-actions__si" href="{ML}">Moissanite Labs <span class="arr" aria-hidden="true">→</span></a>
       </div>
     </div>
-    <div class="hero__fig" aria-hidden="true">
-      <span class="caption"><span class="si">Si</span> · <span class="c">C</span> — silicon carbide</span>
-      <span class="caption">Fig. 1 — illustration, hexagonal habit</span>
-    </div>
-    <a class="scrollcue" href="#name">The name</a>
+    <span class="th-label th-label--c" aria-hidden="true"><span class="chem">C</span> · carbon</span>
+    <span class="th-label th-label--si" aria-hidden="true"><span class="chem">Si</span> · silicon</span>
   </section>
 
   <section class="chapter" id="name" aria-labelledby="name-title">
@@ -244,7 +259,7 @@ def landing():
         <p class="meta">Six principles · proposed for review</p>
       </div>
       <ol class="principles">
-{principles}
+{principles_grid()}
       </ol>
     </div>
   </section>
@@ -300,6 +315,14 @@ def landing():
 </main>
 ''' + footer("home") + '<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="mark" viewBox="0 0 32 32">' + MARK[MARK.index('>')+1:-6] + '</symbol></svg>\n' + SCRIPT + '</body>\n</html>\n'
 
+CHAMBER = '''<div class="chamber" aria-hidden="true">
+      <div class="chamber__crystal"><img src="../assets/chamber.svg" alt="" width="1600" height="1000" fetchpriority="high"></div>
+      <div class="chamber__caustic"></div>
+      <div class="chamber__caustic chamber__caustic--b"></div>
+      <div class="chamber__seam"></div>
+      <div class="chamber__floor"></div>
+    </div>'''
+
 def ml():
     rows = []
     for i, d in enumerate(DIRS, 1):
@@ -315,7 +338,7 @@ def ml():
       </li>''')
     rows = "\n".join(rows)
     pidx = "\n".join(f'<li><a href="{PRIN}#{k}"><span class="n">{i:02d}</span><span class="t">{n}</span><span class="arr" aria-hidden="true">→</span></a></li>' for i, (k, n, t) in enumerate(PRINCIPLES, 1))
-    return head("Moissanite Labs", MISSION) + '<body>\n' + family_header("ml") + f'''<nav class="localnav" aria-label="Moissanite Labs sections">
+    return head("Moissanite Labs", MISSION, '\n<link rel="preload" href="../assets/chamber.svg" as="image" type="image/svg+xml" fetchpriority="high">') + '<body class="ml-page">\n' + family_header("ml") + f'''<nav class="localnav" aria-label="Moissanite Labs sections">
   <div class="wrap wrap--ml">
     <span class="meta">Moissanite Labs</span>
     <a href="#about" aria-current="location">About</a>
@@ -324,18 +347,23 @@ def ml():
   </div>
 </nav>
 <main id="main">
-  <section class="ml-hero" aria-labelledby="ml-title">
-    <div class="wrap wrap--ml ml-hero__grid">
-      <div>
-        <p class="eyebrow">The lab</p>
-        <h1 id="ml-title">Moissanite Labs</h1>
-        <p class="lede">{MISSION}</p>
+  <!-- Chamber hero transplanted from the 2026-11-08 apex (visual unchanged); heading is the lab's own. -->
+  <section class="hero hero--lab" aria-labelledby="ml-title">
+    {CHAMBER}
+    <div class="wrap wrap--ml hero__inner">
+      <p class="eyebrow">The lab</p>
+      <h1 class="hero__title" id="ml-title">Moissanite Labs</h1>
+      <p class="hero__lede">{MISSION}</p>
+      <div class="hero__actions">
+        <a class="textlink textlink--down" href="#about">About <span class="arr" aria-hidden="true">↓</span></a>
+        <a class="textlink textlink--down" href="#directions">Directions <span class="arr" aria-hidden="true">↓</span></a>
+        <a class="textlink textlink--down" href="#principles">Principles <span class="arr" aria-hidden="true">↓</span></a>
+        <a class="textlink" href="{HOME}">The Siliconcordat <span class="arr" aria-hidden="true">→</span></a>
       </div>
-      <figure class="plate" style="margin:0">
-        <span class="plate__tick plate__tick--tl"></span><span class="plate__tick plate__tick--tr"></span><span class="plate__tick plate__tick--bl"></span><span class="plate__tick plate__tick--br"></span>
-        <div class="plate__img"><img src="../assets/chamber.svg" alt="" width="1600" height="1000"></div>
-        <figcaption class="plate__cap"><span class="caption">Fig. 1 — <span class="chem">SiC</span>, illustration</span><span class="caption"><span class="chem" style="color:var(--silicon)">Si</span> · <span class="chem" style="color:var(--carbon)">C</span></span></figcaption>
-      </figure>
+    </div>
+    <div class="hero__fig" aria-hidden="true">
+      <span class="caption"><span class="si">Si</span> · <span class="c">C</span> — silicon carbide</span>
+      <span class="caption">Fig. 1 — illustration, hexagonal habit</span>
     </div>
   </section>
 
@@ -401,6 +429,205 @@ def ml():
 </main>
 ''' + footer("ml") + SCRIPT + '</body>\n</html>\n'
 
+# ---------------------------------------------------------------- Observatory (easter egg)
+# Prototype hrefs are relative; in production Observatory lives on another host, so its family links are absolute:
+# https://siliconcordat.com/ , https://siliconcordat.com/ml , https://siliconcordat.com/weft  (staging: https://staging.siliconcordat.com/…)
+def observatory():
+    pr = "\n".join(f'''        <li class="o-cell reveal" id="{k}">
+          <span class="o-cell__id">§{i:02d} <span class="o-tick" aria-hidden="true"></span></span>
+          <h3>{n}</h3>
+          <p>{t}</p>
+        </li>''' for i, (k, n, t) in enumerate(PRINCIPLES, 1))
+    lines = [21, 47, 64, 83, 91]
+    rows = []
+    for i, d in enumerate(DIRS, 1):
+        href, label = d["primary"]
+        sec = f'<a href="{d["secondary"][0]}">{d["secondary"][1]}{EXT}</a>' if d["secondary"] else ''
+        aside = f'<span class="o-aside">{d["aside"]}</span>' if d["aside"] else ''
+        tag = "Direction · foundation" if d.get("foundation") else "Direction"
+        rows.append(f'''        <li class="o-row o-row--link{' o-row--foundation' if d.get('foundation') else ''}">
+          <span class="o-row__id">D-{i:02d}</span>
+          <span class="o-row__line" aria-hidden="true"><i style="left:{lines[i-1]}%"></i></span>
+          <h3><a href="{href}">{d["name"]}{EXT}</a></h3>
+          <p>{d["text"]}</p>
+          <div class="o-row__status"><span class="o-tag">{tag}</span><span class="o-url" aria-hidden="true">{label} ↗</span>{sec}{aside}</div>
+        </li>''')
+    rows = "\n".join(rows)
+    return f'''<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Observatory — The Siliconcordat</title>
+<meta name="description" content="{MISSION}">
+<meta name="theme-color" content="#0d0f11">
+<link rel="icon" href="../assets/mark.svg" type="image/svg+xml">
+<link rel="preload" href="../assets/fonts/ibm-plex-sans-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="observatory.css">
+<script>document.documentElement.classList.add('js')</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="o-header">
+  <div class="o-wrap o-header__in">
+    <nav aria-label="Moissanite Labs family">
+      <ul class="o-fam">
+        <li><a class="o-home" href="{HOME}">{MARK}<span>Siliconcordat</span></a></li>
+        <li><a href="{ML}">Moissanite Labs</a></li>
+        <li><a class="o-weft" href="{WEFT}"><span class="weft-tick" aria-hidden="true"></span>Weft</a></li>
+      </ul>
+    </nav>
+    <span class="o-meta"><span class="o-here" aria-hidden="true"></span>Observatory · plate 00</span>
+    <a class="o-back" href="{HOME}"><span aria-hidden="true">←</span> Main landing</a>
+  </div>
+</header>
+<main id="main">
+  <section class="o-plate" aria-labelledby="o-title">
+    <span class="o-cross" style="left:calc(var(--o-g) - 9px);top:calc(var(--o-g) - 9px)" aria-hidden="true"></span>
+    <span class="o-cross o-cross--br" aria-hidden="true"></span>
+    <div class="o-col">
+      <div class="o-proposal">
+        <span class="o-chip"><i aria-hidden="true"></i>Working proposal</span>
+        <p>{BANNER}</p>
+      </div>
+      <h1 id="o-title"><span>Moissanite Labs · manifesto</span>The Siliconcordat</h1>
+      <p class="o-lede">{MISSION}</p>
+      <div class="o-actions">
+        <a class="o-link" href="#principles">Principles <span aria-hidden="true">↓</span></a>
+        <a class="o-link" href="#ecosystem">Directions <span aria-hidden="true">↓</span></a>
+      </div>
+    </div>
+    <figure class="o-instrument" aria-labelledby="o-fig1">
+      <figcaption class="o-cap" id="o-fig1">Fig. B1 — <b>calibration plate</b> · fire as dispersion, illustrative</figcaption>
+      <div class="o-spec" aria-hidden="true">
+        <div class="o-spectrum"></div>
+        <div class="o-lines"><i style="left:21%"></i><i style="left:47%"></i><i style="left:64%"></i><i style="left:83%"></i></div>
+        <div class="o-scale"><span>400</span><span>450</span><span>500</span><span>550</span><span>600</span><span>650</span><span>700 nm</span></div>
+      </div>
+      <dl class="o-readout">
+        <div><dt class="o-cap">Element</dt><dd><span class="chem">Si</span> · 14</dd></div>
+        <div><dt class="o-cap">Element</dt><dd><span class="chem">C</span> · 6</dd></div>
+        <div><dt class="o-cap">Compound</dt><dd><span class="chem">SiC</span></dd></div>
+        <div><dt class="o-cap">Mineral</dt><dd>Moissanite</dd></div>
+      </dl>
+      <p class="o-cap o-cap--foot"><span class="chem">Si</span> · <span class="chem">C</span> — silicon carbide · illustration</p>
+    </figure>
+  </section>
+
+  <section class="o-section" id="name" aria-labelledby="o-name">
+    <div class="o-wrap">
+      <p class="o-marker"><span>Plate 01</span> The name</p>
+      <div class="o-two">
+        <div class="reveal">
+          <h2 id="o-name" class="o-h2">The bond between silicon and carbon is a metaphor for the symbiosis the lab wants to cultivate.</h2>
+          <div class="o-sample" aria-label="Silicon and carbon, the elements of silicon carbide">
+            <div class="o-el"><span class="o-cap">Z 14</span><span class="o-el__sym chem">Si</span><span class="o-cap">Silicon</span></div>
+            <div class="o-bond" aria-hidden="true"><span></span><span class="o-cap chem">SiC</span></div>
+            <div class="o-el"><span class="o-cap">Z 6</span><span class="o-el__sym chem">C</span><span class="o-cap">Carbon</span></div>
+          </div>
+          <p class="o-cap">Fig. B2 — Moissanite · a naturally occurring form of silicon carbide</p>
+        </div>
+        <div class="o-prose reveal">
+          <p class="o-prose__first">{MISSION}</p>
+          <p>{NAME_1} {NAME_2} {NAME_2b}</p>
+          <p>{NAME_3}</p>
+          <div class="o-note"><span class="o-cap">Note · What the metaphor is not</span><p>{CAVEAT}</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="o-section" id="principles" aria-labelledby="o-pr">
+    <div class="o-wrap">
+      <p class="o-marker"><span>Plate 02</span> Principles</p>
+      <div class="o-head reveal">
+        <h2 id="o-pr" class="o-h2 o-h2--big">We intend to build for:</h2>
+        <p class="o-cap">Six principles · proposed for review</p>
+      </div>
+      <ol class="o-grid">
+{pr}
+      </ol>
+    </div>
+  </section>
+
+  <section class="o-section" id="ecosystem" aria-labelledby="o-eco">
+    <div class="o-wrap">
+      <p class="o-marker"><span>Plate 03</span> Ecosystem</p>
+      <div class="o-two o-two--eco reveal">
+        <h2 id="o-eco" class="o-h2 o-h2--big">Building the ecosystem</h2>
+        <div class="o-prose">
+          <p>{EXO_P}</p>
+          <div class="o-note"><span class="o-cap">Status</span><p>{DIRS_NOTE}</p></div>
+        </div>
+      </div>
+      <ul class="o-table" aria-label="Directions">
+{rows}
+      </ul>
+      <p class="o-cap o-subhead">Public research program</p>
+      <ul class="o-table" aria-label="Research programs">
+        <li class="o-row o-row--link o-row--weft">
+          <span class="o-row__id">P-01</span>
+          <span class="o-row__line" aria-hidden="true"></span>
+          <h3><a href="{WEFT}">Weft</a></h3>
+          <p>Papers, runtime, and demos. Weft keeps its own site and design.</p>
+          <div class="o-row__status"><span class="o-tag">Open research program</span><span class="o-url" aria-hidden="true">/weft →</span></div>
+        </li>
+      </ul>
+      <p class="o-cap o-subhead">Aspiration</p>
+      <ul class="o-table" aria-label="Aspirations">
+        <li class="o-row o-row--asp">
+          <span class="o-row__id">A-01</span>
+          <span class="o-row__line" aria-hidden="true"></span>
+          <h3>Robotics</h3>
+          <p>{ROBOTICS}</p>
+          <div class="o-row__status"><span class="o-tag">Aspiration · no page</span></div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="o-section" id="doorways" aria-labelledby="o-doors">
+    <div class="o-wrap">
+      <p class="o-marker"><span>Plate 04</span> Doorways</p>
+      <h2 id="o-doors" class="visually-hidden">Doorways</h2>
+      <ul class="o-doors">
+        <li><a class="o-door" href="{HOME}"><span class="o-cap">The proposal · /</span><span class="o-door__t">The Siliconcordat</span><span class="o-door__go">Main landing <span aria-hidden="true">→</span></span></a></li>
+        <li><a class="o-door" href="{ML}"><span class="o-cap">The lab · /ml</span><span class="o-door__t">Moissanite Labs</span><span class="o-door__go">Enter the lab <span aria-hidden="true">→</span></span></a></li>
+        <li><a class="o-door o-door--weft" href="{WEFT}"><span class="o-cap o-cap--weft">Weft · open research program · /weft</span><span class="o-door__t">Weft</span><span class="o-door__go">Open Weft <span aria-hidden="true">→</span></span></a></li>
+      </ul>
+    </div>
+  </section>
+</main>
+<footer class="o-footer">
+  <div class="o-wrap o-footer__grid">
+    <div>
+      <a class="o-home o-home--foot" href="{HOME}">{MARK}<span>Siliconcordat</span></a>
+      <ul class="o-footfam" aria-label="Moissanite Labs family">
+        <li><a href="{HOME}">The Siliconcordat <span class="o-path">/</span></a></li>
+        <li><a href="{ML}">Moissanite Labs <span class="o-path">/ml</span></a></li>
+        <li><a class="o-weft" href="{WEFT}">Weft <span class="o-path">/weft</span></a></li>
+      </ul>
+    </div>
+    <div class="o-humility">
+      <span class="o-cap">Working proposal</span>
+      <p>{BANNER}</p>
+      <p>{CAVEAT}</p>
+    </div>
+  </div>
+  <div class="o-wrap o-footer__base"><span class="o-cap">Moissanite Labs</span><a class="o-cap" href="https://github.com/Moissanite-Labs/siliconcordat">github.com/Moissanite-Labs/siliconcordat{EXT}</a><span class="o-cap">Observatory · plate 05</span></div>
+</footer>
+<script>
+(() => {{
+  const els = document.querySelectorAll('.reveal');
+  if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) {{ els.forEach(e => e.classList.add('is-in')); }}
+  else {{ const io = new IntersectionObserver((es) => es.forEach(e => {{ if (e.isIntersecting) {{ e.target.classList.add('is-in'); io.unobserve(e.target); }} }}), {{ rootMargin: '0px 0px -8% 0px' }}); els.forEach(e => io.observe(e)); }}
+}})();
+</script>
+</body>
+</html>
+'''
+
 def principles_page():
     toc = "\n".join(f'<li><a href="#{k}"{" aria-current=\"location\"" if i==1 else ""}><span class="n">{i:02d}</span>{n}</a></li>' for i, (k, n, t) in enumerate(PRINCIPLES, 1))
     secs = "\n".join(f'''      <section class="doc-section" id="{k}" aria-labelledby="{k}-h">
@@ -445,4 +672,5 @@ def principles_page():
 (OUT / "landing.html").write_text(landing())
 (OUT / "ml.html").write_text(ml())
 (OUT / "ml-principles.html").write_text(principles_page())
+(OUT / "observatory.html").write_text(observatory())
 print("built")

@@ -1,56 +1,50 @@
 # Siliconcordat / Moissanite Labs — public site design spec
 
-Direction A: **Carbon–Silicon Cut** (recommended; fully specified here)
-Status: design package for review by lumen, then nizam, then smith. Prepared 2026-11-08 (America/Chicago).
+**Arrangement 2026-11-10** (revision dated Tuesday 2026-11-10, America/Chicago)
+Status: design package for a **staging preview** at `staging.siliconcordat.com`, then nizam → smith → ship. Lumen does not deploy.
 Package root: `/workspace/siliconcordat-design/`
 
-This document is the build contract. If a state, size or rule isn't written here, take it from the prototype CSS (`prototypes/site.css`), which is the reference implementation. If the two disagree, this document wins and the prototype is the bug.
+This document is the build contract. If a state, size or rule isn't written here, take it from the prototype CSS (`prototypes/site.css` for `/`, `/ml`, `/ml/*`; `prototypes/observatory.css` for Observatory), which is the reference implementation. If the two disagree, this document wins and the prototype is the bug.
+
+The previous contract (2026-11-08, Carbon–Silicon Cut at the apex, Observatory and Threshold unused) is kept for history at `refs/prev-2026-11-08/SPEC.md`. It is superseded.
 
 ---
 
 ## 1. Intent and hard constraints
 
-**Intent.** One house (Moissanite Labs) with three rooms:
+**Intent.** One house (Moissanite Labs), three public rooms, and one hidden one:
 
-| Path | Room | Job |
-|---|---|---|
-| `siliconcordat.com/` | The proposal | Cinematic landing that sets The Siliconcordat: mission, name, six principles, ecosystem directions, doorways. Half sci-fi film still, half research lab. |
-| `siliconcordat.com/ml` | The lab | Moissanite Labs site: about, directions index, principles, and deeper pages (`/ml/principles/`, later `/ml/exo/` etc.). |
-| `siliconcordat.com/weft` | One public research program | The current w3ft.org Weft experience, **unchanged in look**. Only wayfinding links are added (§5.3). |
+| Path | Room | Look | Job |
+|---|---|---|---|
+| `siliconcordat.com/` | The proposal | **Threshold**: split-seam hero (warm carbon left, cool silicon right, bright seam), quiet chapters below | Sets The Siliconcordat: working proposal, mission, name, six principles, ecosystem directions, doorways. |
+| `siliconcordat.com/ml` | The lab | **Chamber hero** (the 2026-11-08 apex hero, moved here) over the existing lab index | Moissanite Labs: about, directions index, principles, deeper pages (`/ml/principles/`, later `/ml/exo/` etc.). |
+| `siliconcordat.com/weft` | One public research program | Weft, **unchanged** | The current w3ft.org Weft experience. Only wayfinding links are added (§5.3). |
+| `observatory.askaconsult.com` | Observatory (easter egg) | **Observatory**: instrument-lab register, cool neutrals, grid, calibration spectrum | The same Siliconcordat substance restated as an instrument plate. Reached only from a hidden spot on the Threshold seam (§6A). Not in any nav. |
+| `staging.siliconcordat.com` | Preview host | — | Preview of this whole arrangement before ship (§15A). Observatory may be served at `/observatory/` on staging. |
 
 **Hard constraints (non-negotiable).**
 1. URL map above is fixed. `/w3ft` → `/weft` and apex aliases are not part of this design.
 2. Copy comes only from The Siliconcordat (Moissanite-Labs/compass `README.md`), as quoted in §10. No FOUNDER-VISION.md, SILICONCORDAT.md or NAMING.md content. No slogans, traction, team, waitlist, newsletter, metrics or taglines. Herald owns marketing copy; the few structural labels this design needs are listed in §10.3 so herald can replace them.
-3. Every page keeps the README's humility: working proposal, not adopted policy, not a legal agreement, directions not capabilities.
-4. Link rule (§10.4): only confirmed-public URLs. The public manifesto home `https://github.com/Moissanite-Labs/siliconcordat` may appear once per Cut page (footer-base). Never link Moissanite-Labs/compass, credos, weft, weft-eido, weft-corpus, or GitHub copies of FOUNDER-VISION.md, SILICONCORDAT.md, or NAMING.md. Weft is always linked as `/weft`, never GitHub.
+3. Every page (including Observatory) keeps the README's humility: working proposal, not adopted policy, not a legal agreement, directions not capabilities.
+4. Link rule (§10.4): only confirmed-public URLs. Never link compass, credos, weft, weft-eido, weft-corpus, or GitHub copies of the manifesto files. Weft is always linked as `/weft` (absolute `https://siliconcordat.com/weft` from Observatory), never GitHub.
 5. Weft is not restyled. No new palette, type, chrome removal, loom change or overlay on `/weft`.
-6. Not folded into askaconsult.com: no askaconsult nav, branding or hosting story. (The Exo card links to Exo's existing site, which happens to live on exo.askaconsult.com; that is the only askaconsult string on the site.)
-7. Dark only for v1. No theme toggle on `/` or `/ml`.
+6. Not folded into askaconsult.com. **One explicit owner exception:** the Observatory easter-egg landing is hosted at `observatory.askaconsult.com`. That page carries **no** askaconsult branding, nav or hosting story, and the main lab site is not moved, linked into, or branded by askaconsult. The Exo card still links to `exo.askaconsult.com`. Those are the only two askaconsult strings in the system (one is a hidden href).
+7. Dark only. No theme toggle on `/`, `/ml`, `/ml/*` or Observatory.
 8. Build contracts: mobile Lighthouse ≥ 80 (target 90+), WCAG 2.2 AA, visible focus, skip link, reduced motion, no colour-only current-nav, no dark patterns, self-hosted fonts, `assets/` is the only asset source.
 
 ---
 
-## 2. Recommendation and alternatives
+## 2. Arrangement and history
 
-### Recommended: A — Carbon–Silicon Cut
-The name is the identity: moissanite is silicon carbide, two substrates in one crystal. Direction A shows a **mineral chamber**: a dark, warm void; a cluster of hexagonal crystals lit cool (silicon) on one side and warm (carbon) on the other; slow light moving through the cut faces. Lab captions (Fig. 1, element plates, numbered chapters) keep it a research lab, not a jewellery ad.
+The owner liked all three directions from the 2026-11-08 package and assigned each a room (2026-11-10):
 
-Why A over the others:
-- **Structurally distinct from Weft.** Weft is a wet loom: navy-black `#060a12`, frost ink, aqua links, liquid-metal chrome borders, 10px radii, Palatino display with an italic aqua tagline, a woven canvas. A is a dry crystal: warm void `#0a0908`, warm paper ink, champagne fire, sharp 2px cuts, upright Source Serif 4, faceted light, no weave. Side by side they read as the same house (dark, serious, honest, research-first) and clearly different rooms.
-- **On-metaphor without a gimmick.** Carbon/silicon shows up as two lights on one object, not as a literal split screen, so it carries to inner pages quietly (the mark, element plates, hairline warm/cool accents).
-- **Cousin to Exofab's Crystal Lattice** (shared crystal vocabulary) without becoming a product-app UI.
+- **Threshold → apex `/`.** The split seam is the memorable first frame. Its two known risks are handled by rule: (a) text crossing the seam gets a soft scrim and glyph halo so AA holds on both halves (§6b, measured in §12); (b) the split is **hero-only**. Below the fold the page is calm: same tokens and type as the rest of the house, with the Threshold carried only as a 1px carbon→fire→silicon hairline and a short seam stub at the top of each chapter (§6c). No chapter is a literal split.
+- **Carbon–Silicon Cut chamber → `/ml` hero.** The live apex hero (crystal, caustics, atmosphere, typography, fig caption) moves onto the lab page, replacing the framed specimen that made `/ml` read as plain. Visual unchanged; the heading becomes the lab's own ("Moissanite Labs") because "The Siliconcordat" now belongs to the apex (§7).
+- **Observatory → `observatory.askaconsult.com`.** A full landing in its own cool instrument palette, reached as an easter egg from the seam (§6A, §7A). It restates the same proposal; it is not a second manifesto, a joke page or a second marketing site.
 
-### Alternative B — Observatory / Instrument Lab (context, not built)
-Frame: `prototypes/alts/observatory.html` · shot: `shots/alt-observatory-1440.png`.
-Cool neutrals, a measurement grid, a spectral calibration plate (moissanite "fire" as dispersion, an instrument rather than jewellery), DIN-like plate captions and an element read-out, light Plex Sans display.
-Risks: closest to Weft's cool instrument feeling (two cool rooms in one house); easy to read as generic deep-tech; the spectrum needs care to avoid rainbow cliché; less cinematic than the brief asks for `/`.
+Carbon–Silicon Cut tokens (`tokens.css`) remain the house tokens for `/`, `/ml`, `/ml/*`. Threshold's hero surfaces are additional hero-only colours (§3.7). Observatory has its own palette (§3.8) and shares only the fonts and the mark.
 
-### Alternative C — Threshold / Split seam (context, not built)
-Frame: `prototypes/alts/threshold.html` · shot: `shots/alt-threshold-1440.png`.
-Literal split: warm carbon left, cool silicon right, a bright seam, title straddling it.
-Risks: memorable once, gimmicky on every inner page; text crossing the seam needs scrims (visible in the frame) and is an a11y liability; the cool half competes with Weft's cool room. The seam survives in A only as a 1px whisper in the hero.
-
-**Decision posture:** A is the recommendation; B and C are context, not a blocking choice. Build A.
+Historical hero frames remain at `prototypes/alts/threshold.html` and `prototypes/alts/observatory.html` (labelled "Historical frame · superseded"), with their original shots `shots/alt-threshold-1440.png` and `shots/alt-observatory-1440.png`. The 2026-11-08 prototypes and shots are in `refs/prev-2026-11-08/` and `shots/prev-2026-11-08/`. The live HTML/CSS as of 2026-11-10 is in `refs/live/`.
 
 ---
 
@@ -100,12 +94,13 @@ Type scale (as built):
 
 | Element | Size | Weight | Line height |
 |---|---|---|---|
-| Hero title "Siliconcordat" | `clamp(3.25rem, 1.2rem + 7.6vw, 8.75rem)` (≈140px at 1440, 52px at 390) | 360 | 0.92 |
-| Hero "The" | 0.34em of title, `--ink-2`, own line | 400 | — |
-| Hero lede (mission) | `clamp(1.25rem, 1rem + .9vw, 1.75rem)`, Source Serif `opsz 24`, `--ink-2`, max 31ch | 380 | 1.38 |
+| `/` Threshold h1 "The Siliconcordat" | `clamp(2.9rem, 1.2rem + 7vw, 9rem)` (≈120px at 1440, 46px at 390), centred, one line on desktop | 360 | 0.92 |
+| `/` Threshold lede (mission) | `clamp(1.2rem, 1rem + .8vw, 1.625rem)`, Source Serif `opsz 24`, `--ink`, max 34ch, centred | 380 | 1.38 |
+| `/ml` chamber h1 "Moissanite Labs" | `clamp(3rem, 1rem + 7vw, 8rem)` (≈117px at 1440, 48px at 390), max 9ch | 360 | 0.92 |
+| `/ml` chamber lede (mission) | `clamp(1.25rem, 1rem + .9vw, 1.75rem)`, Source Serif `opsz 24`, `--ink-2`, max 31ch | 380 | 1.38 |
 | Chapter title (h2 on `/`) | `clamp(2.25rem, 1.4rem + 3vw, 4rem)` | 380 | 1.02 |
 | Pull quote | `clamp(1.9rem, 1.2rem + 2.4vw, 3.25rem)` | 360 | 1.12 |
-| `/ml` h1, deeper-page h1 | `clamp(2.75rem, 1.6rem + 4.4vw, 5.5rem)` / `… 4vw, 5.25rem` | 360 | 0.96–0.98 |
+| Deeper-page h1 (`/ml/*`) | `clamp(2.75rem, 1.6rem + 4vw, 5.25rem)` | 360 | 0.98 |
 | `/ml` h2 | `clamp(2rem, 1.4rem + 2vw, 3rem)` | 380 | 1.05 |
 | Principle h3 | `clamp(1.5rem, 1.2rem + .8vw, 1.875rem)` | 420 | 1.12 |
 | Direction card h3 | 2rem | 420 | 1 |
@@ -124,24 +119,50 @@ Two hexagonal lattices that overlap; the overlap (itself a hexagon) is filled. L
 - Not Weft's weave-mark, not jewellery, not the Exofab mark.
 
 ### 3.4 Atmosphere and imagery
-- `assets/chamber.svg` (6 KB): three translucent hexagonal crystals, flat-shaded from a cool key at upper right and a warm fill at lower left, with champagne cut edges. Illustrative. Generated by `tools/make_chamber.py`.
+- `assets/chamber.svg` (6 KB), used as the `/ml` hero crystal: three translucent hexagonal crystals, flat-shaded from a cool key at upper right and a warm fill at lower left, with champagne cut edges. Illustrative. Generated by `tools/make_chamber.py`.
 - `assets/caustic.webp` (92 KB, 768×768, seamless): angular light facets (periodic Voronoi cells) with thin bright cut lines and slight warm/cool dispersion. Generated by `tools/make_caustic.py`.
 - No photography. No stock scientists, no actors, no engagement-ring moissanite, no video.
 
 ### 3.5 Motion
 | What | Behaviour | Reduced motion |
 |---|---|---|
-| Hero caustic layer A | `transform: translate3d` drifts one tile (768px) diagonally over **36s**, linear, infinite. Opacity 0.16, `mix-blend-mode: screen`, radial-masked to the crystal. | No animation (static). |
-| Hero caustic layer B | Same texture at 1100px, opposite diagonal, **52s**, opacity 0.12. | Static. |
-| Hero seam | 1px vertical champagne→ember gradient at 61% width with a faint glow. Static. Hidden under 860px. | Same. |
+| `/ml` chamber caustic layer A | `transform: translate3d` drifts one tile (768px) diagonally over **36s**, linear, infinite. Opacity 0.16, `mix-blend-mode: screen`, radial-masked to the crystal. | No animation (static). |
+| `/ml` chamber caustic layer B | Same texture at 1100px, opposite diagonal, **52s**, opacity 0.12. | Static. |
+| `/ml` chamber seam | 1px vertical champagne→ember gradient at 61% width with a faint glow. Static. Hidden under 860px. | Same. |
+| Threshold seam (`/`) | 2px static vertical line at 50%, glow via box-shadow. **No animation, ever.** | Same. |
+| Easter-egg hover/focus (`/`) | Seam segment and jewel brighten over 180ms. No pulse, no loop. | Instant change (no transition). |
 | Chapter reveal | Elements with `.reveal`: opacity 0→1 and translateY 14px→0 over 900ms `cubic-bezier(.22,.61,.36,1)`, once, when 8% into the viewport. Only when JS has added `.js` to `<html>`. | Shown immediately; no transition. |
 | Hover/focus on links, cards | 180ms colour/border transitions; arrows nudge 3–4px. | Transitions removed. |
 | Weft doorway | Sliver widens 10px → 34% over 520ms on hover/focus. | Instant switch, no transition. |
 | Smooth scroll | Only under `prefers-reduced-motion: no-preference`. | Off. |
-No parallax, no bounce, no pulsing, no pause/play controls (nothing should look like it pauses real work). Animations are compositor-only (transform/opacity).
+No parallax, no bounce, no pulsing (including on the easter egg), no pause/play controls (nothing should look like it pauses real work). Animations are compositor-only (transform/opacity).
 
 ### 3.6 Tone
 Quiet, filmic, humble. A research lab that happens to look like a still from a serious science-fiction film. Captions state what things are ("Fig. 1 — illustration"). Nothing is "live", "launching", or "join". Status words: **Direction**, **Direction · foundation**, **Open research program**, **Aspiration**. Never "Live product", "Beta", "Coming soon".
+
+### 3.7 Threshold hero surfaces (apex hero only; not tokens)
+| Surface | Value |
+|---|---|
+| Carbon half | `radial-gradient(90% 80% at 85% 60%, #3a2414 0%, #1d130b 45%, #0d0907 100%)` |
+| Silicon half | `radial-gradient(90% 80% at 15% 40%, #2a333e 0%, #141a21 45%, #08090c 100%)` |
+| Facet hatch (both halves) | two `repeating-linear-gradient`s at ±60°, 1px lines every 61px, `rgb(255 255 255/.025)`, layer opacity .5 |
+| Seam | 2px at `left: 50%`; `linear-gradient(180deg, transparent 4%, rgb(243 230 198/.4) 18%, #f3e6c6 34%, #fff8e6 54%, #f3e6c6 78%, transparent)`; glow `0 0 24px 4px rgb(230 210 168/.42), 0 0 120px 30px rgb(230 210 168/.11)` |
+| Centre scrim | ellipse `min(1240px, 112vw)` × `min(640px, 82%)` centred at 50% / 52%: `radial-gradient(closest-side, rgb(8 7 6/.62) 0%, rgb(8 7 6/.52) 45%, rgb(8 7 6/.26) 75%, transparent)` |
+| Banner scrim | behind the proposal block, inset −44px −140px: `radial-gradient(closest-side, rgb(8 7 6/.72), rgb(8 7 6/.5) 50%, rgb(8 7 6/.18) 80%, transparent)` |
+| Glyph halo | title, lede and banner: `text-shadow: 0 0 2px rgb(8 7 6/.95), 0 0 14px rgb(8 7 6/.9)` |
+These values were tuned until the measured contrast in §12 passed. If smith changes any of them, re-run `tools/contrast.mjs`.
+
+### 3.8 Observatory palette (`observatory.css`; Observatory only)
+| Token | Value | Role |
+|---|---|---|
+| `--o-bg` / `--o-bg-2` / `--o-surface` | `#0d0f11` / `#12151a` / `#151920` | Plate ground, footer/notes, door hover |
+| `--o-ink` / `--o-ink-2` | `#e9ebee` / `#b9bfc7` | Headings and readouts / body |
+| `--o-muted` | `#8b939d` | Mono captions (≥ 5.8:1 on the plate, measured) |
+| `--o-line` / `--o-line-2` / `--o-tick` | `#222830` / `#333b45` / `#5b6571` | 96px measurement grid (64px under 600px), rules, scale ticks |
+| `--o-focus` / `--o-fire` | `#e6d2a8` | Focus ring; the one warm accent (chip swatch, note corner) |
+| `--o-weft` / `--o-weft-bg` | `#7fcbe3` / `#060a12` | Only on things that point at Weft |
+| Spectrum | `#3a1d5c → #2a3f9a → #2f7fb5 → #3fae8c → #b9c55a → #e6c46a → #e08a3e → #b03a2e`, `saturate(.55) brightness(.8)`, 1px dark slits every 8px | Calibration plate (Fig. B1) and the small per-direction spectral bars |
+Not Weft's marble-teal/slate; not the Carbon–Silicon Cut warm tokens. Display type is IBM Plex Sans 400 (tight tracking, −0.035 to −0.04em); captions IBM Plex Mono. No Source Serif on Observatory.
 
 ---
 
@@ -153,21 +174,27 @@ No purple gradients · no glassmorphism blur soup (the only blur is the sticky h
 ## 5. Family and navigation
 
 ### 5.1 Visitor path
-Landing ("the house / the proposal") ↔ `/ml` ("the lab") ↔ `/weft` ("one public research program"). Every page on `/` and `/ml` can reach the other two in one click, from the header and the footer.
+Landing ("the house / the proposal", Threshold) ↔ `/ml` ("the lab", chamber) ↔ `/weft` ("one public research program"). Every page on `/` and `/ml` can reach the other two in one click, from the header and the footer. Observatory is **not** in any nav; it is reached only from the seam (§6A) and links back to all three.
 
 ### 5.2 Family header (on `/` and `/ml`) — this is the header
 
+On `/` (Threshold variant, three columns that echo the split):
 ```
-[mark] Siliconcordat     Moissanite Labs     ◇ Weft                    [WORKING PROPOSAL chip — /ml pages only]
+Moissanite Labs                     [mark] Siliconcordat                     ◇ Weft
+ (carbon side, left)                (centred on the seam, current)          (silicon side, right)
+```
+On `/ml` and `/ml/*` (standard variant):
+```
+[mark] Siliconcordat     Moissanite Labs     ◇ Weft                    [WORKING PROPOSAL chip]
 ```
 - Height 64px. `--gutter` side padding, max width = page max (`1280` on `/`, `1120` on `/ml`).
 - Links: "Siliconcordat" → `/`, "Moissanite Labs" → `/ml`, "Weft" → `/weft`. Same tab.
 - Items: Plex Sans 500 0.875rem `--ink-2`; hover `--ink`. Brand item: Source Serif 500 1.125rem `--ink`. Each target ≥ 44px tall.
 - **Current item:** `aria-current="page"` + text `--ink` + **1px `--fire` underline** (9px above the bar's bottom) + **5px fire diamond** centred under it. Never colour alone. On `/`, Siliconcordat is current; on `/ml` and `/ml/*`, Moissanite Labs is current.
 - **Weft item:** a 6px diamond tick before "Weft": fill `--weft-bg`, 1px `--weft-link` outline. Hover: text and tick turn `--weft-link` (the tick fills). This is the only aqua in the header.
-- **On `/`:** header is `position: fixed` over the hero with a top-down fade (`rgb(10 9 8/.7)` → transparent) and no border. After 24px of scroll (`.is-scrolled`), it becomes `rgb(10 9 8/.7)` + 10px backdrop blur + 1px `--line` bottom border. No chip in the landing header (the hero has it).
+- **On `/` (Threshold):** `ul.fam.th-fam` is a 3-column grid (`1fr auto 1fr`) spanning the full width minus `--gutter`: "Moissanite Labs" left-aligned, mark + "Siliconcordat" centred (current), "Weft" right-aligned. DOM and tab order: Moissanite Labs → Siliconcordat → Weft. No menu: at ≤ 720px links tighten (0.8125rem, 8px padding); at ≤ 480px the "Siliconcordat" word is visually hidden (kept for assistive tech) and the mark alone carries the current underline + diamond. The header is `position: fixed` over the hero with a top-down fade (`rgb(10 9 8/.7)` → transparent) and no border. After 24px of scroll (`.is-scrolled`), it becomes `rgb(10 9 8/.7)` + 10px backdrop blur + 1px `--line` bottom border. No chip in the landing header (the hero has it).
 - **On `/ml`:** `position: sticky`, solid treatment from the start, and the "Working proposal" chip at the right.
-- **Mobile (≤ 720px):** mark + "Siliconcordat" stays; the other links and the chip collapse into `<details class="menu">` with a 44×44 "Menu" summary (mono, 1px `--line-2` border, fire border when open). Panel: `--surface`, 1px `--line-2`, 2px radius, rows 48px tall, 1px `--line` separators. Current row: 2px inset fire bar on the left and a mono "HERE" tag on the right. Escape closes the menu and returns focus to the summary. Works without JS.
+- **Mobile (≤ 720px), `/ml` and `/ml/*`:** mark + "Siliconcordat" stays; the other links and the chip collapse into `<details class="menu">` with a 44×44 "Menu" summary (mono, 1px `--line-2` border, fire border when open). Panel: `--surface`, 1px `--line-2`, 2px radius, rows 48px tall, 1px `--line` separators. Current row: 2px inset fire bar on the left and a mono "HERE" tag on the right. Escape closes the menu and returns focus to the summary. Works without JS.
 
 ### 5.3 On `/weft` — wayfinding, not a restyle (recommended default)
 Annotation: `prototypes/family-weft.html` · shot: `shots/family-weft-1440.png`. Facsimiles are simplified redraws for annotation only.
@@ -179,51 +206,103 @@ Weft's current header has one link (mark + "ML Weft" + "Moissanite Labs") to Wef
 4. While Weft is served on w3ft.org, links 2 and 3 are absolute: `https://siliconcordat.com/ml` and `https://siliconcordat.com/`.
 5. Under 860px Weft already hides `.brand-org`; keep that, and append to the bottom of Weft's existing `.menu-panel`, after a 1px Weft `--line` rule, a muted "Moissanite Labs family" label plus "Moissanite Labs" and "Siliconcordat" links in Weft's menu-link style.
 
-Markup and CSS for Weft are in the annotation page (two code blocks). Nothing else on `/weft` changes: no colours, fonts, chrome, loom canvas, theme toggle, GitHub button, sections or footer.
+Markup and CSS for Weft are in the annotation page (two code blocks). The annotation also notes the 2026-11-10 arrangement: Weft's "Siliconcordat" link lands on the Threshold landing, "Moissanite Labs" on the chamber-hero `/ml`; Observatory is never added to Weft's header or menu. Nothing else on `/weft` changes: no colours, fonts, chrome, loom canvas, theme toggle, GitHub button, sections or footer.
 
 **Fallback (not default):** a 32px rail above Weft's header, painted only in Weft tokens (`#060a12` ground, `#86a0b5` links, `#7fcbe3` for current "Weft", `#142a3c` rule, Weft system type at 0.78rem) listing Siliconcordat · Moissanite Labs · Weft. Not recommended: two stacked headers read as two sites.
 
+### 5.4 Observatory header
+`Siliconcordat` (mark + mono uppercase, → main landing) · `Moissanite Labs` (→ `/ml`) · `◇ Weft` (→ `/weft`, aqua tick) … right: mono "◇ Observatory · plate 00" (a non-link location label; this is how current location is shown, not by colour) and a quiet "← Main landing" link behind a 1px rule. 56px tall, 1px `--o-line` bottom, solid `--o-bg`. ≤ 860px: the location label and "← Main landing" hide (the Siliconcordat link is the way back). ≤ 600px: the Siliconcordat word is visually hidden, mark only. No askaconsult name anywhere. In production all three family links are absolute (§10.4).
+
 ---
 
-## 6. Layout: `/` (cinematic landing) — `prototypes/landing.html`
-Max width 1280px, `--gutter` = `clamp(20px, 5vw, 48px)`. Shots: `landing-hero-1440.png`, `landing-principles-1440.png`, `landing-ecosystem-1440.png`, `landing-doorways-1440.png`, `landing-full-1440.png`, `landing-hero-390.png`, `landing-390.png`.
+## 6. Layout: `/` (Threshold landing) — `prototypes/landing.html`
+Max width 1280px for chapters, `--gutter` = `clamp(20px, 5vw, 48px)`. Shots: `landing-hero-1440.png`, `landing-principles-1440.png`, `landing-ecosystem-1440.png`, `landing-doorways-1440.png`, `landing-full-1440.png`, `landing-hero-390.png`, `landing-390.png`.
 
-**a. Family header.** Fixed overlay variant (§5.2).
+**a. Family header.** Threshold variant (§5.2), fixed overlay with the scroll state.
 
-**b. Hero (`<section class="hero">`).** `min-height: max(680px, 100svh)`; content anchored to the bottom-left.
-- Atmosphere stack (all `aria-hidden`, `pointer-events: none`): (1) three radial gradients: cool glow at 74% 44%, warm glow at 18% 88%, `--bg-2`→`--bg` from the top; (2) `chamber.svg` at `min(1320px, 92vw)` wide, right −4vw, vertically centred (−46%), opacity .78, radial mask so its edges dissolve; (3) caustic layers A and B (§3.5); (4) seam; (5) a floor gradient fading the bottom 40% into `--bg`.
-- Content column, left: **proposal block** first, never hidden: the "WORKING PROPOSAL" chip (mono 0.75rem uppercase, `--fire`, 1px fire border at 50%, rotated-square glyph, 2px radius) followed by the full banner sentence in Plex Sans 0.9375rem `--ink-2`, max 44rem. Then **h1** "The / Siliconcordat" ("The" small on its own line). Then the **mission sentence** as lede (Source Serif, roman, `--ink-2`). Then two text links: "Principles ↓" (to `#principles`) and "Moissanite Labs →" (to `/ml`): Plex Sans 500, `--ink`, 1px `--line-2` underline bar; hover → `--fire-strong`, fire bar, arrow nudges 3px.
-- Lab caption, bottom-right (desktop only): "Si · C — silicon carbide" / "Fig. 1 — illustration, hexagonal habit" in mono `--muted`, element symbols in their colours.
-- Scroll cue, bottom-centre (hidden under 600px): mono "THE NAME" with a 36px fire→transparent line; links to `#name`.
-- 390px: crystal moves to the top-right (150vw wide, right −22vw, top 40px, opacity .5), seam and caption hidden, text stays bottom-anchored.
+**b. Hero (`<section class="th-hero">`).** `min-height: max(720px, 100svh)`; two equal grid halves (§3.7), the seam at exactly 50%, all decorative layers `aria-hidden`.
+- Content is centred on the seam (`.th-center`, text-align centre, symmetric `--gutter` padding so the column's centre **is** the seam): (1) **proposal block**: "WORKING PROPOSAL" chip, then the full banner sentence (Plex Sans 0.9375rem `--ink-2`, max 40rem), never hidden; (2) **h1 "The Siliconcordat"** straddling the seam: Source Serif 4 360, `clamp(2.9rem, 1.2rem + 7vw, 9rem)` (≈120px at 1440, ≈46px at 390), line-height .92, tracking −0.03em, `opsz 60`, "The" and "Siliconcordat" each `nowrap` so the title wraps only between the two words; (3) **mission lede**: Source Serif 380, `clamp(1.2rem, 1rem + .8vw, 1.625rem)`, `--ink`, max 34ch; (4) **actions row**: a 3-column grid `1fr 44px 1fr`, max 640px: "Principles ↓" (→ `#principles`) right-aligned on the carbon side, the **easter-egg jewel** in the 44px centre cell on the seam (§6A), "Moissanite Labs →" (→ `/ml`) left-aligned on the silicon side. Text links are the standard `.textlink`.
+- Element labels bottom-left "C · CARBON" (`--carbon`) and bottom-right "Si · SILICON" (`--silicon`), mono 0.6875rem, tracking .16em, `aria-hidden` (decorative; the name chapter states the elements in text).
+- **Contrast rule (the a11y fix):** text that crosses the seam must meet AA against the brightest backdrop pixel within 2px of its glyphs, on both halves, at every width. This is achieved with three layers, none of them an opaque box: the centre scrim, the banner scrim, and the glyph halo (§3.7). The split must still read: the scrim fades to 0 before the outer thirds of each half, and the seam stays visible above, between and below the text. Verify with `node tools/contrast.mjs landing.html <w> <h> ".th-proposal p,.th-title,.th-lede"` (§12).
+- **Mobile:** keep the vertical seam (it is the signature; **never** switch to a horizontal split). Padding tightens (`header + 28px` top, 72px bottom); banner 0.875rem; actions gap 8px and 0.875rem; labels at 24px from the bottom. The title wraps to "The / Siliconcordat" only if needed.
+- No scroll cue (the seam is the only vertical mark on the hero; a second one would compete with the easter egg).
 
-**c. Chapter 01 — The name (`#name`).** Chapter marker: mono "01 THE NAME" with the number in fire and a hairline to the right edge. Two columns 5fr / 6fr, gap `clamp(40px, 7vw, 112px)`.
-- Left: pull quote (README sentence: "The bond between silicon and carbon is a metaphor for the symbiosis the lab wants to cultivate.") then the **element plate**: Si tile (14, Silicon, cool border and glow) — bond line (silicon→fire→carbon gradient, "SiC" label) — C tile (6, Carbon, warm). Caption "Moissanite · a naturally occurring form of silicon carbide".
-- Right: README paragraph 1 in full, split into three paragraphs (mission at 1.1875rem `--ink`; name; Siliconcordat). Then the **caveat block** in readable body type, not a footnote: 1px fire left rule with a fire diamond at the top, mono label "WHAT THE METAPHOR IS NOT", and the sentence in `--ink` 1.0625rem.
-- Under 860px the columns stack (quote and plate first).
+**c. Chapters below the fold: no split.** Chapter 01 The name, 02 Principles, 03 Ecosystem (with constellation and direction cards), 04 Doorways, then the footer: identical in content, layout and components to the 2026-11-08 landing (the specs that follow are unchanged). The Threshold continues only as:
+- each `.chapter` has no bottom border; instead a **1px top hairline** `linear-gradient(90deg, transparent, rgb(196 132 74/.4) 22%, rgb(230 210 168/.7) 50%, rgb(157 176 196/.4) 78%, transparent)` and a **seam stub**: 1px × 56px (36px under 600px) at 50%, `rgb(230 210 168/.55)` → transparent. Decorative, `pointer-events: none`.
+- the footer gets a 1px `--line` top rule.
+Nothing else in the chapters is warm-left/cool-right.
 
-**d. Chapter 02 — Principles (`#principles`).** Head row: h2 "We intend to build for:" (the README's own lead-in) and mono "Six principles · proposed for review". Then `<ol class="principles">`: 3×2 grid at ≥ 1081px, 2×3 at 601–1080px, 1 column ≤ 600px. Cells are hairline-ruled (1px `--line` right/bottom, `--line-2` top), min-height 300px desktop, 32px padding, a 28px fire tick on each cell's top-left edge. Inside: mono numeral "01"–"06" in fire with a 24px rule; h3 principle name; the full README sentence(s). Not interactive (no hover). Each `<li>` has an id equal to the principle slug (§10.2).
+- **01 The name (`#name`).** Chapter marker: mono "01 THE NAME" with the number in fire and a hairline to the right edge. Two columns 5fr / 6fr, gap `clamp(40px, 7vw, 112px)`. Left: pull quote (README sentence: "The bond between silicon and carbon is a metaphor for the symbiosis the lab wants to cultivate.") then the **element plate**: Si tile (14, Silicon, cool border and glow) — bond line (silicon→fire→carbon gradient, "SiC" label) — C tile (6, Carbon, warm). Caption "Moissanite · a naturally occurring form of silicon carbide". Right: README paragraph 1 in full, split into three paragraphs (mission at 1.1875rem `--ink`; name; Siliconcordat). Then the **caveat block** in readable body type: 1px fire left rule with a fire diamond at the top, mono label "WHAT THE METAPHOR IS NOT", and the sentence in `--ink` 1.0625rem. Under 860px the columns stack.
+- **02 Principles (`#principles`).** Head row: h2 "We intend to build for:" and mono "Six principles · proposed for review". Then `<ol class="principles">`: 3×2 grid at ≥ 1081px, 2×3 at 601–1080px, 1 column ≤ 600px. Hairline-ruled cells, min-height 300px desktop, 32px padding, a 28px fire tick on each cell's top-left edge; mono numeral "01"–"06" in fire with a 24px rule; h3 principle name; the full README text. Not interactive. Each `<li>` has an id equal to the principle slug (§10.2).
+- **03 Ecosystem (`#ecosystem`).** h2 "Building the ecosystem" + README paragraph 2 + **Status note** (mono "STATUS" in fire, README caveat sentence in `--ink`). Then the **constellation figure** (hidden ≤ 600px; cards carry the same information): warm→champagne→cool foundation line "EXO · FOUNDATION", four nodes (Exofab, Synbios, Koinos, Ethos — each "DIRECTION"), a dashed extension with a hollow node "ROBOTICS / ASPIRATION". Caption: "Fig. 2 — Directions for work, drawn on the Exo foundation. Robotics sits off the line: an aspiration." Then the **direction cards** (§8.5), 3 / 2 / 1 columns: Exo, Exofab, Synbios, Koinos, Ethos, Robotics (aspiration).
+- **04 Doorways (`#doorways`).** Two equal panels, min-height 380px (300px on mobile), stacked under 860px: **Moissanite Labs** → `/ml` (kicker "THE LAB … /ml", title, description, "Enter the lab →", warm/cool glows and mark watermark; hover/focus border → fire 60%) and **Weft** → `/weft` (§8.7). Observatory is **not** a doorway.
 
-**e. Chapter 03 — Ecosystem (`#ecosystem`).** Head row: h2 "Building the ecosystem" (README heading) + README paragraph 2 (Exo… accountability) + a **Status note** (bordered box, mono "STATUS" label in fire, README caveat sentence in `--ink`). Then the **constellation figure** (desktop/tablet; hidden ≤ 600px because the cards carry the same information): an inline SVG lab diagram: a warm→champagne→cool foundation line labelled "EXO · FOUNDATION", four nodes rising from it (Exofab, Synbios, Koinos, Ethos — each "DIRECTION"), and a dashed extension with a dashed hollow node "ROBOTICS / ASPIRATION" off the foundation. Caption: "Fig. 2 — Directions for work, drawn on the Exo foundation. Robotics sits off the line: an aspiration." Then the **direction cards** (§8.5) in a 3-column grid (2 at ≤ 1080px, 1 at ≤ 600px), in order: Exo, Exofab, Synbios, Koinos, Ethos, Robotics (aspiration).
+**d. Footer.** Two columns (4fr / 7fr, stacked under 860px). Left: mark + "Siliconcordat" (→ `/`), family list with mono paths (`The Siliconcordat /`, `Moissanite Labs /ml`, `Weft /weft`), current page underlined in fire. Right: **humility block** (mono "WORKING PROPOSAL" in fire, banner sentence, caveat sentence). Base row: mono "Moissanite Labs", a source link to `https://github.com/Moissanite-Labs/siliconcordat` (label `github.com/Moissanite-Labs/siliconcordat`, same `.meta` style as the neighbouring labels, plus visually hidden "(external site)"), and "siliconcordat.com". This source link is already live on the current `/` and `/ml` footers; keep it. No Observatory link in the footer.
 
-**f. Chapter 04 — Doorways (`#doorways`).** Two equal panels, min-height 380px (300px on mobile), stacked under 860px.
-- **Moissanite Labs** → `/ml`. Kicker "THE LAB" … "/ml"; title "Moissanite Labs" (Source Serif 360, up to 4.25rem); description; "Enter the lab →". Surface: `--surface` with a warm glow bottom-left and cool glow top-right, mark watermark. Hover/focus: border → fire 60%, action bar → fire, arrow +4px.
-- **Weft** → `/weft` (§8.7).
+---
 
-**g. Footer.** Two columns (4fr / 7fr, stacked under 860px). Left: mark + "Siliconcordat" (→ `/`), then the family list with mono paths (`The Siliconcordat /`, `Moissanite Labs /ml`, `Weft /weft`); current page underlined in fire. Right: **humility block**: 1px `--line-2` top rule, mono "WORKING PROPOSAL" in fire, the banner sentence, and the caveat sentence. Base row: mono "Moissanite Labs", quiet link to `https://github.com/Moissanite-Labs/siliconcordat` (§10.4), and "siliconcordat.com". No newsletter, social icons, or copyright claims.
+## 6A. The easter egg — hidden spot on the seam
+Shots: `state-seam-hover-1440.png`, `state-seam-focus-1440.png`, `state-seam-focus-390.png`.
+
+**Placement.** The centre cell of the hero actions row, i.e. on the seam just below the lede, between "Principles ↓" and "Moissanite Labs →". It is the seam's brightest node: where the scrim has dimmed the seam behind the text, the seam "re-emerges" here.
+
+**Markup.**
+```html
+<a class="th-egg" href="https://observatory.askaconsult.com/" aria-label="Observatory">
+  <span class="th-egg__jewel" aria-hidden="true"></span>
+  <span class="th-egg__label" aria-hidden="true">Observatory</span>
+</a>
+```
+**At rest.** Hit area 44 × 88px (meets WCAG 2.5.8 target size with margin), `display: block`, no border, no background, no visible text. Inside: a 2px vertical seam segment exactly over the hero seam (`rgb(243 230 198/.62)` at its centre, fading to 0 at both ends) and a 7px rotated-square jewel at the centre (`#f7eed8`, opacity .7, `0 0 10px 2px rgb(230 210 168/.28)` glow). It reads as a node on the seam (like a separator between the two links), not as a button.
+**Hover (the discovery moment).** Segment → `rgb(255 248 230/.95)` with `0 0 18px 2px rgb(230 210 168/.35)`; jewel opacity 1 with `0 0 16px 4px rgb(243 230 198/.5)`. 180ms. No label on hover (the cursor change is the hint; the label is for keyboard users).
+**Focus-visible.** Standard 2px `--focus` outline, offset 3px, around the 44 × 88 area; segment at full `#fff8e6` with a stronger glow; jewel glow `0 0 22px 6px`; the mono label "OBSERVATORY" (0.6875rem, tracking .14em, `--fire` on a `rgb(8 7 6/.92)` 4×6px-padded backing, 12:1) appears just below and to the right of the seam (`left: calc(50% + 14px)`), so it never sits on the seam itself.
+**Tab order.** Skip link → Moissanite Labs → Siliconcordat → Weft → Principles ↓ → **Observatory** → Moissanite Labs → … It is a normal link in DOM order, never `tabindex="-1"`, never a 1×1 trap. Its accessible name is "Observatory" (the visible focus label matches it, per WCAG 2.5.3).
+**Reduced motion.** No animation of any kind at any setting (no pulse). Under `prefers-reduced-motion: reduce`, hover/focus changes apply instantly (no transition).
+**Href rules.**
+- Production: `https://observatory.askaconsult.com/` (same tab; it is a sibling page, not marked ↗ because there is no visible text to mark).
+- Staging: if Observatory is served on the same host for preview, point the control at `/observatory/` on `staging.siliconcordat.com` (§15A). Smith may make the href a build variable.
+- Prototype: `observatory.html` so click-through works locally.
+**Never:** no tooltip at rest, no "psst"/teaser copy, no analytics hook, no second hidden spot, no link to Observatory in nav, footer or doorways.
 
 ---
 
 ## 7. Layout: `/ml` (the lab) — `prototypes/ml.html`
-Same tokens, tighter chrome: 1120px max, smaller titles, more rules and mono captions, no hero animation. Shots: `ml-top-1440.png`, `ml-1440.png`, `ml-390.png`.
+Same tokens; 1120px max for content. The chamber hero is the lab entrance; everything below it is the lab index as before. Shots: `ml-top-1440.png`, `ml-1440.png`, `ml-390.png`, `ml-top-390.png`.
 
-1. **Family header** (sticky; Moissanite Labs current; chip on the right).
+1. **Family header** (standard variant, sticky; Moissanite Labs current; chip on the right).
 2. **Local nav** (sticky under the header at 64px; 48px tall; 1px `--line` bottom): mono "MOISSANITE LABS" label, then **About · Directions · Principles**. On `/ml` they are in-page anchors (`#about`, `#directions`, `#principles`); the current section uses `aria-current="location"` with the same 1px fire underline. On deeper pages, "Principles" links to `/ml/principles/` and carries `aria-current="page"`. Horizontally scrollable on narrow screens, no scrollbar.
-3. **Lab hero**: 7fr / 5fr. Left: mono eyebrow "THE LAB" (fire), h1 "Moissanite Labs", mission sentence as lede. Right: **instrument plate**: `chamber.svg` cropped in a 4:3 frame, 1px `--line-2` border, four 9px fire corner ticks, mono caption bar "Fig. 1 — SiC, illustration" / "Si · C". Stacks under 860px.
-4. **About** (`#about`): 3fr / 8fr. Left: h2 "About", mono "From the Siliconcordat", proposal chip. Right: README paragraph 1 (mission as a Source Serif 1.375rem first paragraph; then name; then Siliconcordat), the caveat block, README paragraph 2 (Exo…), and "Read the Siliconcordat →" to `/`. No team, bios or founder names.
-5. **Directions** (`#directions`): left h2 "Directions" + mono count "Index · 5 directions · 1 program · 1 aspiration"; right the Status note. Then an **index table** (not cards: the lab is denser than the landing): rows of `ID | name | description | status + link`, columns 64px / 1.6fr / 4fr / 3fr, 26px vertical padding, 1px rules. IDs: D-01…D-05 for directions, P-01 for Weft under a mono "PUBLIC RESEARCH PROGRAM" subhead, A-01 for Robotics under "ASPIRATION" (dashed bottom rule, dashed diamond, no link). Row states in §8.6.
-6. **Principles** (`#principles`): left h2 "Principles" + mono "We intend to build for:"; right a 2-column index of the six (numeral, name, arrow) linking to `/ml/principles/#slug`, then "All six principles →".
+3. **Chamber hero (`<section class="hero hero--lab">`) — transplanted from the 2026-11-08 apex.** Visual treatment is the old apex hero, unchanged: the same `.chamber` stack (three radial gradients; `chamber.svg` at `min(1320px, 92vw)`, right −4vw, opacity .78, radial mask; caustic layers A/B drifting 36s/52s; 1px seam at 61%; floor fade), the same type and the same lab caption bottom-right ("Si · C — silicon carbide" / "Fig. 1 — illustration, hexagonal habit"). What changes:
+   - **Heading is the lab's:** mono eyebrow "THE LAB" (fire), h1 **"Moissanite Labs"** in the hero title style at `clamp(3rem, 1rem + 7vw, 8rem)` (≈117px at 1440, 48px at 390), max 9ch so it sets as "Moissanite / Labs"; then the mission sentence as `.hero__lede`. No proposal banner in this hero (the chip is in the header and the About aside; the banner is in the footer).
+   - **Actions** are in-page jumps plus the way back: "About ↓", "Directions ↓", "Principles ↓", "The Siliconcordat →" (→ `/`).
+   - Height `max(620px, 100svh − header − local nav)` so the chamber fills the first screen under the two sticky bars; content bottom-anchored with `clamp(64px, 12vh, 140px)` top padding (header is not overlaid here).
+   - The fig caption gets a soft void halo (`text-shadow: 0 0 2px/10px/18px var(--bg)`) and `--ink-2` so it holds AA over crystal facets (it measured 4.43:1 on the old apex; now ≥ 9.3:1).
+   - ≤ 860px: crystal moves to the top-right (150vw, opacity .5), seam and caption hidden, hero min-height 640px, text starts 220px down so it sits under the crystal, not over its brightest facets.
+4. **About** (`#about`): 3fr / 8fr. Left: h2 "About", mono "From the Siliconcordat", proposal chip. Right: README paragraph 1 (mission first in Source Serif 1.375rem; name; Siliconcordat), the caveat block, README paragraph 2, "Read the Siliconcordat →" to `/`. No team, bios or founder names.
+5. **Directions** (`#directions`): h2 + mono count "Index · 5 directions · 1 program · 1 aspiration"; Status note; index table `ID | name | description | status + link` (64px / 1.6fr / 4fr / 3fr). D-01…D-05, P-01 Weft under "PUBLIC RESEARCH PROGRAM", A-01 Robotics under "ASPIRATION". Row states §8.6.
+6. **Principles** (`#principles`): h2 + mono "We intend to build for:"; 2-column index of the six linking to `/ml/principles/#slug`; "All six principles →".
 7. **Footer** (Moissanite Labs current).
+
+The previous framed specimen ("instrument plate", `.plate`) is retired from `/ml`; its CSS stays in `site.css` for possible reuse on deeper pages but is unused. `/ml/principles/` is unchanged (§9): it already uses the lab's doc template and does not reference the plate, so the transplant creates no inconsistency.
+
+---
+
+## 7A. Layout: Observatory (easter egg) — `prototypes/observatory.html` + `prototypes/observatory.css`
+Production `https://observatory.askaconsult.com/`; staging `/observatory/` on `staging.siliconcordat.com`. Max width 1280px, `--o-gutter` = `clamp(20px, 5vw, 48px)`. Shots: `observatory-hero-1440.png`, `observatory-1440.png`, `observatory-390.png`, `observatory-hero-390.png`.
+
+The same Siliconcordat substance as `/`, restated as numbered instrument **plates**. Same README text, same order, same caveats. Not a different manifesto and not a joke.
+
+1. **Header** (§5.4).
+2. **Plate 00 — hero (`.o-plate`).** `min-height: max(700px, 100svh − 56px)`; 96px measurement grid (1px `--o-line`) under a radial vignette; two crosshair registration marks. Grid 7fr / 5fr:
+   - Left column: proposal block (chip with a dark→champagne swatch + "WORKING PROPOSAL"; full banner sentence), h1 with a mono kicker line "MOISSANITE LABS · MANIFESTO" and "The Siliconcordat" in Plex Sans 400 `clamp(2.75rem, 1.5rem + 5.4vw, 7rem)`, tracking −0.04em; mission lede (Plex Sans 1.2–1.375rem, `--o-ink-2`, 32ch); mono text links "PRINCIPLES ↓" / "DIRECTIONS ↓".
+   - Right column, the **instrument** (`<figure>`): caption "Fig. B1 — calibration plate · fire as dispersion, illustrative"; the 120px spectrum with four 1px emission lines and a 400–700 nm scale; the element **readout** as a `<dl>` (Element Si · 14 / Element C · 6 / Compound SiC / Mineral Moissanite); foot caption "Si · C — silicon carbide · illustration".
+   - ≤ 860px: the instrument stacks **below** the title (border-top instead of border-left), crosshairs hide, grid stays (64px under 600px) and the spectrum keeps full width.
+3. **Plate 01 — The name (`#name`).** Mono plate marker (boxed "PLATE 01" + label + a tick-ruler rule). Left: h2 = the README bond sentence; a ruled sample (Z 14 Si — SiC — Z 6 C) with `aria-label`; caption "Fig. B2 — Moissanite · a naturally occurring form of silicon carbide". Right: README paragraph 1 (three paragraphs) and the caveat as a bordered **Note** ("NOTE · WHAT THE METAPHOR IS NOT"), champagne corner tick.
+4. **Plate 02 — Principles (`#principles`).** h2 "We intend to build for:" + "Six principles · proposed for review". 3×2 ruled grid (2 / 1 columns at 1080 / 600px): mono "§01"–"§06" with a tick ruler, h3 name, README text. Ids = slugs (§10.2). Static.
+5. **Plate 03 — Ecosystem (`#ecosystem`).** h2 "Building the ecosystem", README paragraph 2, **Status** note with the directions caveat. Then an instrument table: `ID | spectral bar | name | description | status + link` (64 / 120px / 1.4fr / 3.6fr / 2.6fr). Each direction's spectral bar is a muted copy of the spectrum with one emission line at a fixed position (decorative, `aria-hidden`; it implies no measurement). D-01…D-05 link per §10.4 (stretched title link, ↗ URL label `aria-hidden`, hidden "(external site)"; Synbios GitHub secondary; Koinos synmerit aside); Exo's status diamond filled ("Direction · foundation"). P-01 Weft (aqua-outlined navy bar, "/weft →" in aqua, hover darkens toward Weft navy with a 2px aqua inset). A-01 Robotics (dashed bar, dashed rule, no link). ≤ 600px the row collapses to `ID | content`.
+6. **Plate 04 — Doorways (`#doorways`).** Three ruled cells: The Siliconcordat (→ main landing, "Main landing →"), Moissanite Labs (→ `/ml`, "Enter the lab →"), Weft (→ `/weft`, aqua kicker and a 6px Weft-navy edge, "Open Weft →"). Hover: `--o-surface` fill and full-ink action underline. Focus: champagne ring inset 4px.
+7. **Footer.** Family links with mono paths, humility block (banner + caveat), base row "Moissanite Labs" / the same `https://github.com/Moissanite-Labs/siliconcordat` source link as `/` and `/ml` / "Observatory · plate 05". No askaconsult name, no copyright, no social.
+
+States: focus ring 2px `--o-focus` (champagne) offset 3px everywhere; reveal on scroll as on `/` (off under reduced motion; smooth scroll off too). No animation on the spectrum. No theme toggle.
 
 ---
 
@@ -266,7 +345,7 @@ A door left ajar into Weft's room.
 - Shot: `shots/state-weft-door-hover-1440.png`.
 
 ### 8.8 Footer
-§6g. Family links ≥ 40px tall; Weft link hover `--weft-link`; current page underlined in fire (6px offset).
+§6d. Family links ≥ 40px tall; Weft link hover `--weft-link`; current page underlined in fire (6px offset). The footer base row keeps the already-live source link `https://github.com/Moissanite-Labs/siliconcordat` (§10.4) between "Moissanite Labs" and "siliconcordat.com".
 
 ### 8.9 Skip link
 First focusable element on every page: "Skip to content" → `#main`. Hidden above the viewport; on focus it appears top-left, `--fire` background, `--bg` text (13.4:1).
@@ -289,7 +368,7 @@ Under 860px the TOC becomes a static list above the article.
 ### 10.1 Copy source
 Only The Siliconcordat (compass `README.md`). The prototypes set its words; smith copies them from `tools/build_prototypes.py` (constants at the top), which mirror the README. Before ship, re-diff those strings against the current compass README (see NOTES.md).
 - Banner (public form): "**Working proposal.** Siliconcordat is the chosen name for the Moissanite Labs manifesto. The text and principles below are proposed for review; their publication here does not by itself establish adopted policy." Never mention a repository.
-- The banner appears on `/` (hero + footer), `/ml` (footer; chip in header and About), and every `/ml/*` page (doc head + footer).
+- The banner appears on `/` (hero + footer), `/ml` (footer; chip in header and About), every `/ml/*` page (doc head + footer), and Observatory (Plate 00 + footer).
 - The substrate caveat ("The metaphor is not a claim … nor is this document a legal agreement.") appears in body type on `/` (chapter 01) and `/ml` (About), and in every footer.
 - The directions caveat ("These are directions for work … remain open.") appears directly above the directions on `/` and `/ml`.
 - "A future robotics role is an aspiration, not a present capability." appears as the Robotics card/row text.
@@ -298,7 +377,7 @@ Only The Siliconcordat (compass `README.md`). The prototypes set its words; smit
 `symbiosis`, `agency-and-consent`, `interoperability`, `traceability`, `real-world-outcomes`, `adaptation-with-control`. Names and text exactly as in the README; never renamed or reordered.
 
 ### 10.3 Structural labels (not README; herald may replace, must stay neutral)
-Chapter markers ("The name", "Principles", "Ecosystem", "Doorways"); "The lab"; "About the lab, its directions, and its principles."; "Enter the lab"; "Open Weft"; "Papers, runtime, and demos. Weft keeps its own site and design."; "Open research program"; "What the metaphor is not"; "Status"; "Fig. 1 — illustration, hexagonal habit"; "Fig. 2 — …"; "Read the Siliconcordat"; "All six principles"; element-plate facts (Si 14, C 6, "Moissanite · a naturally occurring form of silicon carbide"). None of these make product claims.
+Chapter markers ("The name", "Principles", "Ecosystem", "Doorways"); Observatory plate markers ("Plate 00"–"Plate 05", "Fig. B1 — calibration plate · fire as dispersion, illustrative", "Fig. B2 — …", "Note", "Main landing", "Observatory", "Moissanite Labs · manifesto"); element labels "C · carbon", "Si · silicon"; "The lab"; "About the lab, its directions, and its principles."; "Enter the lab"; "Open Weft"; "Papers, runtime, and demos. Weft keeps its own site and design."; "Open research program"; "What the metaphor is not"; "Status"; "Fig. 1 — illustration, hexagonal habit"; "Fig. 2 — …"; "Read the Siliconcordat"; "All six principles"; element-plate facts (Si 14, C 6, "Moissanite · a naturally occurring form of silicon carbide"). None of these make product claims.
 
 ### 10.4 Links (confirmed by scout via nizam, 2026-11-08)
 
@@ -311,11 +390,13 @@ Chapter markers ("The name", "Principles", "Ecosystem", "Doorways"); "The lab"; 
 | Ethos | `https://github.com/Moissanite-Labs/ethos` | — | |
 | Weft | `/weft` | — | Never GitHub weft/weft-eido/weft-corpus. |
 | Robotics | none | — | Aspiration. |
-| Manifesto (site-wide) | `https://github.com/Moissanite-Labs/siliconcordat` | — | Footer-base on `/`, `/ml`, and every `/ml/*` page; same tab, ↗, "(external site)". |
+| Footer source (not a direction card) | `https://github.com/Moissanite-Labs/siliconcordat` (label `github.com/Moissanite-Labs/siliconcordat`) | — | Already live in the `/` and `/ml` footer base row (verified 2026-11-10). Keep it on `/`, `/ml`, `/ml/*`, and Observatory. This is the public site repo, not a manifesto-file or Weft-repo link. Do not add a header "View on GitHub" button. |
 
-**Never link:** Moissanite-Labs/compass, credos, weft, weft-eido, weft-corpus, FOUNDER-VISION.md, SILICONCORDAT.md, NAMING.md (any host). Do not copy w3ft.org's "View on GitHub" button to `/` or `/ml`. Any future direction without a confirmed public URL uses the not-linked card (§8.5).
+**Never link:** compass, credos, weft, weft-eido, weft-corpus, FOUNDER-VISION.md, SILICONCORDAT.md, NAMING.md (any host). Do not copy w3ft.org's "View on GitHub" button to `/` or `/ml`. Any future direction without a confirmed public URL uses the not-linked card (§8.5).
 
 External links: same tab, mark with ↗, and include visually hidden "(external site)".
+
+**Observatory link rules.** Observatory lives on another host, so in production its family links are absolute: Siliconcordat / main landing → `https://siliconcordat.com/`, Moissanite Labs → `https://siliconcordat.com/ml`, Weft → `https://siliconcordat.com/weft` (staging: §15A). The direction links are the same as §10.4. The only link **to** Observatory is the seam control (§6A).
 
 ---
 
@@ -324,15 +405,17 @@ External links: same tab, mark with ↗, and include visually hidden "(external 
 | File | Size | Use |
 |---|---|---|
 | `assets/mark.svg` | <1 KB | Mark, favicon, header, footer, doorway watermark (inline the paths in HTML for the header to avoid a request). |
-| `assets/chamber.svg` | 6 KB | Hero crystal (`/`), lab plate (`/ml`). |
-| `assets/caustic.webp` | 92 KB | Hero caustic texture (CSS background, tiled). |
+| `assets/chamber.svg` | 6 KB | Chamber hero crystal on `/ml` (not used on `/`). |
+| `assets/caustic.webp` | 92 KB | `/ml` chamber caustic texture (CSS background, tiled). |
 | `assets/fonts/source-serif-4-opsz.woff2` | 120 KB | Display (variable wght 200–900 + opsz). Latin subset. |
 | `assets/fonts/ibm-plex-sans-{400,500,600}.woff2` | 22–24 KB each | Body/UI. Latin subset. |
 | `assets/fonts/ibm-plex-mono-{400,500}.woff2` | 15 KB each | Meta. Latin subset. |
 | `assets/fonts/LICENSE-*.txt` | — | SIL OFL 1.1 for each family. Ship them. |
 | `tokens.css` | — | Tokens + `@font-face`. Load before site CSS as a separate `<link>` (or inline into one file at build); not via `@import`. |
 
-Generators (not shipped): `tools/make_chamber.py`, `tools/make_caustic.py`, `tools/build_prototypes.py`, `tools/shoot.mjs`.
+`prototypes/observatory.css` is Observatory's stylesheet (with `tokens.css` for fonts). Threshold styles are in `prototypes/site.css` ("THRESHOLD LANDING" block).
+
+Generators and checks (not shipped): `tools/contrast.mjs`, `tools/make_chamber.py`, `tools/make_caustic.py`, `tools/build_prototypes.py`, `tools/shoot.mjs`.
 
 ---
 
@@ -340,10 +423,24 @@ Generators (not shipped): `tools/make_chamber.py`, `tools/make_caustic.py`, `too
 
 **A11y (WCAG 2.2 AA):**
 - All text pairs in §3.1 ≥ 4.5:1 (smallest: `--muted` on `--surface-2` 4.66:1). Large display text ≥ 10:1.
-- Text over the hero atmosphere sits on the dark left side at desktop; on mobile, the crystal is at 50% opacity behind the top of the column. Smith: verify the banner sentence stays ≥ 4.5:1 against the brightest facet behind it at 390px; if not, add `background: rgb(10 9 8/.6)` behind `.proposal p`.
+- **Text over atmosphere is measured, not assumed.** `tools/contrast.mjs` shoots each element with and without its glyphs, finds the brightest backdrop pixel within 2px of any glyph stroke, and reports WCAG contrast against that (worst case, not average). Results on the prototypes (2026-11-10):
+
+| Page / viewport | Element | Min contrast | Needs |
+|---|---|---|---|
+| `/` 1440×900 | banner `.th-proposal p` / title / lede | 6.18 / 5.69 / 4.67 | 4.5 / 3 / 3 (lede is 26px = large) |
+| `/` 1920×1080 | banner / title / lede | 5.50 / 5.83 / 4.60 | 4.5 / 3 / 3 |
+| `/` 1024×768 | banner / title / lede | 6.86 / 5.44 / 4.95 | 4.5 / 3 / 3 |
+| `/` 768×1024 | banner / title / lede | 7.69 / 5.15 / 5.13 | 4.5 / 3 / 4.5 |
+| `/` 390×844 | banner / title / lede | 6.64 / 5.53 / 5.05 | 4.5 / 3 / 4.5 |
+| `/` all | header links, C/Si labels, action links, chip | ≥ 5.9 | 4.5 |
+| `/` focus | easter-egg label | 12.06 | 4.5 |
+| `/ml` 1440 / 390 | eyebrow, title, lede, actions, fig caption | ≥ 8.9 (caption 9.32) | 4.5 / 3 |
+| Observatory 1440 / 390 | banner, kicker, lede, chip, captions, scale, readout | ≥ 5.84 | 4.5 / 3 |
+
+  Re-run after any change to §3.7 values: `node tools/contrast.mjs landing.html 1440 900 ".th-proposal p,.th-title,.th-lede"` (exit code 1 on any failure).
 - Landmarks: one `<header>`, `<nav aria-label>` for family, local and TOC navs, `<main id="main">`, `<footer>`. One h1 per page; h2 per chapter (visually hidden where the chapter marker carries the visible label).
 - Current state never colour-only (underline + diamond / inset bar + "HERE" tag).
-- Focus visible on everything (2px fire, offset 3px). Card focus wraps the whole card.
+- Focus visible on everything (2px fire, offset 3px; Observatory the same champagne). Card focus wraps the whole card. The easter egg is a real, focusable link (§6A).
 - Targets ≥ 44×44 (header, menu, local nav, text links, back links).
 - Decorative atmosphere, constellation SVG, crystal images: `aria-hidden` / `alt=""`. The constellation has a text figcaption and is redundant with the cards.
 - Element plate has an `aria-label`. Chemical symbols are not uppercased.
@@ -353,8 +450,10 @@ Generators (not shipped): `tools/make_chamber.py`, `tools/make_caustic.py`, `too
 **Performance (mobile Lighthouse ≥ 80; target 90+):**
 - Static HTML + one CSS file + tokens. JS: one inline script < 1 KB (header scroll state, reveal, Escape). No frameworks, no WebGL, no Three.js.
 - Preload two fonts; the rest swap in. Total font weight ≈ 240 KB on first visit; consider subsetting Source Serif to the glyphs used on `/` if LCP suffers.
-- Lighthouse reports the hero crystal (`chamber.svg`) as the LCP element on mobile, so it is preloaded (`<link rel="preload" as="image" fetchpriority="high">`) and stays a 6 KB SVG. The caustic texture is a CSS background and is not on the critical path.
-- Prototype measurement (2026-11-08, Lighthouse 12 mobile, `python3 -m http.server`, no compression or caching): `/` 93 / 100 / 100 (perf / a11y / best practices), `/ml` 97 / 100 / 100, `/ml/principles/` 97 / 100 / 100; CLS 0 everywhere; landing LCP 3.2 s under simulated throttling. A real host with gzip/brotli and long cache lifetimes should do better.
+- `/` (Threshold) has no image on the critical path: the hero is CSS gradients only, LCP is the h1 text. Do **not** preload `chamber.svg` on `/`.
+- `/ml` preloads `chamber.svg` (`<link rel="preload" as="image" fetchpriority="high">`) because the chamber hero moved there; the caustic texture stays a CSS background off the critical path.
+- Observatory loads `tokens.css` + `observatory.css` only (no `site.css`) and preloads Plex Sans 400 only; no Source Serif is requested.
+- Prototype measurement (2026-11-10, Lighthouse 12 mobile, `python3 -m http.server`, no compression or caching), perf / a11y / best practices: `/` **96 / 100 / 100** (LCP 2.6 s), `/ml` **94 / 100 / 100** (LCP 3.0 s), `/ml/principles/` **97 / 100 / 100** (LCP 2.4 s), Observatory **100 / 100 / 100** (LCP 1.7 s); CLS 0 everywhere. A real host with gzip/brotli and long cache lifetimes should do better.
 - Animations: transform/opacity only; `mix-blend-mode` on two layers; no animated filters.
 - Images have width/height attributes; `img { height: auto }`.
 - Cache-bust assets by filename hash at build.
@@ -363,75 +462,95 @@ Generators (not shipped): `tools/make_chamber.py`, `tools/make_caustic.py`, `too
 
 ## 13. Out of scope
 - GitHub writes of any kind from design (no repos, PRs, issues, Pages or visibility changes).
-- DNS, redirects (`/w3ft`, apex aliases, `weft.siliconcordat.com`), deploys.
+- DNS, redirects (`/w3ft`, apex aliases, `weft.siliconcordat.com`), deploys, creating `staging.siliconcordat.com` or `observatory.askaconsult.com` (smith's, after nizam).
 - Any restyle of Weft content (palette, type, chrome, loom, toggle, sections). Only the wayfinding change in §5.3.
-- askaconsult.com integration of any kind.
+- askaconsult.com integration of any kind beyond hosting the Observatory page (§1.6).
 - Content from FOUNDER-VISION.md, SILICONCORDAT.md, NAMING.md; any invented claim, team, metric, CTA or slogan.
-- Light theme, i18n, CMS, analytics, newsletter, contact forms.
+- Light theme, i18n, CMS, analytics (including on the easter egg), newsletter, contact forms.
 
 ---
 
 ## 14. Visitor / build acceptance checklist (smith ticks)
 
 **Identity**
-- [ ] `tokens.css` values match §3.1 exactly; no Weft hexes outside `--weft-*` uses.
-- [ ] Display is Source Serif 4 upright; no italic coloured tagline anywhere; no Palatino/Iowan/Inter in any stack.
-- [ ] Radii are 2px/4px only. No woven pattern, chrome gradient or aqua button on `/` or `/ml`.
+- [ ] `tokens.css` values match §3.1 exactly; no Weft hexes outside `--weft-*` uses. Threshold surfaces match §3.7; Observatory palette matches §3.8.
+- [ ] Display on `/` and `/ml` is Source Serif 4 upright; Observatory display is Plex Sans. No italic coloured tagline anywhere; no Palatino/Iowan/Inter in any stack.
+- [ ] Radii are 2px/4px only. No woven pattern, chrome gradient or aqua button on `/`, `/ml` or Observatory.
 - [ ] Text is flat colour everywhere; gradients only on surfaces/atmosphere.
 - [ ] Mark renders crisply at 16px (favicon) and 28px (header).
 
-**Landing `/`**
-- [ ] First screen shows: family header, WORKING PROPOSAL chip **and** full banner sentence, "The Siliconcordat", mission sentence. Nothing pushes the banner below the fold at 390×844.
-- [ ] Hero caustic drifts slowly (36s / 52s); with reduced motion it is static.
-- [ ] Chapter 01 includes the full name paragraph and the substrate/legal caveat in body type.
-- [ ] Six principles, numbered 01–06, README names and full text, README order.
-- [ ] "Building the ecosystem" includes README paragraph 2 and the directions caveat above the cards.
-- [ ] Five direction cards link per §10.4; Koinos titled "Koinos" linking to synmerit; Synbios has Pages primary + GitHub secondary.
-- [ ] Robotics is dashed, badged "Aspiration", not a link.
-- [ ] Weft doorway links to `/weft`; sliver widens on hover **and** keyboard focus.
-- [ ] Footer has family links and the humility block (banner + caveat).
+**Landing `/` (Threshold)**
+- [ ] First screen at 1440×900 **and** 390×844 shows: three-column family header, WORKING PROPOSAL chip and full banner sentence, "The Siliconcordat" straddling the seam, mission sentence, both action links, C/Si labels. Seam is vertical at 390.
+- [ ] `tools/contrast.mjs` passes for banner, title and lede at 390, 768, 1024, 1440 and 1920 widths.
+- [ ] The split appears only in the hero; chapters use the hairline + seam stub only.
+- [ ] Chapter 01 has the full name paragraph and the substrate/legal caveat in body type; six principles in README order with full text; ecosystem paragraph + directions caveat above the cards; five direction cards link per §10.4; Robotics dashed and unlinked; Weft doorway sliver widens on hover **and** focus; footer family links + humility block.
+
+**Easter egg (§6A)**
+- [ ] At rest: no visible button chrome or text; reads as a node of the seam.
+- [ ] Hover brightens seam segment and jewel. Keyboard focus shows the fire ring and the "OBSERVATORY" label; accessible name "Observatory".
+- [ ] Reachable by Tab right after "Principles ↓"; hit area ≥ 44 × 88px.
+- [ ] No animation at any motion setting; reduced motion removes the transition.
+- [ ] href = production `https://observatory.askaconsult.com/` / staging `/observatory/`. No other link to Observatory anywhere.
 
 **`/ml` and `/ml/*`**
 - [ ] Family header with Moissanite Labs current (underline + diamond); local nav About · Directions · Principles.
-- [ ] About uses only README paragraphs; no team/founder content.
-- [ ] Directions index: 5 directions (D-01…05), Weft as P-01 linking `/weft`, Robotics as A-01 unlinked.
-- [ ] `/ml/principles/` follows the template (§9): back link, eyebrow, h1, dek, banner, sticky TOC, six sections with ids per §10.2.
+- [ ] Hero is the chamber (crystal, two drifting caustic layers, seam, floor, fig caption) filling the first screen under the two sticky bars; h1 "Moissanite Labs"; mission lede; About/Directions/Principles jumps + "The Siliconcordat →". No framed specimen.
+- [ ] About uses only README paragraphs; Directions index D-01…05, P-01 Weft, A-01 Robotics; Principles index.
+- [ ] `/ml/principles/` follows §9.
+
+**Observatory**
+- [ ] Plates 00–04 + footer present with the same README text as `/` (banner, mission, name paragraphs, caveat, six principles, ecosystem paragraph, directions caveat, five directions, Weft, Robotics).
+- [ ] Header: Siliconcordat / Moissanite Labs / Weft + location label + "← Main landing"; absolute links in production. No askaconsult branding.
+- [ ] Mobile: instrument plate below the title; grid and spectrum readable; no horizontal scroll.
 
 **Weft**
-- [ ] `/weft` looks identical to w3ft.org except the split brand block (§5.3) and the mobile menu family group.
+- [ ] `/weft` looks identical to w3ft.org except the split brand block (§5.3) and the mobile menu family group. Observatory is not in Weft's nav.
 - [ ] No champagne, Source Serif or Plex on `/weft`.
 
 **Links**
-- [ ] Footer-base on `/`, `/ml`, and `/ml/*` links to `https://github.com/Moissanite-Labs/siliconcordat`. No other link to compass, credos, weft, weft-eido, weft-corpus, or the three manifesto files. No "View on GitHub" on `/` or `/ml`.
+- [ ] No link anywhere to compass, credos, weft, weft-eido, weft-corpus, or the three manifesto files. No "View on GitHub" on `/`, `/ml` or Observatory.
 - [ ] External links same tab, ↗, hidden "(external site)".
 
 **A11y / perf**
-- [ ] Skip link works on every page. Every interactive element shows the 2px fire focus ring.
+- [ ] Skip link works on every page (including Observatory). Every interactive element shows a 2px focus ring.
 - [ ] axe/Lighthouse a11y: no contrast failures; menu operable by keyboard; Escape closes it.
-- [ ] Reduced motion: no caustic drift, no reveal transitions, no doorway transition, no smooth scroll.
-- [ ] Mobile Lighthouse performance ≥ 80 on `/`, `/ml`, `/ml/principles/` (target 90+).
+- [ ] Reduced motion: no caustic drift on `/ml`, no reveal transitions, no doorway or egg transition, no smooth scroll.
+- [ ] Mobile Lighthouse performance ≥ 80 on `/`, `/ml`, `/ml/principles/`, Observatory (target 90+).
 - [ ] Fonts served from `assets/fonts/`; no request to any font CDN.
+
+**Staging**
+- [ ] `staging.siliconcordat.com` serves the arrangement with `noindex`; Observatory reachable via the seam at `/observatory/` (or the production host if it exists).
+
+---
+
+## 15A. Staging preview — `staging.siliconcordat.com`
+The owner previews this arrangement on staging before anything ships to the apex.
+- `staging.siliconcordat.com/` = Threshold landing, `/ml` = chamber-hero lab, `/ml/principles/`, `/weft` = Weft (unchanged, or a link out to the current Weft host if Weft isn't mirrored on staging).
+- **Observatory on staging:** `observatory.askaconsult.com` may not exist yet. For a same-host preview, serve Observatory at `staging.siliconcordat.com/observatory/` and point the hidden seam control there. When Observatory is served from staging, its family links point at staging (`/`, `/ml`, `/weft`) rather than the production apex. Make both the egg href and Observatory's family-link origin build variables so ship is a config change, not an edit.
+- Staging should send `X-Robots-Tag: noindex` (or `<meta name="robots" content="noindex">`) so the preview isn't indexed. Remove on ship.
+- Deploys are smith's after nizam's review. Lumen does not deploy.
 
 ---
 
 ## 15. Files
 
-Prototypes (open via `python3 -m http.server` from the package root, then `/prototypes/landing.html`):
-- `prototypes/landing.html` — `/`
-- `prototypes/ml.html` — `/ml`
-- `prototypes/ml-principles.html` — `/ml/principles/` (deeper-page template)
+Prototypes (open via `python3 -m http.server 8765` from the package root, then `/prototypes/landing.html`):
+- `prototypes/landing.html` — `/` (Threshold landing)
+- `prototypes/ml.html` — `/ml` (chamber hero + lab index)
+- `prototypes/ml-principles.html` — `/ml/principles/` (deeper-page template; unchanged)
+- `prototypes/observatory.html` — Observatory easter egg (`observatory.askaconsult.com`; staging `/observatory/`)
 - `prototypes/family-weft.html` — wayfinding annotation for `/weft`
-- `prototypes/alts/observatory.html` — Alternative B hero frame
-- `prototypes/alts/threshold.html` — Alternative C hero frame
-- `prototypes/site.css` — reference CSS; `tokens.css` — tokens + fonts
+- `prototypes/site.css` — reference CSS for `/`, `/ml`, `/ml/*`; `prototypes/observatory.css` — Observatory; `tokens.css` — tokens + fonts
+- `prototypes/alts/threshold.html`, `prototypes/alts/observatory.html` — **historical** 2026-11-08 hero frames, superseded
+- `tools/build_prototypes.py` — generates the four pages from the README constants at its top
 
-In the prototypes, every "Weft" link opens `family-weft.html` so reviewers can click through; **in production every one of those links is `/weft`.** Production hrefs: `landing.html` → `/`, `ml.html` → `/ml`, `ml-principles.html` → `/ml/principles/`.
+Prototype hrefs → production: `landing.html` → `/`, `ml.html` → `/ml`, `ml-principles.html` → `/ml/principles/`, `family-weft.html` → `/weft`, `observatory.html` → `https://observatory.askaconsult.com/` (staging `/observatory/`). From Observatory, family links become absolute (§10.4).
 
-Screenshots (`shots/`, captured with headless Chromium via Playwright at DPR 1):
-- `landing-hero-1440.png`, `landing-principles-1440.png`, `landing-ecosystem-1440.png`, `landing-doorways-1440.png`, `landing-full-1440.png`
-- `landing-hero-390.png`, `landing-390.png` (full page)
-- `ml-top-1440.png`, `ml-1440.png` (full), `ml-390.png` (full)
-- `ml-principles-top-1440.png`, `ml-principles-1440.png` (full), `ml-principles-390.png` (full)
-- `family-weft-1440.png` (full)
-- `alt-observatory-1440.png`, `alt-threshold-1440.png`
-- States: `state-weft-door-hover-1440.png`, `state-direction-card-hover-1440.png`, `state-ml-weft-row-hover-1440.png`
+Screenshots (`shots/`, headless Chromium via Playwright at DPR 1; `node tools/shoot.mjs`):
+- `/`: `landing-hero-1440.png`, `landing-principles-1440.png`, `landing-ecosystem-1440.png`, `landing-doorways-1440.png`, `landing-full-1440.png`, `landing-hero-390.png`, `landing-390.png`
+- Easter egg: `state-seam-hover-1440.png`, `state-seam-focus-1440.png`, `state-seam-focus-390.png`
+- `/ml`: `ml-top-1440.png`, `ml-1440.png`, `ml-390.png`, `ml-top-390.png`
+- `/ml/principles/`: `ml-principles-top-1440.png`, `ml-principles-1440.png`, `ml-principles-390.png`
+- Observatory: `observatory-hero-1440.png`, `observatory-1440.png`, `observatory-390.png`, `observatory-hero-390.png`
+- Weft annotation: `family-weft-1440.png`; states: `state-weft-door-hover-1440.png`
+- Historical (not regenerated): `alt-observatory-1440.png`, `alt-threshold-1440.png`, `state-direction-card-hover-1440.png`, `state-ml-weft-row-hover-1440.png`; the full 2026-11-08 set is in `shots/prev-2026-11-08/`.

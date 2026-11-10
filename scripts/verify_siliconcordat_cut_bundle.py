@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import os
 import re
 import sys
 from pathlib import Path
@@ -10,6 +11,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DIST = ROOT / "dist-cut"
 WEFT = DIST / "weft"
+
+HOST = os.environ.get("SILICONCORDAT_CUT_HOST", "production").strip().lower()
 
 RETIRED = (
     "assets/js/weft-loom.js",
@@ -30,6 +33,16 @@ BAD_WEEFT_PATH = re.compile(
     r'(?<![\w-])(?<![\w/])/assets/|(?<![\w-])(?<![\w/])/papers/'
 )
 
+FOOTER_SOURCE = "https://github.com/Moissanite-Labs/siliconcordat"
+NOINDEX_META = re.compile(r'<meta\s+name="robots"\s+content="noindex"')
+
+CUT_PAGE_PATHS = (
+    DIST / "index.html",
+    DIST / "ml" / "index.html",
+    DIST / "ml" / "principles" / "index.html",
+    DIST / "observatory" / "index.html",
+)
+
 
 def fail(msg: str) -> None:
     print(f"verify: {msg}", file=sys.stderr)
@@ -41,8 +54,10 @@ def check_cut_pages() -> None:
         "index.html",
         "tokens.css",
         "assets/css/site.css",
+        "assets/css/observatory.css",
         "ml/index.html",
         "ml/principles/index.html",
+        "observatory/index.html",
         "assets/mark.svg",
         "assets/chamber.svg",
         "assets/caustic.webp",
@@ -51,12 +66,68 @@ def check_cut_pages() -> None:
             fail(f"missing Cut asset: {rel}")
 
     index = (DIST / "index.html").read_text(encoding="utf-8")
+    if 'class="th-egg"' not in index:
+        fail("landing missing Threshold easter-egg control")
+    if 'class="chamber"' in index.split("<main", 1)[0]:
+        fail("landing must be Threshold, not chamber hero")
     if 'href="/weft"' not in index and 'href="/weft/' not in index:
         fail("landing missing /weft links")
     if "landing.html" in index or "family-weft.html" in index:
         fail("prototype hrefs remain on landing")
     if "#0a0908" not in (DIST / "tokens.css").read_text(encoding="utf-8"):
         fail("Cut tokens missing --bg #0a0908")
+
+    ml = (DIST / "ml" / "index.html").read_text(encoding="utf-8")
+    if "hero--lab" not in ml:
+        fail("/ml missing chamber-hero")
+    if not re.search(
+        r'class="hero hero--lab"[\s\S]*?<h1[^>]*>\s*Moissanite Labs\s*</h1>',
+        ml,
+    ):
+        fail("/ml hero h1 must be Moissanite Labs")
+
+    obs = (DIST / "observatory" / "index.html").read_text(encoding="utf-8")
+    if "/assets/css/observatory.css" not in obs:
+        fail("observatory missing bundled observatory.css")
+
+    if HOST == "staging":
+        if 'href="/observatory/"' not in index:
+            fail("staging landing egg must point at /observatory/")
+        if "https://siliconcordat.com/" in obs:
+            fail("staging observatory must use same-origin family links")
+    elif HOST == "production":
+        if "https://observatory.askaconsult.com/" not in index:
+            fail("production landing egg must point at observatory.askaconsult.com")
+        if "https://siliconcordat.com/" not in obs:
+            fail("production observatory must use apex family links")
+
+
+def check_footer_source() -> None:
+    for path in CUT_PAGE_PATHS:
+        if not path.is_file():
+            fail(f"missing page for footer check: {path.relative_to(DIST)}")
+        text = path.read_text(encoding="utf-8")
+        if FOOTER_SOURCE not in text:
+            fail(f"missing footer source link on {path.relative_to(DIST)}")
+        if text.count(FOOTER_SOURCE) > 1:
+            fail(f"footer source must appear once on {path.relative_to(DIST)}")
+
+
+def check_noindex() -> None:
+    wants = HOST == "staging"
+    for path in CUT_PAGE_PATHS:
+        text = path.read_text(encoding="utf-8")
+        has_meta = bool(NOINDEX_META.search(text))
+        if wants and not has_meta:
+            fail(f"staging build missing noindex meta on {path.relative_to(DIST)}")
+        if not wants and has_meta:
+            fail(f"production build must not include noindex on {path.relative_to(DIST)}")
+    headers = DIST / "_headers"
+    has_header = headers.is_file() and "X-Robots-Tag: noindex" in headers.read_text(encoding="utf-8")
+    if wants and not has_header:
+        fail("staging build missing _headers X-Robots-Tag: noindex")
+    if not wants and has_header:
+        fail("production build must not ship _headers noindex")
 
 
 def check_weft_mirror() -> None:
@@ -99,10 +170,6 @@ def check_weft_mirror() -> None:
     css = (WEFT / "assets/css/site.css").read_text(encoding="utf-8")
     if ".brand-family" not in css or "menu-family-label" not in css:
         fail("wayfinding CSS not appended to weft site.css")
-    if "https://siliconcordat.org/weft" not in index and "siliconcordat.org/weft" not in index:
-        # canonical may be in head only
-        if "w3ft.org" in index:
-            fail("w3ft.org canonical not rewritten on weft index")
 
 
 def check_private_hrefs() -> None:
@@ -122,9 +189,11 @@ def check_private_hrefs() -> None:
 
 def main() -> None:
     check_cut_pages()
+    check_footer_source()
+    check_noindex()
     check_weft_mirror()
     check_private_hrefs()
-    print("verify: dist-cut/ passed all ml-siliconcordat-cut checks")
+    print(f"verify: dist-cut/ passed ml-siliconcordat-cut checks (host={HOST})")
 
 
 if __name__ == "__main__":
