@@ -6,7 +6,7 @@ Pinned sources live in [`sources-manifest.json`](sources-manifest.json):
 
 | Input | Pin |
 |-------|-----|
-| Weft `site/` | `bff15957656a4c904250963e67d0a2c770cd5a26` on this repo |
+| Weft `site/` | `50d0f938f470856be99520825cc11a93c87664af` on this repo |
 | Public lab `docs/` | `a42df12a53ab3c86b31573012a16ee5a62ce1a26` on [Moissanite-Labs/.github](https://github.com/Moissanite-Labs/.github) |
 
 ## Rebuild `dist/`
