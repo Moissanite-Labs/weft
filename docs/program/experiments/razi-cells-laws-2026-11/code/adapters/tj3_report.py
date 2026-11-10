@@ -4,6 +4,7 @@ Every number comes from the OUT files written by tj3.py. Lower loss is better (n
 Each arm is judged on the median of its final test loss over the seeds given.
 TJ-e uses counts summed over all seeds, since a median of a choice is not defined."""
 import json, sys, statistics as st
+from pathlib import Path
 runs = [json.load(open(p)) for p in sys.argv[1:]]
 bad = [p for p, r in zip(sys.argv[1:], runs) if not r.get("ok")]
 if bad: print("INCOMPLETE runs, not judged:", bad); sys.exit(1)
@@ -40,3 +41,41 @@ tok = {}
 for r in runs:
     for k, v in r.get("tokens", {}).items(): tok[k] = tok.get(k, 0) + v
 print("tokens", tok, "| wall s", [r.get("wall_s") for r in runs])
+
+# Display per-generation eval_nll trajectory if present in tj3.jsonl or run logs (R2)
+jsonl_files = set()
+for p in sys.argv[1:]:
+    pp = Path(p)
+    if pp.with_suffix(".jsonl").exists(): jsonl_files.add(pp.with_suffix(".jsonl"))
+    if (pp.parent / "tj3.jsonl").exists(): jsonl_files.add(pp.parent / "tj3.jsonl")
+
+trajectories = {}
+for jf in sorted(jsonl_files):
+    for line in open(jf):
+        try:
+            e = json.loads(line)
+        except Exception:
+            continue
+        if "eval_nll" in e:
+            key = (e.get("seed", 0), e.get("arm", "unknown"))
+            trajectories.setdefault(key, []).append((e.get("gen", 0), e["eval_nll"]))
+
+if trajectories:
+    print("\neval_nll trajectory (from tj3.jsonl):")
+    for (s, a), pts in sorted(trajectories.items()):
+        pts_str = ", ".join(f"g{g}: {nll:.5f}" for g, nll in sorted(pts))
+        print(f"  seed {s} arm {a:<5}: {pts_str}")
+else:
+    has_nll = any(any("eval_nll" in g for g in r["arms"].get(a, {}).get("log", []))
+                  for r in runs for a in ARMS if a in r.get("arms", {}))
+    if has_nll:
+        print("\neval_nll trajectory (from run logs):")
+        for r in runs:
+            s = r["args"]["seed"]
+            p0 = r.get("start", {}).get("eval_nll")
+            if p0 is not None:
+                print(f"  seed {s} arm start: g0: {p0:.5f}")
+            for a in ARMS:
+                pts = [f"g{g['gen']+1}: {g['eval_nll']:.5f}" for g in r["arms"].get(a, {}).get("log", []) if "eval_nll" in g]
+                if pts:
+                    print(f"  seed {s} arm {a:<5}: {', '.join(pts)}")
