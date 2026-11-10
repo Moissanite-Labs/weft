@@ -66,6 +66,20 @@ included in this cut.
 
 ## Reproducing
 
-The offline tests need no model and no key: `python code/cells/kit_selftest.py` and the files in
-`code/cells/tests/`. The colony runs need a model router and are not reproducible from this folder alone. That is a
-stated limit of the record.
+The scripts `code/cells/kit_selftest.py` and `code/cells/tests/*_offline.py` are offline checks: they stub model
+calls and spend no API credits. They are not runnable from a fresh checkout of this folder alone.
+
+On the machine that wrote this record they still depend on:
+
+- **Exo.** `cell.py` imports `exo` from `~/Work/exo-live/src` at import time. `kit_selftest.py` loads `cell.py`.
+  `colony.py` and the sandbox runner expect Exo's Python at `~/Work/exo-live/.venv/bin/python`; `cell.py` also
+  hardcodes `/opt/homebrew/bin/python3` for scoring subprocesses. Without that layout, `python
+  code/cells/kit_selftest.py` fails with `ModuleNotFoundError: No module named 'exo'`.
+- **Author paths.** The files in `code/cells/tests/` import `metab` and `cell` from `~/Work/razi-tools/cells`, not
+  from this tree. `kit.py` reads kit inputs from `~/Work/razi-cells/kits`; the offline tests write temp runs under
+  `~/Work/razi-cells/exp`. Those directories must exist, or you must mirror the paths.
+
+Once that layout is in place, the offline checks themselves need no model router and no API key.
+
+Colony runs and the saved outputs in `results/` need a live model router and the same machine layout. They are not
+reproducible from this folder alone. That is a stated limit of the record.
