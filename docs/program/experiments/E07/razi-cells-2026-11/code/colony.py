@@ -33,9 +33,9 @@ def sample(pids: set[int]) -> tuple[float, float, int]:
 def cell_stats(d: Path) -> dict:
     ev = [json.loads(l) for l in (d / "log.jsonl").read_text().splitlines()] if (d / "log.jsonl").exists() else []
     acts = [e.get("act", {}).get("do") for e in ev if "act" in e]
-    mit = [e for e in ev if e.get("event") == "mitosis"]
+    mit = [e for e in ev if e.get("event") == "try"]  # a split is one `try` (asymmetric mitosis); cell.py never logs "mitosis"
     return {"steps": len(ev), "errors": sum("error" in e for e in ev), "acts": {a: acts.count(a) for a in set(acts)},
-            "splits": len(mit), "ties": sum(bool(m.get("tie")) for m in mit),
+            "splits": len(mit), "ties": sum(not m.get("won") for m in mit),
             "bad_replies": sum("bad_reply" in e for e in ev), "assays": sum(e.get("event") == "assay" for e in ev),
             "variants": sum(e.get("event") == "variants" for e in ev),
             "tries": sum(e.get("event") == "try" for e in ev),

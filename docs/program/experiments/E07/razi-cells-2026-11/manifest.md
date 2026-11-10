@@ -10,7 +10,7 @@ This manifest itself is not hashed (it would be self-referential).
 | File | sha256 | Size (bytes) | Class |
 |---|---|---|---|
 | code/cell.py | ef2d16ee8d3191fa2a01d7c1ad0ff63e8d92da1940fd8353e5dc8025c7fb9eb6 | 23773 | code |
-| code/colony.py | 01ba6ebcc2b5eeab60eec1eb48cada5e1bd6e6080bf5350b3c613f6473a1881d | 5359 | code |
+| code/colony.py | 0b676368946cbb4baab5b81b1be75717c670ef7fd2d3acf128d5dda8de0c5035 | 5428 | code |
 | code/embed.py | d5903a48a8c90b1bfbbafeec7be2e4630269a0b991203f67c2994abb9b20d87c | 4699 | code |
 | code/perm.py | 25207b5b03ab136fc1673f1ff7d3f93337d54526bb1d357c990abf7ea5905e24 | 1202 | code |
 | data/IDEAS.md | 0261fc11d31beafed1cd85fb7758c3e8fd489c2b4c8638664cd32d31a8455c79 | 7811 | notes |
@@ -25,7 +25,7 @@ This manifest itself is not hashed (it would be self-referential).
 | data/g3-summary.json | 21cf907eb830c836fe183370fe8d6d929564e7773fa8cd3602e73eb386aefedb | 3113 | measured |
 | data/g4-summary.json | e2a3f633e1be257c1a91dd76af0af0b0f28efd69c6a7bfda1cef0b4228a2d283 | 3050 | measured |
 | data/needs8v3.json | 55f7ae5ee14ae8e6d4dd1806747f04d5b4c018e7611b038dfecc21aec4b30f8f | 1788 | fixture |
-| report.md | 05e6926adc69009559ae52dafdeecd740eba99acf332c502f0bb0b03548d77b0 | 39349 | derived |
+| report.md | 9c0f2836c6632d5fdf81fd145c1a7ba5eabde944cc6dc5113a0279c398171e26 | 41054 | derived |
 | convergence.md | 0d9e93010b1fac28db11feef81c827767cd5988559861c63ed26afaef60fba02 | 9375 | notes |
 | corpus-findings.md | 32a13285451c54c2460729eaa227059783928f147fd9f8e6dabf125ffe8676fa | 11652 | notes |
 
@@ -36,7 +36,7 @@ Class notes:
 - report.md: Markdown conversion of the HTML report (Report 1, version 2). derived. Tables and text are unchanged apart from the sanitizing listed below.
 - convergence.md: Report 2, where razi-cells and Weft converged and split. notes.
 - corpus-findings.md: Report 3, corpus ideas not in the Weft code, verification of scout citations, and the protocol for the remaining experiments. notes.
-- code/*.py: cell.py, colony.py, perm.py, embed.py as used by the runs. code.
+- code/*.py: cell.py, colony.py, perm.py, embed.py. cell.py, perm.py and embed.py are as used by the runs. colony.py was patched after the runs (2026-11-10) to count `splits` from `try` events, which cell.py logs, instead of `mitosis`, which it never logged; the data/ summaries are unchanged. code.
 - Not included: run folders g1, g2, g3smoke and b6-failed-400, and any raw per-cell logs.
 
 ## Environment
