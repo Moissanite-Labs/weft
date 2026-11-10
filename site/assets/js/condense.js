@@ -31,8 +31,13 @@ const PEEK_HOLD = 350; // ms
 const WPM = 230;
 const ELI5_TIP = "I still don’t get it, please explain wewwy simple";
 
-const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
-const fnv = (s) => {
+// Exported for the Node test (weft/runtime/aywa/test_condense.mjs): the
+// level clamp is the guard the PR 93 review caught missing on the
+// ?condense= path. NaN clamps to the floor, so a bad value can never slip
+// a level outside its range. fnv is the passage-key hash; the Python key
+// check in scripts/check_condensed.py uses the same function.
+export const clamp = (v, a, b) => (Number.isNaN(v) ? a : v < a ? a : v > b ? b : v);
+export const fnv = (s) => {
   let h = 0x811c9dc5;
   for (let i = 0; i < s.length; i++) {
     h ^= s.charCodeAt(i);
