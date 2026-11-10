@@ -562,13 +562,14 @@ Prototypes (open via `python3 -m http.server 8765` from the package root, then `
 - `prototypes/ml.html` — `/ml` (chamber hero + lab index)
 - `prototypes/ml-principles.html` — `/ml/principles/` (deeper-page template; unchanged)
 - `prototypes/ml-notes-from-the-colony.html` — `/ml/notes-from-the-colony/` (Note 01; see §9A and §16)
+- `prototypes/ml-the-alignment-question.html` — `/ml/the-alignment-question/` (Note 02; see §17)
 - `prototypes/observatory.html` — Observatory easter egg (`observatory.askaconsult.com`; staging `/observatory/`)
 - `prototypes/family-weft.html` — wayfinding annotation for `/weft`
 - `prototypes/site.css` — reference CSS for `/`, `/ml`, `/ml/*`; `prototypes/observatory.css` — Observatory; `tokens.css` — tokens + fonts
 - `prototypes/alts/threshold.html`, `prototypes/alts/observatory.html` — **historical** 2026-11-08 hero frames, superseded
-- `tools/build_prototypes.py` — generates the pages from the README constants at its top (five now: landing, ml, ml-principles, ml-notes-from-the-colony, observatory)
+- `tools/build_prototypes.py` — generates the pages from the README constants at its top (six now: landing, ml, ml-principles, ml-notes-from-the-colony, ml-the-alignment-question, observatory)
 
-Prototype hrefs → production: `landing.html` → `/`, `ml.html` → `/ml`, `ml-principles.html` → `/ml/principles/`, `ml-notes-from-the-colony.html` → `/ml/notes-from-the-colony/`, `family-weft.html` → `/weft`, `observatory.html` → `https://observatory.askaconsult.com/` (staging `/observatory/`). From Observatory, family links become absolute (§10.4).
+Prototype hrefs → production: `landing.html` → `/`, `ml.html` → `/ml`, `ml-principles.html` → `/ml/principles/`, `ml-notes-from-the-colony.html` → `/ml/notes-from-the-colony/`, `ml-the-alignment-question.html` → `/ml/the-alignment-question/`, `family-weft.html` → `/weft`, `observatory.html` → `https://observatory.askaconsult.com/` (staging `/observatory/`). From Observatory, family links become absolute (§10.4).
 
 Screenshots (`shots/`, headless Chromium via Playwright at DPR 1; `node tools/shoot.mjs`):
 - `/`: `landing-hero-1440.png`, `landing-principles-1440.png`, `landing-ecosystem-1440.png`, `landing-doorways-1440.png`, `landing-full-1440.png`, `landing-hero-390.png`, `landing-390.png`
@@ -578,3 +579,20 @@ Screenshots (`shots/`, headless Chromium via Playwright at DPR 1; `node tools/sh
 - Observatory: `observatory-hero-1440.png`, `observatory-1440.png`, `observatory-390.png`, `observatory-hero-390.png`
 - Weft annotation: `family-weft-1440.png`; states: `state-weft-door-hover-1440.png`
 - Historical (not regenerated): `alt-observatory-1440.png`, `alt-threshold-1440.png`, `state-direction-card-hover-1440.png`, `state-ml-weft-row-hover-1440.png`; the full 2026-11-08 set is in `shots/prev-2026-11-08/`.
+
+## 17. Amendment 2026-11-11 — Note 02 and the Notes index on /ml
+
+The Arrangement gains its second public note.
+
+### 17.1 Note 02 (`/ml/the-alignment-question/`)
+- A deeper-page essay, `prototypes/ml-the-alignment-question.html`, same template as Note 01 (doc-head, chip, toc, doc-sections, footer-family). Eyebrow: `Moissanite Labs · Note 02`; h1: "The Alignment Question". Written by Ahraz Arifuddin, from outside the lab; the caption in the article footer names the author.
+- Body: the shared intellect claim applied to AI safety and alignment. The closed loop and model collapse; whose average wins (pluralistic alignment); entropy as a safety requirement (the filter problem); provenance over obedience and end-to-end verification; governance as the actual alignment problem (Guardian Angel framing); symbiosis of biological and digital intelligences; honest unknowns. No capability claims; plain prose; no em dashes.
+- Links only to live targets: nature.com (model collapse), grokipedia (model collapse overview, pluralistic alignment), gwern.net, bend-lang.org, github.com/Moissanite-Labs/exorien.
+- Prototype href → production: `ml-the-alignment-question.html` → `/ml/the-alignment-question/` (added to the bundle `CUT_HREF_MAP`, to the mirror copy list, and to the verifier's required files).
+- The doc-head `Working proposal` chip matches Note 01. Localnav unchanged: `Notes` → Note 01.
+
+### 17.2 Notes table on `/ml`
+A new `<p class="meta subhead">Notes</p>` block sits between the "Research" table and "Aspiration", two rows:
+- `N-01` Notes from the colony → `/ml/notes-from-the-colony/`. Tag: `Note 01 · process note`.
+- `N-02` The Alignment Question → `/ml/the-alignment-question/`. Tag: `Note 02 · essay`.
+- The `/ml` index meta line becomes "5 directions · 1 program · 2 research entries · 2 notes · 1 aspiration".

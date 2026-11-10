@@ -146,6 +146,7 @@ def check_cut_pages() -> None:
         "ml/index.html",
         "ml/principles/index.html",
         "ml/notes-from-the-colony/index.html",
+        "ml/the-alignment-question/index.html",
         "observatory/index.html",
         "assets/mark.svg",
         "assets/chamber.svg",

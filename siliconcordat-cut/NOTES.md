@@ -65,3 +65,9 @@ No GitHub writes, no deploys, no DNS, no messages to anyone. All work was in `/w
 
 ## 2026-11-10 (later) — Note 01 and research links (superseding change)
 Prepared to supersede the arranged Arrangement pull request (see the superseding PR). The arrangement itself is unchanged except: `/ml` gains two research rows (R-01 razi-cells record at the public Weft repository; R-02 the lab research hub, which 404s until the lab-site research PR merges — reviewer's call), the localnav on `/ml`, `/ml/principles/` and the new page gains `Notes`, and a new deeper page Note 01, "Notes from the colony" (`/ml/notes-from-the-colony/`), the lab's first public note. Weft gains one additive `Research` nav link to the same hub. The Weft pin in `siliconcordat/sources-manifest.json` is advanced to this branch's head in a companion commit, so the `/weft` mirror carries the new link. No other Weft element changes; no capability claims are added anywhere; misses stay in the record.
+
+## Amendment 2026-11-11 — Note 02
+- `/ml/the-alignment-question/` (Note 02, "The Alignment Question") added: deeper-page template as Note 01, written by Ahraz Arifuddin. The shared intellect claim applied to AI safety and alignment: the closed loop, whose average wins, entropy as a safety requirement, provenance over obedience, governance, symbiosis, honest unknowns.
+- `/ml` gains a Notes table between Research and Aspiration (N-01, N-02). The index meta line is now "5 directions · 1 program · 2 research entries · 2 notes · 1 aspiration". Localnav unchanged.
+- Bundle `CUT_HREF_MAP` and the mirror copy list gain `ml-the-alignment-question.html` → `/ml/the-alignment-question/`; the verifier requires the page. SPEC §17 (new); §15 (files, tools line) updated.
+- Checks (2026-11-11): `SILICONCORDAT_CUT_HOST=staging` and `production` builds + verifier passed; `node --test workers/test_siliconcordat-cut.mjs` 11/11; Note 02 and `/ml` spot-checked in headless Chromium (1440 and 390).

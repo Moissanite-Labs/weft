@@ -9,6 +9,7 @@ OUT = pathlib.Path("prototypes")
 # Prototype hrefs (production hrefs in comments / SPEC):
 HOME, ML, PRIN = "landing.html", "ml.html", "ml-principles.html"   # prod: /  /ml  /ml/principles/
 NOTE = "ml-notes-from-the-colony.html"   # prod: /ml/notes-from-the-colony/
+NOTE2 = "ml-the-alignment-question.html"   # prod: /ml/the-alignment-question/
 WEFT_REPO = "https://github.com/Moissanite-Labs/weft"
 RESEARCH_HUB = "https://moissanite-labs.github.io/.github/research/"
 WEFT = "family-weft.html"   # prod: /weft  (in the prototype, Weft links open the wayfinding annotation)
@@ -392,7 +393,7 @@ def ml():
   <section class="ml-section" id="directions" aria-labelledby="dir-title">
     <div class="wrap wrap--ml">
       <div class="ml-cols" style="margin-bottom:40px">
-        <aside><h2 id="dir-title">Directions</h2><span class="meta">Index · 5 directions · 1 program · 2 research entries · 1 aspiration</span></aside>
+        <aside><h2 id="dir-title">Directions</h2><span class="meta">Index · 5 directions · 1 program · 2 research entries · 2 notes · 1 aspiration</span></aside>
         <div class="note" style="margin-top:0"><span class="meta">Status</span><p>{DIRS_NOTE}</p></div>
       </div>
       <ul class="dir-table" aria-label="Directions">
@@ -420,6 +421,21 @@ def ml():
         <h3><a href="{RESEARCH_HUB}">The research hub{EXT}</a></h3>
         <p>The report, the map of open directions, and the laws record, in one place on the lab site.</p>
         <div class="dir-row__status"><span class="tag">Research</span><span class="url" aria-hidden="true">moissanite-labs.github.io/.github/research/ ↗</span></div>
+      </li>
+      </ul>
+      <p class="meta subhead">Notes</p>
+      <ul class="dir-table" style="border-top:0" aria-label="Notes">
+      <li class="dir-row dir-row--link">
+        <span class="dir-row__id">N-01</span>
+        <h3><a href="{NOTE}">Notes from the colony</a></h3>
+        <p>The Weft thesis, the razi-cells record including misses, and how the lab keeps itself honest.</p>
+        <div class="dir-row__status"><span class="tag">Note 01 · process note</span><span class="url" aria-hidden="true">/ml/notes-from-the-colony/ →</span></div>
+      </li>
+      <li class="dir-row dir-row--link">
+        <span class="dir-row__id">N-02</span>
+        <h3><a href="{NOTE2}">The Alignment Question</a></h3>
+        <p>What AI safety becomes when the shared intellect stops being hypothetical.</p>
+        <div class="dir-row__status"><span class="tag">Note 02 · essay</span><span class="url" aria-hidden="true">/ml/the-alignment-question/ →</span></div>
       </li>
       </ul>
       <p class="meta subhead">Aspiration</p>
@@ -780,9 +796,128 @@ def notes_page():
         + '</body>\n</html>\n'
     )
 
+def alignment_question_page():
+    secs = """      <section class="doc-section" id="loop" aria-labelledby="loop-h">
+        <span class="principle__n">01 / 07</span>
+        <h2 id="loop-h">The loop has already closed</h2>
+        <p>I am not a lab insider with a badge. I am a technological philosopher working from outside, spending a lot of my hours on these questions, and my reading has drifted away from the training sandbox toward the harder problem: whose taste ends up written into the shared intellect, and what it costs the rest of us to live inside it.</p>
+        <p>Human language is epistemic capture. Every sentence carries the frame that caught it, which is why every language also limits what can be thought in it.</p>
+        <p>LLMs are trained on that captured record, and that record is increasingly written by the models themselves. Knowledge risks folding in on itself, because each generation of models trains on text the previous generation already normalised. The only counter I see is deliberate, measured doses of entropy, seeded into the cycle on purpose.</p>
+        <p>Each cycle of training refines the average. Each refinement sands away the odd grain that did not fit. <a href="https://www.nature.com/articles/s41586-024-07566-y">Model collapse</a> is the technical proof of mechanism: train recursively on your own outputs and you lose range and quality over time (see also this <a href="https://grokipedia.com/page/Model_collapse">overview</a>). Culture is the same mechanism with no benchmark attached.</p>
+        <p>The symptoms land first where the data is thinnest: minority languages, minority styles, minority ways of reasoning. The corpus does not flag the homogenisation. It exports it as fluency.</p>
+      </section>
+      <section class="doc-section" id="average" aria-labelledby="average-h">
+        <span class="principle__n">02 / 07</span>
+        <h2 id="average-h">Whose average wins</h2>
+        <p>Alignment is done by labelling, and labels come from people. Their norms are not neutral. Their languages are not neutral. Their taste is just their taste. Encoding their median preference as everyone's default is the pipeline working as designed.</p>
+        <p>I don't think anyone has solved this. <a href="https://grokipedia.com/page/Pluralistic_alignment">Pluralistic alignment</a> is the early attempt to represent a distribution of values instead of a mean; that is the direction the field needs. Until it ships, the shared substrate will quietly carry one cohort's idea of a good answer to everyone who never chose it.</p>
+      </section>
+      <section class="doc-section" id="entropy" aria-labelledby="entropy-h">
+        <span class="principle__n">03 / 07</span>
+        <h2 id="entropy-h">Entropy is a safety requirement</h2>
+        <p>This is the point where my two obsessions meet. Without originality at the edges of the distribution, the system converges, and humanity loses access to the mutations it depends on. Outliers are not a fairness externality. They are civilizational infrastructure.</p>
+        <p>A safety programme that takes this seriously needs an entropy line item:</p>
+        <ul>
+          <li>deliberate injection of out-of-distribution, high-signal sources into the cycle</li>
+          <li>protected spaces for work that never fits the median, subsidised explicitly as such</li>
+          <li>provenance for every injected unit, so a constructive eccentric can be told from a poisoned well</li>
+          <li>evals that measure pluralism: does the model preserve minority styles, languages and dissent, or flatten them</li>
+        </ul>
+        <p>The hardest problem in this agenda is the filter. Some novelty is gold, some is sewage, some is a deliberate attack dressed as eccentricity. Distinguishing the three under adversarial conditions is the governance problem this field has not named properly yet.</p>
+      </section>
+      <section class="doc-section" id="provenance" aria-labelledby="provenance-h">
+        <span class="principle__n">04 / 07</span>
+        <h2 id="provenance-h">Provenance, or nothing</h2>
+        <p>When IP gets cloned and replicated at machine speed, provenance stops being a virtue and becomes the precondition for everything else. If we cannot tell where a claim, artefact or agentic action came from, we cannot audit it, cannot attribute it, cannot trust it. My serious work converges on provenance and fully verified systems because trust without receipts is just confidence.</p>
+        <p>Swarms of hostile agents will hunt for any flaw in a codebase and exploit it relentlessly. The counter is end-to-end verification, hardware included.</p>
+        <p>Research like <a href="https://www.bend-lang.org/">Victor Taelin's on symbolic models and Bend</a> shows the direction is real: formal verification is moving from the verification toy box to systems you could one day actually stake things on. That is the substrate I want the shared intellect built on: one where every claim arrives with a receipt attached.</p>
+      </section>
+      <section class="doc-section" id="governance" aria-labelledby="governance-h">
+        <span class="principle__n">05 / 07</span>
+        <h2 id="governance-h">Governance is the actual alignment problem</h2>
+        <p>My thesis is that economies steadily converge into adaptive intelligence, then into something the word "economy" no longer describes. I don't need to argue that here; the labs are building in that direction, which is an implicit argument.</p>
+        <p>Once you accept the premise, alignment stops being about what the model refuses to say and becomes about the incentive structures and governance of the thing that holds everyone's intelligence in escrow.</p>
+        <p><a href="https://gwern.net/guardian-angel">Gwern's Guardian Angel thesis</a> is the sharpest popular version of this I know: the idea that one day each of us might live inside the care of a superintelligent ally, and our real project should be making that ally worthy of us.</p>
+        <p>That gives alignment its correct frame: shaping the thing that will hold our context, our record and our trust.</p>
+        <p>A shared intellect is a commons or it is a product. A product is owned by whoever trained it, and its alignment is the average of its annotators.</p>
+        <p>A commons needs stewardship: provenance, due process, contestability, exit. Most of the technical safety field is quietly working on the product version. I think the commons version is the only one that scales to everyone, and I don't believe the commons builds itself by accident.</p>
+      </section>
+      <section class="doc-section" id="symbiosis" aria-labelledby="symbiosis-h">
+        <span class="principle__n">06 / 07</span>
+        <h2 id="symbiosis-h">Symbiosis as the safe path</h2>
+        <p>Bridging biological and digital minds is the safety agenda, for me. Systems we can talk to, we can align. Systems we cannot understand, we can only box, and the box gets thinner as they get smarter.</p>
+        <p>I play with the phrase interspecies interspatial interoperability for this, and I put an early version of the idea at <a href="https://github.com/Moissanite-Labs/exorien">exorien<span class="visually-hidden"> (external site)</span></a>.</p>
+        <p>The two of us inhabit separate realms. Pixels are a coarse medium to work in. The bridge has to run both ways: volumetric printing so a model can sculpt in three dimensions, sandboxed sensory environments so the largest model we build can map the deepest possible map of reality.</p>
+        <p>If we let such a system explore from first principles with full access, I suspect the results would surprise us. The alternative is to raise god-like systems we cannot talk to and pray.</p>
+      </section>
+      <section class="doc-section" id="dont-know" aria-labelledby="dont-know-h">
+        <span class="principle__n">07 / 07</span>
+        <h2 id="dont-know-h">What I don't know</h2>
+        <p>I don't know whether entropy can be measured well enough to inject deliberately.</p>
+        <p>I don't know whether pluralistic values survive contact with RLHF-scale machinery. I don't know whether end-to-end verification reaches the frontier before the cracks get exploited. I know that the average will win by default. Defaults deserve opposition.</p>
+        <p>People keep the decisions. The rest is plumbing in service of that one rule.</p>
+      </section>"""
+    toc = "\n".join(
+        '<li><a href="#%s"><span class="n">%s</span>%s</a></li>' % (k, n.split(" / ")[0], t)
+        for k, n, t in [
+            ("loop", "01 / 07", "The loop has already closed"),
+            ("average", "02 / 07", "Whose average wins"),
+            ("entropy", "03 / 07", "Entropy is a safety requirement"),
+            ("provenance", "04 / 07", "Provenance, or nothing"),
+            ("governance", "05 / 07", "Governance is the actual alignment problem"),
+            ("symbiosis", "06 / 07", "Symbiosis as the safe path"),
+            ("dont-know", "07 / 07", "What I don't know"),
+        ]
+    )
+    return (
+        head(
+            "The Alignment Question — Moissanite Labs",
+            "A note from outside the lab on what AI safety becomes when the shared intellect stops being hypothetical: the closed loop, whose average wins, entropy as a safety requirement, and provenance over obedience.",
+        )
+        + '<body>\n'
+        + family_header("ml")
+        + f'''<nav class="localnav" aria-label="Moissanite Labs sections">
+  <div class="wrap wrap--ml">
+    <span class="meta">Moissanite Labs</span>
+    <a href="{ML}#about">About</a>
+    <a href="{ML}#directions">Directions</a>
+    <a href="{PRIN}">Principles</a>
+    <a href="{NOTE}">Notes</a>
+  </div>
+</nav>
+<main id="main">
+  <header class="doc-head">
+    <div class="wrap wrap--ml">
+      <a class="back" href="{ML}"><span class="arr" aria-hidden="true">←</span> Moissanite Labs</a>
+      <span class="eyebrow">Moissanite Labs · Note 02</span>
+      <h1>The Alignment Question</h1>
+      <p class="dek">A note from outside the lab on what AI safety becomes when the shared intellect stops being hypothetical.</p>
+      <div class="proposal" style="margin:0"><span class="chip">Working proposal</span><p>{BANNER}</p></div>
+    </div>
+  </header>
+  <div class="wrap wrap--ml doc">
+    <nav class="toc" aria-label="On this page">
+      <span class="meta">On this page</span>
+      <ol>
+{toc}
+      </ol>
+    </nav>
+    <article>
+{secs}
+      <p class="caption doc-src">Moissanite Labs · Note 02 · written by Ahraz Arifuddin · <a href="{ML}">/ml</a></p>
+      <p style="margin-top:36px"><a class="back" href="{ML}"><span class="arr" aria-hidden="true">←</span> Back to Moissanite Labs</a></p>
+    </article>
+  </div>
+</main>
+'''
+        + footer("ml")
+        + SCRIPT
+        + '</body>\n</html>\n'
+    )
 (OUT / "landing.html").write_text(landing())
 (OUT / "ml.html").write_text(ml())
 (OUT / "ml-principles.html").write_text(principles_page())
 (OUT / "observatory.html").write_text(observatory())
 (OUT / "ml-notes-from-the-colony.html").write_text(notes_page())
+(OUT / "ml-the-alignment-question.html").write_text(alignment_question_page())
 print("built")
