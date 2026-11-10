@@ -45,6 +45,7 @@ CUT_HREF_MAP = {
     "ml-principles.html": "/ml/principles/",
     "family-weft.html": "/weft",
     "ml-notes-from-the-colony.html": "/ml/notes-from-the-colony/",
+    "ml-the-alignment-question.html": "/ml/the-alignment-question/",
     "observatory.html": "/observatory/",
 }
 
@@ -436,6 +437,7 @@ def copy_cut_pages(host: dict) -> None:
         (CUT / "prototypes" / "ml.html", DIST / "ml" / "index.html"),
         (CUT / "prototypes" / "ml-principles.html", DIST / "ml" / "principles" / "index.html"),
         (CUT / "prototypes" / "ml-notes-from-the-colony.html", DIST / "ml" / "notes-from-the-colony" / "index.html"),
+        (CUT / "prototypes" / "ml-the-alignment-question.html", DIST / "ml" / "the-alignment-question" / "index.html"),
         (CUT / "prototypes" / "observatory.html", DIST / "observatory" / "index.html"),
     ]
     tokens, site_css, obs_css = prepare_cut_css()
