@@ -64,6 +64,11 @@ GERM = os.environ.get("CELL_GERM", "").strip()
 PAY_ANY = os.environ.get("CELL_PAY_ANY", "") == "1"
 LINEAGE = os.environ.get("CELL_LINEAGE", "") == "1"
 
+# L2 Dissipative Heredity: opt-in causal mechanisms (2026-11-11)
+WEISMANN = os.environ.get("CELL_WEISMANN", "") == "1"
+SPORE_FROM = os.environ.get("CELL_SPORE_FROM", "").strip()
+GAP_PAY = os.environ.get("CELL_GAP_PAY", "") == "1"
+
 assert C.KIT, "metab.py needs a harness-owned kit (CELL_KIT)"
 
 # SP3: what the cell is told about cost. "1" (default): the price list is in VITALS. "0": cost is felt only.
@@ -81,12 +86,26 @@ The facts of your world:
   the bench scores it above you. %s
 - You choose how you think. Any tool call may set `model` and `effort` for your next step.
 LIBRARY holds the colony's wins, losses and lessons. COLONY shows the other cells. Call exactly one tool per reply."""
-SYSTEM = SYSTEM % (("- You may `rest` at any time. Your body is kept. Your unspent energy " +
-                    ("returns to your lineage's store, which feeds the next generation.\n" if LINEAGE else
-                     "returns to the stem cell that fed you.\n" if HEIR else "passes to the colony's living cells.\n"),
-                    "The energy it does not spend returns to you.") if LAW == "rest" else
-                   ("- There is no stopping. You live until your energy is gone. Energy cannot be saved or passed on.\n",
-                    "It lives until that energy is gone."))
+if LAW == "rest":
+    if LINEAGE and WEISMANN:
+        if GERM:
+            _rest_b = ("- Your folder starts with your lineage's germline body, which is already stored safely outside you. "
+                       "Your birth energy is committed to this life: if you rest without a scored win over your inherited baseline, "
+                       "your unspent birth energy dissipates (0 returns to your lineage's store). Once you score a win beyond noise, "
+                       "any unspent energy at rest returns to your lineage's store to feed the next generation.\n")
+        else:
+            _rest_b = ("- You may `rest` at any time. Your birth energy is committed to this life: if you rest without an accepted assay, "
+                       "your unspent birth energy dissipates (0 returns to your lineage's store). Once you register an accepted assay, "
+                       "your body is kept and your unspent energy at rest returns to your lineage's store.\n")
+    else:
+        _rest_b = ("- You may `rest` at any time. Your body is kept. Your unspent energy " +
+                   ("returns to your lineage's store, which feeds the next generation.\n" if LINEAGE else
+                    "returns to the stem cell that fed you.\n" if HEIR else "passes to the colony's living cells.\n"))
+    _d_rest = "The energy it does not spend returns to you."
+else:
+    _rest_b = "- There is no stopping. You live until your energy is gone. Energy cannot be saved or passed on.\n"
+    _d_rest = "It lives until that energy is gone."
+SYSTEM = SYSTEM % (_rest_b, _d_rest)
 
 if not PRICE_SHOW:
     assert SYSTEM.count("VITALS shows the numbers.") == 1
@@ -168,7 +187,7 @@ def upd(cell: Path, **delta) -> dict:
 
 def sense(cell: Path) -> None:
     """One inward data point: this body's score as a share of the best recorded body's score for the same need."""
-    best = Path(SENSE_DIR) / C.KIT if SENSE_DIR else None
+    best = Path(SENSE_DIR) / C.KIT if SENSE_DIR else (Path(SPORE_FROM) / "body" if SPORE_FROM and (Path(SPORE_FROM) / "body").is_dir() else None)
     if not best or not best.is_dir():
         return
     keep = dict(C.LAST_WHY)  # C.variants reads LAST_WHY after adopt returns
@@ -177,7 +196,7 @@ def sense(cell: Path) -> None:
         s, b = statistics.median(m["self"]), statistics.median(m["best"])
         if b > 0:
             ledger(cell, lambda d: d[cid(cell)].__setitem__("sense", round(s / b, 4)))
-            C.log(cell, event="sense", ratio=round(s / b, 4), self=s, best=b, shown=SENSE_SHOW)
+            C.log(cell, event="sense", ratio=round(s / b, 4), self=s, best=b, shown=SENSE_SHOW or bool(SPORE_FROM))
         else:
             C.log(cell, event="sense", error="record body scored 0: " + C.LAST_WHY.get("best", "?")[:120])
     except Exception as e:
@@ -185,6 +204,16 @@ def sense(cell: Path) -> None:
     finally:
         C.LAST_WHY.clear()
         C.LAST_WHY.update(keep)
+
+
+def eff_reward(cell: Path) -> float:
+    """Effective win reward, scaled by sense gap under Law 2b (GAP_PAY)."""
+    if not GAP_PAY:
+        return REWARD
+    s = ledger(cell).get(cid(cell), {}).get("sense")
+    if s is None or s <= 0:
+        return REWARD
+    return min(4.0 * REWARD, REWARD / max(0.25, 1.0 - min(float(s), 0.95)))
 
 
 def paid_dir(cell: Path) -> Path:
@@ -210,7 +239,7 @@ def same_body(a: Path, b: Path) -> bool:
 def pay_win(cell: Path, gain: float, via: str) -> float:
     pay = 0.0
     if C.depth(cell) == 0:
-        pay = REWARD * math.log1p(max(gain, 0.0))
+        pay = eff_reward(cell) * math.log1p(max(gain, 0.0))
         upd(cell, e=pay, earned=pay)
         C.log(cell, event="income", units=round(pay, 1), gain=round(gain, 4), via=via)
     return pay
@@ -287,7 +316,7 @@ def adopt(cell: Path, src: Path, gain: float, what: str) -> None:
     me = ledger(cell)[cid(cell)]
     upd(cell, fit=(1 + me["fit"]) * (1 + gain) - 1)
     if C.depth(cell) == 0:
-        pay = REWARD * math.log1p(max(gain, 0.0))
+        pay = eff_reward(cell) * math.log1p(max(gain, 0.0))
         upd(cell, e=pay, earned=pay)
         C.log(cell, event="income", units=round(pay, 1), gain=round(gain, 4))
     snapshot(cell)
@@ -354,9 +383,14 @@ def est_input(model: str, prompt: str, seen: dict, fixed: int) -> float:
     last measured rate on that model is used, with a margin, and never above the dearest case."""
     pi, _ = price(model)
     chars = fixed + len(prompt)
-    tok = chars * seen["tpc"] * 1.1 if "tpc" in seen else chars / 2.8 + 600
+    tpc = seen["tpc"] * 1.1 if "tpc" in seen else 1.0 / 2.8
+    pad = 0 if "tpc" in seen else 600
     top = pi * 1.25 / 1000
-    return tok * (min(seen[model] * 1.15, top) if model in seen else top)
+    if model in seen and seen.get("last_model") == model:
+        cached_chars = min(chars, seen.get(f"chars:{model}", chars))
+        new_chars = max(0, chars - cached_chars)
+        return (cached_chars * tpc) * min(seen[model] * 1.15, top) + (new_chars * tpc + pad) * top
+    return (chars * tpc + pad) * top
 
 
 def observe(model: str, prompt: str, u: dict, cost: float, seen: dict, fixed: int) -> None:
@@ -365,6 +399,8 @@ def observe(model: str, prompt: str, u: dict, cost: float, seen: dict, fixed: in
         return
     seen["tpc"] = tok / (fixed + len(prompt))
     seen[model] = max(cost - BASAL - (u.get("out") or 0) / 1000 * price(model)[1], 0.0) / tok
+    seen["last_model"] = model
+    seen[f"chars:{model}"] = fixed + len(prompt)
 
 
 def pick(model: str, prompt: str, energy: float, seen: dict, fixed: int) -> tuple[str | None, int, float]:
@@ -403,19 +439,33 @@ def vitals(cell: Path, model: str, effort: str, costs: list[str]) -> str:
     d = ledger(cell)
     me = d[cid(cell)]
     daughter = C.depth(cell) > 0
-    src = (("given by your parent. What you do not spend returns to it" if LAW == "rest" else "given by your parent")
-           if daughter else f"born with {me['born']:.0f}, earned {me['earned']:.0f} from wins" if LAW == "mortal" else
-           f"born with {me['born']:.0f} from your lineage's store, earned {me['earned']:.0f} from wins" if LINEAGE else
-           f"fed {me['born'] + me['got']:.0f} by the stem cell, earned {me['earned']:.0f} from wins" if HEIR else
-           f"born with {me['born']:.0f}, earned {me['earned']:.0f} from wins, received {me['got']:.0f} from resting cells")
+    if daughter:
+        src = "given by your parent. What you do not spend returns to it" if LAW == "rest" else "given by your parent"
+    elif LAW == "mortal":
+        src = f"born with {me['born']:.0f}, earned {me['earned']:.0f} from wins"
+    elif LINEAGE:
+        lock_str = ""
+        if WEISMANN and not daughter:
+            if bool(GERM) and me["fit"] <= 0 and me["earned"] <= 0:
+                lock_str = "; dissipates at rest until a scored win"
+            elif not bool(GERM) and not me["assay"]:
+                lock_str = "; dissipates at rest until assayed"
+            else:
+                lock_str = "; returns to store at rest"
+        src = f"born with {me['born']:.0f} from your lineage's store, earned {me['earned']:.0f} from wins{lock_str}"
+    elif HEIR:
+        src = f"fed {me['born'] + me['got']:.0f} by the stem cell, earned {me['earned']:.0f} from wins"
+    else:
+        src = f"born with {me['born']:.0f}, earned {me['earned']:.0f} from wins, received {me['got']:.0f} from resting cells"
     menu = ", ".join(f"{m} {price(m)[0]:g}/{price(m)[1]:g}" for m in MENU)
+    er = eff_reward(cell)
     out = (f"VITALS: energy {me['e']:.0f} ({src}). Age {me['age']} steps.\n"
            f"Your last steps cost: {', '.join(costs[-6:]) or 'none yet'}.\n"
            f"Your next step thinks with: {model}, effort {effort}.\n"
            + (f"Prices per 1000 tokens, input/output: {menu}. Living cost per step: {BASAL:g}.\n" if PRICE_SHOW else "") +
-           f"A scored win of +10% earns {REWARD * math.log1p(0.1):.0f}, +100% earns {REWARD * math.log1p(1.0):.0f}"
+           f"A scored win of +10% earns {er * math.log1p(0.1):.0f}, +100% earns {er * math.log1p(1.0):.0f}"
            + (" (paid to your parent if you replace it)." if daughter else "."))
-    if SENSE_DIR and SENSE_SHOW:
+    if (SENSE_DIR or SPORE_FROM) and SENSE_SHOW:
         out += ("\nSENSE: " + (f"measured on this machine after your last scored change, your body scores "
                                f"{me['sense']:.2f} of the best body your lineage has ever recorded for this need "
                                "(1.00 would equal it). You cannot see that body, only this number."
@@ -519,6 +569,12 @@ def rest(cell: Path, result: str) -> None:
         me = d[cid(cell)]
         left = max(me["e"], 0.0)
         alive = [k for k, v in d.items() if "/" not in k and k != cid(cell) and v["state"] == "alive"]
+        dissipate = WEISMANN and ((bool(GERM) and me["fit"] <= 0 and me["earned"] <= 0) or
+                                  (not bool(GERM) and not me["assay"] and me["earned"] <= 0))
+        if dissipate:
+            me["e"], me["state"] = 0.0, "resting"
+            me["dissipated"] = round(me.get("dissipated", 0.0) + left, 1)
+            return 0.0, dict(me)
         if HEIR and HEIR in d and HEIR != cid(cell):  # whatever the heir's state: a resting stem wakes on this
             d[HEIR]["e"] += left
             d[HEIR]["got"] += left
@@ -533,10 +589,14 @@ def rest(cell: Path, result: str) -> None:
         return left if alive else 0.0, dict(me)
     gave, me = ledger(cell, fn)
     a = C.get_assay(cell)
-    C.log(cell, event="rest", gave=round(gave, 1), fit=round(me["fit"], 4), age=me["age"])
+    kw = dict(gave=round(gave, 1), fit=round(me["fit"], 4), age=me["age"])
+    if WEISMANN:
+        kw["dissipated"] = round(me.get("dissipated", 0.0), 1)
+    C.log(cell, event="rest", **kw)
+    dis_note = f", dissipated {me.get('dissipated', 0.0):.0f} energy (no win over germline)" if me.get("dissipated", 0.0) > 0 else ""
     C.library_add(cell, "REST" + (f" (baseline {a['baseline']:.4g}, gain {me['fit']:+.0%}" if a else " (no assay") +
                   f", {'returned' if HEIR else 'gave'} {gave:.0f} energy to the "
-                  f"{'lineage store' if LINEAGE else 'stem' if HEIR else 'living'}): {result[:260]}")
+                  f"{'lineage store' if LINEAGE else 'stem' if HEIR else 'living'}{dis_note}): {result[:260]}")
 
 
 def run(cell: Path, model: str = START_MODEL, effort: str = START_EFFORT) -> str | None:
@@ -697,6 +757,11 @@ def main() -> int:
                     break
             C.log(cell, event="inherit", ok=r.startswith("assay accepted"), res=r[:200],
                   files=[str(q.relative_to(cell)) for q in C.body_files(cell)])
+        elif SPORE_FROM:
+            sg = Path(SPORE_FROM) / "body" / "genome.md"
+            if sg.is_file():
+                shutil.copy2(sg, cell / "genome.md")
+            C.log(cell, event="spore", from_germ=SPORE_FROM, has_genome=sg.is_file())
     else:  # stem.py wrote NEED and put the energy in the ledger; the body, memory and assay are as they were left
         assert (cell / "NEED").exists() and cid(cell) in ledger(cell), "wake needs a cell that was fed"
         (cell / "RESULT").unlink(missing_ok=True)
