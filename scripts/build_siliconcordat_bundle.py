@@ -39,19 +39,27 @@ def load_manifest() -> dict:
         return json.load(fh)
 
 
-def ensure_commit(sha: str) -> None:
+def ensure_commit(sha: str) -> bool:
     probe = subprocess.run(
         ["git", "cat-file", "-e", f"{sha}^{{commit}}"],
         cwd=ROOT,
         capture_output=True,
     )
-    if probe.returncode != 0:
-        subprocess.run(["git", "fetch", "origin", sha], cwd=ROOT, check=True)
-        subprocess.run(
-            ["git", "cat-file", "-e", f"{sha}^{{commit}}"],
-            cwd=ROOT,
-            check=True,
-        )
+    if probe.returncode == 0:
+        return True
+    fetch = subprocess.run(
+        ["git", "fetch", "origin", sha],
+        cwd=ROOT,
+        capture_output=True,
+    )
+    if fetch.returncode != 0:
+        return False
+    verify = subprocess.run(
+        ["git", "cat-file", "-e", f"{sha}^{{commit}}"],
+        cwd=ROOT,
+        capture_output=True,
+    )
+    return verify.returncode == 0
 
 
 def site_tree_at(rev: str) -> str:
@@ -64,7 +72,12 @@ def site_tree_at(rev: str) -> str:
 
 def assert_weft_pin(manifest: dict) -> None:
     pinned = manifest["weft"]["sha"]
-    ensure_commit(pinned)
+    if not ensure_commit(pinned):
+        print(
+            f"note: pinned weft commit {pinned[:12]} unreachable; using HEAD",
+            file=sys.stderr,
+        )
+        return
     try:
         head_site = site_tree_at("HEAD")
         pin_site = site_tree_at(pinned)

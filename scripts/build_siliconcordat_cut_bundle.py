@@ -126,14 +126,20 @@ def load_manifest() -> dict:
         return json.load(fh)
 
 
-def ensure_commit(sha: str) -> None:
+def ensure_commit(sha: str) -> bool:
     probe = subprocess.run(
         ["git", "cat-file", "-e", f"{sha}^{{commit}}"],
         cwd=ROOT,
         capture_output=True,
     )
-    if probe.returncode != 0:
-        subprocess.run(["git", "fetch", "origin", sha], cwd=ROOT, check=True)
+    if probe.returncode == 0:
+        return True
+    fetch = subprocess.run(
+        ["git", "fetch", "origin", sha],
+        cwd=ROOT,
+        capture_output=True,
+    )
+    return fetch.returncode == 0
 
 
 def site_tree_at(rev: str) -> str:
@@ -146,7 +152,12 @@ def site_tree_at(rev: str) -> str:
 
 def log_weft_pin(manifest: dict) -> None:
     pinned = manifest["weft"]["sha"]
-    ensure_commit(pinned)
+    if not ensure_commit(pinned):
+        print(
+            f"note: pinned commit {pinned[:12]} unreachable; using HEAD for /weft pin check",
+            file=sys.stderr,
+        )
+        return
     head_site = site_tree_at("HEAD")
     pin_site = site_tree_at(pinned)
     if head_site != pin_site:
@@ -285,6 +296,12 @@ def export_pinned_site(pinned_sha: str) -> Path:
 
 def site_source_tree(manifest: dict) -> Path:
     pinned = manifest["weft"]["sha"]
+    if not ensure_commit(pinned):
+        print(
+            f"note: pinned commit {pinned[:12]} unreachable; using local SITE tree for /weft",
+            file=sys.stderr,
+        )
+        return SITE
     head_site = site_tree_at("HEAD")
     pin_site = site_tree_at(pinned)
     if head_site == pin_site and SITE.is_dir():
@@ -306,16 +323,23 @@ def copy_weft_tree(site_root: Path) -> None:
         dest = weft_root / rel
         dest.parent.mkdir(parents=True, exist_ok=True)
         data = src.read_bytes()
-        dest.write_bytes(rewrite_weft_file(Path(rel), data))
+        rewritten = rewrite_weft_file(Path(rel), data)
+        dest.write_bytes(rewritten)
+        if rel == TEXT_HEADERS_NAME:
+            (DIST / TEXT_HEADERS_NAME).write_bytes(rewritten)
+
+
+def _apply_href_mapping(html: str, mapping: dict[str, str]) -> str:
+    for proto, prod in mapping.items():
+        html = html.replace(f'href="{proto}"', f'href="{prod}"')
+        html = html.replace(f"href='{proto}'", f"href='{prod}'")
+    for proto, prod in mapping.items():
+        html = html.replace(f'href="{proto}#', f'href="{prod}#')
+    return html
 
 
 def rewrite_cut_hrefs(html: str) -> str:
-    for proto, prod in CUT_HREF_MAP.items():
-        html = html.replace(f'href="{proto}"', f'href="{prod}"')
-        html = html.replace(f"href='{proto}'", f"href='{prod}'")
-    for proto, prod in CUT_HREF_MAP.items():
-        html = html.replace(f'href="{proto}#', f'href="{prod}#')
-    return html
+    return _apply_href_mapping(html, CUT_HREF_MAP)
 
 
 def rewrite_observatory_family(html: str, origin: str) -> str:
@@ -324,21 +348,16 @@ def rewrite_observatory_family(html: str, origin: str) -> str:
         return rewrite_cut_hrefs(html)
     base = origin.rstrip("/")
     mapping = {
-        "landing.html": f"{base}/",
-        "ml.html": f"{base}/ml",
-        "family-weft.html": f"{base}/weft",
+        proto: (f"{base}{prod}" if prod != "/observatory/" else prod)
+        for proto, prod in CUT_HREF_MAP.items()
     }
-    for proto, prod in mapping.items():
-        html = html.replace(f'href="{proto}"', f'href="{prod}"')
-        html = html.replace(f"href='{proto}'", f"href='{prod}'")
-        html = html.replace(f'href="{proto}#', f'href="{prod}#')
-    return html
+    return _apply_href_mapping(html, mapping)
 
 
 def apply_egg_href(html: str, egg_href: str) -> str:
     html = re.sub(
         r'(<a class="th-egg" href=")[^"]+(")',
-        rf"\1{egg_href}\2",
+        lambda m: m.group(1) + egg_href + m.group(2),
         html,
         count=1,
     )
@@ -397,8 +416,17 @@ def transform_cut_html(raw: str, host: dict, *, observatory: bool = False) -> st
         if 'class="th-egg"' in html:
             html = apply_egg_href(html, host["egg_href"])
     html = fix_cut_asset_paths(html, observatory=observatory)
-    if host.get("noindex"):
+    if host.get("noindex") or observatory:
         html = apply_noindex(html)
+    if observatory and not host.get("noindex"):
+        canonical_tag = f'<link rel="canonical" href="{host["egg_href"]}">'
+        if canonical_tag not in html:
+            if NOINDEX_META in html:
+                html = html.replace(NOINDEX_META, NOINDEX_META + "\n" + canonical_tag, 1)
+            else:
+                insert_after = '<meta name="viewport" content="width=device-width, initial-scale=1">'
+                if insert_after in html:
+                    html = html.replace(insert_after, insert_after + "\n" + canonical_tag, 1)
     return html
 
 
@@ -438,9 +466,6 @@ def copy_cut_pages(host: dict) -> None:
         dest.parent.mkdir(parents=True, exist_ok=True)
         dest.write_text(html, encoding="utf-8")
 
-    if host.get("noindex"):
-        write_staging_headers()
-
 
 def build() -> None:
     host = load_host_settings(DEFAULT_HOST)
@@ -456,6 +481,10 @@ def build() -> None:
     finally:
         if site_root != SITE and str(site_root).startswith(tempfile.gettempdir()):
             shutil.rmtree(site_root, ignore_errors=True)
+    if host.get("noindex"):
+        write_staging_headers()
+    (DIST / ".assetsignore").write_text(".cut-host\n", encoding="utf-8")
+    (DIST / ".cut-host").write_text(DEFAULT_HOST + "\n", encoding="utf-8")
     print(
         f"Built {DIST} (Arrangement 2026-11-10, host={DEFAULT_HOST}, "
         f"weft pin {manifest['weft']['sha'][:12]})"

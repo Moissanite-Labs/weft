@@ -372,8 +372,8 @@ strong { color: var(--ink); font-weight: 600; }
 
 .th-hero { position: relative; min-height: max(720px, 100svh); display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; isolation: isolate; border-bottom: 1px solid var(--line); }
 .th-half { position: relative; z-index: -3; }
-.th-half--c { background: radial-gradient(90% 80% at 85% 60%, #3a2414 0%, #1d130b 45%, #0d0907 100%); }
-.th-half--si { background: radial-gradient(90% 80% at 15% 40%, #2a333e 0%, #141a21 45%, #08090c 100%); }
+.th-half--c { grid-column: 1; grid-row: 1; background: radial-gradient(90% 80% at 85% 60%, #3a2414 0%, #1d130b 45%, #0d0907 100%); }
+.th-half--si { grid-column: 2; grid-row: 1; background: radial-gradient(90% 80% at 15% 40%, #2a333e 0%, #141a21 45%, #08090c 100%); }
 .th-half::after { content: ""; position: absolute; inset: 0; opacity: 0.5;
   background-image: repeating-linear-gradient(60deg, transparent 0 60px, rgb(255 255 255 / 0.025) 60px 61px), repeating-linear-gradient(-60deg, transparent 0 60px, rgb(255 255 255 / 0.025) 60px 61px); }
 .th-seam { position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; transform: translateX(-1px); z-index: -2;
@@ -381,7 +381,7 @@ strong { color: var(--ink); font-weight: 600; }
   box-shadow: 0 0 24px 4px rgb(230 210 168 / 0.42), 0 0 120px 30px rgb(230 210 168 / 0.11); }
 /* Scrim: a soft centred ellipse that dims the seam and the bright inner edges of both halves behind the text, so AA holds
    on carbon and silicon alike. It fades to nothing well before the edges, so the split still reads. */
-.th-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+.th-center { position: relative; grid-column: 1 / -1; grid-row: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
   padding: calc(var(--header-h) + 40px) var(--gutter) 104px; }
 .th-center::before { content: ""; position: absolute; left: 50%; top: 52%; width: min(1240px, 112vw); height: min(640px, 82%); transform: translate(-50%, -50%); z-index: -1; pointer-events: none;
   background: radial-gradient(closest-side, rgb(8 7 6 / 0.62) 0%, rgb(8 7 6 / 0.52) 45%, rgb(8 7 6 / 0.26) 75%, rgb(8 7 6 / 0) 100%); }

@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import json
 import os
 import re
 import sys
@@ -12,8 +13,45 @@ from urllib.parse import urlparse
 ROOT = Path(__file__).resolve().parents[1]
 DIST = ROOT / "dist-cut"
 WEFT = DIST / "weft"
+HOST_SETTINGS_PATH = ROOT / "siliconcordat-cut" / "host-settings.json"
 
-HOST = os.environ.get("SILICONCORDAT_CUT_HOST", "production").strip().lower()
+
+def fail(msg: str) -> None:
+    print(f"verify: {msg}", file=sys.stderr)
+    sys.exit(1)
+
+
+def resolve_host() -> tuple[str, dict]:
+    with HOST_SETTINGS_PATH.open(encoding="utf-8") as fh:
+        table = json.load(fh)
+
+    env_val = os.environ.get("SILICONCORDAT_CUT_HOST")
+    env_host = env_val.strip().lower() if env_val is not None else None
+
+    cut_host_file = DIST / ".cut-host"
+    file_host = (
+        cut_host_file.read_text(encoding="utf-8").strip().lower()
+        if cut_host_file.is_file()
+        else None
+    )
+
+    host = (
+        env_host
+        if env_host is not None
+        else (file_host if file_host is not None else "production")
+    )
+    if host not in table:
+        fail(f"unknown SILICONCORDAT_CUT_HOST={host!r}; expected one of {sorted(table)}")
+
+    if env_host is not None and file_host is not None and env_host != file_host:
+        fail(
+            f"SILICONCORDAT_CUT_HOST ({env_host}) disagrees with dist-cut/.cut-host ({file_host})"
+        )
+
+    return host, table[host]
+
+
+HOST, host_cfg = resolve_host()
 
 RETIRED = (
     "assets/js/weft-loom.js",
@@ -27,7 +65,7 @@ RETIRED = (
 PRIVATE_HREF = re.compile(
     r"github\.com/Moissanite-Labs/(compass|credos|weft-eido|weft-corpus)"
     r'|href="[^"]*(FOUNDER-VISION|SILICONCORDAT|NAMING)\.md'
-    r"|family-weft\.html"
+    r"|(?:landing|ml|ml-principles|ml-notes-from-the-colony|family-weft|observatory)\.html"
 )
 
 BAD_WEEFT_PATH = re.compile(
@@ -40,6 +78,7 @@ CUT_PAGE_PATHS = (
     DIST / "index.html",
     DIST / "ml" / "index.html",
     DIST / "ml" / "principles" / "index.html",
+    DIST / "ml" / "notes-from-the-colony" / "index.html",
     DIST / "observatory" / "index.html",
 )
 
@@ -98,11 +137,6 @@ def count_href_to(html: str, *, scheme: str, hostname: str, path: str) -> int:
     )
 
 
-def fail(msg: str) -> None:
-    print(f"verify: {msg}", file=sys.stderr)
-    sys.exit(1)
-
-
 def check_cut_pages() -> None:
     for rel in (
         "index.html",
@@ -123,7 +157,7 @@ def check_cut_pages() -> None:
     index = (DIST / "index.html").read_text(encoding="utf-8")
     if 'class="th-egg"' not in index:
         fail("landing missing Threshold easter-egg control")
-    if 'class="chamber"' in index.split("<main", 1)[0]:
+    if 'class="chamber"' in index:
         fail("landing must be Threshold, not chamber hero")
     if 'href="/weft"' not in index and 'href="/weft/' not in index:
         fail("landing missing /weft links")
@@ -146,27 +180,42 @@ def check_cut_pages() -> None:
         fail("/ml/notes-from-the-colony/ missing h1")
     if "ml-notes-from-the-colony.html" in note or "family-weft.html" in note:
         fail("prototype hrefs remain on notes page")
+    doc_head = re.search(r'<header class="doc-head">([\s\S]*?)</header>', note)
+    if not doc_head or 'class="proposal"' not in doc_head.group(1):
+        fail("/ml/notes-from-the-colony/ missing proposal in doc-head")
 
     obs = (DIST / "observatory" / "index.html").read_text(encoding="utf-8")
     if "/assets/css/observatory.css" not in obs:
         fail("observatory missing bundled observatory.css")
 
     egg = th_egg_href(index)
-    if HOST == "staging":
-        if not egg or not href_is_relative_path(egg, "/observatory/"):
-            fail("staging landing egg must be href=\"/observatory/\"")
-        if page_has_https_href_to_host(obs, APEX_HOST):
-            fail("staging observatory must use same-origin family links")
-    elif HOST == "production":
+    expected_egg = host_cfg["egg_href"]
+    if expected_egg.startswith("/"):
+        if not egg or not href_is_relative_path(egg, expected_egg):
+            fail(f'{HOST} landing egg must be href="{expected_egg}"')
+    else:
+        p_egg = urlparse(expected_egg)
         if not egg or not href_parsed_match(
-            egg, scheme="https", hostname=OBSERVATORY_EGG_PROD_HOST, path="/"
+            egg,
+            scheme=p_egg.scheme,
+            hostname=p_egg.hostname or "",
+            path=p_egg.path or "/",
         ):
-            fail(
-                'production landing egg must be href="https://observatory.askaconsult.com/"'
-            )
+            fail(f'{HOST} landing egg must be href="{expected_egg}"')
+
+    origin = host_cfg.get("observatory_family_origin", "")
+    if origin:
+        p_origin = urlparse(origin)
+        origin_host = p_origin.hostname or ""
         for path in APEX_FAMILY_PATHS:
-            if not page_has_apex_family_href(obs, path):
-                fail(f"production observatory missing family href for path {path!r}")
+            if not any(
+                href_parsed_match(h, scheme=p_origin.scheme, hostname=origin_host, path=path)
+                for h in href_values(obs)
+            ):
+                fail(f"{HOST} observatory missing family href for path {path!r}")
+    else:
+        if page_has_https_href_to_host(obs, APEX_HOST):
+            fail(f"{HOST} observatory must use same-origin family links")
 
 
 def check_footer_source() -> None:
@@ -184,19 +233,42 @@ def check_footer_source() -> None:
 
 
 def check_noindex() -> None:
-    wants = HOST == "staging"
+    is_staging = host_cfg.get("noindex", False)
+    obs_path = DIST / "observatory" / "index.html"
     for path in CUT_PAGE_PATHS:
         text = path.read_text(encoding="utf-8")
         has_meta = bool(NOINDEX_META.search(text))
-        if wants and not has_meta:
-            fail(f"staging build missing noindex meta on {path.relative_to(DIST)}")
-        if not wants and has_meta:
-            fail(f"production build must not include noindex on {path.relative_to(DIST)}")
+        is_obs = path == obs_path
+        if is_staging:
+            if not has_meta:
+                fail(f"staging build missing noindex meta on {path.relative_to(DIST)}")
+        else:
+            if is_obs:
+                if not has_meta:
+                    fail(f"production observatory missing noindex on {path.relative_to(DIST)}")
+                canon_match = re.search(r'<link\s+rel="canonical"\s+href="([^"]+)"', text)
+                if not canon_match:
+                    fail(f"production observatory missing canonical link on {path.relative_to(DIST)}")
+                canon_href = canon_match.group(1)
+                p_egg = urlparse(host_cfg["egg_href"])
+                if not href_parsed_match(
+                    canon_href,
+                    scheme=p_egg.scheme,
+                    hostname=p_egg.hostname or "",
+                    path=p_egg.path or "/",
+                ):
+                    fail(
+                        f"production observatory canonical {canon_href} does not match {host_cfg['egg_href']}"
+                    )
+            else:
+                if has_meta:
+                    fail(f"production build must not include noindex on {path.relative_to(DIST)}")
+
     headers = DIST / "_headers"
     has_header = headers.is_file() and "X-Robots-Tag: noindex" in headers.read_text(encoding="utf-8")
-    if wants and not has_header:
+    if is_staging and not has_header:
         fail("staging build missing _headers X-Robots-Tag: noindex")
-    if not wants and has_header:
+    if not is_staging and has_header:
         fail("production build must not ship _headers noindex")
 
 
@@ -226,13 +298,25 @@ def check_weft_mirror() -> None:
     if not saw_assets or not saw_papers:
         fail("expected /weft/assets and /weft/papers in generated weft")
 
-    headers = (WEFT / "_headers").read_text(encoding="utf-8")
-    if "\n/*\n" in headers or headers.startswith("/*\n"):
-        fail("_headers catch-all still /* instead of /weft/*")
-    if "/weft/*" not in headers:
-        fail("_headers missing /weft/* catch-all")
+    for h_path in (WEFT / "_headers", DIST / "_headers"):
+        if not h_path.is_file():
+            fail(f"missing headers file: {h_path.relative_to(DIST)}")
+        h_text = h_path.read_text(encoding="utf-8")
+        if "/weft/*" not in h_text:
+            fail(f"{h_path.relative_to(DIST)} missing /weft/*")
+
+    weft_headers = (WEFT / "_headers").read_text(encoding="utf-8")
+    if "\n/*\n" in weft_headers or weft_headers.startswith("/*\n"):
+        fail("weft/_headers catch-all still /* instead of /weft/*")
+
+    if not host_cfg.get("noindex", False):
+        dist_headers = (DIST / "_headers").read_text(encoding="utf-8")
+        if dist_headers.startswith("/*\n") or "\n/*\n" in dist_headers:
+            fail("dist-cut/_headers on production must not start with /*\\n or contain \\n/*\\n")
 
     index = (WEFT / "index.html").read_text(encoding="utf-8")
+    if page_has_https_href_to_host(index, "w3ft.org"):
+        fail("w3ft.org canonical not rewritten on weft index")
     if 'class="brand-family"' not in index or 'href="/ml"' not in index:
         fail("§5.3 brand-family missing on weft index")
     if page_has_https_href_to_host(index, APEX_HOST):
@@ -247,6 +331,7 @@ ALLOWED_WEFT_REPO = {
     Path("ml/notes-from-the-colony/index.html"),
 }
 
+
 def check_private_hrefs() -> None:
     for path in DIST.rglob("*.html"):
         rel = path.relative_to(DIST)
@@ -255,8 +340,22 @@ def check_private_hrefs() -> None:
         text = path.read_text(encoding="utf-8")
         if PRIVATE_HREF.search(text):
             fail(f"private or prototype href in {rel}")
-        if re.search(r'github\.com/Moissanite-Labs/weft"', text) and rel not in ALLOWED_WEFT_REPO:
-            fail(f"GitHub weft link on Cut page {rel}")
+        if rel not in ALLOWED_WEFT_REPO:
+            has_weft_link = False
+            for h in href_values(text):
+                p = urlparse(h)
+                if (p.hostname or "").lower() == "github.com" and (
+                    p.path == "/Moissanite-Labs/weft"
+                    or p.path.startswith("/Moissanite-Labs/weft/")
+                ):
+                    has_weft_link = True
+                    break
+            if not has_weft_link and re.search(
+                r"github\.com/Moissanite-Labs/weft(?![-\w])", text, re.I
+            ):
+                has_weft_link = True
+            if has_weft_link:
+                fail(f"GitHub weft link on Cut page {rel}")
     for path in (DIST / "index.html", DIST / "ml" / "index.html"):
         if "View on GitHub" in path.read_text(encoding="utf-8"):
             fail(f"View on GitHub on {path.relative_to(DIST)}")

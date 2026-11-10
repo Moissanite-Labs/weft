@@ -26,7 +26,7 @@ The previous contract (2026-11-08, Carbon–Silicon Cut at the apex, Observatory
 1. URL map above is fixed. `/w3ft` → `/weft` and apex aliases are not part of this design.
 2. Copy comes only from The Siliconcordat (Moissanite-Labs/compass `README.md`), as quoted in §10. No FOUNDER-VISION.md, SILICONCORDAT.md or NAMING.md content. No slogans, traction, team, waitlist, newsletter, metrics or taglines. Herald owns marketing copy; the few structural labels this design needs are listed in §10.3 so herald can replace them.
 3. Every page (including Observatory) keeps the README's humility: working proposal, not adopted policy, not a legal agreement, directions not capabilities.
-4. Link rule (§10.4): only confirmed-public URLs. Never link compass, credos, weft, weft-eido, weft-corpus, or GitHub copies of the manifesto files. Weft is always linked as `/weft` (absolute `https://siliconcordat.com/weft` from Observatory), never GitHub.
+4. Link rule (§10.4): only confirmed-public URLs. Never link compass, credos, weft (except on /ml and /ml/notes-from-the-colony/ per §16.2), weft-eido, weft-corpus, or GitHub copies of the manifesto files. Weft is always linked as `/weft` (absolute `https://siliconcordat.com/weft` from Observatory), never GitHub.
 5. Weft is not restyled. No new palette, type, chrome removal, loom change or overlay on `/weft`.
 6. Not folded into askaconsult.com. **One explicit owner exception:** the Observatory easter-egg landing is hosted at `observatory.askaconsult.com`. That page carries **no** askaconsult branding, nav or hosting story, and the main lab site is not moved, linked into, or branded by askaconsult. The Exo card still links to `exo.askaconsult.com`. Those are the only two askaconsult strings in the system (one is a hidden href).
 7. Dark only. No theme toggle on `/`, `/ml`, `/ml/*` or Observatory.
@@ -388,11 +388,11 @@ Chapter markers ("The name", "Principles", "Ecosystem", "Doorways"); Observatory
 | Synbios | `https://moissanite-labs.github.io/synbios/` | `https://github.com/Moissanite-Labs/synbios` (label "GitHub") | If only one link fits, Pages. |
 | Koinos | `https://github.com/Moissanite-Labs/synmerit` (label "Public repository") | — | Title stays "Koinos". Quiet aside: "The public repository currently lives at synmerit." |
 | Ethos | `https://github.com/Moissanite-Labs/ethos` | — | |
-| Weft | `/weft` | — | Never GitHub weft/weft-eido/weft-corpus. |
+| Weft | `/weft` | — | Never GitHub weft (except on /ml and /ml/notes-from-the-colony/ per §16.2)/weft-eido/weft-corpus. |
 | Robotics | none | — | Aspiration. |
 | Footer source (not a direction card) | `https://github.com/Moissanite-Labs/siliconcordat` (label `github.com/Moissanite-Labs/siliconcordat`) | — | Already live in the `/` and `/ml` footer base row (verified 2026-11-10). Keep it on `/`, `/ml`, `/ml/*`, and Observatory. This is the public site repo, not a manifesto-file or Weft-repo link. Do not add a header "View on GitHub" button. |
 
-**Never link:** compass, credos, weft, weft-eido, weft-corpus, FOUNDER-VISION.md, SILICONCORDAT.md, NAMING.md (any host). Do not copy w3ft.org's "View on GitHub" button to `/` or `/ml`. Any future direction without a confirmed public URL uses the not-linked card (§8.5).
+**Never link:** compass, credos, weft (except on /ml and /ml/notes-from-the-colony/ per §16.2), weft-eido, weft-corpus, FOUNDER-VISION.md, SILICONCORDAT.md, NAMING.md (any host). Do not copy w3ft.org's "View on GitHub" button to `/` or `/ml`. Any future direction without a confirmed public URL uses the not-linked card (§8.5).
 
 External links: same tab, mark with ↗, and include visually hidden "(external site)".
 
@@ -508,7 +508,7 @@ Generators and checks (not shipped): `tools/contrast.mjs`, `tools/make_chamber.p
 - [ ] No champagne, Source Serif or Plex on `/weft`.
 
 **Links**
-- [ ] No link anywhere to compass, credos, weft, weft-eido, weft-corpus, or the three manifesto files. No "View on GitHub" on `/`, `/ml` or Observatory.
+- [ ] No link anywhere to compass, credos, weft (except on /ml and /ml/notes-from-the-colony/ per §16.2), weft-eido, weft-corpus, or the three manifesto files. No "View on GitHub" on `/`, `/ml` or Observatory.
 - [ ] External links same tab, ↗, hidden "(external site)".
 
 **A11y / perf**

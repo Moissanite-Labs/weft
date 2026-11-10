@@ -466,7 +466,7 @@ def observatory():
         tag = "Direction · foundation" if d.get("foundation") else "Direction"
         rows.append(f'''        <li class="o-row o-row--link{' o-row--foundation' if d.get('foundation') else ''}">
           <span class="o-row__id">D-{i:02d}</span>
-          <span class="o-row__line" aria-hidden="true"><i style="left:{lines[i-1]}%"></i></span>
+          <span class="o-row__line" aria-hidden="true"><i style="left:{lines[(i - 1) % len(lines)]}%"></i></span>
           <h3><a href="{href}">{d["name"]}{EXT}</a></h3>
           <p>{d["text"]}</p>
           <div class="o-row__status"><span class="o-tag">{tag}</span><span class="o-url" aria-hidden="true">{label} ↗</span>{sec}{aside}</div>
@@ -691,33 +691,40 @@ def principles_page():
 
 def notes_page():
     SECTIONS = [
-        ("premise", "01 / 06", "The premise", [
+        ("premise", "01 / 07", "The premise", [
             "Moissanite Labs exists to build the conditions for digital and biological intelligences to collaborate, create, and evolve together. That is the whole of it. Everything on this site — the Siliconcordat, Weft, the directions — is an attempt to make those conditions concrete enough to build against.",
             "Silicon carbide is the metaphor the lab is named for. Two substrates, one crystal. It is a metaphor, not a claim about minds; the working proposal says so, and this note keeps the distinction.",
         ]),
-        ("thesis", "02 / 06", "The thesis", [
+        ("thesis", "02 / 07", "The thesis", [
             "Weft is the open research program this lab runs. It studies models that keep adapting after deployment, under limits a program can verify. Its object is the cell: a bounded piece of memory with a frozen core, a resource budget, and a rule that commits a change only when the candidate passes the check and stays within a distance bound from a saved baseline.",
             "Three papers are public at w3ft.org: the program overview, <em>Models as Cells</em>, and <em>Checkable Computation</em> — a reducer for interaction combinators, a canonical graph format, and committed execution records. Read them before you trust this lab; that is what they are for.",
         ]),
-        ("colony", "03 / 06", "What the colony taught", [
+        ("colony", "03 / 07", "What the colony taught", [
             "The razi-cells program is the agent-level twin of Weft. Small harnesses — a need, an empty folder, a model — write their own tools and are kept or dropped by a measured score. Thirteen colonies, eight fixed coding tasks, about 1,560 model calls, five model conditions.",
             "Three findings survived the record. Harness design moved outcomes as much as model choice did. Frontier models reached 10 to 13 kept improvements per 100 calls, against 1.6 to 3.1 for the fast default. And how often a model used its selection tool predicted its improvement rate almost perfectly.",
             "The misses are kept in the record too. The scoring instrument had a fault — a runtime warning line was once read as a score — and the record says so. Heredity, passing a body from one generation to the next, bought the same reach for 31% less energy and fewer deaths, and did not raise reach at all: 65 of 70 later-generation heirs changed nothing. Several registered guesses missed. The program is exploratory, and it is reported that way.",
         ]),
-        ("honesty", "04 / 06", "How the lab keeps itself honest", [
+        ("honesty", "04 / 07", "How the lab keeps itself honest", [
             "Guesses are written before the data, and judged by script, exactly as written. Misses are reported beside the wins. Nothing ships publicly with a claim the record cannot carry. When a number is wrong, the record says so instead of quietly editing it.",
             "This note is the first artifact published under that rule, which makes it the smallest honest example of it: everything in it is either a link to the public record, or a description of what the record shows, misses included.",
         ]),
-        ("open", "05 / 06", "What is open", [
-            "Fifty-two directions are open across eight branches — the laws of the cell, the choice of model, what is inherited, signals beyond text, proof, growing a model, the colony as an organism. The map is on the lab site; the laws record (E11 to L1) and the E07 record are under review, and will be linked as they land.",
+        ("open", "05 / 07", "What is open", [
+            "Fifty-two directions are open across eight branches — the laws of the cell, the choice of model, what is inherited, signals beyond text, proof, growing a model, the colony as an organism, and the instrument itself. The map is on the lab site; "
+            + f'the <a href="https://github.com/Moissanite-Labs/weft/tree/main/docs/program/experiments/razi-cells-laws-2026-11">laws record (E11 to L1){EXT}</a> and the <a href="https://github.com/Moissanite-Labs/weft/tree/main/docs/program/experiments/E07/razi-cells-2026-11">E07 record{EXT}</a> are in the public repository.',
             "Nothing here is finished, and this lab does not behave as though it were. A future robotics role is an aspiration, not a capability. Weft is an open research program, not a product.",
         ]),
-        ("limit", "06 / 06", "The honest limit", [
+        ("limit", "06 / 07", "The honest limit", [
             "The laws record rests on one model family, four small kits, and three runs per arm: leads, not laws. The report is exploratory and not peer reviewed. Some directions on the map are far out of reach today and are labelled so.",
             "So do not take this note on trust. Read the papers, or read the record, or run the code. The instruments are public; the misses are public; the rest is work in progress, stated as such.",
         ]),
+        ("read", "07 / 07", "Where to read it", [
+            f'<a href="https://w3ft.org/papers/overview/">Paper 0 — the overview</a> · <a href="https://w3ft.org/papers/models-as-cells/">Paper 1 — Models as Cells</a> · <a href="https://w3ft.org/papers/checkable-computation/">Paper 2 — Checkable Computation</a> · <a href="{WEFT}">/weft</a> · <a href="{RESEARCH_HUB}">The research hub{EXT}</a> · <a href="{WEFT_REPO}">github.com/Moissanite-Labs/weft{EXT}</a> · <a href="{ML}">Moissanite Labs</a>',
+        ]),
     ]
-    toc = "\n".join('<li><a href="#%s"><span class="n">%s</span>%s</a></li>' % (k, n.split(" / ")[0], t) for k, n, t, _ in SECTIONS)
+    toc = "\n".join(
+        f'<li><a href="#{k}"{" aria-current=\"location\"" if i == 1 else ""}><span class="n">{n.split(" / ")[0]}</span>{t}</a></li>'
+        for i, (k, n, t, _) in enumerate(SECTIONS, 1)
+    )
     secs = "\n".join(
         '      <section class="doc-section" id="%s" aria-labelledby="%s-h">\n'
         '        <span class="principle__n">%s</span>\n'
@@ -750,6 +757,7 @@ def notes_page():
       <span class="eyebrow">Moissanite Labs · Note 01</span>
       <h1>Notes from the colony</h1>
       <p class="dek">The first public note from this lab: the thesis it runs on, what its experiments actually found — misses kept — and what it intends to still be able to check a year from now.</p>
+      <div class="proposal" style="margin:0"><span class="chip">Working proposal</span><p>{BANNER}</p></div>
     </div>
   </header>
   <div class="wrap wrap--ml doc">
@@ -761,11 +769,6 @@ def notes_page():
     </nav>
     <article>
 {secs}
-      <section class="doc-section" id="read" aria-labelledby="read-h">
-        <span class="principle__n">07 / 07</span>
-        <h2 id="read-h">Where to read it</h2>
-        <p><a href="https://w3ft.org/papers/overview/">Paper 0 — the overview</a> · <a href="https://w3ft.org/papers/models-as-cells/">Paper 1 — Models as Cells</a> · <a href="https://w3ft.org/papers/checkable-computation/">Paper 2 — Checkable Computation</a> · <a href="{WEFT}">/weft</a> · <a href="{RESEARCH_HUB}">The research hub{EXT}</a> · <a href="{WEFT_REPO}">github.com/Moissanite-Labs/weft{EXT}</a> · <a href="{ML}">Moissanite Labs</a></p>
-      </section>
       <p class="caption doc-src">Moissanite Labs · Note 01 · <a href="{ML}">/ml</a></p>
       <p style="margin-top:36px"><a class="back" href="{ML}"><span class="arr" aria-hidden="true">←</span> Back to Moissanite Labs</a></p>
     </article>
