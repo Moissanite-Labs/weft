@@ -43,6 +43,28 @@ CUT_PAGE_PATHS = (
     DIST / "observatory" / "index.html",
 )
 
+HREF_ATTR = re.compile(r'href=(["\'])([^"\']*)\1')
+TH_EGG_HREF = re.compile(r'<a\s+class="th-egg"\s+href="([^"]+)"')
+
+OBSERVATORY_APEX_FAMILY = (
+    "https://siliconcordat.com/",
+    "https://siliconcordat.com/ml",
+    "https://siliconcordat.com/weft",
+)
+
+
+def href_values(html: str) -> list[str]:
+    return [m.group(2) for m in HREF_ATTR.finditer(html)]
+
+
+def has_href(html: str, value: str) -> bool:
+    return value in href_values(html)
+
+
+def th_egg_href(html: str) -> str | None:
+    m = TH_EGG_HREF.search(html)
+    return m.group(1) if m else None
+
 
 def fail(msg: str) -> None:
     print(f"verify: {msg}", file=sys.stderr)
@@ -90,16 +112,19 @@ def check_cut_pages() -> None:
     if "/assets/css/observatory.css" not in obs:
         fail("observatory missing bundled observatory.css")
 
+    egg = th_egg_href(index)
     if HOST == "staging":
-        if 'href="/observatory/"' not in index:
-            fail("staging landing egg must point at /observatory/")
-        if "https://siliconcordat.com/" in obs:
-            fail("staging observatory must use same-origin family links")
+        if egg != "/observatory/":
+            fail("staging landing egg must be href=\"/observatory/\"")
+        for apex in OBSERVATORY_APEX_FAMILY:
+            if has_href(obs, apex):
+                fail("staging observatory must use same-origin family links")
     elif HOST == "production":
-        if "https://observatory.askaconsult.com/" not in index:
-            fail("production landing egg must point at observatory.askaconsult.com")
-        if "https://siliconcordat.com/" not in obs:
-            fail("production observatory must use apex family links")
+        if egg != "https://observatory.askaconsult.com/":
+            fail("production landing egg must be href=\"https://observatory.askaconsult.com/\"")
+        for apex in OBSERVATORY_APEX_FAMILY:
+            if not has_href(obs, apex):
+                fail(f"production observatory missing family href {apex!r}")
 
 
 def check_footer_source() -> None:
@@ -165,7 +190,7 @@ def check_weft_mirror() -> None:
     index = (WEFT / "index.html").read_text(encoding="utf-8")
     if 'class="brand-family"' not in index or 'href="/ml"' not in index:
         fail("§5.3 brand-family missing on weft index")
-    if 'href="https://siliconcordat.com' in index:
+    if any(h.startswith("https://siliconcordat.com") for h in href_values(index)):
         fail("weft must use same-origin /ml and /, not siliconcordat.com")
     css = (WEFT / "assets/css/site.css").read_text(encoding="utf-8")
     if ".brand-family" not in css or "menu-family-label" not in css:
