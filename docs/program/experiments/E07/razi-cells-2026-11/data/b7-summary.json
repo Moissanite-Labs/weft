@@ -1,0 +1,218 @@
+{
+ "calls": 123,
+ "improvements": 0,
+ "imp_per_100_calls": 0.0,
+ "done": 7,
+ "bad_replies": 1,
+ "wall_s": 3227.4,
+ "par": 8,
+ "peak_rss_mb": 871.7,
+ "peak_cpu_pct": 111.4,
+ "mean_cpu_pct": 8.4,
+ "cells": {
+  "primes": {
+   "rc": 0,
+   "secs": 834.2,
+   "steps": 17,
+   "errors": 0,
+   "acts": {
+    "done": 1,
+    "sh": 13,
+    "assay": 1
+   },
+   "splits": 0,
+   "ties": 0,
+   "bad_replies": 0,
+   "assays": 1,
+   "variants": 0,
+   "tries": 0,
+   "improvements": 0,
+   "gain": 0,
+   "apoptosis": false,
+   "calls": 16,
+   "routes": {
+    "opencode-go:hy4": 15
+   },
+   "done": true
+  },
+  "sortints": {
+   "rc": 0,
+   "secs": 770.8,
+   "steps": 16,
+   "errors": 0,
+   "acts": {
+    "done": 1,
+    "sh": 12,
+    "assay": 1
+   },
+   "splits": 0,
+   "ties": 0,
+   "bad_replies": 0,
+   "assays": 1,
+   "variants": 0,
+   "tries": 0,
+   "improvements": 0,
+   "gain": 0,
+   "apoptosis": false,
+   "calls": 15,
+   "routes": {
+    "opencode-go:hy4": 14
+   },
+   "done": true
+  },
+  "wordfreq": {
+   "rc": 0,
+   "secs": 1115.3,
+   "steps": 16,
+   "errors": 0,
+   "acts": {
+    "write": 2,
+    "done": 1,
+    "sh": 8,
+    "assay": 1
+   },
+   "splits": 0,
+   "ties": 0,
+   "bad_replies": 0,
+   "assays": 1,
+   "variants": 0,
+   "tries": 0,
+   "improvements": 0,
+   "gain": 0,
+   "apoptosis": false,
+   "calls": 15,
+   "routes": {
+    "opencode-go:hy4": 12
+   },
+   "done": true
+  },
+  "compress": {
+   "rc": 0,
+   "secs": 596.4,
+   "steps": 17,
+   "errors": 0,
+   "acts": {
+    "done": 1,
+    "sh": 14,
+    "assay": 1
+   },
+   "splits": 0,
+   "ties": 0,
+   "bad_replies": 0,
+   "assays": 1,
+   "variants": 0,
+   "tries": 0,
+   "improvements": 0,
+   "gain": 0,
+   "apoptosis": false,
+   "calls": 16,
+   "routes": {
+    "opencode-go:hy4": 16
+   },
+   "done": true
+  },
+  "fibmod": {
+   "rc": 0,
+   "secs": 836.3,
+   "steps": 17,
+   "errors": 0,
+   "acts": {
+    "write": 1,
+    "done": 1,
+    "sh": 12,
+    "assay": 1
+   },
+   "splits": 0,
+   "ties": 0,
+   "bad_replies": 0,
+   "assays": 1,
+   "variants": 0,
+   "tries": 0,
+   "improvements": 0,
+   "gain": 0,
+   "apoptosis": false,
+   "calls": 16,
+   "routes": {
+    "opencode-go:hy4": 15
+   },
+   "done": true
+  },
+  "lcs": {
+   "rc": 0,
+   "secs": 3135.8,
+   "steps": 18,
+   "errors": 2,
+   "acts": {
+    "write": 1,
+    "done": 1,
+    "sh": 7,
+    "assay": 1
+   },
+   "splits": 0,
+   "ties": 0,
+   "bad_replies": 1,
+   "assays": 1,
+   "variants": 0,
+   "tries": 0,
+   "improvements": 0,
+   "gain": 0,
+   "apoptosis": false,
+   "calls": 16,
+   "routes": {
+    "opencode-go:hy4": 11
+   },
+   "done": true
+  },
+  "csvsum": {
+   "rc": 1,
+   "secs": 3030.5,
+   "steps": 16,
+   "errors": 3,
+   "acts": {
+    "write": 1,
+    "sh": 5,
+    "assay": 1
+   },
+   "splits": 0,
+   "ties": 0,
+   "bad_replies": 0,
+   "assays": 1,
+   "variants": 0,
+   "tries": 0,
+   "improvements": 0,
+   "gain": 0,
+   "apoptosis": true,
+   "calls": 14,
+   "routes": {
+    "opencode-go:hy4": 7
+   },
+   "done": false
+  },
+  "maze": {
+   "rc": 0,
+   "secs": 3225.5,
+   "steps": 16,
+   "errors": 1,
+   "acts": {
+    "write": 2,
+    "done": 1,
+    "sh": 6,
+    "assay": 1
+   },
+   "splits": 0,
+   "ties": 0,
+   "bad_replies": 0,
+   "assays": 1,
+   "variants": 0,
+   "tries": 0,
+   "improvements": 0,
+   "gain": 0,
+   "apoptosis": false,
+   "calls": 15,
+   "routes": {
+    "opencode-go:hy4": 10
+   },
+   "done": true
+  }
+ }
+}
