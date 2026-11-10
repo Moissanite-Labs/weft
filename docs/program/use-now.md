@@ -2,9 +2,9 @@
 
 Companion to the [convergence plan](convergence-plan.md) and [variant register](variants.md), for [#39](https://github.com/Moissanite-Labs/weft/issues/39). Baseline: `main@94b9064f`, reviewed 2026-11-08. Commands below are existing entrypoints and a proposed local runbook, not a claim that they have run on the owner's Mac.
 
-The user reports an M1 MacBook, 64 GB RAM, Chrome, and macOS “Golden Gate 27.0.1.” Preserve that report as given. Confirm the actual chip, OS build, architecture, Python/Torch and Chrome versions before choosing compatibility settings; do not infer an Apple version or successful MPS execution from the reported name.
+The user reports an M1 MacBook, 64 GB RAM, Chrome, and macOS “Golden Gate 27.0.1.” Preserve that report as given. Probes confirmed: Apple M1 Max, 64 GB RAM (68,719,476,736 bytes), macOS 27.0.1 (Build 26A434), architecture `arm64`, Google Chrome 157.0.8103.50, Python 3.14.6, and PyTorch 2.15.0 (`mps_built: true`, `mps_available: true`).
 
-The existing CI commands were re-run successfully on the review environment on 2026-11-08: Linux x86_64, Python 3.12, Torch `2.15.0+cpu`, 34 Python tests including C11, 38 Node tests, and the daemon/site/core/Mac-wrapper selftests. This is the usable CPU baseline. The Mac and Chrome record below is still to be obtained.
+The Paper 1 experiments and runtime suite ran on this Apple Silicon machine on 2026-11-10. The CPU run (`--device cpu`) reproduced the committed numbers in `results.json` (`0.278059` mean final error ratio) with zero numerical differences under `--check`. An opt-in MPS baseline run (`--device mps`) recorded execution in `papers/01-models-as-cells/results-mps-m1.json`.
 
 ## Capability by environment
 
@@ -66,7 +66,11 @@ print({
 PY
 ```
 
-`mps_available: true` is an availability check, not a performance or correctness result. CPU and MPS comparisons need separate runs of the same workload, recorded device selection and tolerances. The current harness chooses the device automatically; do not relabel its output as a CPU comparison without controlling that selection.
+`mps_available: true` is an availability check, not a performance or correctness result. CPU and MPS comparisons need separate runs of the same workload, recorded device selection and tolerances. `papers/01-models-as-cells/experiments.py` supports explicit `--device {cpu,mps}`, `--check`, and `--check-mps` flags. Default execution remains CPU for deterministic CI checks.
+
+On the Apple M1 Max host, CPU execution runs in `float64`. It records an 81.24 ms median elapsed time per 12-generation cycle and reproduces the committed 0.278059 mean final error ratio.
+
+MPS execution runs in `float32` because PyTorch MPS lacks `float64` support. It records a 121.96 ms median elapsed time and a 0.277101 mean final error ratio, a 0.05% to 1.5% per-seed difference from float64 CPU. Both devices yield identical gate decisions: 15.0 degrees first rejected angle, 120/120 committed proposals, zero core-row drift, and full watermark retention.
 
 Compare the actual host record with the current [PyTorch MPS requirements](https://developer.apple.com/metal/pytorch/). Native Torch/MLX experiments and Chrome WebGPU/ONNX experiments are different stacks; a working native backend does not validate a browser model path.
 
@@ -87,6 +91,8 @@ python weft/runtime/aywa/site_selftest.py
 python weft/runtime/core/selftest.py
 python weft/runtime/mac/darwin_sysctl.py
 python weft/runtime/mac/metal_loom.py
+python papers/01-models-as-cells/experiments.py --check
+python papers/01-models-as-cells/experiments.py --check-mps
 git status --short
 ```
 

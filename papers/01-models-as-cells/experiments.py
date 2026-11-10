@@ -6,13 +6,14 @@ modules in weft/runtime (C1 plasm, C2 invariants). Run from the repository root:
 
     python3 papers/01-models-as-cells/experiments.py           # write results.json and figures/
     python3 papers/01-models-as-cells/experiments.py --check   # CI: recompute, compare, write nothing
+    python3 papers/01-models-as-cells/experiments.py --device mps # write results-mps-m1.json
 
-It writes results.json and the SVG figures next to this file. CPU only and
-deterministic: each run seeds torch, and the Plasm cycle is forced onto the CPU
-so results do not depend on whether Apple MPS is available.
+Default device is CPU and deterministic: each run seeds torch, and the Plasm cycle is forced
+onto the CPU so CI results do not depend on whether Apple MPS is available.
 """
 from __future__ import annotations
 
+import argparse
 import json
 import math
 import os
@@ -36,7 +37,7 @@ from weft.runtime.invariants import (  # noqa: E402
     verify_weight_update_safety_ex,
 )
 
-plasm.select_compute_device = lambda: torch.device("cpu")  # deterministic CPU runs
+plasm.select_compute_device = lambda: torch.device("cpu")  # default deterministic CPU runs
 
 SEEDS = list(range(10))
 GENERATIONS = 12
@@ -50,25 +51,63 @@ def git_commit() -> str:
         return "unknown"
 
 
+def probe_environment(device_name: str) -> dict:
+    env = {
+        "commit": git_commit(),
+        "python": platform.python_version(),
+        "torch": torch.__version__,
+        "machine": platform.machine(),
+        "system": platform.system(),
+        "device": device_name,
+    }
+    if device_name == "mps":
+        brand = None
+        for cmd in (["sysctl", "-n", "machdep.cpu.brand_string"], ["/usr/sbin/sysctl", "-n", "machdep.cpu.brand_string"]):
+            try:
+                out = subprocess.check_output(cmd, stderr=subprocess.DEVNULL).decode().strip()
+                if out:
+                    brand = out
+                    break
+            except Exception:
+                pass
+        if brand:
+            env["chip"] = brand
+
+        try:
+            sw_ver = subprocess.check_output(["sw_vers", "-productVersion"], stderr=subprocess.DEVNULL).decode().strip()
+            sw_build = subprocess.check_output(["sw_vers", "-buildVersion"], stderr=subprocess.DEVNULL).decode().strip()
+            if sw_ver:
+                env["os_version"] = sw_ver
+            if sw_build:
+                env["os_build"] = sw_build
+        except Exception:
+            pass
+
+        env["mps_available"] = bool(hasattr(torch.backends, "mps") and torch.backends.mps.is_available())
+        env["mps_built"] = bool(hasattr(torch.backends, "mps") and torch.backends.mps.is_built())
+    return env
+
+
 # --- E1: equal sizes do not mean a small move --------------------------------
-def e1_compared_sizes() -> dict:
+def e1_compared_sizes(device: torch.device = torch.device("cpu")) -> dict:
     """W' = cos(t) W + sin(t) Q with <W, Q>_F = 0 and ||Q|| = ||W||.
 
     Then ||W'|| = ||W|| for every t, while ||W' - W|| = 2 sin(t/2) ||W||.
     A check on |‖W'‖ - ‖W‖| passes every t; the baseline-distance gate does not.
     """
-    g = torch.Generator().manual_seed(7)
-    w = torch.randn(DIM, DIM, generator=g, dtype=torch.float64) * 0.05
-    q = torch.randn(DIM, DIM, generator=g, dtype=torch.float64)
+    dtype = torch.float32 if device.type == "mps" else torch.float64
+    g = torch.Generator(device="cpu").manual_seed(7)
+    w = (torch.randn(DIM, DIM, generator=g, dtype=dtype) * 0.05).to(device)
+    q = torch.randn(DIM, DIM, generator=g, dtype=dtype).to(device)
     q = q - (torch.sum(q * w) / torch.sum(w * w)) * w  # orthogonal to W in the Frobenius inner product
     q = q / torch.linalg.norm(q) * torch.linalg.norm(w)
-    norm_w = float(torch.linalg.norm(w))
+    norm_w = float(torch.linalg.norm(w).item())
     radius = 0.25 * norm_w
     rows = []
     for k in range(0, 37):
         t = math.pi * k / 36
         cand = math.cos(t) * w + math.sin(t) * q
-        size_change = abs(float(torch.linalg.norm(cand)) - norm_w)
+        size_change = abs(float(torch.linalg.norm(cand).item()) - norm_w)
         ok, dist, _, reason = verify_weight_update_safety_ex(w, cand, radius, 10.0, 1.0)
         rows.append({
             "theta_deg": round(math.degrees(t), 1),
@@ -95,16 +134,18 @@ def e1_compared_sizes() -> dict:
 
 
 # --- E2: the Plasm cycle ------------------------------------------------------
-def e2_plasm_cycles() -> dict:
+def e2_plasm_cycles(device: torch.device = torch.device("cpu")) -> dict:
+    plasm.select_compute_device = lambda: device
     runs = []
     for seed in SEEDS:
         torch.manual_seed(seed)
         t0 = time.perf_counter()
         res = plasm.run_weft_plasm_cycle(generations=GENERATIONS, shm_name=f"weft_wp1_{os.getpid()}_{seed}")
+        if device.type == "mps":
+            torch.mps.synchronize()
         elapsed = (time.perf_counter() - t0) * 1000
         gens = res["generations"]
         committed = []
-        w_err = gens[0]["parent_target_error"]
         for g in gens:
             took = g["invariant_safe"] and g["watermark_retained"] and g["winner_target_error"] <= g["parent_target_error"] and g["tension"] <= TENSION_MAX
             committed.append(bool(took))
@@ -153,12 +194,13 @@ def e2_plasm_cycles() -> dict:
 
 
 # --- E5: the gate inside the loop --------------------------------------------
-def e5_radius_sweep() -> dict:
+def e5_radius_sweep(device: torch.device = torch.device("cpu")) -> dict:
     """Run the same cycle with smaller radii so the gate actually binds.
 
     run_weft_plasm_cycle reads the module-level R_INVARIANT at call time, so the
     sweep sets it for each run and restores it afterwards.
     """
+    plasm.select_compute_device = lambda: device
     original = plasm.R_INVARIANT
     rows = []
     try:
@@ -199,27 +241,27 @@ def e5_radius_sweep() -> dict:
 
 
 # --- E3: watermark threat model ----------------------------------------------
-def e3_watermark() -> dict:
+def e3_watermark(device: torch.device = torch.device("cpu")) -> dict:
     torch.manual_seed(11)
-    g = torch.Generator().manual_seed(11)
-    w0 = torch.randn(DIM, DIM, generator=g) * 0.05
+    g = torch.Generator(device="cpu").manual_seed(11)
+    w0 = (torch.randn(DIM, DIM, generator=g, dtype=torch.float32) * 0.05).to(device)
     core = DIM // 4
     wm, trig, target, init_align = plasm.embed_weight_watermark(w0, core_rows=core)
     base = wm.clone()
-    noise = torch.randn(DIM, DIM, generator=g)
+    noise = torch.randn(DIM, DIM, generator=g, dtype=torch.float32).to(device)
     noise = noise / torch.linalg.norm(noise)
-    periphery = torch.ones(DIM, DIM)
+    periphery = torch.ones(DIM, DIM, device=device)
     periphery[:core, :] = 0.0
     sweep = []
     for scale in [0.0, 0.5, 1, 2, 4, 6, 8, 12, 16, 24, 32]:
         row = {"scale": scale}
-        for name, m in (("masked", periphery), ("unmasked", torch.ones(DIM, DIM))):
-            cand = base + scale * (m * noise) / max(float(torch.linalg.norm(m * noise)), 1e-12)
+        for name, m in (("masked", periphery), ("unmasked", torch.ones(DIM, DIM, device=device))):
+            cand = base + scale * (m * noise) / max(float(torch.linalg.norm(m * noise).item()), 1e-12)
             r = plasm.verify_watermark_retention(base, cand, trig, target)
             row[name] = {"retained": r["retained"], "cosine": r["cosine_alignment"], "response_drift": r["response_l2_drift"], "reason": r["reason"]}
         sweep.append(row)
     # Threat 1: targeted rank-1 overwrite of the trigger response.
-    adv = torch.randn(DIM, generator=g)
+    adv = torch.randn(DIM, generator=g, dtype=torch.float32).to(device)
     adv = adv / torch.linalg.norm(adv) * 3.0
     resp = torch.mv(base.t(), trig)
     overwritten = base + torch.outer(trig, adv - resp)
@@ -238,14 +280,22 @@ def e3_watermark() -> dict:
 
 
 # --- E4: cross-language conformance -----------------------------------------
-def e4_conformance() -> dict:
+def e4_conformance(device: torch.device = torch.device("cpu")) -> dict:
     v = load_conformance_vectors()
     agree = 0
     for vec in v["weight_update_vectors"]:
         dec = lambda x: float(x) if isinstance(x, str) else x  # noqa: E731
-        ok, dist, rem, reason = verify_weight_update_safety_ex(
-            [dec(x) for x in vec["baseline"]], [dec(x) for x in vec["candidate"]],
-            vec["r_invariant"], vec["budget"], vec["cost"])
+        if device.type == "mps":
+            b = torch.tensor([dec(x) for x in vec["baseline"]], dtype=torch.float32, device=device)
+            c = torch.tensor([dec(x) for x in vec["candidate"]], dtype=torch.float32, device=device)
+            ok, dist, rem, reason = verify_weight_update_safety_ex(
+                b, c, vec["r_invariant"], vec["budget"], vec["cost"]
+            )
+        else:
+            ok, dist, rem, reason = verify_weight_update_safety_ex(
+                [dec(x) for x in vec["baseline"]], [dec(x) for x in vec["candidate"]],
+                vec["r_invariant"], vec["budget"], vec["cost"]
+            )
         agree += ok == vec["expected_accepted"] and reason == vec["expected_reason"]
     return {"weight_update_vectors": len(v["weight_update_vectors"]), "python_agrees": agree,
             "tension_vectors": len(v["tension_vectors"]), "royalty_vectors": len(v["royalty_vectors"]),
@@ -363,31 +413,57 @@ def compare(a, b, path="") -> list[str]:
 
 
 def main() -> None:
-    check = "--check" in sys.argv[1:]
-    e1 = e1_compared_sizes()
-    e2 = e2_plasm_cycles()
-    e3 = e3_watermark()
-    e4 = e4_conformance()
-    e5 = e5_radius_sweep()
-    if not check:
+    parser = argparse.ArgumentParser(description="Experiments for Paper 1, 'Models as cells'.")
+    parser.add_argument("--check", action="store_true", help="CI: recompute, compare against baseline, write nothing")
+    parser.add_argument("--check-mps", action="store_true", help="Recompute on MPS, compare against results-mps-m1.json, write nothing")
+    parser.add_argument("--device", choices=["cpu", "mps"], default="cpu", help="Compute device (default: cpu)")
+    parser.add_argument("--out", type=Path, default=None, help="Output JSON path (default: results.json for cpu, results-mps-m1.json for mps)")
+    parser.add_argument("--figures", action="store_true", help="Force generating SVG figures")
+    args = parser.parse_args()
+
+    if args.check_mps:
+        args.device = "mps"
+        args.check = True
+
+    if args.device == "mps" and not (hasattr(torch.backends, "mps") and torch.backends.mps.is_available()):
+        sys.exit("Error: PyTorch MPS backend is not available on this machine.")
+
+    device = torch.device(args.device)
+    target_out = args.out or (HERE / ("results-mps-m1.json" if args.device == "mps" else "results.json"))
+
+    e1 = e1_compared_sizes(device)
+    e2 = e2_plasm_cycles(device)
+    e3 = e3_watermark(device)
+    e4 = e4_conformance(device)
+    e5 = e5_radius_sweep(device)
+
+    if not args.check and (args.figures or (args.device == "cpu" and args.out is None)):
         figures(e1, e2, e3, e5)
+
     out = {
         "schema": "weft-paper-1-results/1",
-        "environment": {
-            "commit": git_commit(), "python": platform.python_version(), "torch": torch.__version__,
-            "machine": platform.machine(), "system": platform.system(), "device": "cpu",
-        },
-        "e1_compared_sizes": e1, "e2_plasm_cycles": e2, "e3_watermark": e3, "e4_conformance": e4, "e5_radius_sweep": e5,
+        "environment": probe_environment(args.device),
+        "e1_compared_sizes": e1,
+        "e2_plasm_cycles": e2,
+        "e3_watermark": e3,
+        "e4_conformance": e4,
+        "e5_radius_sweep": e5,
     }
-    if check:
-        committed = json.loads((HERE / "results.json").read_text())
+
+    if args.check:
+        if not target_out.exists():
+            sys.exit(f"Baseline file {target_out} not found")
+        committed = json.loads(target_out.read_text(encoding="utf-8"))
         diffs = compare(json.loads(json.dumps(out)), committed)
         for d in diffs[:50]:
             print(f"DIFF {d}", file=sys.stderr)
         print(json.dumps({"status": "FAIL" if diffs else "PASS", "differences": len(diffs)}))
         raise SystemExit(1 if diffs else 0)
-    (HERE / "results.json").write_text(json.dumps(out, indent=2) + "\n")
+
+    target_out.write_text(json.dumps(out, indent=2) + "\n", encoding="utf-8")
     summary = {
+        "device": args.device,
+        "out": str(target_out),
         "E1": {k: e1[k] for k in ("cases", "weak_accepts", "gate_accepts", "weak_accepts_beyond_radius", "max_size_change", "first_rejected_theta_deg")},
         "E2": {k: e2[k] for k in ("all_pass", "error_ratio_mean", "error_ratio_min", "error_ratio_max", "max_core_row_drift", "min_watermark_alignment", "max_drift", "commits_total", "proposals_total", "alpha_wins", "beta_wins", "elapsed_ms_median")},
         "E3": {k: e3[k] for k in ("masked_all_retained", "masked_max_response_drift", "first_unmasked_failure_scale", "rank1_overwrite")},
