@@ -111,6 +111,7 @@ def check_cut_pages() -> None:
         "assets/css/observatory.css",
         "ml/index.html",
         "ml/principles/index.html",
+        "ml/notes-from-the-colony/index.html",
         "observatory/index.html",
         "assets/mark.svg",
         "assets/chamber.svg",
@@ -139,6 +140,12 @@ def check_cut_pages() -> None:
         ml,
     ):
         fail("/ml hero h1 must be Moissanite Labs")
+
+    note = (DIST / "ml" / "notes-from-the-colony" / "index.html").read_text(encoding="utf-8")
+    if re.search(r"<h1[^>]*>\s*Notes from the colony\s*</h1>", note) is None:
+        fail("/ml/notes-from-the-colony/ missing h1")
+    if "ml-notes-from-the-colony.html" in note or "family-weft.html" in note:
+        fail("prototype hrefs remain on notes page")
 
     obs = (DIST / "observatory" / "index.html").read_text(encoding="utf-8")
     if "/assets/css/observatory.css" not in obs:
@@ -235,6 +242,11 @@ def check_weft_mirror() -> None:
         fail("wayfinding CSS not appended to weft site.css")
 
 
+ALLOWED_WEFT_REPO = {
+    Path("ml/index.html"),
+    Path("ml/notes-from-the-colony/index.html"),
+}
+
 def check_private_hrefs() -> None:
     for path in DIST.rglob("*.html"):
         rel = path.relative_to(DIST)
@@ -243,7 +255,7 @@ def check_private_hrefs() -> None:
         text = path.read_text(encoding="utf-8")
         if PRIVATE_HREF.search(text):
             fail(f"private or prototype href in {rel}")
-        if re.search(r'github\.com/Moissanite-Labs/weft"', text):
+        if re.search(r'github\.com/Moissanite-Labs/weft"', text) and rel not in ALLOWED_WEFT_REPO:
             fail(f"GitHub weft link on Cut page {rel}")
     for path in (DIST / "index.html", DIST / "ml" / "index.html"):
         if "View on GitHub" in path.read_text(encoding="utf-8"):

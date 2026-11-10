@@ -62,3 +62,6 @@ node tools/contrast.mjs landing.html 1440 900 ".th-proposal p,.th-title,.th-lede
 
 ## Confirmation
 No GitHub writes, no deploys, no DNS, no messages to anyone. All work was in `/workspace/siliconcordat-design/` and `/tmp`, for the local server, shots and Lighthouse JSON.
+
+## 2026-11-10 (later) — Note 01 and research links (superseding change)
+Prepared to supersede the arranged Arrangement pull request (see the superseding PR). The arrangement itself is unchanged except: `/ml` gains two research rows (R-01 razi-cells record at the public Weft repository; R-02 the lab research hub, which 404s until the lab-site research PR merges — reviewer's call), the localnav on `/ml`, `/ml/principles/` and the new page gains `Notes`, and a new deeper page Note 01, "Notes from the colony" (`/ml/notes-from-the-colony/`), the lab's first public note. Weft gains one additive `Research` nav link to the same hub. The Weft pin in `siliconcordat/sources-manifest.json` is advanced to this branch's head in a companion commit, so the `/weft` mirror carries the new link. No other Weft element changes; no capability claims are added anywhere; misses stay in the record.

@@ -532,19 +532,43 @@ The owner previews this arrangement on staging before anything ships to the apex
 
 ---
 
+## 16. Amendment 2026-11-10 — Note 01 and research links
+
+The Arrangement gains its first public note and its research links. Signed-off as a superseding change to the 2026-11-10 arrangement (see the superseding pull request).
+
+### 16.1 Note 01 (`/ml/notes-from-the-colony/`)
+- A deeper-page essay, `prototypes/ml-notes-from-the-colony.html`, same template as `/ml/principles/` (doc-head, chip, toc, doc-sections, footer-family). Eyebrow: `Moissanite Labs · Note 01`; h1: "Notes from the colony". Body: the Weft thesis, the razi-cells record including misses (scoring fault, heredity bought thrift not reach), and the lab's honesty rules. Closing section "Where to read it" lists Paper 0/1/2, `/weft`, the research hub, the Weft repository and `/ml`.
+- Tone per §3.6 and §10.3: quiet, humble, no capability claims; "Weft is an open research program, not a product"; misses reported beside wins.
+- `/ml` gains a `Notes` localnav entry; `/ml/principles/` and the note page carry the same localnav with `aria-current` on Notes for the note page.
+- Prototype href → production: `ml-notes-from-the-colony.html` → `/ml/notes-from-the-colony/` (added to the bundle `CUT_HREF_MAP`; the mirror build and the verifier check the page exists and the h1 renders).
+
+### 16.2 Research entries on `/ml` (index table additions)
+New `<p class="meta subhead">Research</p>` block after the "Public research program" table, two rows:
+- `R-01` Razi cells — "Colonies of small agent harnesses, kept or dropped by a measured score. Guesses registered before the data; misses kept in the record." Tag: `Experimental research`. Link: `https://github.com/Moissanite-Labs/weft` (public; visible label `github.com/Moissanite-Labs/weft ↗`).
+- `R-02` The research hub — "The report, the map of open directions, and the laws record, in one place on the lab site." Tag: `Research`. Link: `https://moissanite-labs.github.io/.github/research/`. R-02 404s until the lab-site research pull request merges; if the cut ships before that, drop R-02 or point it at `https://moissanite-labs.github.io/.github/` (reviewer's call).
+- The cut verifier bans `github.com/Moissanite-Labs/weft` on Cut pages except the two pages above (allowlist `ml/index.html`, `ml/notes-from-the-colony/index.html`); every other Cut page still fails the check. The Weft repository went public, so the ban now exists only for the pages that do not need it.
+- The `/ml` index meta line becomes "5 directions · 1 program · 2 research entries · 1 aspiration".
+
+### 16.3 Research link on `/weft`
+One additive link, `Research` → `https://moissanite-labs.github.io/.github/research/`, added to the primary nav and the menu panel, styled exactly like the neighbouring `Papers` link. No other Weft element changes. The link 404s until the lab-site research pull request merges (same note as §16.2).
+
+### 16.4 Weft pin
+The bundle mirrors `site/` from the pinned Weft commit in `siliconcordat/sources-manifest.json` (`weft.sha`). This amendment carries the `site/` change, so the pin is advanced in the companion commit to this branch's head (see the superseding pull request).
+
 ## 15. Files
 
 Prototypes (open via `python3 -m http.server 8765` from the package root, then `/prototypes/landing.html`):
 - `prototypes/landing.html` — `/` (Threshold landing)
 - `prototypes/ml.html` — `/ml` (chamber hero + lab index)
 - `prototypes/ml-principles.html` — `/ml/principles/` (deeper-page template; unchanged)
+- `prototypes/ml-notes-from-the-colony.html` — `/ml/notes-from-the-colony/` (Note 01; see §9A and §16)
 - `prototypes/observatory.html` — Observatory easter egg (`observatory.askaconsult.com`; staging `/observatory/`)
 - `prototypes/family-weft.html` — wayfinding annotation for `/weft`
 - `prototypes/site.css` — reference CSS for `/`, `/ml`, `/ml/*`; `prototypes/observatory.css` — Observatory; `tokens.css` — tokens + fonts
 - `prototypes/alts/threshold.html`, `prototypes/alts/observatory.html` — **historical** 2026-11-08 hero frames, superseded
-- `tools/build_prototypes.py` — generates the four pages from the README constants at its top
+- `tools/build_prototypes.py` — generates the pages from the README constants at its top (five now: landing, ml, ml-principles, ml-notes-from-the-colony, observatory)
 
-Prototype hrefs → production: `landing.html` → `/`, `ml.html` → `/ml`, `ml-principles.html` → `/ml/principles/`, `family-weft.html` → `/weft`, `observatory.html` → `https://observatory.askaconsult.com/` (staging `/observatory/`). From Observatory, family links become absolute (§10.4).
+Prototype hrefs → production: `landing.html` → `/`, `ml.html` → `/ml`, `ml-principles.html` → `/ml/principles/`, `ml-notes-from-the-colony.html` → `/ml/notes-from-the-colony/`, `family-weft.html` → `/weft`, `observatory.html` → `https://observatory.askaconsult.com/` (staging `/observatory/`). From Observatory, family links become absolute (§10.4).
 
 Screenshots (`shots/`, headless Chromium via Playwright at DPR 1; `node tools/shoot.mjs`):
 - `/`: `landing-hero-1440.png`, `landing-principles-1440.png`, `landing-ecosystem-1440.png`, `landing-doorways-1440.png`, `landing-full-1440.png`, `landing-hero-390.png`, `landing-390.png`

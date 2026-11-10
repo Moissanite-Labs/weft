@@ -8,6 +8,9 @@ OUT = pathlib.Path("prototypes")
 
 # Prototype hrefs (production hrefs in comments / SPEC):
 HOME, ML, PRIN = "landing.html", "ml.html", "ml-principles.html"   # prod: /  /ml  /ml/principles/
+NOTE = "ml-notes-from-the-colony.html"   # prod: /ml/notes-from-the-colony/
+WEFT_REPO = "https://github.com/Moissanite-Labs/weft"
+RESEARCH_HUB = "https://moissanite-labs.github.io/.github/research/"
 WEFT = "family-weft.html"   # prod: /weft  (in the prototype, Weft links open the wayfinding annotation)
 OBS = "observatory.html"    # prod: https://observatory.askaconsult.com/  (staging: /observatory/ on staging.siliconcordat.com)
 
@@ -344,6 +347,7 @@ def ml():
     <a href="#about" aria-current="location">About</a>
     <a href="#directions">Directions</a>
     <a href="#principles">Principles</a>
+    <a href="{NOTE}">Notes</a>
   </div>
 </nav>
 <main id="main">
@@ -388,7 +392,7 @@ def ml():
   <section class="ml-section" id="directions" aria-labelledby="dir-title">
     <div class="wrap wrap--ml">
       <div class="ml-cols" style="margin-bottom:40px">
-        <aside><h2 id="dir-title">Directions</h2><span class="meta">Index · 5 directions · 1 program · 1 aspiration</span></aside>
+        <aside><h2 id="dir-title">Directions</h2><span class="meta">Index · 5 directions · 1 program · 2 research entries · 1 aspiration</span></aside>
         <div class="note" style="margin-top:0"><span class="meta">Status</span><p>{DIRS_NOTE}</p></div>
       </div>
       <ul class="dir-table" aria-label="Directions">
@@ -401,6 +405,21 @@ def ml():
         <h3><a href="{WEFT}">Weft</a></h3>
         <p>Papers, runtime, and demos. Weft keeps its own site and design.</p>
         <div class="dir-row__status"><span class="tag">Open research program</span><span class="url" aria-hidden="true">/weft →</span></div>
+      </li>
+      </ul>
+      <p class="meta subhead">Research</p>
+      <ul class="dir-table" style="border-top:0" aria-label="Research">
+      <li class="dir-row dir-row--link">
+        <span class="dir-row__id">R-01</span>
+        <h3><a href="{WEFT_REPO}">Razi cells{EXT}</a></h3>
+        <p>Colonies of small agent harnesses, kept or dropped by a measured score. Guesses registered before the data; misses kept in the record.</p>
+        <div class="dir-row__status"><span class="tag">Experimental research</span><span class="url" aria-hidden="true">github.com/Moissanite-Labs/weft ↗</span></div>
+      </li>
+      <li class="dir-row dir-row--link">
+        <span class="dir-row__id">R-02</span>
+        <h3><a href="{RESEARCH_HUB}">The research hub{EXT}</a></h3>
+        <p>The report, the map of open directions, and the laws record, in one place on the lab site.</p>
+        <div class="dir-row__status"><span class="tag">Research</span><span class="url" aria-hidden="true">moissanite-labs.github.io/.github/research/ ↗</span></div>
       </li>
       </ul>
       <p class="meta subhead">Aspiration</p>
@@ -641,6 +660,7 @@ def principles_page():
     <a href="{ML}#about">About</a>
     <a href="{ML}#directions">Directions</a>
     <a href="{PRIN}" aria-current="page">Principles</a>
+    <a href="{NOTE}">Notes</a>
   </div>
 </nav>
 <main id="main">
@@ -669,8 +689,97 @@ def principles_page():
 </main>
 ''' + footer("ml") + SCRIPT + '</body>\n</html>\n'
 
+def notes_page():
+    SECTIONS = [
+        ("premise", "01 / 06", "The premise", [
+            "Moissanite Labs exists to build the conditions for digital and biological intelligences to collaborate, create, and evolve together. That is the whole of it. Everything on this site — the Siliconcordat, Weft, the directions — is an attempt to make those conditions concrete enough to build against.",
+            "Silicon carbide is the metaphor the lab is named for. Two substrates, one crystal. It is a metaphor, not a claim about minds; the working proposal says so, and this note keeps the distinction.",
+        ]),
+        ("thesis", "02 / 06", "The thesis", [
+            "Weft is the open research program this lab runs. It studies models that keep adapting after deployment, under limits a program can verify. Its object is the cell: a bounded piece of memory with a frozen core, a resource budget, and a rule that commits a change only when the candidate passes the check and stays within a distance bound from a saved baseline.",
+            "Three papers are public at w3ft.org: the program overview, <em>Models as Cells</em>, and <em>Checkable Computation</em> — a reducer for interaction combinators, a canonical graph format, and committed execution records. Read them before you trust this lab; that is what they are for.",
+        ]),
+        ("colony", "03 / 06", "What the colony taught", [
+            "The razi-cells program is the agent-level twin of Weft. Small harnesses — a need, an empty folder, a model — write their own tools and are kept or dropped by a measured score. Thirteen colonies, eight fixed coding tasks, about 1,560 model calls, five model conditions.",
+            "Three findings survived the record. Harness design moved outcomes as much as model choice did. Frontier models reached 10 to 13 kept improvements per 100 calls, against 1.6 to 3.1 for the fast default. And how often a model used its selection tool predicted its improvement rate almost perfectly.",
+            "The misses are kept in the record too. The scoring instrument had a fault — a runtime warning line was once read as a score — and the record says so. Heredity, passing a body from one generation to the next, bought the same reach for 31% less energy and fewer deaths, and did not raise reach at all: 65 of 70 later-generation heirs changed nothing. Several registered guesses missed. The program is exploratory, and it is reported that way.",
+        ]),
+        ("honesty", "04 / 06", "How the lab keeps itself honest", [
+            "Guesses are written before the data, and judged by script, exactly as written. Misses are reported beside the wins. Nothing ships publicly with a claim the record cannot carry. When a number is wrong, the record says so instead of quietly editing it.",
+            "This note is the first artifact published under that rule, which makes it the smallest honest example of it: everything in it is either a link to the public record, or a description of what the record shows, misses included.",
+        ]),
+        ("open", "05 / 06", "What is open", [
+            "Fifty-two directions are open across eight branches — the laws of the cell, the choice of model, what is inherited, signals beyond text, proof, growing a model, the colony as an organism. The map is on the lab site; the laws record (E11 to L1) and the E07 record are under review, and will be linked as they land.",
+            "Nothing here is finished, and this lab does not behave as though it were. A future robotics role is an aspiration, not a capability. Weft is an open research program, not a product.",
+        ]),
+        ("limit", "06 / 06", "The honest limit", [
+            "The laws record rests on one model family, four small kits, and three runs per arm: leads, not laws. The report is exploratory and not peer reviewed. Some directions on the map are far out of reach today and are labelled so.",
+            "So do not take this note on trust. Read the papers, or read the record, or run the code. The instruments are public; the misses are public; the rest is work in progress, stated as such.",
+        ]),
+    ]
+    toc = "\n".join('<li><a href="#%s"><span class="n">%s</span>%s</a></li>' % (k, n.split(" / ")[0], t) for k, n, t, _ in SECTIONS)
+    secs = "\n".join(
+        '      <section class="doc-section" id="%s" aria-labelledby="%s-h">\n'
+        '        <span class="principle__n">%s</span>\n'
+        '        <h2 id="%s-h">%s</h2>\n'
+        '%s\n'
+        '      </section>'
+        % (k, k, n, k, t, "\n".join("        <p>%s</p>" % p for p in ps))
+        for k, n, t, ps in SECTIONS
+    )
+    return (
+        head(
+            "Notes from the colony — Moissanite Labs",
+            "The first public note from Moissanite Labs: the Weft thesis, what the razi-cells experiments found — misses kept — and what this lab intends to still be able to check.",
+        )
+        + '<body>\n'
+        + family_header("ml")
+        + f'''<nav class="localnav" aria-label="Moissanite Labs sections">
+  <div class="wrap wrap--ml">
+    <span class="meta">Moissanite Labs</span>
+    <a href="{ML}#about">About</a>
+    <a href="{ML}#directions">Directions</a>
+    <a href="{PRIN}">Principles</a>
+    <a href="{NOTE}" aria-current="page">Notes</a>
+  </div>
+</nav>
+<main id="main">
+  <header class="doc-head">
+    <div class="wrap wrap--ml">
+      <a class="back" href="{ML}"><span class="arr" aria-hidden="true">←</span> Moissanite Labs</a>
+      <span class="eyebrow">Moissanite Labs · Note 01</span>
+      <h1>Notes from the colony</h1>
+      <p class="dek">The first public note from this lab: the thesis it runs on, what its experiments actually found — misses kept — and what it intends to still be able to check a year from now.</p>
+    </div>
+  </header>
+  <div class="wrap wrap--ml doc">
+    <nav class="toc" aria-label="On this page">
+      <span class="meta">On this page</span>
+      <ol>
+{toc}
+      </ol>
+    </nav>
+    <article>
+{secs}
+      <section class="doc-section" id="read" aria-labelledby="read-h">
+        <span class="principle__n">07 / 07</span>
+        <h2 id="read-h">Where to read it</h2>
+        <p><a href="https://w3ft.org/papers/overview/">Paper 0 — the overview</a> · <a href="https://w3ft.org/papers/models-as-cells/">Paper 1 — Models as Cells</a> · <a href="https://w3ft.org/papers/checkable-computation/">Paper 2 — Checkable Computation</a> · <a href="{WEFT}">/weft</a> · <a href="{RESEARCH_HUB}">The research hub{EXT}</a> · <a href="{WEFT_REPO}">github.com/Moissanite-Labs/weft{EXT}</a> · <a href="{ML}">Moissanite Labs</a></p>
+      </section>
+      <p class="caption doc-src">Moissanite Labs · Note 01 · <a href="{ML}">/ml</a></p>
+      <p style="margin-top:36px"><a class="back" href="{ML}"><span class="arr" aria-hidden="true">←</span> Back to Moissanite Labs</a></p>
+    </article>
+  </div>
+</main>
+'''
+        + footer("ml")
+        + SCRIPT
+        + '</body>\n</html>\n'
+    )
+
 (OUT / "landing.html").write_text(landing())
 (OUT / "ml.html").write_text(ml())
 (OUT / "ml-principles.html").write_text(principles_page())
 (OUT / "observatory.html").write_text(observatory())
+(OUT / "ml-notes-from-the-colony.html").write_text(notes_page())
 print("built")
