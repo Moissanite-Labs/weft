@@ -5,7 +5,7 @@ number: 0
 slug: overview
 version: "1.1"
 date: 2026-11-08
-authors: "ML Weft contributors, Moissanite Labs"
+authors: "Ahraz Arifuddin"
 status: "Overview. Each claim is labelled as running, simulated, or design."
 commit: a18fc40e31e71325aec507258fb80bb26f125c7c
 abstract: |

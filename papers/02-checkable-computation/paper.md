@@ -5,7 +5,7 @@ number: 2
 slug: checkable-computation
 version: "1.1"
 date: 2026-11-09
-authors: "ML Weft contributors, Moissanite Labs"
+authors: "Ahraz Arifuddin"
 status: "Runs and tested. CPU experiments against an independent reference semantics. Three reducer defects found, now fixed in C3 version 2 (§8); confluence of the extended rules not proven."
 commit: a18fc40e31e71325aec507258fb80bb26f125c7c
 abstract: |

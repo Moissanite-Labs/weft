@@ -1,5 +1,0 @@
-# Release archives (GitHub "Source code" downloads and the Zenodo deposit made
-# from a release) leave out the exported widgets: their runtime dependencies are
-# under third-party terms that the owner has not yet decided on (#57, #64, #70).
-# They stay in the repository and on the site. See docs/program/releasing.md.
-/site/widgets export-ignore

@@ -15,20 +15,13 @@ Each record gets a *concept DOI* (all versions) and a *version DOI* (this versio
 specific version matters. The creator on every record is Ahraz Arifuddin (Moissanite Labs). The creator list lives
 in `.zenodo.json` and `CITATION.cff`, and CI checks that the two agree (`python3 scripts/zenodo_metadata.py --check`).
 
-## What is left out
+## What the archive holds
 
-Release archives honour `export-ignore` in [`.gitattributes`](../../.gitattributes). The exported widgets in
-`site/widgets/` are excluded because their runtime dependencies are under third-party terms the owner has not decided
-on ([#57](https://github.com/Moissanite-Labs/weft/issues/57)). If that decision clears them, remove the line before the
-next release. `weft-corpus` is not archived: it holds raw session transcripts.
-
-Check the archive locally before tagging:
-
-```bash
-git archive HEAD | tar -t | grep -c '^site/widgets'
-```
-
-It should print `0`.
+The software record archives the whole repository at the release tag, the same files anyone can see on GitHub. The
+owner decided on 2026-11-08 that the exported widgets in `site/widgets/` stay in their original form; `NOTICE` names
+the Google-hosted modules and fonts they load at runtime, which are not part of the archive. `weft-corpus` is not
+archived: it holds raw session transcripts. To leave a path out of future archives, add it to `.gitattributes` with
+`export-ignore`.
 
 ## Steps
 

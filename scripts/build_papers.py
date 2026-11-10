@@ -158,7 +158,7 @@ def bibtex(p: dict) -> str:
     entry = (
         f"@techreport{{{key},\n"
         f"  title       = {{{{{p['title']}: {p['subtitle']}}}}},\n"
-        f"  author      = {{{{{p['authors']}}}}},\n"
+        f"  author      = {{{p['authors']}}},\n"
         f"  institution = {{Moissanite Labs}},\n"
         f"  type        = {{ML Weft Paper}},\n"
         f"  number      = {{{p['number']}}},\n"
