@@ -62,11 +62,22 @@ def take(run: Path, kit: str, want: float) -> float:
     return M.ledger(run / store(kit), fn)
 
 
-def launch(run: Path, name: str, need: dict, energy: float, a) -> tuple[str, int, float]:
+def launch(run: Path, name: str, need: dict, energy: float, a, idx: int = 0, gen: int = 0, reward: float | None = None) -> tuple[str, int, float]:
     kit = need["kit"]
-    env = {**os.environ, "CELL_KIT": kit, "CELL_GERM": "" if a.blank else str(run / ".germ" / kit), "CELL_PAY_ANY": "1",
-           "CELL_LINEAGE": "1", "CELL_HEIR": store(kit), "CELL_E0": str(energy), "CELL_REWARD": str(a.reward),
+    germ_dir = run / ".germ" / kit
+    has_germ = (germ_dir / "body").is_dir() and any((germ_dir / "body").iterdir())
+    is_spore = bool(getattr(a, "spore", False)) and has_germ and idx > 0
+    cell_germ = "" if (a.blank or is_spore) else str(germ_dir)
+    rwd = reward if reward is not None else a.reward
+    env = {**os.environ, "CELL_KIT": kit, "CELL_GERM": cell_germ, "CELL_PAY_ANY": "1",
+           "CELL_LINEAGE": "1", "CELL_HEIR": store(kit), "CELL_E0": str(energy), "CELL_REWARD": str(rwd),
            "CELL_FUSE": "1e12", "CELL_MAX_CALLS": str(a.calls), "CELL_PRICE_SHOW": "1"}
+    if getattr(a, "weismann", False):
+        env["CELL_WEISMANN"] = "1"
+    if getattr(a, "gap_pay", False):
+        env["CELL_GAP_PAY"] = "1"
+    if is_spore:
+        env["CELL_SPORE_FROM"] = str(germ_dir)
     if a.sense:
         env.update(CELL_SENSE_DIR=str(Path(a.sense).resolve()), CELL_SENSE_SHOW="1")
     t = time.time()
@@ -124,17 +135,25 @@ def main() -> int:
     ap.add_argument("--par", type=int, default=4); ap.add_argument("--calls", type=int, default=80)
     ap.add_argument("--blank", action="store_true", help="control: newborns do not inherit the germline body")
     ap.add_argument("--sense", default="", help="folder of record bodies per kit (the SENSE number), optional")
+    ap.add_argument("--weismann", action="store_true", help="Law 2a: birth energy is sunk into soma; returns to store at rest only after a win (or assay for blank/spore)")
+    ap.add_argument("--chemostat", action="store_true", help="Law 2b: unharvested free-energy flux accumulates in a stalled niche's reward pool each generation")
+    ap.add_argument("--flux", type=float, default=0.0, help="chemostat flux added to a kit's reward per stalled generation (0: reward/2)")
+    ap.add_argument("--gap-pay", action="store_true", help="Law 2b intra-life: scale win reward with remaining sense gap")
+    ap.add_argument("--spore", action="store_true", help="Law 2c: in gen >= 1 (when germline exists), birth 0 is soma (inherits body) and births >= 1 are spores (inherit genome.md only, empty code folder)")
     a = ap.parse_args()
     run = Path(a.run).expanduser().resolve()
     run.mkdir(parents=True, exist_ok=True)
     needs = json.loads(Path(a.needs).read_text())
     s0 = a.store or a.gens * a.width * a.e0 / 2
+    bounty = {n["kit"]: float(a.reward) for n in needs}
+    flux = a.flux or (a.reward / 2.0)
     for n in needs:
         C.kit.ensure(n["kit"])
         (run / ".germ" / n["kit"]).mkdir(parents=True, exist_ok=True)
         if store(n["kit"]) not in M.ledger(run / store(n["kit"])):
             M.born(run / store(n["kit"]), s0)
     jlog(run, event="start", gens=a.gens, width=a.width, e0=a.e0, store=s0, reward=a.reward, sense=bool(a.sense), blank=a.blank,
+         weismann=a.weismann, chemostat=a.chemostat, spore=a.spore, gap_pay=a.gap_pay,
          kits=[n["kit"] for n in needs], menu=M.MENU)
     t0 = time.time()
     for g in range(a.gens):
@@ -143,16 +162,23 @@ def main() -> int:
             for i in range(a.width):
                 e = take(run, n["kit"], a.e0)
                 if e > 0:
-                    births.append((f"g{g}-{n['kit']}-{i}", n, e))
+                    births.append((f"g{g}-{n['kit']}-{i}", n, e, i, g, bounty[n["kit"]]))
         if not births:
             jlog(run, event="extinct", gen=g)
             break
         with ThreadPoolExecutor(a.par) as ex:
-            res = list(ex.map(lambda b: launch(run, b[0], b[1], b[2], a), births))
+            res = list(ex.map(lambda b: launch(run, b[0], b[1], b[2], a, b[3], b[4], b[5]), births))
         led = M.ledger(run / store(needs[0]["kit"]))
         for n in needs:
             names = [b[0] for b in births if b[1]["kit"] == n["kit"]]
             row = gate(run, n["kit"], g, names) if names else {"gen": g, "kit": n["kit"], "cells": []}
+            row["bounty"] = round(bounty[n["kit"]], 1)
+            if a.chemostat:
+                if row.get("took"):
+                    bounty[n["kit"]] = float(a.reward)
+                else:
+                    bounty[n["kit"]] = round(bounty[n["kit"]] + flux, 1)
+                row["next_bounty"] = round(bounty[n["kit"]], 1)
             row.update(event="gen", store=round(led[store(n["kit"])]["e"], 1),
                        born=round(sum(b[2] for b in births if b[1]["kit"] == n["kit"]), 1),
                        spent=round(sum(led[c]["spent"] for c in names), 1),
@@ -161,7 +187,7 @@ def main() -> int:
                        states={c: led[c]["state"] for c in names}, ages={c: led[c]["age"] for c in names},
                        rc={r[0]: r[1] for r in res if r[0] in names})
             jlog(run, **row)
-            print(json.dumps({k: row.get(k) for k in ("gen", "kit", "took", "gain", "store", "spent", "earned", "states")}),
+            print(json.dumps({k: row.get(k) for k in ("gen", "kit", "took", "gain", "store", "spent", "earned", "states", "bounty") if k in row}),
                   flush=True)
     rows = [json.loads(l) for l in (run / "lineage.jsonl").read_text().splitlines()]
     (run / "summary.json").write_text(json.dumps({"wall_s": round(time.time() - t0, 1),
