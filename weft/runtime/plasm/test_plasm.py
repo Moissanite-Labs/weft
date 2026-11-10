@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Unit tests for Codebase C1 (`weft/runtime/plasm`) covering Issues #4, #5, #6, #14, #17, #22, #28, #40."""
+"""Unit tests for Codebase C1 (`weft/runtime/plasm`) covering Issues #4, #5, #6, #14, #17, #22, #28, #40, #74."""
 
 import ctypes
 import json
@@ -257,6 +257,37 @@ class TestWeftPlasm(unittest.TestCase):
         self.assertFalse(any(g["committed"] for g in gens))
         self.assertEqual(report["final_target_error"], report["initial_target_error"])
         for g in gens:
+            self.assertEqual(g["held_target_error"], g["parent_target_error"])
+        # The candidates themselves did improve; that must not be reported as progress.
+        self.assertLess(gens[-1]["winner_target_error"], report["initial_target_error"])
+        self.assertEqual(report["status"], "FAIL")
+
+    def test_watermark_failure_blocks_commit(self) -> None:
+        """Issue #74 finding 5: a candidate that fails the watermark check is never committed, even when it improves target error and passes the distance gate."""
+        import weft.runtime.plasm.plasm as plasm_module
+
+        original = plasm_module.verify_watermark_retention
+
+        def failing_check(*args, **kwargs):
+            return {
+                "retained": False,
+                "cosine_alignment": -0.04,
+                "response_l2_drift": 1.0,
+                "reason": "cosine_alignment_below_threshold",
+            }
+
+        plasm_module.verify_watermark_retention = failing_check
+        try:
+            torch.manual_seed(0)
+            report = run_weft_plasm_cycle(generations=6)
+        finally:
+            plasm_module.verify_watermark_retention = original
+        gens = report["generations"]
+        self.assertEqual(report["committed_generations"], 0)
+        self.assertFalse(any(g["committed"] for g in gens))
+        self.assertEqual(report["final_target_error"], report["initial_target_error"])
+        for g in gens:
+            self.assertFalse(g["watermark_retained"])
             self.assertEqual(g["held_target_error"], g["parent_target_error"])
         # The candidates themselves did improve; that must not be reported as progress.
         self.assertLess(gens[-1]["winner_target_error"], report["initial_target_error"])
