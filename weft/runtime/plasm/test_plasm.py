@@ -292,6 +292,26 @@ class TestWeftPlasm(unittest.TestCase):
         # The candidates themselves did improve; that must not be reported as progress.
         self.assertLess(gens[-1]["winner_target_error"], report["initial_target_error"])
         self.assertEqual(report["status"], "FAIL")
+    def test_small_radius_commits_expected_counts(self) -> None:
+        """Issue #74 finding 4: with a small radius the gate binds, so the cycle commits 2 of 12 updates at R = 0.2, 5 at R = 0.3, and 8 at R = 0.4, and every committed distance stays below R."""
+        import weft.runtime.plasm.plasm as plasm_module
+
+        original = plasm_module.R_INVARIANT
+        try:
+            for radius, expected in ((0.2, 2), (0.3, 5), (0.4, 8)):
+                plasm_module.R_INVARIANT = radius
+                for seed in range(10):
+                    with self.subTest(radius=radius, seed=seed):
+                        torch.manual_seed(seed)
+                        report = run_weft_plasm_cycle(generations=12)
+                        gens = report["generations"]
+                        self.assertEqual(report["committed_generations"], expected)
+                        self.assertEqual(sum(g["committed"] for g in gens), expected)
+                        for g in gens:
+                            if g["committed"]:
+                                self.assertLess(g["frobenius_drift"], radius)
+        finally:
+            plasm_module.R_INVARIANT = original
 
     def test_committed_generations_report_the_held_error(self) -> None:
         report = run_weft_plasm_cycle(generations=4)
