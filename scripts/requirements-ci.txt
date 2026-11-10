@@ -1,0 +1,12 @@
+# Pinned Python packages for the verify and plasm-macos CI jobs.
+# Versions are the ones the successful main run 42571402803 installed
+# (head 5dc28387, 2026-11-09). Dependabot already watches pip in /scripts,
+# so bumps for this file arrive as pull requests.
+--extra-index-url https://download.pytorch.org/whl/cpu
+numpy==2.5.4
+matplotlib==3.11.2
+networkx==3.7
+# Torch ships a CPU-only wheel for Linux with a +cpu local version, and a
+# plain wheel for macOS. One pin per platform, picked by marker.
+torch==2.15.0+cpu; sys_platform == 'linux'
+torch==2.15.0; sys_platform == 'darwin'

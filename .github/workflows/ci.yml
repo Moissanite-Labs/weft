@@ -42,7 +42,7 @@ jobs:
       - name: Install Python runtime dependencies (numpy + CPU torch, matplotlib for paper figures)
         run: |
           python3 -m pip install --upgrade pip
-          python3 -m pip install numpy matplotlib networkx --extra-index-url https://download.pytorch.org/whl/cpu torch
+          python3 -m pip install -r scripts/requirements-ci.txt
 
       - name: C2 invariants (Python + C11 header conformance)
         run: python3 -m unittest discover -s weft/runtime/invariants -p 'test_*.py'
@@ -89,7 +89,7 @@ jobs:
       - name: Install numpy and torch
         run: |
           python3 -m pip install --upgrade pip
-          python3 -m pip install numpy torch
+          python3 -m pip install -r scripts/requirements-ci.txt
       - name: C2 invariants
         run: python3 -m unittest discover -s weft/runtime/invariants -p 'test_*.py'
       - name: C1 plasm (shared memory, A/B mitosis)
