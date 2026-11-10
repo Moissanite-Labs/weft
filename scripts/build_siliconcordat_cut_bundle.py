@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Build dist-cut/ for Worker ml-siliconcordat-cut: Cut pages at / and /ml, Weft at /weft."""
+"""Build dist-cut/ for Worker ml-siliconcordat-cut (Arrangement 2026-11-10)."""
 
 from __future__ import annotations
 
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -35,12 +36,31 @@ SC_ORG = "https://siliconcordat.org"
 SC_ORG_WEEFT = f"{SC_ORG}/weft"
 W3FT = "https://w3ft.org"
 
+HOST_SETTINGS_PATH = CUT / "host-settings.json"
+DEFAULT_HOST = os.environ.get("SILICONCORDAT_CUT_HOST", "production").strip().lower()
+
 CUT_HREF_MAP = {
     "landing.html": "/",
     "ml.html": "/ml",
     "ml-principles.html": "/ml/principles/",
     "family-weft.html": "/weft",
+    "observatory.html": "/observatory/",
 }
+
+NOINDEX_META = '<meta name="robots" content="noindex">'
+
+
+def load_host_settings(profile: str) -> dict:
+    with HOST_SETTINGS_PATH.open(encoding="utf-8") as fh:
+        table = json.load(fh)
+    if profile not in table:
+        print(
+            f"unknown SILICONCORDAT_CUT_HOST={profile!r}; "
+            f"expected one of {sorted(table)}",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    return table[profile]
 
 WAYFINDING_CSS = """
 /* §5.3 wayfinding (build-time only; Weft tokens) */
@@ -297,17 +317,57 @@ def rewrite_cut_hrefs(html: str) -> str:
     return html
 
 
-def fix_cut_asset_paths(html: str) -> str:
-    html = html.replace('href="../tokens.css"', 'href="/tokens.css"')
-    html = html.replace('href="site.css"', 'href="/assets/css/site.css"')
-    html = html.replace('href="../assets/', 'href="/assets/')
-    html = html.replace("href='../assets/", "href='/assets/")
-    html = html.replace('src="../assets/', 'src="/assets/')
-    html = html.replace('<link rel="icon" href="/assets/mark.svg"', '<link rel="icon" href="/assets/mark.svg"')
+def rewrite_observatory_family(html: str, origin: str) -> str:
+    """Observatory family links are same-origin on staging, apex-absolute in production."""
+    if not origin:
+        return rewrite_cut_hrefs(html)
+    base = origin.rstrip("/")
+    mapping = {
+        "landing.html": f"{base}/",
+        "ml.html": f"{base}/ml",
+        "family-weft.html": f"{base}/weft",
+    }
+    for proto, prod in mapping.items():
+        html = html.replace(f'href="{proto}"', f'href="{prod}"')
+        html = html.replace(f"href='{proto}'", f"href='{prod}'")
+        html = html.replace(f'href="{proto}#', f'href="{prod}#')
     return html
 
 
-def prepare_cut_css() -> tuple[str, str]:
+def apply_egg_href(html: str, egg_href: str) -> str:
+    html = re.sub(
+        r'(<a class="th-egg" href=")[^"]+(")',
+        rf"\1{egg_href}\2",
+        html,
+        count=1,
+    )
+    return html
+
+
+def apply_noindex(html: str) -> str:
+    if NOINDEX_META in html:
+        return html
+    insert_after = '<meta name="viewport" content="width=device-width, initial-scale=1">'
+    if insert_after not in html:
+        return html
+    return html.replace(insert_after, insert_after + "\n" + NOINDEX_META, 1)
+
+
+def fix_cut_asset_paths(html: str, *, observatory: bool = False) -> str:
+    html = html.replace('href="../tokens.css"', 'href="/tokens.css"')
+    if observatory:
+        html = html.replace(
+            'href="observatory.css"', 'href="/assets/css/observatory.css"'
+        )
+    else:
+        html = html.replace('href="site.css"', 'href="/assets/css/site.css"')
+    html = html.replace('href="../assets/', 'href="/assets/')
+    html = html.replace("href='../assets/", "href='/assets/")
+    html = html.replace('src="../assets/', 'src="/assets/')
+    return html
+
+
+def prepare_cut_css() -> tuple[str, str, str]:
     tokens = (CUT / "tokens.css").read_text(encoding="utf-8")
     tokens = tokens.replace('url("assets/fonts/', 'url("/assets/fonts/')
     site_css = (CUT / "prototypes" / "site.css").read_text(encoding="utf-8")
@@ -315,20 +375,45 @@ def prepare_cut_css() -> tuple[str, str]:
         'url("../assets/caustic.webp")',
         'url("/assets/caustic.webp")',
     )
-    return tokens, site_css
+    obs_css = (CUT / "prototypes" / "observatory.css").read_text(encoding="utf-8")
+    return tokens, site_css, obs_css
 
 
-def copy_cut_pages() -> None:
+def write_staging_headers() -> None:
+    """Cloudflare static _headers: noindex on staging host builds only."""
+    headers = (DIST / "_headers").read_text(encoding="utf-8") if (DIST / "_headers").is_file() else ""
+    block = "/*\n  X-Robots-Tag: noindex\n"
+    if block.strip() not in headers:
+        (DIST / "_headers").write_text(headers.rstrip() + ("\n" if headers and not headers.endswith("\n") else "") + block, encoding="utf-8")
+
+
+def transform_cut_html(raw: str, host: dict, *, observatory: bool = False) -> str:
+    html = raw
+    if observatory:
+        html = rewrite_observatory_family(html, host["observatory_family_origin"])
+    else:
+        html = rewrite_cut_hrefs(html)
+        if 'class="th-egg"' in html:
+            html = apply_egg_href(html, host["egg_href"])
+    html = fix_cut_asset_paths(html, observatory=observatory)
+    if host.get("noindex"):
+        html = apply_noindex(html)
+    return html
+
+
+def copy_cut_pages(host: dict) -> None:
     pages = [
         (CUT / "prototypes" / "landing.html", DIST / "index.html"),
         (CUT / "prototypes" / "ml.html", DIST / "ml" / "index.html"),
         (CUT / "prototypes" / "ml-principles.html", DIST / "ml" / "principles" / "index.html"),
+        (CUT / "prototypes" / "observatory.html", DIST / "observatory" / "index.html"),
     ]
-    tokens, site_css = prepare_cut_css()
+    tokens, site_css, obs_css = prepare_cut_css()
     (DIST / "tokens.css").write_text(tokens, encoding="utf-8")
     css_dest = DIST / "assets" / "css"
     css_dest.mkdir(parents=True, exist_ok=True)
     (css_dest / "site.css").write_text(site_css, encoding="utf-8")
+    (css_dest / "observatory.css").write_text(obs_css, encoding="utf-8")
 
     assets_src = CUT / "assets"
     assets_dest = DIST / "assets"
@@ -343,20 +428,26 @@ def copy_cut_pages() -> None:
         shutil.copy2(src, dest)
 
     for src, dest in pages:
-        html = src.read_text(encoding="utf-8")
-        html = rewrite_cut_hrefs(html)
-        html = fix_cut_asset_paths(html)
+        html = transform_cut_html(
+            src.read_text(encoding="utf-8"),
+            host,
+            observatory=src.name == "observatory.html",
+        )
         dest.parent.mkdir(parents=True, exist_ok=True)
         dest.write_text(html, encoding="utf-8")
 
+    if host.get("noindex"):
+        write_staging_headers()
+
 
 def build() -> None:
+    host = load_host_settings(DEFAULT_HOST)
     manifest = load_manifest()
     log_weft_pin(manifest)
     if DIST.exists():
         shutil.rmtree(DIST)
     DIST.mkdir(parents=True)
-    copy_cut_pages()
+    copy_cut_pages(host)
     site_root = site_source_tree(manifest)
     try:
         copy_weft_tree(site_root)
@@ -364,7 +455,8 @@ def build() -> None:
         if site_root != SITE and str(site_root).startswith(tempfile.gettempdir()):
             shutil.rmtree(site_root, ignore_errors=True)
     print(
-        f"Built {DIST} (Cut Direction A, weft pin {manifest['weft']['sha'][:12]})"
+        f"Built {DIST} (Arrangement 2026-11-10, host={DEFAULT_HOST}, "
+        f"weft pin {manifest['weft']['sha'][:12]})"
     )
 
 

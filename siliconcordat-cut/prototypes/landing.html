@@ -12,57 +12,42 @@
 <link rel="stylesheet" href="../tokens.css">
 <link rel="stylesheet" href="site.css">
 <script>document.documentElement.classList.add('js')</script>
-<link rel="preload" href="../assets/chamber.svg" as="image" type="image/svg+xml" fetchpriority="high">
 </head>
-<body>
+<body class="th-page">
 <a class="skip" href="#main">Skip to content</a>
-<header class="family-header family-header--over" data-header>
+<header class="family-header family-header--over family-header--th" data-header>
   <div class="wrap">
     <nav aria-label="Moissanite Labs family">
-      <ul class="fam">
-        <li><a class="fam-home" href="landing.html" aria-current="page"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M16 8.81 L20.23 11.25 L20.23 20.75 L16 23.19 L11.77 20.75 L11.77 11.25 Z" fill="#e6d2a8"/><path d="M12 6.5 L20.23 11.25 L20.23 20.75 L12 25.5 L3.77 20.75 L3.77 11.25 Z" fill="none" stroke="#c4844a" stroke-width="2"/><path d="M20 6.5 L28.23 11.25 L28.23 20.75 L20 25.5 L11.77 20.75 L11.77 11.25 Z" fill="none" stroke="#9db0c4" stroke-width="2"/></svg><span>Siliconcordat</span></a></li>
-        <li><a href="ml.html">Moissanite Labs</a></li>
-        <li><a class="fam-weft" href="family-weft.html"><span class="weft-tick" aria-hidden="true"></span>Weft</a></li>
+      <ul class="fam th-fam">
+        <li class="th-fam__l"><a href="ml.html">Moissanite Labs</a></li>
+        <li class="th-fam__c"><a class="fam-home" href="landing.html" aria-current="page"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M16 8.81 L20.23 11.25 L20.23 20.75 L16 23.19 L11.77 20.75 L11.77 11.25 Z" fill="#e6d2a8"/><path d="M12 6.5 L20.23 11.25 L20.23 20.75 L12 25.5 L3.77 20.75 L3.77 11.25 Z" fill="none" stroke="#c4844a" stroke-width="2"/><path d="M20 6.5 L28.23 11.25 L28.23 20.75 L20 25.5 L11.77 20.75 L11.77 11.25 Z" fill="none" stroke="#9db0c4" stroke-width="2"/></svg><span class="fam-home__t">Siliconcordat</span></a></li>
+        <li class="th-fam__r"><a class="fam-weft" href="family-weft.html"><span class="weft-tick" aria-hidden="true"></span>Weft</a></li>
       </ul>
     </nav>
-    
-    <details class="menu">
-      <summary aria-label="Open family menu">Menu</summary>
-      <nav class="menu-panel" aria-label="Moissanite Labs family (menu)">
-        <a href="landing.html" aria-current="page">Siliconcordat</a>
-        <a href="ml.html">Moissanite Labs</a>
-        <a class="weft-row" href="family-weft.html">Weft</a>
-      </nav>
-    </details>
   </div>
 </header>
 
 <main id="main">
-  <section class="hero" aria-labelledby="hero-title">
-    <div class="chamber" aria-hidden="true">
-      <div class="chamber__crystal"><img src="../assets/chamber.svg" alt="" width="1600" height="1000" fetchpriority="high"></div>
-      <div class="chamber__caustic"></div>
-      <div class="chamber__caustic chamber__caustic--b"></div>
-      <div class="chamber__seam"></div>
-      <div class="chamber__floor"></div>
-    </div>
-    <div class="wrap hero__inner">
-      <div class="proposal">
+  <section class="th-hero" aria-labelledby="hero-title">
+    <div class="th-half th-half--c" aria-hidden="true"></div>
+    <div class="th-half th-half--si" aria-hidden="true"></div>
+    <div class="th-seam" aria-hidden="true"></div>
+    <div class="th-center">
+      <div class="th-proposal">
         <span class="chip">Working proposal</span>
         <p>Siliconcordat is the chosen name for the Moissanite Labs manifesto. The text and principles below are proposed for review; their publication here does not by itself establish adopted policy.</p>
       </div>
-      <h1 class="hero__title" id="hero-title"><span class="the">The</span> Siliconcordat</h1>
-      <p class="hero__lede">Moissanite Labs exists to build the conditions for digital and biological intelligences to collaborate, create, and evolve together.</p>
-      <div class="hero__actions">
-        <a class="textlink textlink--down" href="#principles">Principles <span class="arr" aria-hidden="true">↓</span></a>
-        <a class="textlink" href="ml.html">Moissanite Labs <span class="arr" aria-hidden="true">→</span></a>
+      <h1 class="th-title" id="hero-title"><span>The</span> <span>Siliconcordat</span></h1>
+      <p class="th-lede">Moissanite Labs exists to build the conditions for digital and biological intelligences to collaborate, create, and evolve together.</p>
+      <div class="th-actions">
+        <a class="textlink textlink--down th-actions__c" href="#principles">Principles <span class="arr" aria-hidden="true">↓</span></a>
+        <!-- Easter egg: the brightest point of the seam. Prod href https://observatory.askaconsult.com/ ; staging /observatory/ -->
+        <a class="th-egg" href="observatory.html" aria-label="Observatory"><span class="th-egg__jewel" aria-hidden="true"></span><span class="th-egg__label" aria-hidden="true">Observatory</span></a>
+        <a class="textlink th-actions__si" href="ml.html">Moissanite Labs <span class="arr" aria-hidden="true">→</span></a>
       </div>
     </div>
-    <div class="hero__fig" aria-hidden="true">
-      <span class="caption"><span class="si">Si</span> · <span class="c">C</span> — silicon carbide</span>
-      <span class="caption">Fig. 1 — illustration, hexagonal habit</span>
-    </div>
-    <a class="scrollcue" href="#name">The name</a>
+    <span class="th-label th-label--c" aria-hidden="true"><span class="chem">C</span> · carbon</span>
+    <span class="th-label th-label--si" aria-hidden="true"><span class="chem">Si</span> · silicon</span>
   </section>
 
   <section class="chapter" id="name" aria-labelledby="name-title">
