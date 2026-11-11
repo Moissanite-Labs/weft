@@ -420,6 +420,20 @@ function setupLoom() {
   }, { passive: true });
   themeListeners.push(() => { readColors(); draw(performance.now()); });
   start();
+  // Deterministic redraw at a fixed time (used by loom visual-regression checks only).
+  window.__loomSnapshot = (t) => {
+    waves.length = 0;
+    for (const k of ["speed", "turn", "jolt"]) {
+      raw[k] = 0;
+      mood[k] = 0;
+    }
+    mood.idle = 0;
+    Object.assign(pointer, { x: -1e4, y: -1e4, tx: -1e4, ty: -1e4 });
+    gesture.has = false;
+    attention.restless = 0;
+    readColors();
+    draw(t);
+  };
 }
 
 /* ---------- Demo 1: the safety gate ---------- */
