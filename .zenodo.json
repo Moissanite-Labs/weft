@@ -8,6 +8,7 @@
     "description": "<p>ML Weft is an open research program on adaptive models that change themselves within bounds that a program can check.</p><p>This archive is the source repository: the runtime (Plasm cells, invariants, the interaction-combinator VM, telemetry, the ledger simulator and gateway, Aywa), its tests, the design documents, and the sources and editions of the ML Weft papers.</p><p>Status: early research. Weft has no coin or token and nothing deployed to any blockchain.</p><p>Directed by Ahraz Arifuddin</p><p>Researched and verified by different model families across Gemini, Claude, Grok, OpenAI, and Muse</p>",
     "upload_type": "software",
     "license": "Apache-2.0",
+    "access_right": "open",
     "keywords": [
         "ai-safety",
         "machine-learning",
