@@ -207,7 +207,7 @@ p { margin: 0 0 1em; }
 .kicker .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 0 3px rgb(217 199 160 / 0.15); }
 .hero h1 { font-size: clamp(3rem, 2rem + 6vw, 6rem); letter-spacing: -0.025em; line-height: 0.95; }
 .hero h1 .thin { color: var(--muted); font-weight: 400; }
-.tagline { font-family: var(--font-display); font-style: italic; font-size: clamp(1.3rem, 1rem + 1.4vw, 1.9rem); color: var(--champ-text); margin: 12px 0 22px; }
+.tagline { font-family: var(--font-serif); font-style: italic; font-size: clamp(1.3rem, 1rem + 1.4vw, 1.9rem); color: var(--champ-text); margin: 12px 0 22px; }
 .lede { font-size: clamp(1.05rem, 0.98rem + 0.4vw, 1.25rem); max-width: 40rem; color: var(--ink-2); }
 .cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
 .btn {
