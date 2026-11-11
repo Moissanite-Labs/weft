@@ -89,7 +89,7 @@ Per PROGRAM.md, the GitHub Wiki is not used; the "wiki" is a directory reviewed 
 
 | ID | Contract | Producer → consumer | Status |
 |---|---|---|---|
-| I1 | 64-byte telemetry frame (16 × f32 little-endian; slot map) | C6 → C7, C1 | Exists implicitly in `github_harvester.py:79-87`. Undocumented. JS packs zeros into the velocity slots (`sources/A` §6.4). |
+| I1 | 64-byte telemetry frame (`16 × f32` little-endian; slot 2 relative clock in `[0, 2^23]` s, wall-clock integer outside frame) | C6 → C7, C1 | Specified in [`docs/interfaces/I1-frame64.md`](../interfaces/I1-frame64.md) and enforced in `frame64.py` (#78). |
 | I2 | SYM-2P line (role byte, action byte, decimal sequence, s-expression, SHA-256) | C6 → C7 | Fixed and vector-tested in PR #12 (#13). The key vocabulary is still unsettled (`tension`/`gini` vs `con`/`owner`/…). |
 | I3 | Safety gate API plus conformance vectors | C2 → C1, C3, C5, C4 (constants) | Python reference exists. Vectors to be written. |
 | I4 | Plasm shm layout `[4,64,512]` / `[4]` / `[8,512]` | C1 → cells, daemon | Stated in `WEFT-ARCHITECTURE-LOCK.md`. No spec file. |

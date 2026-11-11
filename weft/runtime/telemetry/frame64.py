@@ -4,24 +4,62 @@
 ==================================================================
 Packs the 16 float32 uniform fields (`<16f`, 64 bytes) consumed by the Aywa
 WebGPU compute/render pipeline (`dashboard_layout.wgsl`) and Canvas2D fallback:
-  - `[0]`: `active_nodes`
-  - `[1]`: `org_tension`
-  - `[2]`: `system_time`
-  - `[3]`: `gini_index`
-  - `[4]`: `user_rounding`
-  - `[5]`: `user_density`
-  - `[6]`: `user_hue`
-  - `[7]`: `user_contrast`
+  - `[0]`: `active_nodes` (count of active repository/cell nodes, >= 0)
+  - `[1]`: `org_tension` (normalized tension scalar in [0, 1] or cellular band)
+  - `[2]`: `system_time` (relative clock in seconds from a consumer-chosen epoch,
+           in `[0.0, MAX_RELATIVE_CLOCK_SECONDS]`; never Unix wall-clock time,
+           where binary32 ULP spacing reaches 128 s at 1.76e9 — Issue #78)
+  - `[3]`: `gini_index` (Gini coefficient in [0.0, 1.0])
+  - `[4]`: `user_rounding` (Eido barycentric rounding weight in [0.0, 1.0])
+  - `[5]`: `user_density` (Eido barycentric density weight in [0.0, 1.0])
+  - `[6]`: `user_hue` (Eido barycentric hue weight in [0.0, 1.0])
+  - `[7]`: `user_contrast` (Eido barycentric contrast weight in [0.0, 1.0])
   - `[8..11]`: `node_vel_0` (first 4 repository velocity signals)
   - `[12..15]`: `node_vel_1` (next 4 repository velocity signals)
 """
 
 from __future__ import annotations
 
+import math
 import struct
-from typing import Dict, List, Sequence
+from typing import Any, Dict, List, Sequence, Tuple
 
 FRAME64_STRUCT = struct.Struct("<16f")
+
+# Above 2**23 seconds (~97.09 days), IEEE-754 binary32 spacing exceeds 0.5 s
+# (reaching 1.0 s on [2**23, 2**24) and 128.0 s at 2026 Unix timestamps ~1.76e9).
+# Bounding slot 2 (`system_time`) to [0.0, 2**23] guarantees <= 0.5 s spacing
+# everywhere in range and <= 0.0078125 s (~7.8 ms) across a 24-hour session (#78).
+MAX_RELATIVE_CLOCK_SECONDS: float = float(1 << 23)  # 8,388,608.0 s
+
+FRAME64_SLOT_SPECS: Tuple[Dict[str, Any], ...] = (
+    {"slot": 0, "offset": 0, "name": "active_nodes", "unit": "count", "domain": "[0, 65536]", "max_ulp": 0.0078125},
+    {"slot": 1, "offset": 4, "name": "org_tension", "unit": "ratio", "domain": "[0.0, 85.0]", "max_ulp": 7.63e-06},
+    {"slot": 2, "offset": 8, "name": "system_time", "unit": "relative_s", "domain": "[0.0, 8388608.0]", "max_ulp": 0.5},
+    {"slot": 3, "offset": 12, "name": "gini_index", "unit": "ratio", "domain": "[0.0, 1.0]", "max_ulp": 1.193e-07},
+    {"slot": 4, "offset": 16, "name": "user_rounding", "unit": "ratio", "domain": "[0.0, 1.0]", "max_ulp": 1.193e-07},
+    {"slot": 5, "offset": 20, "name": "user_density", "unit": "ratio", "domain": "[0.0, 1.0]", "max_ulp": 1.193e-07},
+    {"slot": 6, "offset": 24, "name": "user_hue", "unit": "ratio", "domain": "[0.0, 1.0]", "max_ulp": 1.193e-07},
+    {"slot": 7, "offset": 28, "name": "user_contrast", "unit": "ratio", "domain": "[0.0, 1.0]", "max_ulp": 1.193e-07},
+    {"slot": 8, "offset": 32, "name": "node_vel_0.x", "unit": "commits_per_50", "domain": "[0.0, 1024.0]", "max_ulp": 0.0001221},
+    {"slot": 9, "offset": 36, "name": "node_vel_0.y", "unit": "commits_per_50", "domain": "[0.0, 1024.0]", "max_ulp": 0.0001221},
+    {"slot": 10, "offset": 40, "name": "node_vel_0.z", "unit": "commits_per_50", "domain": "[0.0, 1024.0]", "max_ulp": 0.0001221},
+    {"slot": 11, "offset": 44, "name": "node_vel_0.w", "unit": "commits_per_50", "domain": "[0.0, 1024.0]", "max_ulp": 0.0001221},
+    {"slot": 12, "offset": 48, "name": "node_vel_1.x", "unit": "commits_per_50", "domain": "[0.0, 1024.0]", "max_ulp": 0.0001221},
+    {"slot": 13, "offset": 52, "name": "node_vel_1.y", "unit": "commits_per_50", "domain": "[0.0, 1024.0]", "max_ulp": 0.0001221},
+    {"slot": 14, "offset": 56, "name": "node_vel_1.z", "unit": "commits_per_50", "domain": "[0.0, 1024.0]", "max_ulp": 0.0001221},
+    {"slot": 15, "offset": 60, "name": "node_vel_1.w", "unit": "commits_per_50", "domain": "[0.0, 1024.0]", "max_ulp": 0.0001221},
+)
+
+
+def float32_ulp_spacing(value: float) -> float:
+    """Return the IEEE-754 binary32 spacing (`ulp`) at `value`."""
+    packed = struct.unpack("<f", struct.pack("<f", float(value)))[0]
+    if not math.isfinite(packed):
+        return float("inf")
+    bits = struct.unpack("<I", struct.pack("<f", abs(packed)))[0]
+    next_val = struct.unpack("<f", struct.pack("<I", bits + 1))[0]
+    return float(next_val - abs(packed))
 
 
 def compute_gini(values: Sequence[float]) -> float:
@@ -42,13 +80,19 @@ def pack_uniform_frame_64b(
     barycentric: Dict[str, float],
     velocities: Sequence[float],
 ) -> List[float]:
+    t_rel = float(system_time)
+    if not math.isfinite(t_rel) or t_rel < 0.0 or t_rel > MAX_RELATIVE_CLOCK_SECONDS:
+        raise ValueError(
+            f"system_time ({system_time!r}) must be finite relative elapsed seconds in "
+            f"[0.0, {MAX_RELATIVE_CLOCK_SECONDS:.1f}], not a Unix wall-clock timestamp (#78)"
+        )
     vels = list(velocities)[:8]
     while len(vels) < 8:
         vels.append(0.0)
     return [
         float(active_nodes),
         float(org_tension),
-        float(system_time),
+        t_rel,
         float(gini_index),
         float(barycentric.get("rounding", 0.18)),
         float(barycentric.get("density", 0.55)),
@@ -61,7 +105,15 @@ def pack_uniform_frame_64b(
 def encode_frame_64b_bytes(floats_16: Sequence[float]) -> bytes:
     if len(floats_16) != 16:
         raise ValueError(f"Expected 16 floats, got {len(floats_16)}")
-    return FRAME64_STRUCT.pack(*[float(x) for x in floats_16])
+    vals = [float(x) for x in floats_16]
+    if any(not math.isfinite(v) for v in vals):
+        raise ValueError("All 16 frame64 floats must be finite")
+    if vals[2] < 0.0 or vals[2] > MAX_RELATIVE_CLOCK_SECONDS:
+        raise ValueError(
+            f"Slot 2 system_time ({vals[2]!r}) exceeds relative-clock domain "
+            f"[0.0, {MAX_RELATIVE_CLOCK_SECONDS:.1f}] (#78)"
+        )
+    return FRAME64_STRUCT.pack(*vals)
 
 
 def decode_frame_64b_bytes(blob: bytes) -> List[float]:

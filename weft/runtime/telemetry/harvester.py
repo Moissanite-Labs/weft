@@ -16,11 +16,14 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import time
 import urllib.request
 from typing import Any, Dict, List, Optional
 
 from .frame64 import compute_gini, encode_frame_64b_bytes, pack_uniform_frame_64b
 from .sym2p_codec import encode_sym2p_line
+
+FIXTURE_CAPTURED_AT_UNIX_S: int = 1762560000
 
 MOISSANITE_REPOS_FIXTURE: List[Dict[str, Any]] = [
     {"name": "fixture-node-01", "role": "Synthetic governance-plane sample", "commits": 14, "prs": 3, "issues": 5, "layer": "governance", "tension": 0.18},
@@ -121,10 +124,14 @@ def harvest_moissanite_telemetry(
     }
     vel = [float(r["commits"]) / 50.0 for r in repos[:8]]
 
+    captured_unix_s = (
+        int(time.time()) if source == "github-api" else FIXTURE_CAPTURED_AT_UNIX_S
+    )
+
     floats_16 = pack_uniform_frame_64b(
         active_nodes=active_nodes,
         org_tension=round(mean_tension, 4),
-        system_time=1762560000.0,
+        system_time=0.0,
         gini_index=round(gini, 4),
         barycentric=barycentric,
         velocities=vel,
@@ -148,6 +155,7 @@ def harvest_moissanite_telemetry(
         "source": source,
         "organization": "Moissanite-Labs",
         "origin_thread": "weft/telemetry-fixture#1",
+        "captured_at_unix_s": captured_unix_s,
         "active_nodes": len(repos),
         "org_tension": round(mean_tension, 4),
         "gini_index": round(gini, 4),
