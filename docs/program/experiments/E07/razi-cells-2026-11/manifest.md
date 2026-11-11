@@ -12,7 +12,7 @@ This manifest itself is not hashed (it would be self-referential).
 | code/cell.py | ef2d16ee8d3191fa2a01d7c1ad0ff63e8d92da1940fd8353e5dc8025c7fb9eb6 | 23773 | code |
 | code/colony.py | 0b676368946cbb4baab5b81b1be75717c670ef7fd2d3acf128d5dda8de0c5035 | 5428 | code |
 | code/embed.py | d5903a48a8c90b1bfbbafeec7be2e4630269a0b991203f67c2994abb9b20d87c | 4699 | code |
-| code/heldout_audit.py | b0849e79df0301b0ebbcb885ffbf3071a4c50f0e4bfc7d9a67179cbfee8d5fc3 | 31453 | code |
+| code/heldout_audit.py | 8229bd2b8f06a1dd1081e0aac881af4c6cadfa9fb02df1723ddfa43399984a9b | 31586 | code |
 | code/perm.py | 25207b5b03ab136fc1673f1ff7d3f93337d54526bb1d357c990abf7ea5905e24 | 1202 | code |
 | data/IDEAS.md | 0261fc11d31beafed1cd85fb7758c3e8fd489c2b4c8638664cd32d31a8455c79 | 7811 | notes |
 | data/TESTS.md | a9a726d00278a90c141f6d8cf938b1062e4dcdd242d521cb1e665320e43a691d | 6363 | notes |

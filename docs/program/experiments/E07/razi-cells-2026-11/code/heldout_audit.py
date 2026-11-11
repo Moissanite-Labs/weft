@@ -624,7 +624,12 @@ def run_audit(
                 med = statistics.median(v) if v else 0.0
                 path = score_paths[task_name].get(run_key, "")
                 ref_med = ref_by_path.get(path, 0.0)
-                rel = round(med / ref_med, 4) if ref_med > 0 and med > 0 else None
+                if ref_med > 0:
+                    rel = round(med / ref_med, 4) if med > 0 else 0.0
+                elif med == 0:
+                    rel = 0.0
+                else:
+                    rel = None
                 ref_spread = spread_by_path.get(path) or 0.0
                 task_block["scores"][run_key] = {
                     "median": round(med, 4),
