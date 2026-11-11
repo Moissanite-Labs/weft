@@ -74,6 +74,45 @@ class ManifestSha256Test(unittest.TestCase):
             self.assertEqual(proc.returncode, 0, proc.stdout + proc.stderr)
 
 
+class StagingHeadersTest(unittest.TestCase):
+    def _patch_dist(self, dist: Path) -> None:
+        patcher = mock.patch.object(build, "DIST", dist)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+    def test_staging_noindex_block_exact_output(self):
+        existing = (
+            "/weft/assets/*\n"
+            "  Cache-Control: public, max-age=3600, must-revalidate\n"
+        )
+        expected = (
+            "/weft/assets/*\n"
+            "  Cache-Control: public, max-age=3600, must-revalidate\n"
+            "\n"
+            "/*\n"
+            "  X-Robots-Tag: noindex\n"
+        )
+        self.assertEqual(build.append_staging_noindex_headers(existing), expected)
+
+    def test_write_staging_headers_preserves_weft_rules(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            dist = Path(tmp)
+            self._patch_dist(dist)
+            (dist / "_headers").write_text(
+                "/weft/assets/*\n"
+                "  Cache-Control: public, max-age=3600, must-revalidate\n",
+                encoding="utf-8",
+            )
+            build.write_staging_headers()
+            self.assertEqual((dist / "_headers").read_text(encoding="utf-8"), (
+                "/weft/assets/*\n"
+                "  Cache-Control: public, max-age=3600, must-revalidate\n"
+                "\n"
+                "/*\n"
+                "  X-Robots-Tag: noindex\n"
+            ))
+
+
 class DistIntegrationTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
