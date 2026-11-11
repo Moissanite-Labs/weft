@@ -9,7 +9,7 @@ This manifest itself is not hashed (it would be self-referential).
 
 | File | sha256 | Size (bytes) | Class |
 |---|---|---|---|
-| CONSULT-2026-11-10.md | 4655f27222c5e68c9ff8b9eb84d0b4cce4f711426732c54d1a407a342bde7d0b | 12827 | notes |
+| CONSULT-2026-11-10.md | 38720375a0ed5681beff261c49508af7c25ce2086c5724255f77ffad00bb2d10 | 13300 | notes |
 | IDEAS.md | e16c11faf992b9fc956e8c4aee8eb1bba54c92d85a65fc24051b68769f353f42 | 36069 | notes |
 | README.md | 74cde704af1ded43e5a89a4eb80b2bddfeefa5e4a995e294eaa1a0f8757f2c9c | 6149 | notes |
 | TESTS.md | 58376fc97c57c8acc33d7cec789b03f010a061f926859973a81494db8bafa3bd | 130425 | notes |
@@ -17,7 +17,7 @@ This manifest itself is not hashed (it would be self-referential).
 | code/adapters/tj3_data.py | 7982459de22b74890af796e8309d72bbcec0ffa3ae6bfc56064eaf94e482b154 | 3341 | code |
 | code/adapters/tj3_report.py | ce0f3a5ed9bc4cc4d212b8b89bd9f37b3104ac07b951b0c490b2d777a29a6444 | 2400 | code |
 | code/adapters/tk_smoke.py | d0dc3cdabd3ec3b66280bf591cfaac7596faead8c42c3748ca72922c48c26f24 | 3770 | code |
-| code/cells/cell.py | dc076bff25472f5e5f69c425c8a395403f90bd9400f46298464a01d20145919e | 34217 | code |
+| code/cells/cell.py | eab236b5e19766dfed87a6cc002b5db404a1584980f366ced17bd5431ff78ba0 | 34508 | code |
 | code/cells/colony.py | d38c5eb291fe9e21d8823aaa14a785d7edb650c242ab6d5c3e74ee85b1c71ca6 | 6250 | code |
 | code/cells/e11.py | 8cdaabeca7bd6fc50c334b838915cdfa7fba5180983e31b443c611c3c5a02ea6 | 3684 | code |
 | code/cells/e12.py | 5ee3f3566829d16597fedde54e12815fc092e12b4ef7c2858ea31f9ae7d6e0f2 | 4524 | code |
@@ -32,9 +32,9 @@ This manifest itself is not hashed (it would be self-referential).
 | code/cells/grow4.py | a12329838d1faf3b802c2e20889e983189185ed8dd4594b004c8360d1b848a1a | 7950 | code |
 | code/cells/kit.py | 8c9a544aea86a7e81121474cb600c92afe83d29c66d19c1d0235f5e5da5ee7eb | 11099 | code |
 | code/cells/kit_selftest.py | 233e3da093549fc27aa782f1a22cba3ea5fdd123b24ae06a4a0e1e662497d274 | 4186 | code |
-| code/cells/lineage.py | 09ff41682cd42ab654e82c01849513c5575ba3f1b694f609666628ab197c8293 | 10787 | code |
+| code/cells/lineage.py | e674a20467246d833efb9dcdffe9cb00f17dfa7cf65eb61bb2ba48d4c5de1e76 | 10803 | code |
 | code/cells/lineage_report.py | 2497f755f0c8bc6fb14bf5e5f52b2556d9e8f120ce115d6638c84c72179403a1 | 6124 | code |
-| code/cells/metab.py | 0689494df401f6676778e2b53a384e9ee2f7560c04735569cb78f3c21aab6ca2 | 41811 | code |
+| code/cells/metab.py | 157478b86d7253f25262a48c4cfe5adb0b90861d64061b906ca94f288dce8123 | 41791 | code |
 | code/cells/refscore.py | 3937690f190b67dfd83a652f0834fbfa5fdee0c39dc080598c86ed289b654206 | 2742 | code |
 | code/cells/sp1_diag.py | 3bd14200bcabfd8c89666574f34661e6fc8fdcb29a6cb202146ce4003075bb59 | 1580 | code |
 | code/cells/sp2.py | 4726fc281051a899afc82965c6bb8ea85ae1e885c6f2c73d49668081d20eb038 | 7345 | code |
@@ -45,7 +45,7 @@ This manifest itself is not hashed (it would be self-referential).
 | code/cells/stem.py | 8ffe3d4f79bc1c3bf8134a1d42ef7b3f694aa3e5d38fcb14aaba40cb3c743cd2 | 18935 | code |
 | code/cells/stem_report.py | 9dc87bdc82614bda93c3f3c6d499b9e97b03492cbd0cc9a1e972281ed0abb879 | 4481 | code |
 | code/cells/tests/debt_offline.py | 831797b5a487c12bf3cae78d5d1949abb674ea2e21a0194f1ab709460fa1d552 | 2288 | code |
-| code/cells/tests/dissipative_offline.py | 34ce3ee984dfea852212aa1760f2e822da1fe4a011bd834a911a768e664cf299 | 13414 | code |
+| code/cells/tests/dissipative_offline.py | a1370dbe1b0cd439da04419fd754ffe4afba7c4b50be90420cda2c91de033b98 | 18832 | code |
 | code/cells/tests/lineage_offline.py | 3651e4492118bbc07a5cf1f15d7f11a9e30b8f22f4a633d7865adf0bb01e6e0c | 5068 | code |
 | code/cells/tests/metab_offline.py | afa9b48a44a4e84376648c0b8507d5b3e0a78fad066e4e56d155491ac8c148a2 | 3112 | code |
 | code/cells/tests/sp3_offline.py | 17f3b301602a035913adc82bc3068d8c27414b077b90c91d8f2798b189c3f9ee | 3106 | code |
@@ -97,7 +97,7 @@ This manifest itself is not hashed (it would be self-referential).
 | run/run_e11.sh | 8c4dbd0bbcf5501e43847b1d4709f96e0af3e68446e0d1360cdae4faeffe867d | 397 | code |
 | run/run_e13.sh | 678918ccd76f008d2423540c6b1478bcef48ddb12e054e2ea3f30615e5204439 | 502 | code |
 | run/run_l1.sh | 8ec4d1b0357698585ef30cbf69756fb380c29f6dfda726f7506427fae5e55c05 | 977 | code |
-| run/run_l2.sh | 8f1be599465b64ebfb37ed5819487934614bb25e3c09723ec1d732677be0a60c | 1083 | code |
+| run/run_l2.sh | ce7ae493a39acfdeb4ac4221e71c2b572e71858e1aa9601f4e7835210342b637 | 1083 | code |
 | run/run_metab.sh | 27b65154c66bb80a27317f8cff9b77141e779f44ec52fe4e65c1d4131b490f08 | 470 | code |
 | run/run_sp1.sh | b9c92f0607e55b5bd3854aa5525caff5031e223f75344716ce720ebc4f3adfff | 280 | code |
 | run/run_sp2.sh | e789390e01f9d0971b14f0214c9e3cc17837a5d94165ca2ec7d191b34750ad67 | 422 | code |

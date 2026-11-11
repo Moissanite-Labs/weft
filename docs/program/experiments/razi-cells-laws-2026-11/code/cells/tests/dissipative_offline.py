@@ -1,6 +1,8 @@
 """Offline verification of L2 Dissipative Heredity: Causal Laws for Silicon Life.
 
 Tests:
+0. Generation-0 Weismann without germ body: `lineage.launch` with no `.germ/<kit>/body` passes empty
+   `CELL_GERM`; metab follows the blank/spore rest rule (accepted assay refunds unspent energy).
 1. Weismann Soma Coasting Dissipates: A soma seeded with .germ/fibmod (slow body) and
    CELL_WEISMANN=1 that immediately rests at fit==0 dissipates unspent energy; gave==0,
    dissipated > 0, store receives 0 refund.
@@ -20,8 +22,9 @@ Tests:
 """
 from __future__ import annotations
 
-import json, math, os, shutil, sys, tempfile
+import json, math, os, shutil, subprocess, sys, tempfile
 from pathlib import Path
+from types import SimpleNamespace
 
 # Setup environment for tests
 os.environ["CELL_KIT"] = "fibmod"
@@ -68,6 +71,121 @@ def fake_think(prompt: str, sid: str, model: str, effort: str, cap: int | None =
 
 
 M.think = fake_think
+M.start_loop = lambda: None
+
+_real_subprocess_run = subprocess.run
+_shim_bin = str(Path.home() / "Work/razi-tools/bin")
+_intercept_launch_metab = False
+
+
+def patched_subprocess_run(cmd, stdout=None, stderr=subprocess.STDOUT, env=None, **kw):
+    merged = {**(env or os.environ)}
+    merged["PATH"] = f"{_shim_bin}:{merged.get('PATH', '')}"
+    if _intercept_launch_metab and len(cmd) >= 5 and cmd[2] == "seed" and "metab.py" in str(cmd[1]):
+        return _launch_metab_main(cmd, stdout, merged)
+    kw2 = {k: v for k, v in kw.items() if k != "env"}
+    if kw2.get("capture_output"):
+        return _real_subprocess_run(cmd, env=merged, **kw2)
+    return _real_subprocess_run(cmd, stdout=stdout, stderr=stderr, env=merged, **kw2)
+
+
+subprocess.run = patched_subprocess_run
+L.subprocess.run = patched_subprocess_run
+
+
+def apply_launch_env(env: dict) -> None:
+    os.environ.update(env)
+    M.GERM = env.get("CELL_GERM", "").strip()
+    M.WEISMANN = env.get("CELL_WEISMANN", "") == "1"
+    M.SPORE_FROM = env.get("CELL_SPORE_FROM", "").strip()
+    M.GAP_PAY = env.get("CELL_GAP_PAY", "") == "1"
+    M.E0 = float(env.get("CELL_E0", str(M.E0)))
+    M.REWARD = float(env.get("CELL_REWARD", str(M.REWARD)))
+    M.SENSE_DIR = env.get("CELL_SENSE_DIR", "").strip()
+    M.SENSE_SHOW = env.get("CELL_SENSE_SHOW", "") == "1"
+    M.HEIR = env.get("CELL_HEIR", "").strip()
+
+
+def system_prompt_from_env(env: dict) -> str:
+    cell_env = {k: v for k, v in env.items() if k.startswith("CELL_")}
+    cell_env.setdefault("CELL_KIT", "fibmod")
+    snippet = (
+        "import os, sys\n"
+        f"sys.path.insert(0, {TOOLS_DIR!r})\n"
+        f"os.environ.update({cell_env!r})\n"
+        "import importlib\n"
+        "import cell as C\n"
+        "importlib.reload(C)\n"
+        "import metab as M\n"
+        "importlib.reload(M)\n"
+        "print(M.SYSTEM)\n"
+    )
+    r = subprocess.run([sys.executable, "-c", snippet], capture_output=True, text=True, env=os.environ)
+    return r.stdout if r.returncode == 0 else ""
+
+
+# -------------------------------------------------------------------------
+# Test 0: Generation-0 Weismann without germ body (real lineage.launch env)
+# -------------------------------------------------------------------------
+print("--- Test 0: Generation-0 Weismann without germ body ---")
+g0_run = Path(tempfile.mkdtemp(dir=str(Path.home() / "Work/razi-cells/exp"), prefix="offline-l2-g0-"))
+(g0_run / ".germ" / "fibmod").mkdir(parents=True)  # kit slot exists, no body/ yet
+M.born(g0_run / "store-fibmod", 1000.0)
+need = {"kit": "fibmod", "need": "need"}
+birth_e = L.take(g0_run, "fibmod", 200.0)
+store_after_birth = M.ledger(g0_run / "store-fibmod")["store-fibmod"]["e"]
+arms = SimpleNamespace(blank=False, spore=False, weismann=True, gap_pay=False, sense=None, reward=400.0, calls=120)
+c0_name = "g0-weismann-nogerm"
+c0 = g0_run / c0_name
+launch_env: dict = {}
+_noise_save = C.MAX_NOISE
+C.MAX_NOISE = 0.5
+
+
+def _launch_metab_main(cmd, stdout, env: dict):
+    launch_env.update(env)
+    apply_launch_env(env)
+    cid = Path(cmd[3]).name
+    script[cid] = (
+        [{"do": "write", "path": "fibmod.py", "text": fast}]
+        + [{"do": "assay", "why": "first body"}] * 8
+        + [{"do": "rest", "result": "generation 0 first body"}]
+    )
+    M.think = fake_think
+    M.run.__globals__["think"] = fake_think
+    M.start_loop = lambda: None
+    sys.argv = ["metab.py", *[str(x) for x in cmd[2:5]]]
+    rc = M.main()
+    if stdout is not None:
+        stdout.write(json.dumps({"rc": rc}) + "\n")
+    return subprocess.CompletedProcess(cmd, rc)
+
+
+_intercept_launch_metab = True
+L.PY = sys.executable
+L.launch(g0_run, c0_name, need, birth_e, arms, idx=0, gen=0)
+_intercept_launch_metab = False
+C.MAX_NOISE = _noise_save
+
+check("0a. launch passes empty CELL_GERM", not launch_env.get("CELL_GERM"), launch_env.get("CELL_GERM", "(missing)"))
+sys_txt = system_prompt_from_env(launch_env)
+check("0b. SYSTEM has no inherited-germline rest rule", "germline body" not in sys_txt and "inherited baseline" not in sys_txt,
+      "found heir wording" if "germline body" in sys_txt else "ok")
+ev0 = ([json.loads(line) for line in (c0 / "log.jsonl").read_text().splitlines()]
+       if (c0 / "log.jsonl").exists() else [])
+check("0c. seed path did not inherit a germ body", not any(e.get("event") == "inherit" and e.get("ok") for e in ev0), ev0[:3])
+led0 = M.ledger(c0)
+me0, st0 = led0[c0_name], led0["store-fibmod"]
+check("0d. accepted assay", me0.get("assay") is True, me0.get("assay"))
+check("0e. unspent birth energy returns to store (gave > 0)", me0.get("gave", 0) > 0, me0.get("gave"))
+check("0f. no Weismann dissipate at rest", me0.get("dissipated", 0) == 0, me0.get("dissipated"))
+check("0g. store received refund", abs(st0["e"] - (store_after_birth + me0["gave"])) < 1e-6,
+      (round(st0["e"], 1), round(store_after_birth + me0["gave"], 1)))
+rest0 = [e for e in ev0 if e.get("event") == "rest"]
+check("0h. rest logged no Weismann dissipate", rest0 and rest0[0].get("dissipated", 0) == 0, rest0)
+row0 = L.gate(g0_run, "fibmod", 0, [c0_name])
+check("0i. gate takes lineage first body", row0.get("took") == c0_name, row0.get("took"))
+shutil.rmtree(g0_run, ignore_errors=True)
 
 # -------------------------------------------------------------------------
 # Test 1: Weismann Soma Coasting Dissipates
