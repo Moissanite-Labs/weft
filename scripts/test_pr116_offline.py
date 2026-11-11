@@ -19,7 +19,6 @@ TJ3 = REPO / "docs/program/experiments/razi-cells-laws-2026-11/code/adapters/tj3
 TJ3_REPORT = REPO / "docs/program/experiments/razi-cells-laws-2026-11/code/adapters/tj3_report.py"
 
 
-BASELINE_REV = "6c4f04a05684d2db7e0e49e83f9e97f070967efa"
 FIB_REL_LO, FIB_REL_HI = 0.65, 1.35
 FIB_TIMING_REPEATS = 3
 FIB_CASE_N = 250
@@ -27,16 +26,6 @@ FIB_CASE_N = 250
 
 def _load_heldout():
     return _load_heldout_file(HELDOUT)
-
-
-def _load_heldout_at_rev(rev: str):
-    text = subprocess.check_output(
-        ["git", "show", f"{rev}:docs/program/experiments/E07/razi-cells-2026-11/code/heldout_audit.py"],
-        cwd=REPO,
-    )
-    tmp = Path(tempfile.mkdtemp(prefix="heldout-rev-")) / "heldout_audit.py"
-    tmp.write_bytes(text)
-    return _load_heldout_file(tmp)
 
 
 def _load_heldout_file(path: Path):
@@ -204,48 +193,31 @@ class FibmodPathTests(unittest.TestCase):
             self.assertGreaterEqual(rel, FIB_REL_LO)
             self.assertLessEqual(rel, FIB_REL_HI)
 
-    def test_baseline_6c4f04a_stdin_body_does_not_fallback(self):
-        old = _load_heldout_at_rev(BASELINE_REV)
-        old.ALLOW_NO_SANDBOX = True
+    def test_fibmod_both_paths_fail_rel_zero_in_summary(self):
         with tempfile.TemporaryDirectory() as td:
-            cell = Path(td) / "stdin"
-            cell.mkdir()
-            (cell / "fibmod.py").write_text(_fib_stdin_main_source(), encoding="utf-8")
-            score, why, path = old.score_task("fibmod", cell, self.cases)
-        self.assertEqual(score, 0.0)
-        self.assertEqual(path, "cli_runpy")
-        self.assertIn("wrong output", why)
-
-    def test_baseline_6c4f04a_exit1_mixed_paths_when_compared_to_flat_ref(self):
-        old = _load_heldout_at_rev(BASELINE_REV)
-        old.ALLOW_NO_SANDBOX = True
-        with tempfile.TemporaryDirectory() as td:
-            ref = Path(td) / "ref"
-            ref.mkdir()
-            (ref / "fibmod.py").write_text(old.REFERENCE_BODIES["fibmod"][1], encoding="utf-8")
-            cell = Path(td) / "exit1"
-            cell.mkdir()
-            (cell / "fibmod.py").write_text(_fib_exit1_module_source(), encoding="utf-8")
-            ref_score, _, ref_path = old.score_task("fibmod", ref, self.cases)
-            cell_score, _, cell_path = old.score_task("fibmod", cell, self.cases)
-        self.assertEqual(ref_path, "cli_runpy")
-        self.assertEqual(cell_path, "module_callable")
-        self.assertNotEqual(ref_path, cell_path)
-        bogus_rel = cell_score / ref_score if ref_score else 0
-        self.assertTrue(ref_score > 0 and cell_score > 0)
-        # Path-matched on current harness should land in band; flat ref on old mix may not.
-        with tempfile.TemporaryDirectory() as td:
-            ref = Path(td) / "ref"
-            ref.mkdir()
-            (ref / "fibmod.py").write_text(self.ha.REFERENCE_BODIES["fibmod"][1], encoding="utf-8")
-            cell = Path(td) / "exit1"
-            cell.mkdir()
-            (cell / "fibmod.py").write_text(_fib_exit1_module_source(), encoding="utf-8")
-            good_rel, path, _, _ = _path_matched_rel(self.ha, ref, cell, self.cases)
-        self.assertEqual(path, "module_callable")
-        self.assertGreaterEqual(good_rel, FIB_REL_LO)
-        self.assertLessEqual(good_rel, FIB_REL_HI)
-        self.assertNotAlmostEqual(bogus_rel, good_rel, delta=0.15, msg=f"bogus={bogus_rel} matched={good_rel}")
+            arch = Path(td) / "archive"
+            cell_dir = arch / "broken" / "fibmod"
+            cell_dir.mkdir(parents=True)
+            (cell_dir / "fibmod.py").write_text(
+                "# no fib(); CLI exits 1\nimport sys\nsys.exit(1)\n",
+                encoding="utf-8",
+            )
+            lock = Path(td) / ".bench.lock"
+            audit = self.ha.run_audit(
+                arch,
+                ["broken"],
+                repeats=1,
+                bench_lock=lock,
+                task_names=["fibmod"],
+            )
+            sc = audit["per_task"]["fibmod"]["scores"]["broken"]
+            self.assertEqual(sc["median"], 0.0)
+            self.assertEqual(sc["rel"], 0.0)
+            row = self.ha.build_summary_table(audit, exclude_tasks=set())[0]
+            self.assertEqual(row["run"], "broken")
+            self.assertEqual(row["total_tasks"], 1)
+            self.assertEqual(row["median_rel"], 0.0)
+            self.assertEqual(row["mean_rel"], 0.0)
 
 
 class Tj3JsonlRunIdTests(unittest.TestCase):
