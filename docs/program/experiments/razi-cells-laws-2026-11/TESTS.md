@@ -1430,7 +1430,7 @@ What changed in `tj3.py` and `tj3_report.py`:
 - Extra forward passes on eval and train are counted in `TOK`.
 - One `.jsonl` per OUT file (no shared `tj3.jsonl`); trajectory points keyed by `(tag, seed, arm)` from `event=eval` lines, including gc and the last generation.
 - Each event carries a `run_id` (run start time in ms, bumped above any prior lines in the same OUT jsonl). `tj3_report.py` prints trajectories from the latest `run_id` only so reruns into the same OUT do not mix generations.
-Hashes (sha256, first 16): tj3.py 4ed8d19b89712334, tj3_report.py 04f76d53746865dc, tj3_data.py 7982459de22b7489, tj3/data.json 1233583f918ab255 (unchanged).
+Hashes (sha256, first 16): tj3.py 4ed8d19b89712334, tj3_report.py 676dac32e6b3242c, tj3_data.py 7982459de22b7489, tj3/data.json 1233583f918ab255 (unchanged).
 
 ## L1: lineages with heredity (guesses written 2026-11-10, before any L1 data)
 
