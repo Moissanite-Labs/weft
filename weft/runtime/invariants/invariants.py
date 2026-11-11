@@ -19,7 +19,7 @@ from __future__ import annotations
 import json
 import math
 from pathlib import Path
-from typing import Any, Dict, Iterable, Sequence, Tuple
+from typing import Any, Dict, Iterable, Optional, Sequence, Tuple
 
 R_INVARIANT: float = 120.0
 TENSION_MAX: float = 85.0
@@ -49,12 +49,56 @@ def _flatten_floats(arr: Any) -> Iterable[float]:
         yield float(arr)
 
 
+def _f32_bits(val: float) -> int:
+    import struct
+    return struct.unpack("<I", struct.pack("<f", float(val)))[0]
+
+
+def _masked_frobenius_distance_f64(
+    baseline_w: Sequence[float],
+    candidate_w: Sequence[float],
+    locked_mask: Optional[Sequence[int]],
+) -> Tuple[bool, float]:
+    """Neumaier scaled binary64 accumulation matching `weft_frobenius_distance_masked_f64`."""
+    scale = 0.0
+    ssq = 1.0
+    comp = 0.0
+    for i, (b, c) in enumerate(zip(baseline_w, candidate_w)):
+        if not (math.isfinite(b) and math.isfinite(c)):
+            return False, float("inf")
+        if locked_mask is not None and int(locked_mask[i]) != 0:
+            if not (b == 0.0 and c == 0.0):
+                if _f32_bits(b) != _f32_bits(c):
+                    return False, float("inf")
+            continue
+        abs_diff = abs(float(c) - float(b))
+        if abs_diff == 0.0:
+            continue
+        if scale < abs_diff:
+            ratio = scale / abs_diff
+            ratio_sq = ratio * ratio
+            ssq = 1.0 + ssq * ratio_sq
+            comp = comp * ratio_sq
+            scale = abs_diff
+        else:
+            ratio = abs_diff / scale
+            term = ratio * ratio
+            t = ssq + term
+            comp += (ssq - t) + term if abs(ssq) >= term else (term - t) + ssq
+            ssq = t
+    dist = 0.0 if scale == 0.0 else scale * math.sqrt(ssq + comp)
+    if not math.isfinite(dist):
+        return False, float("inf")
+    return True, dist
+
+
 def verify_weight_update_safety_ex(
     baseline_w: Any,
     candidate_w: Any,
     r_invariant: float,
     current_budget: float,
     step_cost: float,
+    locked_mask: Optional[Sequence[int]] = None,
 ) -> Tuple[bool, float, float, str]:
     """
     Evaluate the baseline-relative Frobenius distance and metabolic budget gate.
@@ -76,10 +120,10 @@ def verify_weight_update_safety_ex(
     if b_val < c_val:
         return False, float("inf"), b_val - c_val, "insufficient_metabolic_budget"
 
-    # Fast path for torch tensors when available
-    if hasattr(baseline_w, "detach") and hasattr(candidate_w, "detach"):
+    # Fast path for torch tensors when available (unmasked only; shared JSON mask cases use lists)
+    if locked_mask is None and hasattr(baseline_w, "detach") and hasattr(candidate_w, "detach"):
         import torch
-        if baseline_w.shape != candidate_w.shape:
+        if baseline_w.shape != candidate_w.shape or baseline_w.numel() == 0:
             return False, float("inf"), b_val, "shape_mismatch"
         if not bool(torch.isfinite(baseline_w).all().item() and torch.isfinite(candidate_w).all().item()):
             return False, float("inf"), b_val, "non_finite_weights"
@@ -94,21 +138,28 @@ def verify_weight_update_safety_ex(
     cand_flat = list(_flatten_floats(candidate_w))
     if len(base_flat) != len(cand_flat) or len(base_flat) == 0:
         return False, float("inf"), b_val, "shape_mismatch"
+    if locked_mask is not None and len(locked_mask) != len(base_flat):
+        return False, float("inf"), b_val, "shape_mismatch"
 
-    sq_sum = 0.0
-    for b_elem, c_elem in zip(base_flat, cand_flat):
-        if not (math.isfinite(b_elem) and math.isfinite(c_elem)):
-            return False, float("inf"), b_val, "non_finite_weights"
-        diff = c_elem - b_elem
-        sq_sum += diff * diff
+    if locked_mask is None:
+        sq_sum = 0.0
+        for b_elem, c_elem in zip(base_flat, cand_flat):
+            if not (math.isfinite(b_elem) and math.isfinite(c_elem)):
+                return False, float("inf"), b_val, "non_finite_weights"
+            diff = c_elem - b_elem
+            sq_sum += diff * diff
+        dist = math.sqrt(sq_sum)
+        dist_ok = math.isfinite(dist)
+    else:
+        dist_ok, dist = _masked_frobenius_distance_f64(base_flat, cand_flat, locked_mask)
 
-    dist = math.sqrt(sq_sum)
-    if not math.isfinite(dist):
+    if not dist_ok:
         return False, float("inf"), b_val, "non_finite_weights"
-    if dist > r_val:
-        return False, dist, b_val, "baseline_distance_exceeded"
+    dist_out = float(dist)
+    if dist > float(r_val):
+        return False, dist_out, b_val, "baseline_distance_exceeded"
 
-    return True, dist, b_val - c_val, "ok"
+    return True, dist_out, b_val - c_val, "ok"
 
 
 def _frobenius_norm(arr: Any) -> float:

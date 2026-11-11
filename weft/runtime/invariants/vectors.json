@@ -54,6 +54,28 @@
       "expected_reason": "ok"
     },
     {
+      "name": "valid_exact_radius_and_budget",
+      "baseline": [
+        1.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "candidate": [
+        1.5,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "r_invariant": 0.5,
+      "budget": 1.0,
+      "cost": 1.0,
+      "expected_accepted": true,
+      "expected_distance": 0.5,
+      "expected_remaining_budget": 0.0,
+      "expected_reason": "ok"
+    },
+    {
       "name": "reject_nan_candidate",
       "baseline": [
         1.0,
@@ -140,12 +162,162 @@
       "expected_distance": "Inf",
       "expected_remaining_budget": -1.0,
       "expected_reason": "non_positive_budget_or_cost"
+    },
+    {
+      "name": "reject_negative_radius",
+      "baseline": [
+        1.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "candidate": [
+        1.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "r_invariant": -0.25,
+      "budget": 10.0,
+      "cost": 1.0,
+      "expected_accepted": false,
+      "expected_distance": "Inf",
+      "expected_remaining_budget": 9.0,
+      "expected_reason": "non_positive_budget_or_cost"
+    },
+    {
+      "name": "reject_empty_weights",
+      "baseline": [],
+      "candidate": [],
+      "r_invariant": 0.5,
+      "budget": 10.0,
+      "cost": 1.0,
+      "expected_accepted": false,
+      "expected_distance": "Inf",
+      "expected_remaining_budget": 10.0,
+      "expected_reason": "shape_mismatch"
+    },
+    {
+      "name": "reject_pre_cast_radius_boundary",
+      "baseline": [
+        0.0,
+        0.0
+      ],
+      "candidate": [
+        120.0,
+        0.02683282
+      ],
+      "r_invariant": 120.0,
+      "budget": 10.0,
+      "cost": 1.0,
+      "expected_accepted": false,
+      "expected_distance": 120.0000030000011,
+      "expected_remaining_budget": 10.0,
+      "expected_reason": "baseline_distance_exceeded"
+    },
+    {
+      "name": "accept_huge_scale_weight_move",
+      "baseline": [
+        0.0,
+        0.0
+      ],
+      "candidate": [
+        1e25,
+        0.0
+      ],
+      "r_invariant": 1e26,
+      "budget": 10.0,
+      "cost": 1.0,
+      "expected_accepted": true,
+      "expected_distance": 1e25,
+      "expected_remaining_budget": 9.0,
+      "expected_reason": "ok"
+    },
+    {
+      "name": "reject_locked_mask_ulp_tamper",
+      "baseline": [
+        1.0,
+        0.0,
+        2.0,
+        3.0
+      ],
+      "candidate": [
+        1.0000001192092896,
+        0.0,
+        2.5,
+        3.0
+      ],
+      "locked_mask": [
+        1,
+        1,
+        0,
+        0
+      ],
+      "r_invariant": 120.0,
+      "budget": 10.0,
+      "cost": 1.0,
+      "expected_accepted": false,
+      "expected_distance": "Inf",
+      "expected_remaining_budget": 10.0,
+      "expected_reason": "non_finite_weights"
+    },
+    {
+      "name": "accept_locked_mask_negzero_normalize",
+      "baseline": [
+        1.0,
+        0.0,
+        2.0,
+        3.0
+      ],
+      "candidate": [
+        1.0,
+        -0.0,
+        2.5,
+        3.0
+      ],
+      "locked_mask": [
+        1,
+        1,
+        0,
+        0
+      ],
+      "r_invariant": 120.0,
+      "budget": 10.0,
+      "cost": 1.0,
+      "expected_accepted": true,
+      "expected_distance": 0.5,
+      "expected_remaining_budget": 9.0,
+      "expected_reason": "ok"
     }
   ],
   "tension_vectors": [
     {
+      "name": "tension_zero_boundary",
+      "tension": 0.0,
+      "max_tension": 85.0,
+      "expected_accepted": true,
+      "expected_homeostatic": false,
+      "expected_excision": false
+    },
+    {
+      "name": "tension_homeostatic_min_exact",
+      "tension": 15.0,
+      "max_tension": 85.0,
+      "expected_accepted": true,
+      "expected_homeostatic": true,
+      "expected_excision": false
+    },
+    {
       "name": "tension_homeostatic",
       "tension": 28.5,
+      "max_tension": 85.0,
+      "expected_accepted": true,
+      "expected_homeostatic": true,
+      "expected_excision": false
+    },
+    {
+      "name": "tension_homeostatic_max_exact",
+      "tension": 35.0,
       "max_tension": 85.0,
       "expected_accepted": true,
       "expected_homeostatic": true,
@@ -174,9 +346,31 @@
       "expected_accepted": false,
       "expected_homeostatic": false,
       "expected_excision": true
+    },
+    {
+      "name": "tension_nan",
+      "tension": "NaN",
+      "max_tension": 85.0,
+      "expected_accepted": false,
+      "expected_homeostatic": false,
+      "expected_excision": true
     }
   ],
   "royalty_vectors": [
+    {
+      "name": "zero_wei",
+      "gross_wei": 0,
+      "upstream_bps": 1500,
+      "expected_upstream_wei": 0,
+      "expected_weaver_wei": 0
+    },
+    {
+      "name": "single_wei_dust",
+      "gross_wei": 1,
+      "upstream_bps": 1500,
+      "expected_upstream_wei": 0,
+      "expected_weaver_wei": 1
+    },
     {
       "name": "standard_10000_wei",
       "gross_wei": 10000,
