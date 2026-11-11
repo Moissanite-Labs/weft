@@ -7,6 +7,13 @@ name: DCO
 # One narrow exemption: Dependabot cannot certify the DCO. Its commits are
 # skipped only when the pull request was opened by `dependabot[bot]` AND the
 # commit author is GitHub's fixed Dependabot identity. Neither alone suffices.
+#
+# On merge_group, GitHub either replays the commits (rebase merge) or writes a
+# synthetic squash commit. A replay keeps authors and sign-offs, so the strict
+# rule applies. The synthetic commit is authored by the PR author's profile
+# email with the original sign-offs concatenated into its message and is never
+# signed by hand; it is skipped only when it is the single merge_group commit
+# and carries at least one Signed-off-by line.
 on:
   pull_request:
   merge_group:
@@ -26,4 +33,5 @@ jobs:
           BASE: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
           HEAD: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha }}
           PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          EVENT_NAME: ${{ github.event_name }}
         run: bash .github/scripts/check-dco.sh
