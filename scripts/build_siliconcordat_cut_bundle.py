@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import re
@@ -50,6 +51,16 @@ CUT_HREF_MAP = {
 }
 
 NOINDEX_META = '<meta name="robots" content="noindex">'
+
+STATIC_ASSET_URL = re.compile(
+    r"\.(?:css|js|mjs|json|svg|webp|png|jpe?g|gif|ico|woff2?|ttf|otf|webmanifest)(?:\?.*)?$",
+    re.IGNORECASE,
+)
+
+_HTML_LOCAL_ASSET = re.compile(
+    r'(?P<attr>\b(?:href|src)=)(?P<q>["\'])'
+    r'(?P<url>(?!https?:)(?!mailto:)(?!data:)(?!//)(?!#)[^"\']+)(?P=q)'
+)
 
 
 def load_host_settings(profile: str) -> dict:
@@ -400,6 +411,65 @@ def prepare_cut_css() -> tuple[str, str, str]:
     return tokens, site_css, obs_css
 
 
+def resolve_build_version() -> str:
+    """Short git SHA for cache-busting; one value per bundle build."""
+    env = os.environ.get("SILICONCORDAT_CUT_BUILD_SHA", "").strip()
+    if env:
+        return env[:12]
+    return subprocess.check_output(
+        ["git", "rev-parse", "--short=12", "HEAD"],
+        cwd=ROOT,
+        text=True,
+    ).strip()
+
+
+def is_local_static_asset_url(url: str) -> bool:
+    base = url.split("#", 1)[0].split("?", 1)[0]
+    return bool(STATIC_ASSET_URL.search(base))
+
+
+def cache_bust_url(url: str, version: str) -> str:
+    if re.search(r"[?&]v=", url):
+        return url
+    frag = ""
+    if "#" in url:
+        url, frag = url.split("#", 1)
+        frag = f"#{frag}"
+    if "?" in url:
+        return f"{url}&v={version}{frag}"
+    return f"{url}?v={version}{frag}"
+
+
+def apply_cache_busters_to_html(html: str, version: str) -> str:
+    def sub(m: re.Match[str]) -> str:
+        url = m.group("url")
+        if not is_local_static_asset_url(url):
+            return m.group(0)
+        busted = cache_bust_url(url, version)
+        return f'{m.group("attr")}{m.group("q")}{busted}{m.group("q")}'
+
+    return _HTML_LOCAL_ASSET.sub(sub, html)
+
+
+def apply_cache_busters_to_dist(version: str) -> None:
+    for path in sorted(DIST.rglob("*.html")):
+        text = path.read_text(encoding="utf-8")
+        path.write_text(apply_cache_busters_to_html(text, version), encoding="utf-8")
+
+
+def write_manifest_sha256() -> None:
+    lines: list[str] = []
+    for path in sorted(DIST.rglob("*")):
+        if not path.is_file():
+            continue
+        rel = path.relative_to(DIST).as_posix()
+        if rel == "MANIFEST.sha256":
+            continue
+        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        lines.append(f"{digest}  {rel}")
+    (DIST / "MANIFEST.sha256").write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
 def write_staging_headers() -> None:
     """Cloudflare static _headers: noindex on staging host builds only."""
     headers = (DIST / "_headers").read_text(encoding="utf-8") if (DIST / "_headers").is_file() else ""
@@ -485,11 +555,14 @@ def build() -> None:
             shutil.rmtree(site_root, ignore_errors=True)
     if host.get("noindex"):
         write_staging_headers()
+    version = resolve_build_version()
+    apply_cache_busters_to_dist(version)
+    write_manifest_sha256()
     (DIST / ".assetsignore").write_text(".cut-host\n", encoding="utf-8")
     (DIST / ".cut-host").write_text(DEFAULT_HOST + "\n", encoding="utf-8")
     print(
         f"Built {DIST} (Arrangement 2026-11-10, host={DEFAULT_HOST}, "
-        f"weft pin {manifest['weft']['sha'][:12]})"
+        f"weft pin {manifest['weft']['sha'][:12]}, build {version})"
     )
 
 
