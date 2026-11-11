@@ -1,17 +1,18 @@
-# Gitleaks allowlist for known test vectors in the imported corpus docs.
+# Gitleaks config for the secret-scan CI job (#73).
 #
-# The four values below come from commit a18e0ff2 ("Adding recompiled weft
-# corpus"). They are fixtures in design docs, not real credentials:
-# - 0x0123...abcdef is a repeating placeholder private key (MOCK_PRIVATE_KEY).
-# - 0xe7f1...0512 is a fixed test token address used in doc examples.
-# - The two passphrases are test strings from the same docs.
-# The secret-scan job runs `gitleaks git`, so history is scanned; without
-# this file the job fails on 28 findings, all from that one commit.
-[allowlist]
-description = "Known test vectors from the corpus import (a18e0ff2), not real secrets."
-regexes = [
-  '''0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef''',
-  '''0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512''',
-  '''House_Of_Light_Mithrax_Sacred_Weaver_2026''',
-  '''Test_Splicer_Mithrax_2026''',
-]
+# gitleaks v8 replaces its default rule set when a config file is present,
+# so this file must extend the defaults; without [extend] the scan loads
+# zero rules and passes on anything (#100 review).
+[extend]
+useDefault = true
+
+# Commit a18e0ff2 ("Adding recompiled weft corpus") imported design docs
+# that carry test vectors: a repeating placeholder private key
+# (MOCK_PRIVATE_KEY), a fixed example token address, and two test
+# passphrases. They are fixtures, not credentials, and they produce all 28
+# history findings. The allowlist is scoped to that one commit, so the same
+# strings added anywhere else are still reported, and the values themselves
+# are not repeated here.
+[[allowlists]]
+description = "Corpus import test vectors (a18e0ff2), not real secrets."
+commits = ["a18e0ff2a583366709e7bc507b780ee914cb233c"]
