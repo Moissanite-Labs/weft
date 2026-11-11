@@ -3,11 +3,13 @@
 import "./site.js";
 import { holdAttention, setupAttention } from "./attention.js";
 import { loadCondensed, setupCondense } from "./condense.js";
+import { hasCondensed } from "./condensed-papers.js";
 
 // A paper with condensed versions beside it swaps the reading weave's motion
-// for condensing prose; the others keep the reading weave as it is.
+// for condensing prose; the others keep the reading weave as it is. Only the
+// papers listed in condensed-papers.js fetch condensed.json.
 holdAttention();
-loadCondensed().then((data) => {
+(hasCondensed(location.pathname) ? loadCondensed() : Promise.resolve(null)).then((data) => {
   if (!data) return setupAttention();
   const reading = setupAttention({ motion: false, panel: false });
   if (reading) setupCondense(data, reading);

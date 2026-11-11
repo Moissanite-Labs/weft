@@ -128,8 +128,11 @@ jobs:
         run: python3 scripts/zenodo_metadata.py --check
       - name: Paper HTML is current and PDFs were built from current sources
         run: python3 scripts/build_papers.py --check
-      - name: condensed.json still matches the overview page
-        run: python3 scripts/check_condensed.py
+      - name: condensed.json still matches each paper page
+        run: |
+          python3 scripts/check_condensed.py
+          python3 scripts/check_condensed.py --page site/papers/models-as-cells/index.html --data site/papers/models-as-cells/condensed.json
+          python3 scripts/check_condensed.py --page site/papers/checkable-computation/index.html --data site/papers/checkable-computation/condensed.json
 
   siliconcordat-bundle:
     runs-on: ubuntu-latest
