@@ -1,0 +1,13 @@
+{
+  "schema": "WEFT-INVARIANTS/2.0-C11-REPORT",
+  "num_vectors": 2048,
+  "v2_c11_python_matches": 2048,
+  "v2_parity_rate": 1.00000000,
+  "v1_naive_divergences_caught": 317,
+  "v1_zeno_free_steps_in_100k": 100000,
+  "v2_monotone_deduction_steps_in_1k": 1000,
+  "max_distance_abs_error_c11_vs_py": 0.000e+00,
+  "arena_65536_checks_per_sec": 5647.07,
+  "arena_throughput_gweights_per_sec": 0.3701,
+  "last_bench_distance": 0.598664658
+}
