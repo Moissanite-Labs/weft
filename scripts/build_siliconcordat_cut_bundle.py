@@ -52,6 +52,8 @@ CUT_HREF_MAP = {
 
 NOINDEX_META = '<meta name="robots" content="noindex">'
 
+STAGING_NOINDEX_BLOCK = "/*\n  X-Robots-Tag: noindex\n"
+
 STATIC_ASSET_URL = re.compile(
     r"\.(?:css|js|mjs|json|svg|webp|png|jpe?g|gif|ico|woff2?|ttf|otf|webmanifest)(?:\?.*)?$",
     re.IGNORECASE,
@@ -470,12 +472,22 @@ def write_manifest_sha256() -> None:
     (DIST / "MANIFEST.sha256").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+def append_staging_noindex_headers(existing: str) -> str:
+    """Append staging catch-all noindex block; keep path rules separated."""
+    if STAGING_NOINDEX_BLOCK.strip() in existing:
+        return existing if existing.endswith("\n") else existing + "\n"
+    base = existing.rstrip("\n")
+    if base:
+        base += "\n"
+    return base + "\n" + STAGING_NOINDEX_BLOCK
+
+
 def write_staging_headers() -> None:
     """Cloudflare static _headers: noindex on staging host builds only."""
     headers = (DIST / "_headers").read_text(encoding="utf-8") if (DIST / "_headers").is_file() else ""
-    block = "/*\n  X-Robots-Tag: noindex\n"
-    if block.strip() not in headers:
-        (DIST / "_headers").write_text(headers.rstrip() + ("\n" if headers and not headers.endswith("\n") else "") + block, encoding="utf-8")
+    merged = append_staging_noindex_headers(headers)
+    if merged != headers:
+        (DIST / "_headers").write_text(merged, encoding="utf-8")
 
 
 def transform_cut_html(raw: str, host: dict, *, observatory: bool = False) -> str:
