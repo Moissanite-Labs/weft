@@ -262,7 +262,7 @@ export function setupAttention({ motion = true, panel = true } = {}) {
           <button class="attn-icon attn-help" type="button" aria-label="What is this?">${icon.help}</button>
           <button class="attn-icon attn-min" type="button" aria-label="Minimise">${icon.min}</button>
           <span class="attn-x-wrap">
-            <button class="attn-icon attn-x" type="button" aria-describedby="attn-x-tip">${icon.close}</button>
+            <button class="attn-icon attn-x" type="button" aria-labelledby="attn-x-tip">${icon.close}</button>
             <span class="attn-tip" id="attn-x-tip" role="tooltip">Stops the dynamic effects</span>
           </span>
         </div>
@@ -524,10 +524,9 @@ export function setupAttention({ motion = true, panel = true } = {}) {
       return;
     }
     overlayOn = true;
-    const light = document.documentElement.getAttribute("data-theme") === "light";
     octx.setTransform(odpr, 0, 0, odpr, 0, 0);
     octx.clearRect(0, 0, ow, oh);
-    const rgb = light ? "48, 109, 104" : "217, 199, 160";
+    const rgb = getComputedStyle(document.documentElement).getPropertyValue("--attn-wave").trim() || "217, 199, 160";
     for (const v of waves) {
       const cx = v.x - scrollX, cy = v.y - scrollY;
       // Draw each crest as a ring; the packet's envelope sets its strength.
