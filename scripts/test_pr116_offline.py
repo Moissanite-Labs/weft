@@ -5,6 +5,7 @@ import importlib.util
 import json
 import os
 import re
+import statistics
 import subprocess
 import sys
 import tempfile
@@ -18,11 +19,58 @@ TJ3 = REPO / "docs/program/experiments/razi-cells-laws-2026-11/code/adapters/tj3
 TJ3_REPORT = REPO / "docs/program/experiments/razi-cells-laws-2026-11/code/adapters/tj3_report.py"
 
 
+BASELINE_REV = "6c4f04a05684d2db7e0e49e83f9e97f070967efa"
+FIB_REL_LO, FIB_REL_HI = 0.65, 1.35
+FIB_TIMING_REPEATS = 3
+FIB_CASE_N = 250
+
+
 def _load_heldout():
-    spec = importlib.util.spec_from_file_location("heldout_audit", HELDOUT)
+    return _load_heldout_file(HELDOUT)
+
+
+def _load_heldout_at_rev(rev: str):
+    text = subprocess.check_output(
+        ["git", "show", f"{rev}:docs/program/experiments/E07/razi-cells-2026-11/code/heldout_audit.py"],
+        cwd=REPO,
+    )
+    tmp = Path(tempfile.mkdtemp(prefix="heldout-rev-")) / "heldout_audit.py"
+    tmp.write_bytes(text)
+    return _load_heldout_file(tmp)
+
+
+def _load_heldout_file(path: Path):
+    spec = importlib.util.spec_from_file_location("heldout_audit", path)
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
     return mod
+
+
+def _slim_fibmod_cases(ha, n: int = FIB_CASE_N):
+    rng = __import__("random").Random("heldout-r1-fibmod-20261110")
+    inp, exp = ha.gen_fibmod(rng)[0]
+    nums = [int(x) for x in inp.decode().split()][:n]
+    slim_inp = ("\n".join(map(str, nums)) + "\n").encode()
+    slim_exp = ("\n".join(exp.decode().strip().split("\n")[:n]) + "\n").encode()
+    return [(slim_inp, slim_exp)]
+
+
+def _ref_median_for_path(ha, ref_dir: Path, cases, path: str, repeats: int) -> float:
+    vals = [
+        ha.score_fibmod(ref_dir, cases, force_path=path)[0]
+        for _ in range(repeats)
+    ]
+    return statistics.median(vals)
+
+
+def _path_matched_rel(ha, ref_dir: Path, cell_dir: Path, cases, repeats: int = FIB_TIMING_REPEATS):
+    _, _, path = ha.score_fibmod(cell_dir, cases)
+    ref_path = path if path in ("cli_runpy", "module_callable") else "module_callable"
+    ref_med = _ref_median_for_path(ha, ref_dir, cases, ref_path, repeats)
+    cell_scores = [ha.score_fibmod(cell_dir, cases)[0] for _ in range(repeats)]
+    cell_med = statistics.median(cell_scores)
+    rel = cell_med / ref_med if ref_med > 0 else 0.0
+    return rel, path, ref_med, cell_med
 
 
 def _fib_cli_ref_source() -> str:
@@ -83,39 +131,121 @@ class HeldoutMainTests(unittest.TestCase):
                 ha.sandboxed_run(body, "true", b"")
 
 
-class FibmodCliRunpyTests(unittest.TestCase):
-    FIB_SAMPLE_N = 1000
+def _fib_stdin_main_source() -> str:
+    return """import sys
+M=10**9+7
+def fib(n):
+    a,b=0,1
+    for bit in bin(n)[2:]:
+        c=a*((2*b-a)%M)%M; d=(a*a+b*b)%M
+        a,b=(d,(c+d)%M) if bit=="1" else (c,d)
+    return a
+if __name__ == "__main__":
+    print("\\n".join(str(fib(int(x))) for x in sys.stdin.read().split()))
+"""
 
-    def test_cli_only_near_reference(self):
-        ha = _load_heldout()
-        ha.ALLOW_NO_SANDBOX = True
-        rng = __import__("random").Random("heldout-r1-fibmod-20261110")
-        full = ha.gen_fibmod(rng)
-        inp, exp = full[0]
-        nums = [int(x) for x in inp.decode().split()][: self.FIB_SAMPLE_N]
-        slim_inp = ("\n".join(map(str, nums)) + "\n").encode()
-        slim_exp = ("\n".join(exp.decode().strip().split("\n")[: self.FIB_SAMPLE_N]) + "\n").encode()
-        cases = [(slim_inp, slim_exp)]
 
+def _fib_exit1_module_source() -> str:
+    return """import sys
+M=10**9+7
+def fib(n):
+    a,b=0,1
+    for bit in bin(n)[2:]:
+        c=a*((2*b-a)%M)%M; d=(a*a+b*b)%M
+        a,b=(d,(c+d)%M) if bit=="1" else (c,d)
+    return a
+if __name__ == "__main__":
+    sys.exit(1)
+"""
+
+
+class FibmodPathTests(unittest.TestCase):
+    def setUp(self):
+        self.ha = _load_heldout()
+        self.ha.ALLOW_NO_SANDBOX = True
+        self.cases = _slim_fibmod_cases(self.ha)
+
+    def _write_ref(self, td: Path) -> Path:
+        ref = Path(td) / "ref"
+        ref.mkdir()
+        (ref / "fibmod.py").write_text(self.ha.REFERENCE_BODIES["fibmod"][1], encoding="utf-8")
+        return ref
+
+    def test_argv_cli_body_cli_runpy_rel(self):
         with tempfile.TemporaryDirectory() as td:
-            ref_dir = Path(td) / "ref-body"
-            cli_dir = Path(td) / "cli-body"
-            ref_dir.mkdir()
-            cli_dir.mkdir()
-            (ref_dir / "fibmod.py").write_text(ha.REFERENCE_BODIES["fibmod"][1], encoding="utf-8")
-            (cli_dir / "fibmod.py").write_text(_fib_cli_ref_source(), encoding="utf-8")
+            ref = self._write_ref(td)
+            cell = Path(td) / "cli"
+            cell.mkdir()
+            (cell / "fibmod.py").write_text(_fib_cli_ref_source(), encoding="utf-8")
+            rel, path, _, _ = _path_matched_rel(self.ha, ref, cell, self.cases)
+            self.assertEqual(path, "cli_runpy")
+            self.assertGreaterEqual(rel, FIB_REL_LO)
+            self.assertLessEqual(rel, FIB_REL_HI)
 
-            t0 = time.perf_counter()
-            ref_score, _, ref_path = ha.score_task("fibmod", ref_dir, cases)
-            cli_score, _, cli_path = ha.score_task("fibmod", cli_dir, cases)
-            wall = time.perf_counter() - t0
-            rel = cli_score / ref_score if ref_score else 0.0
-            self.assertEqual(cli_path, "cli_runpy")
-            self.assertEqual(ref_path, "cli_runpy")
-            self.assertGreater(rel, 0.8, f"rel={rel} ref={ref_score} cli={cli_score}")
-            # stash measured values for the test run log (not persisted)
-            self._rel = rel
-            self._wall = wall
+    def test_stdin_main_body_module_callable_rel(self):
+        with tempfile.TemporaryDirectory() as td:
+            ref = self._write_ref(td)
+            cell = Path(td) / "stdin"
+            cell.mkdir()
+            (cell / "fibmod.py").write_text(_fib_stdin_main_source(), encoding="utf-8")
+            rel, path, _, _ = _path_matched_rel(self.ha, ref, cell, self.cases)
+            self.assertEqual(path, "module_callable")
+            self.assertGreaterEqual(rel, FIB_REL_LO)
+            self.assertLessEqual(rel, FIB_REL_HI)
+
+    def test_cli_exit1_fallback_module_rel(self):
+        with tempfile.TemporaryDirectory() as td:
+            ref = self._write_ref(td)
+            cell = Path(td) / "exit1"
+            cell.mkdir()
+            (cell / "fibmod.py").write_text(_fib_exit1_module_source(), encoding="utf-8")
+            rel, path, _, _ = _path_matched_rel(self.ha, ref, cell, self.cases)
+            self.assertEqual(path, "module_callable")
+            self.assertGreaterEqual(rel, FIB_REL_LO)
+            self.assertLessEqual(rel, FIB_REL_HI)
+
+    def test_baseline_6c4f04a_stdin_body_does_not_fallback(self):
+        old = _load_heldout_at_rev(BASELINE_REV)
+        old.ALLOW_NO_SANDBOX = True
+        with tempfile.TemporaryDirectory() as td:
+            cell = Path(td) / "stdin"
+            cell.mkdir()
+            (cell / "fibmod.py").write_text(_fib_stdin_main_source(), encoding="utf-8")
+            score, why, path = old.score_task("fibmod", cell, self.cases)
+        self.assertEqual(score, 0.0)
+        self.assertEqual(path, "cli_runpy")
+        self.assertIn("wrong output", why)
+
+    def test_baseline_6c4f04a_exit1_mixed_paths_when_compared_to_flat_ref(self):
+        old = _load_heldout_at_rev(BASELINE_REV)
+        old.ALLOW_NO_SANDBOX = True
+        with tempfile.TemporaryDirectory() as td:
+            ref = Path(td) / "ref"
+            ref.mkdir()
+            (ref / "fibmod.py").write_text(old.REFERENCE_BODIES["fibmod"][1], encoding="utf-8")
+            cell = Path(td) / "exit1"
+            cell.mkdir()
+            (cell / "fibmod.py").write_text(_fib_exit1_module_source(), encoding="utf-8")
+            ref_score, _, ref_path = old.score_task("fibmod", ref, self.cases)
+            cell_score, _, cell_path = old.score_task("fibmod", cell, self.cases)
+        self.assertEqual(ref_path, "cli_runpy")
+        self.assertEqual(cell_path, "module_callable")
+        self.assertNotEqual(ref_path, cell_path)
+        bogus_rel = cell_score / ref_score if ref_score else 0
+        self.assertTrue(ref_score > 0 and cell_score > 0)
+        # Path-matched on current harness should land in band; flat ref on old mix may not.
+        with tempfile.TemporaryDirectory() as td:
+            ref = Path(td) / "ref"
+            ref.mkdir()
+            (ref / "fibmod.py").write_text(self.ha.REFERENCE_BODIES["fibmod"][1], encoding="utf-8")
+            cell = Path(td) / "exit1"
+            cell.mkdir()
+            (cell / "fibmod.py").write_text(_fib_exit1_module_source(), encoding="utf-8")
+            good_rel, path, _, _ = _path_matched_rel(self.ha, ref, cell, self.cases)
+        self.assertEqual(path, "module_callable")
+        self.assertGreaterEqual(good_rel, FIB_REL_LO)
+        self.assertLessEqual(good_rel, FIB_REL_HI)
+        self.assertNotAlmostEqual(bogus_rel, good_rel, delta=0.15, msg=f"bogus={bogus_rel} matched={good_rel}")
 
 
 class Tj3JsonlRunIdTests(unittest.TestCase):

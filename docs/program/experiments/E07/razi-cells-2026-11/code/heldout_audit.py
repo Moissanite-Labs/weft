@@ -379,6 +379,56 @@ else:
 """
 
 
+def score_fibmod(
+    body: Path,
+    cases: list[tuple[bytes, bytes]],
+    *,
+    force_path: str | None = None,
+) -> tuple[float, str, str]:
+    inp, exp = cases[0]
+    tdef = TASKS["fibmod"]
+    if not (body / "fibmod.py").is_file():
+        return 0.0, "no fibmod.py", "missing"
+
+    def attempt_cli() -> tuple[float | None, str]:
+        rc, out, dt = sandboxed_run(body, "", inp, script=FIB_CLI_RUNPY_SHIM)
+        if rc != 0:
+            return None, f"cli_runpy exit {rc}"
+        if not tdef["check"](out, exp):
+            return None, "cli_runpy wrong output"
+        return (1.0 / dt if dt > 0 else 0.0), ""
+
+    def attempt_module() -> tuple[float | None, str]:
+        rc, out, dt = sandboxed_run(body, "", inp, script=FIB_SHIM)
+        if rc != 0:
+            return None, f"module_callable exit {rc}"
+        if not tdef["check"](out, exp):
+            return None, "module_callable wrong output"
+        return (1.0 / dt if dt > 0 else 0.0), ""
+
+    if force_path == "cli_runpy":
+        score, why = attempt_cli()
+        if score is not None:
+            return score, why, "cli_runpy"
+        return 0.0, why, "cli_runpy"
+    if force_path == "module_callable":
+        score, why = attempt_module()
+        if score is not None:
+            return score, why, "module_callable"
+        return 0.0, why, "module_callable"
+
+    failures: list[str] = []
+    score, why = attempt_cli()
+    if score is not None:
+        return score, why, "cli_runpy"
+    failures.append(why)
+    score, why = attempt_module()
+    if score is not None:
+        return score, why, "module_callable"
+    failures.append(why)
+    return 0.0, "; ".join(failures), "failed"
+
+
 def squeeze_uses_module(body: Path) -> bool:
     sp = body / "squeeze.py"
     if not sp.is_file():
@@ -411,20 +461,7 @@ def score_task(name: str, body: Path, cases: list[tuple[bytes, bytes]]) -> tuple
         return (raw / packed if packed else 0.0), "", cpath
 
     if name == "fibmod":
-        inp, exp = cases[0]
-        if not (body / "fibmod.py").is_file():
-            return 0.0, "no fibmod.py", "missing"
-        rc, out, dt = sandboxed_run(body, "", inp, script=FIB_CLI_RUNPY_SHIM)
-        if rc == 0:
-            if tdef["check"](out, exp):
-                return (1.0 / dt if dt > 0 else 0.0), "", "cli_runpy"
-            return 0.0, "cli wrong output", "cli_runpy"
-        rc, out, dt = sandboxed_run(body, "", inp, script=FIB_SHIM)
-        if rc == 0:
-            if tdef["check"](out, exp):
-                return (1.0 / dt if dt > 0 else 0.0), "", "module_callable"
-            return 0.0, "wrong output", "module_callable"
-        return 0.0, f"fibmod exit {rc}", "cli_runpy"
+        return score_fibmod(body, cases)
 
     if name == "primes":
         arg, exp = cases[0]
@@ -499,6 +536,7 @@ def run_audit(
                 contenders[task_name][r] = c_dir
 
     raw_scores: dict[str, dict[str, list[float]]] = {t: {k: [] for k in contenders[t]} for t in active}
+    fibmod_ref_by_path: dict[str, list[float]] = {"cli_runpy": [], "module_callable": []}
     reasons: dict[str, dict[str, str]] = {t: {} for t in active}
     score_paths: dict[str, dict[str, str]] = {t: {} for t in active}
     cell_sha256: dict[str, str] = {}
@@ -519,14 +557,25 @@ def run_audit(
             for task_name in sorted(active.keys()):
                 for run_key, body_dir in contenders[task_name].items():
                     try:
-                        score, why, path = score_task(task_name, body_dir, task_cases[task_name])
+                        if task_name == "fibmod" and run_key == "ref":
+                            for p in ("cli_runpy", "module_callable"):
+                                sc, wy, _ = score_fibmod(
+                                    body_dir, task_cases[task_name], force_path=p,
+                                )
+                                fibmod_ref_by_path[p].append(round(sc, 5))
+                            score, why, path = score_fibmod(body_dir, task_cases[task_name])
+                        elif task_name == "fibmod":
+                            score, why, path = score_fibmod(body_dir, task_cases[task_name])
+                        else:
+                            score, why, path = score_task(task_name, body_dir, task_cases[task_name])
                     except BaseException as ex:
                         score, why, path = 0.0, f"{type(ex).__name__}: {ex}", "error"
                     if path and run_key not in score_paths[task_name]:
                         score_paths[task_name][run_key] = path
                     if why and not reasons[task_name].get(run_key):
                         reasons[task_name][run_key] = why
-                    raw_scores[task_name][run_key].append(round(score, 5))
+                    if not (task_name == "fibmod" and run_key == "ref"):
+                        raw_scores[task_name][run_key].append(round(score, 5))
             print(f"  repeat {rep + 1}/{repeats} complete ({time.time() - t_rep:.1f}s)")
 
     shutil.rmtree(temp_dir, ignore_errors=True)
@@ -541,24 +590,69 @@ def run_audit(
     }
 
     for task_name in sorted(active.keys()):
-        ref_med = statistics.median(raw_scores[task_name]["ref"])
-        results["per_task"][task_name] = {
-            "ref_median": round(ref_med, 4),
-            "ref_spread": round(spread(raw_scores[task_name]["ref"]), 4),
-            "scores": {},
-        }
-        for run_key in contenders[task_name]:
-            v = raw_scores[task_name][run_key]
-            med = statistics.median(v)
-            rel = round(med / ref_med, 4) if ref_med > 0 else None
-            results["per_task"][task_name]["scores"][run_key] = {
-                "median": round(med, 4),
-                "rel": rel,
-                "spread": round(spread(v), 4) if med > 0 else None,
-                "raw": v,
-                "why": reasons[task_name].get(run_key, ""),
-                "score_path": score_paths[task_name].get(run_key, ""),
+        task_block: dict = {"scores": {}}
+        if task_name == "fibmod":
+            ref_by_path = {
+                p: round(statistics.median(fibmod_ref_by_path[p]), 4)
+                if fibmod_ref_by_path[p] else 0.0
+                for p in ("cli_runpy", "module_callable")
             }
+            spread_by_path = {
+                p: round(spread(fibmod_ref_by_path[p]), 4)
+                if fibmod_ref_by_path[p] and ref_by_path[p] > 0
+                else None
+                for p in ("cli_runpy", "module_callable")
+            }
+            task_block["ref_median_by_path"] = ref_by_path
+            task_block["ref_spread_by_path"] = spread_by_path
+            task_block["ref_raw_by_path"] = fibmod_ref_by_path
+            task_block["ref_median"] = ref_by_path["module_callable"]
+            task_block["ref_spread"] = spread_by_path["module_callable"] or 0.0
+            for run_key in contenders[task_name]:
+                if run_key == "ref":
+                    task_block["scores"]["ref"] = {
+                        "median": ref_by_path["module_callable"],
+                        "rel": 1.0,
+                        "spread": None,
+                        "raw": [],
+                        "why": "",
+                        "score_path": "both",
+                        "ref_median_by_path": ref_by_path,
+                    }
+                    continue
+                v = raw_scores[task_name][run_key]
+                med = statistics.median(v) if v else 0.0
+                path = score_paths[task_name].get(run_key, "")
+                ref_med = ref_by_path.get(path, 0.0)
+                rel = round(med / ref_med, 4) if ref_med > 0 and med > 0 else None
+                ref_spread = spread_by_path.get(path) or 0.0
+                task_block["scores"][run_key] = {
+                    "median": round(med, 4),
+                    "rel": rel,
+                    "spread": round(spread(v), 4) if med > 0 else None,
+                    "raw": v,
+                    "why": reasons[task_name].get(run_key, ""),
+                    "score_path": path,
+                    "ref_median_for_path": ref_med,
+                    "ref_spread_for_path": ref_spread,
+                }
+        else:
+            ref_med = statistics.median(raw_scores[task_name]["ref"])
+            task_block["ref_median"] = round(ref_med, 4)
+            task_block["ref_spread"] = round(spread(raw_scores[task_name]["ref"]), 4)
+            for run_key in contenders[task_name]:
+                v = raw_scores[task_name][run_key]
+                med = statistics.median(v)
+                rel = round(med / ref_med, 4) if ref_med > 0 else None
+                task_block["scores"][run_key] = {
+                    "median": round(med, 4),
+                    "rel": rel,
+                    "spread": round(spread(v), 4) if med > 0 else None,
+                    "raw": v,
+                    "why": reasons[task_name].get(run_key, ""),
+                    "score_path": score_paths[task_name].get(run_key, ""),
+                }
+        results["per_task"][task_name] = task_block
 
     return results
 
@@ -580,7 +674,11 @@ def build_summary_table(audit: dict, *, exclude_tasks: set[str], wins_margin: st
             if rel is None:
                 continue
             rels.append(rel)
-            ref_spread = pt.get("ref_spread", 0.0)
+            if t == "fibmod" and pt.get("ref_spread_by_path"):
+                path = sc.get("score_path") or ""
+                ref_spread = pt["ref_spread_by_path"].get(path) or pt.get("ref_spread", 0.0)
+            else:
+                ref_spread = pt.get("ref_spread", 0.0)
             if wins_margin == "beats_ref_spread":
                 if rel > 1.0 + ref_spread:
                     wins += 1
