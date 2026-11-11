@@ -16,7 +16,7 @@ one() {  # arm run gens width needs
   done
 }
 case "$1" in
-  pilot) one d l2pd 2 1 $E/needs1fib.json; one h l2ph 2 1 $E/needs1fib.json ;;
+  pilot) one d l2pd 2 2 $E/needs1fib.json; one h l2ph 2 2 $E/needs1fib.json ;;
   full)  for i in 1 2 3; do one d l2d$i 4 2 $E/needs4k.json; one h l2h$i 4 2 $E/needs4k.json; done ;;
   *) echo "usage: run_l2.sh pilot|full"; exit 2 ;;
 esac

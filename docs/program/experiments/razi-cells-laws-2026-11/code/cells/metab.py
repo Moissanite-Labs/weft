@@ -196,7 +196,7 @@ def sense(cell: Path) -> None:
         s, b = statistics.median(m["self"]), statistics.median(m["best"])
         if b > 0:
             ledger(cell, lambda d: d[cid(cell)].__setitem__("sense", round(s / b, 4)))
-            C.log(cell, event="sense", ratio=round(s / b, 4), self=s, best=b, shown=SENSE_SHOW or bool(SPORE_FROM))
+            C.log(cell, event="sense", ratio=round(s / b, 4), self=s, best=b, shown=SENSE_SHOW)
         else:
             C.log(cell, event="sense", error="record body scored 0: " + C.LAST_WHY.get("best", "?")[:120])
     except Exception as e:

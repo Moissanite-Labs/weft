@@ -67,7 +67,7 @@ def launch(run: Path, name: str, need: dict, energy: float, a, idx: int = 0, gen
     germ_dir = run / ".germ" / kit
     has_germ = (germ_dir / "body").is_dir() and any((germ_dir / "body").iterdir())
     is_spore = bool(getattr(a, "spore", False)) and has_germ and idx > 0
-    cell_germ = "" if (a.blank or is_spore) else str(germ_dir)
+    cell_germ = "" if (a.blank or is_spore or not has_germ) else str(germ_dir)
     rwd = reward if reward is not None else a.reward
     env = {**os.environ, "CELL_KIT": kit, "CELL_GERM": cell_germ, "CELL_PAY_ANY": "1",
            "CELL_LINEAGE": "1", "CELL_HEIR": store(kit), "CELL_E0": str(energy), "CELL_REWARD": str(rwd),
