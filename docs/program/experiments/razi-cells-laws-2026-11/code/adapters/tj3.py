@@ -33,6 +33,19 @@ def safe(s): return re.sub(r"tml-[A-Za-z0-9_\-\.]+", "tml-[REDACTED]", str(s))[:
 T0 = time.time()
 def lap(msg): print(f"[{time.time()-T0:7.1f}s] {msg}", flush=True)
 
+RUN_ID = int(time.time() * 1000)
+_jl = Path(A.out).with_suffix(".jsonl")
+if _jl.is_file():
+    _max_rid = 0
+    for _line in open(_jl):
+        try:
+            _e = json.loads(_line)
+            _max_rid = max(_max_rid, int(_e.get("run_id", 0)))
+        except Exception:
+            pass
+    if _max_rid >= RUN_ID:
+        RUN_ID = _max_rid + 1
+
 TTL_SECONDS = int(os.environ.get("TJ3_TTL_SECONDS", "14400"))
 ROLLING_SLOTS = os.environ.get("TJ3_ROLLING_SLOTS", "1") == "1"
 
@@ -115,6 +128,7 @@ def eval_nll(client_or_sc, hold=None, tok=None, renderer=None, arm="eval", tc=No
 
 def log_jsonl(rec: dict) -> None:
     rec["t"] = round(time.time() - T0, 2)
+    rec["run_id"] = RUN_ID
     tf = Path(A.out).with_suffix(".jsonl")
     try:
         with open(tf, "a") as f:
