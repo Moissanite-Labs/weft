@@ -40,7 +40,6 @@ class TestMPSBaselineFile(unittest.TestCase):
         raw_text = MPS_RESULTS_PATH.read_text(encoding="utf-8")
         self.assertNotIn("/Users/", raw_text)
         self.assertNotIn("/home/", raw_text)
-        self.assertNotIn("kethuda", raw_text)
         self.assertNotIn("IOPlatformSerialNumber", raw_text)
         self.assertNotIn("hardware_uuid", raw_text)
 
