@@ -34,7 +34,7 @@ Aggregates use seven tasks. Geometric mean is shown where every task rel is posi
 | g3 | DeepSeek v4.1 Flash | 3.12 | 1.564 | 4.694 | — | 5 |
 | b6 | openai:gpt-6-astra | 12.88 | 1.180 | 4.211 | 1.813 | 4 |
 
-`b7` sits above `b6` on median rel (1.564 vs 1.180) yet both show 4 wins of 7 under `rel > 1 + ref_spread`. Mean and geometric means are pulled up by `lcs`, where every run scores an order of magnitude above reference; geometric mean is the fairer single-number summary when `lcs` dominates the arithmetic mean.
+`b7` sits above `b6` on median rel (1.564 vs 1.180) yet both show 4 wins of 7 under `rel > 1 + ref_spread`. Mean and geometric means are pulled up by `lcs`, where all runs but `b8` score about 18× to 24× reference (`b8` is 2.7×); geometric mean is the fairer single-number summary when `lcs` dominates the arithmetic mean.
 
 ## Per-task relative scores (1.000 = stdlib reference)
 
