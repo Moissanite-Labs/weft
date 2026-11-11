@@ -28,7 +28,7 @@ from exo.core.types import Message, ToolSpec  # noqa: E402
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import kit  # noqa: E402  harness-owned kits (inputs, check, timing)
 
-PY = os.environ.get("CELL_PY", "/opt/homebrew/bin/python3")
+PY = "/opt/homebrew/bin/python3"
 MODEL = os.environ.get("CELL_MODEL", "").strip()  # e.g. "anthropic:claude-fable-5-1"
 ROLE = "main" if MODEL else os.environ.get("CELL_ROLE", "fast")
 GENOME_CAP, OUT_CAP, SH_TIMEOUT = 4000, 2000, 30
@@ -179,9 +179,7 @@ def sandboxed(cell: Path, cmd: str, timeout: int = SH_TIMEOUT) -> tuple[str, flo
         # plain `cd` into the samples walks the parent folders, so allow metadata only (no listing, no contents)
         ups = [str(q) for q in (kit.PUBLIC / KIT).parents if str(q).startswith(str(Path.home()))]
         prof += "(allow file-read-metadata " + " ".join(f'(literal "{q}")' for q in ups) + ")"
-    _shim = Path.home() / "Work/razi-tools/bin"
-    _path = f"{_shim}:{Path(PY).parent}:/usr/bin:/bin" if _shim.is_dir() else f"{Path(PY).parent}:/usr/bin:/bin"
-    env = {"PATH": _path, "HOME": real, "TMPDIR": tmp, "LANG": "C.UTF-8"}
+    env = {"PATH": f"{Path(PY).parent}:/usr/bin:/bin", "HOME": real, "TMPDIR": tmp, "LANG": "C.UTF-8"}
     t = time.perf_counter()
     try:
         p = subprocess.run(["sandbox-exec", "-p", prof, "/bin/sh", "-c", cmd], cwd=real, env=env,
@@ -202,9 +200,7 @@ def kit_run(body: Path, cmd: str, stdin: bytes) -> tuple[int, bytes, float]:
     prof = (f'(version 1)(allow default)(deny network*)'
             f'(deny file-write*)(allow file-write* (subpath "{scratch}") (literal "/dev/null"))'
             f'(deny file-read* (subpath "{Path.home()}"))(allow file-read* (subpath "{real}"))')
-    _shim = Path.home() / "Work/razi-tools/bin"
-    _path = f"{_shim}:{Path(PY).parent}:/usr/bin:/bin" if _shim.is_dir() else f"{Path(PY).parent}:/usr/bin:/bin"
-    env = {"PATH": _path, "HOME": scratch, "TMPDIR": scratch, "LANG": "C.UTF-8",
+    env = {"PATH": f"{Path(PY).parent}:/usr/bin:/bin", "HOME": scratch, "TMPDIR": scratch, "LANG": "C.UTF-8",
            "PYTHONDONTWRITEBYTECODE": "1"}
     t = time.perf_counter()
     try:

@@ -17,7 +17,7 @@ This manifest itself is not hashed (it would be self-referential).
 | code/adapters/tj3_data.py | 7982459de22b74890af796e8309d72bbcec0ffa3ae6bfc56064eaf94e482b154 | 3341 | code |
 | code/adapters/tj3_report.py | ce0f3a5ed9bc4cc4d212b8b89bd9f37b3104ac07b951b0c490b2d777a29a6444 | 2400 | code |
 | code/adapters/tk_smoke.py | d0dc3cdabd3ec3b66280bf591cfaac7596faead8c42c3748ca72922c48c26f24 | 3770 | code |
-| code/cells/cell.py | eab236b5e19766dfed87a6cc002b5db404a1584980f366ced17bd5431ff78ba0 | 34508 | code |
+| code/cells/cell.py | dc076bff25472f5e5f69c425c8a395403f90bd9400f46298464a01d20145919e | 34217 | code |
 | code/cells/colony.py | d38c5eb291fe9e21d8823aaa14a785d7edb650c242ab6d5c3e74ee85b1c71ca6 | 6250 | code |
 | code/cells/e11.py | 8cdaabeca7bd6fc50c334b838915cdfa7fba5180983e31b443c611c3c5a02ea6 | 3684 | code |
 | code/cells/e12.py | 5ee3f3566829d16597fedde54e12815fc092e12b4ef7c2858ea31f9ae7d6e0f2 | 4524 | code |
@@ -45,7 +45,7 @@ This manifest itself is not hashed (it would be self-referential).
 | code/cells/stem.py | 8ffe3d4f79bc1c3bf8134a1d42ef7b3f694aa3e5d38fcb14aaba40cb3c743cd2 | 18935 | code |
 | code/cells/stem_report.py | 9dc87bdc82614bda93c3f3c6d499b9e97b03492cbd0cc9a1e972281ed0abb879 | 4481 | code |
 | code/cells/tests/debt_offline.py | 831797b5a487c12bf3cae78d5d1949abb674ea2e21a0194f1ab709460fa1d552 | 2288 | code |
-| code/cells/tests/dissipative_offline.py | a1370dbe1b0cd439da04419fd754ffe4afba7c4b50be90420cda2c91de033b98 | 18832 | code |
+| code/cells/tests/dissipative_offline.py | c69538abb43c0566fd1caf6059dd0d82ab478a8d5140293beee5daf7c2e2ae4e | 18997 | code |
 | code/cells/tests/lineage_offline.py | 3651e4492118bbc07a5cf1f15d7f11a9e30b8f22f4a633d7865adf0bb01e6e0c | 5068 | code |
 | code/cells/tests/metab_offline.py | afa9b48a44a4e84376648c0b8507d5b3e0a78fad066e4e56d155491ac8c148a2 | 3112 | code |
 | code/cells/tests/sp3_offline.py | 17f3b301602a035913adc82bc3068d8c27414b077b90c91d8f2798b189c3f9ee | 3106 | code |

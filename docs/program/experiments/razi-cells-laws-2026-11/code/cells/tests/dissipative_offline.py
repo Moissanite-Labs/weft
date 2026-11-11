@@ -38,6 +38,11 @@ TOOLS_DIR = Path.home() / "Work/razi-tools/cells"
 sys.path.insert(0, str(TOOLS_DIR))
 import cell as C, lineage as L, metab as M
 
+# Linux offline only: scoring python and lineage launch, without changing cell.py.
+if sys.platform != "darwin":
+    C.PY = "/usr/bin/python3"
+L.PY = sys.executable
+
 head = (
     "import sys\nM=1000000007\ndef fd(n):\n"
     "    if n==0: return (0,1)\n"
