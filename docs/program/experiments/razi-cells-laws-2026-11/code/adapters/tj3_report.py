@@ -48,6 +48,7 @@ for p in sys.argv[1:]:
     jf = Path(p).with_suffix(".jsonl")
     if not jf.is_file():
         continue
+    eval_events = []
     for line in open(jf):
         try:
             e = json.loads(line)
@@ -55,11 +56,18 @@ for p in sys.argv[1:]:
             continue
         if e.get("event") != "eval" or "eval_nll" not in e:
             continue
+        eval_events.append(e)
+    if not eval_events:
+        continue
+    latest_run = max(e.get("run_id", 0) for e in eval_events)
+    for e in eval_events:
+        if e.get("run_id", 0) != latest_run:
+            continue
         key = (e.get("tag", "?"), e.get("seed", 0), e.get("arm", "unknown"))
         trajectories.setdefault(key, []).append((e.get("gen", 0), e["eval_nll"]))
 
 if trajectories:
-    print("\neval_nll trajectory (from OUT jsonl, eval events):")
+    print("\neval_nll trajectory (from OUT jsonl, latest run_id, eval events):")
     for (tag, s, a), pts in sorted(trajectories.items()):
         seen: dict[int, float] = {}
         for g, nll in pts:

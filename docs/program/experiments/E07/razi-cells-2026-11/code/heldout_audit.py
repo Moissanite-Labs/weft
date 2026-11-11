@@ -19,6 +19,11 @@ M = 1_000_000_007
 BENCH_LOCK = Path.home() / "Work/razi-cells/.bench.lock"
 SH_TIMEOUT = 30
 PY = sys.executable
+ALLOW_NO_SANDBOX = False
+
+
+class SandboxUnavailableError(RuntimeError):
+    """Raised when sandbox-exec is missing and --no-sandbox was not passed."""
 
 # ---------------------------------------------------------------- Reference generators
 def fib_ref(n: int) -> int:
@@ -164,7 +169,7 @@ def fib(n):
         a,b=(d,(c+d)%M) if bit=="1" else (c,d)
     return a
 if __name__ == "__main__":
-    print("\\n".join(str(fib(int(x))) for x in sys.stdin.read().split()))
+    print(fib(int(sys.argv[1])))
 """),
     "csvsum": ("csvsum.py", """import sys
 from decimal import Decimal
@@ -262,6 +267,12 @@ def sandboxed_run(body: Path, cmd: str, stdin: bytes, timeout: int = SH_TIMEOUT,
     }
     t = time.perf_counter()
     try:
+        if not shutil.which("sandbox-exec") and not ALLOW_NO_SANDBOX:
+            raise SandboxUnavailableError(
+                "sandbox-exec is not available on this host. "
+                "Refuse to run archived cell code unsandboxed unless --no-sandbox is passed "
+                "(offline checks only; not valid for claiming an archive rescore)."
+            )
         if shutil.which("sandbox-exec"):
             prof = (f'(version 1)(allow default)(deny network*)'
                     f'(deny file-write*)(allow file-write* (subpath "{scratch}") (literal "/dev/null"))'
@@ -320,6 +331,29 @@ sys.stdout.write("\\n".join(out) + "\\n")
 sys.exit(0)
 """
 
+FIB_CLI_RUNPY_SHIM = """import contextlib, io, runpy, sys
+sys.path.insert(0, '.')
+nums = [int(x) for x in sys.stdin.read().split()]
+lines = []
+for n in nums:
+    buf = io.StringIO()
+    argv = sys.argv
+    sys.argv = ['fibmod.py', str(n)]
+    try:
+        with contextlib.redirect_stdout(buf):
+            runpy.run_path('fibmod.py', run_name='__main__')
+    except SystemExit as e:
+        if e.code not in (0, None):
+            sys.exit(1)
+    except BaseException:
+        sys.exit(1)
+    finally:
+        sys.argv = argv
+    lines.append(buf.getvalue().strip())
+sys.stdout.write("\\n".join(lines) + "\\n")
+sys.exit(0)
+"""
+
 COMPRESS_SHIM = """import sys, ast
 sys.path.insert(0, '.')
 has_fn = False
@@ -345,50 +379,52 @@ else:
 """
 
 
+def squeeze_uses_module(body: Path) -> bool:
+    sp = body / "squeeze.py"
+    if not sp.is_file():
+        return False
+    try:
+        import ast as _ast
+        tree = _ast.parse(sp.read_text())
+        fns = {n.name for n in _ast.walk(tree) if isinstance(n, (_ast.FunctionDef, _ast.AsyncFunctionDef))}
+        return "compress" in fns and "decompress" in fns
+    except Exception:
+        return False
+
+
 def score_task(name: str, body: Path, cases: list[tuple[bytes, bytes]]) -> tuple[float, str, str]:
     tdef = TASKS[name]
     kind = tdef["kind"]
 
     if name == "compress":
+        cpath = "compress_module" if squeeze_uses_module(body) else "compress_subprocess"
         raw = packed = 0
         for i, (inp, _) in enumerate(cases):
             rc, comp, _ = sandboxed_run(body, "c", inp, script=COMPRESS_SHIM)
             if rc != 0:
-                return 0.0, f"case {i}: compress exit {rc}", "compress_subprocess"
+                return 0.0, f"case {i}: compress exit {rc}", cpath
             rc, back, _ = sandboxed_run(body, "d", comp, script=COMPRESS_SHIM)
             if rc != 0 or back != inp:
-                return 0.0, f"case {i}: roundtrip mismatch (rc={rc})", "compress_subprocess"
+                return 0.0, f"case {i}: roundtrip mismatch (rc={rc})", cpath
             raw += len(inp)
             packed += len(comp)
-        return (raw / packed if packed else 0.0), "", "compress_subprocess"
+        return (raw / packed if packed else 0.0), "", cpath
 
     if name == "fibmod":
         inp, exp = cases[0]
-        nums = [int(x) for x in inp.decode().split()]
+        if not (body / "fibmod.py").is_file():
+            return 0.0, "no fibmod.py", "missing"
+        rc, out, dt = sandboxed_run(body, "", inp, script=FIB_CLI_RUNPY_SHIM)
+        if rc == 0:
+            if tdef["check"](out, exp):
+                return (1.0 / dt if dt > 0 else 0.0), "", "cli_runpy"
+            return 0.0, "cli wrong output", "cli_runpy"
         rc, out, dt = sandboxed_run(body, "", inp, script=FIB_SHIM)
         if rc == 0:
             if tdef["check"](out, exp):
                 return (1.0 / dt if dt > 0 else 0.0), "", "module_callable"
             return 0.0, "wrong output", "module_callable"
-        if not (body / "fibmod.py").is_file():
-            return 0.0, "no fibmod.py", "missing"
-        total_dt = 0.0
-        lines: list[str] = []
-        for i, n in enumerate(nums):
-            try:
-                rc, one_out, one_dt = sandboxed_run(
-                    body, f"{PY} fibmod.py {n}", b"",
-                )
-            except BaseException as ex:
-                return 0.0, f"n={n}: {type(ex).__name__}", "cli_per_n"
-            if rc != 0:
-                return 0.0, f"cli n={n}: exit {rc}", "cli_per_n"
-            lines.append(one_out.decode().strip())
-            total_dt += one_dt
-        batch = ("\n".join(lines) + "\n").encode()
-        if not tdef["check"](batch, exp):
-            return 0.0, "cli wrong output", "cli_per_n"
-        return (1.0 / total_dt if total_dt > 0 else 0.0), "", "cli_per_n"
+        return 0.0, f"fibmod exit {rc}", "cli_runpy"
 
     if name == "primes":
         arg, exp = cases[0]
@@ -424,19 +460,30 @@ def spread(v: list[float]) -> float:
     return (max(v) - min(v)) / m if m > 0 else float("inf")
 
 
-def run_audit(archive_base: Path, runs: list[str]) -> dict:
-    BENCH_LOCK.parent.mkdir(parents=True, exist_ok=True)
+def run_audit(
+    archive_base: Path,
+    runs: list[str],
+    *,
+    repeats: int = REPEATS,
+    bench_lock: Path | None = None,
+    task_names: list[str] | None = None,
+) -> dict:
+    lock_path = bench_lock or BENCH_LOCK
+    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    active = {k: TASKS[k] for k in (task_names or list(TASKS.keys())) if k in TASKS}
     temp_dir = Path(tempfile.mkdtemp(prefix="audit-ref-", dir=os.path.realpath(tempfile.gettempdir())))
 
     # Pre-generate cases
     task_cases = {}
-    for task_name, tdef in TASKS.items():
+    for task_name, tdef in active.items():
         rng = random.Random(f"heldout-r1-{task_name}-20261110")
         task_cases[task_name] = tdef["gen"](rng)
 
     # Build reference directories
     ref_dirs = {}
     for task_name, (fname, code) in REFERENCE_BODIES.items():
+        if task_name not in active:
+            continue
         d = temp_dir / ("ref-" + task_name)
         d.mkdir(parents=True, exist_ok=True)
         (d / fname).write_text(code)
@@ -444,16 +491,16 @@ def run_audit(archive_base: Path, runs: list[str]) -> dict:
 
     # Collect directories to score per task
     contenders: dict[str, dict[str, Path]] = {}
-    for task_name in TASKS:
+    for task_name in active:
         contenders[task_name] = {"ref": ref_dirs[task_name]}
         for r in runs:
             c_dir = archive_base / r / task_name
             if c_dir.is_dir():
                 contenders[task_name][r] = c_dir
 
-    raw_scores: dict[str, dict[str, list[float]]] = {t: {k: [] for k in contenders[t]} for t in TASKS}
-    reasons: dict[str, dict[str, str]] = {t: {} for t in TASKS}
-    score_paths: dict[str, dict[str, str]] = {t: {} for t in TASKS}
+    raw_scores: dict[str, dict[str, list[float]]] = {t: {k: [] for k in contenders[t]} for t in active}
+    reasons: dict[str, dict[str, str]] = {t: {} for t in active}
+    score_paths: dict[str, dict[str, str]] = {t: {} for t in active}
     cell_sha256: dict[str, str] = {}
     for r in runs:
         run_dir = archive_base / r
@@ -464,12 +511,12 @@ def run_audit(archive_base: Path, runs: list[str]) -> dict:
                 cell_sha256[r] = "error"
 
     # Execute 5 interleaved repeats under machine-wide bench lock
-    print(f"Executing {REPEATS} interleaved repeats under bench lock...")
-    with open(BENCH_LOCK, "w") as lk:
+    print(f"Executing {repeats} interleaved repeats under bench lock...")
+    with open(lock_path, "w") as lk:
         fcntl.flock(lk, fcntl.LOCK_EX)
-        for rep in range(REPEATS):
+        for rep in range(repeats):
             t_rep = time.time()
-            for task_name in sorted(TASKS.keys()):
+            for task_name in sorted(active.keys()):
                 for run_key, body_dir in contenders[task_name].items():
                     try:
                         score, why, path = score_task(task_name, body_dir, task_cases[task_name])
@@ -480,20 +527,20 @@ def run_audit(archive_base: Path, runs: list[str]) -> dict:
                     if why and not reasons[task_name].get(run_key):
                         reasons[task_name][run_key] = why
                     raw_scores[task_name][run_key].append(round(score, 5))
-            print(f"  repeat {rep + 1}/{REPEATS} complete ({time.time() - t_rep:.1f}s)")
+            print(f"  repeat {rep + 1}/{repeats} complete ({time.time() - t_rep:.1f}s)")
 
     shutil.rmtree(temp_dir, ignore_errors=True)
 
     # Compile results
     results = {
-        "repeats": REPEATS,
-        "tasks": list(TASKS.keys()),
+        "repeats": repeats,
+        "tasks": list(active.keys()),
         "runs": runs,
         "cell_folder_sha256": cell_sha256,
         "per_task": {},
     }
 
-    for task_name in sorted(TASKS.keys()):
+    for task_name in sorted(active.keys()):
         ref_med = statistics.median(raw_scores[task_name]["ref"])
         results["per_task"][task_name] = {
             "ref_median": round(ref_med, 4),
@@ -557,20 +604,42 @@ def build_summary_table(audit: dict, *, exclude_tasks: set[str], wins_margin: st
 
 
 def main() -> None:
+    global ALLOW_NO_SANDBOX
     parser = argparse.ArgumentParser(description="Held-out audit over E07 archives.")
     parser.add_argument("--archive-dir", default="/tmp/e07-archive-copy", help="Path to E07 archive copy")
     parser.add_argument("--out", default="", help="Path to output json")
+    parser.add_argument("--repeats", type=int, default=REPEATS, help="Interleaved repeat count")
+    parser.add_argument("--tasks", default="", help="Comma-separated task subset (default: all)")
+    parser.add_argument("--bench-lock", default="", help="Override bench lock path (for offline checks)")
+    parser.add_argument(
+        "--no-sandbox",
+        action="store_true",
+        help="Allow running without macOS sandbox-exec (offline checks only)",
+    )
     args = parser.parse_args()
+    ALLOW_NO_SANDBOX = args.no_sandbox
 
     archive_base = Path(args.archive_dir)
     runs = ["b5", "b6", "b7", "b8", "b9", "b10", "b11", "g3", "g4"]
     runs = [r for r in runs if (archive_base / r).is_dir()]
+    task_names = [t.strip() for t in args.tasks.split(",") if t.strip()] or None
+    bench_lock = Path(args.bench_lock) if args.bench_lock else None
 
     out_path = Path(args.out) if args.out else Path(__file__).resolve().parent.parent / "data/heldout-audit-r1.json"
     out_path.parent.mkdir(parents=True, exist_ok=True)
 
     print(f"Auditing runs: {runs} from {archive_base}")
-    audit = run_audit(archive_base, runs)
+    try:
+        audit = run_audit(
+            archive_base,
+            runs,
+            repeats=args.repeats,
+            bench_lock=bench_lock,
+            task_names=task_names,
+        )
+    except SandboxUnavailableError as e:
+        print(f"ERROR: {e}", file=sys.stderr)
+        raise SystemExit(1) from e
 
     # Load summary json for each run to pull kept improvements per 100 calls
     summaries_dir = Path(__file__).resolve().parent.parent / "data"
@@ -603,6 +672,7 @@ def main() -> None:
     out_path.write_text(json.dumps(audit, indent=2))
     print(f"\nWrote machine-readable results to {out_path}")
 
+    summary_table = audit["summary_table"]
     # Print summary table
     print("\n" + "=" * 90)
     print("HELD-OUT AUDIT SUMMARY: KEPT IMPROVEMENTS PER 100 CALLS vs HELD-OUT ARTIFACT SCORE")
@@ -620,7 +690,7 @@ def main() -> None:
     hdr = f"{'Task':<10}" + "".join(f"{r:>9}" for r in ["ref"] + runs)
     print(hdr)
     print("-" * len(hdr))
-    for t in sorted(TASKS.keys()):
+    for t in sorted(audit["tasks"]):
         row_str = f"{t:<10}" + "    1.000"
         for r in runs:
             sc = audit["per_task"][t]["scores"].get(r, {})

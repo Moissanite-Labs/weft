@@ -12,7 +12,7 @@ This manifest itself is not hashed (it would be self-referential).
 | code/cell.py | ef2d16ee8d3191fa2a01d7c1ad0ff63e8d92da1940fd8353e5dc8025c7fb9eb6 | 23773 | code |
 | code/colony.py | 0b676368946cbb4baab5b81b1be75717c670ef7fd2d3acf128d5dda8de0c5035 | 5428 | code |
 | code/embed.py | d5903a48a8c90b1bfbbafeec7be2e4630269a0b991203f67c2994abb9b20d87c | 4699 | code |
-| code/heldout_audit.py | ba41189cd7769269d346827d881a56c3f0e51c9551a2bff5f797bf44c7b7972e | 24735 | code |
+| code/heldout_audit.py | 36ff49ee76480f78a0c4173b32036dee39d97c15b1164f7ba1e5469a03c44aa5 | 27128 | code |
 | code/perm.py | 25207b5b03ab136fc1673f1ff7d3f93337d54526bb1d357c990abf7ea5905e24 | 1202 | code |
 | data/IDEAS.md | 0261fc11d31beafed1cd85fb7758c3e8fd489c2b4c8638664cd32d31a8455c79 | 7811 | notes |
 | data/TESTS.md | a9a726d00278a90c141f6d8cf938b1062e4dcdd242d521cb1e665320e43a691d | 6363 | notes |
@@ -30,7 +30,7 @@ This manifest itself is not hashed (it would be self-referential).
 | report.md | 9c0f2836c6632d5fdf81fd145c1a7ba5eabde944cc6dc5113a0279c398171e26 | 41054 | derived |
 | convergence.md | 0d9e93010b1fac28db11feef81c827767cd5988559861c63ed26afaef60fba02 | 9375 | notes |
 | corpus-findings.md | 32a13285451c54c2460729eaa227059783928f147fd9f8e6dabf125ffe8676fa | 11652 | notes |
-| heldout-audit-r1.md | 88fad5cb0593dd7c3c2095eea796a81f4dd08774dabd8c68899df14b6f9ab329 | 7168 | derived |
+| heldout-audit-r1.md | ca234fa3430c16701d9188c412ec73b8d9b18c4c4613757c06190422c8cd59f6 | 7514 | derived |
 
 Class notes:
 - data/*-summary.json: per-run summary files run summaries (calls, improvements, wall time, per-cell results) for runs g3, g4, b5 to b11). measured.
