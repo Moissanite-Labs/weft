@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import re
@@ -50,6 +51,37 @@ CUT_HREF_MAP = {
 }
 
 NOINDEX_META = '<meta name="robots" content="noindex">'
+
+STATIC_ASSET_URL = re.compile(
+    r"\.(?:css|js|mjs|json|svg|webp|png|jpe?g|gif|ico|woff2?|ttf|otf|webmanifest)(?:\?.*)?$",
+    re.IGNORECASE,
+)
+
+_HTML_LOCAL_ASSET = re.compile(
+    r'(?P<attr>\b(?:href|src)=)(?P<q>["\'])'
+    r'(?P<url>(?!https?:)(?!mailto:)(?!data:)(?!//)(?!#)[^"\']+)(?P=q)'
+)
+
+_JS_MODULE_SPEC = re.compile(
+    r'(?P<prefix>\b(?:import|export)\s+(?:[^"\';]*?\s+from\s+|))'
+    r'(?P<q>["\'])'
+    r'(?P<url>(?:\.{1,2}/|/)[^"\']+)(?P=q)'
+)
+
+_JS_IMPORT_SIDE = re.compile(
+    r'\bimport\s+(?P<q>["\'])(?P<url>(?:\.{1,2}/|/)[^"\']+)(?P=q)\s*;'
+)
+
+_JS_DYNAMIC_IMPORT = re.compile(
+    r'\bimport\s*\(\s*(?P<q>["\'])(?P<url>(?:\.{1,2}/|/)[^"\']+)(?P=q)\s*\)'
+)
+
+_CSS_URL = re.compile(
+    r"url\(\s*(?P<q>['\"]?)"
+    r"(?P<url>(?!https?:)(?!data:)(?!//)(?:\.{1,2}/|/)[^'\")\s]+)"
+    r"(?P=q)?\s*\)",
+    re.IGNORECASE,
+)
 
 
 def load_host_settings(profile: str) -> dict:
@@ -400,6 +432,149 @@ def prepare_cut_css() -> tuple[str, str, str]:
     return tokens, site_css, obs_css
 
 
+def resolve_build_version() -> str:
+    """Short git SHA for cache-busting; one value per bundle build."""
+    env = os.environ.get("SILICONCORDAT_CUT_BUILD_SHA", "").strip()
+    if env:
+        return env[:12]
+    return subprocess.check_output(
+        ["git", "rev-parse", "--short=12", "HEAD"],
+        cwd=ROOT,
+        text=True,
+    ).strip()
+
+
+def is_bustable_url(url: str) -> bool:
+    if not url or url.startswith(("#", "data:", "http://", "https://", "//", "mailto:")):
+        return False
+    if not (url.startswith("/") or url.startswith("./") or url.startswith("../")):
+        return False
+    base = url.split("#", 1)[0].split("?", 1)[0]
+    return bool(STATIC_ASSET_URL.search(base))
+
+
+def cache_bust_url(url: str, version: str) -> str:
+    if re.search(r"[?&]v=", url):
+        return url
+    frag = ""
+    if "#" in url:
+        url, frag = url.split("#", 1)
+        frag = f"#{frag}"
+    if "?" in url:
+        return f"{url}&v={version}{frag}"
+    return f"{url}?v={version}{frag}"
+
+
+def _rewrite_pattern(text: str, pattern: re.Pattern[str], version: str) -> str:
+    def sub(m: re.Match[str]) -> str:
+        url = m.group("url")
+        if not is_bustable_url(url):
+            return m.group(0)
+        busted = cache_bust_url(url, version)
+        if pattern is _HTML_LOCAL_ASSET:
+            return f'{m.group("attr")}{m.group("q")}{busted}{m.group("q")}'
+        if pattern is _CSS_URL:
+            q = m.group("q") or ""
+            return f"url({q}{busted}{q})"
+        if pattern is _JS_DYNAMIC_IMPORT:
+            return m.group(0).replace(f'{m.group("q")}{url}{m.group("q")}', f'{m.group("q")}{busted}{m.group("q")}', 1)
+        # import/export from and side-effect import
+        return m.group(0).replace(f'{m.group("q")}{url}{m.group("q")}', f'{m.group("q")}{busted}{m.group("q")}', 1)
+
+    return pattern.sub(sub, text)
+
+
+def apply_cache_busters_to_html(html: str, version: str) -> str:
+    return _rewrite_pattern(html, _HTML_LOCAL_ASSET, version)
+
+
+def apply_cache_busters_to_js(text: str, version: str) -> str:
+    text = _rewrite_pattern(text, _JS_MODULE_SPEC, version)
+    text = _rewrite_pattern(text, _JS_IMPORT_SIDE, version)
+    text = _rewrite_pattern(text, _JS_DYNAMIC_IMPORT, version)
+    return text
+
+
+def apply_cache_busters_to_css(text: str, version: str) -> str:
+    return _rewrite_pattern(text, _CSS_URL, version)
+
+
+def apply_cache_busters_to_dist(version: str) -> None:
+    for path in sorted(DIST.rglob("*")):
+        if not path.is_file():
+            continue
+        suffix = path.suffix.lower()
+        try:
+            text = path.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
+            continue
+        if suffix == ".html":
+            updated = apply_cache_busters_to_html(text, version)
+        elif suffix in {".js", ".mjs"}:
+            updated = apply_cache_busters_to_js(text, version)
+        elif suffix == ".css":
+            updated = apply_cache_busters_to_css(text, version)
+        else:
+            continue
+        if updated != text:
+            path.write_text(updated, encoding="utf-8")
+
+
+def bundle_file_paths(dist: Path | None = None) -> list[str]:
+    root = dist if dist is not None else DIST
+    return sorted(
+        p.relative_to(root).as_posix()
+        for p in root.rglob("*")
+        if p.is_file() and p.name != "MANIFEST.sha256"
+    )
+
+
+def manifest_listed_paths(dist: Path | None = None) -> list[str]:
+    root = dist if dist is not None else DIST
+    manifest = root / "MANIFEST.sha256"
+    lines = manifest.read_text(encoding="utf-8").strip().splitlines()
+    return [line.split("  ", 1)[1] for line in lines if "  " in line]
+
+
+def write_manifest_sha256(dist: Path | None = None) -> None:
+    root = dist if dist is not None else DIST
+    lines: list[str] = []
+    for rel in bundle_file_paths(root):
+        path = root / rel
+        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        lines.append(f"{digest}  {rel}")
+    (root / "MANIFEST.sha256").write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def find_unversioned_asset_refs(dist: Path, version: str) -> list[str]:
+    """Return human-readable locations missing ?v=<version> on bustable refs."""
+    issues: list[str] = []
+    patterns: list[tuple[str, re.Pattern[str]]] = [
+        ("html", _HTML_LOCAL_ASSET),
+        ("js", _JS_MODULE_SPEC),
+        ("js", _JS_IMPORT_SIDE),
+        ("js", _JS_DYNAMIC_IMPORT),
+        ("css", _CSS_URL),
+    ]
+    for path in sorted(dist.rglob("*")):
+        if not path.is_file():
+            continue
+        suffix = path.suffix.lower()
+        if suffix not in {".html", ".css", ".js", ".mjs"}:
+            continue
+        text = path.read_text(encoding="utf-8")
+        rel = path.relative_to(dist).as_posix()
+        kind = "html" if suffix == ".html" else ("css" if suffix == ".css" else "js")
+        for pat_kind, pattern in patterns:
+            if pat_kind != kind:
+                continue
+            for m in pattern.finditer(text):
+                url = m.group("url")
+                if is_bustable_url(url) and f"v={version}" not in url:
+                    issues.append(f"{rel}: {url}")
+    return issues
+
+
 def write_staging_headers() -> None:
     """Cloudflare static _headers: noindex on staging host builds only."""
     headers = (DIST / "_headers").read_text(encoding="utf-8") if (DIST / "_headers").is_file() else ""
@@ -487,9 +662,12 @@ def build() -> None:
         write_staging_headers()
     (DIST / ".assetsignore").write_text(".cut-host\n", encoding="utf-8")
     (DIST / ".cut-host").write_text(DEFAULT_HOST + "\n", encoding="utf-8")
+    version = resolve_build_version()
+    apply_cache_busters_to_dist(version)
+    write_manifest_sha256()
     print(
         f"Built {DIST} (Arrangement 2026-11-10, host={DEFAULT_HOST}, "
-        f"weft pin {manifest['weft']['sha'][:12]})"
+        f"weft pin {manifest['weft']['sha'][:12]}, build {version})"
     )
 
 
