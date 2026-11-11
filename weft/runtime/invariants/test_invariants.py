@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Unit and cross-language C conformance tests for Codebase C2 (`weft/runtime/invariants`)."""
 
+import json
 import math
 import random
 import shutil
@@ -38,6 +39,7 @@ class TestWeftInvariants(unittest.TestCase):
                     vec["r_invariant"],
                     vec["budget"],
                     vec["cost"],
+                    vec.get("locked_mask"),
                 )
                 self.assertEqual(ok, vec["expected_accepted"])
                 self.assertEqual(reason, vec["expected_reason"])
@@ -46,6 +48,35 @@ class TestWeftInvariants(unittest.TestCase):
                 else:
                     self.assertAlmostEqual(dist, float(vec["expected_distance"]), places=6)
                 self.assertAlmostEqual(rem, float(vec["expected_remaining_budget"]), places=6)
+
+    def test_weight_update_vectors_torch_fast_path(self) -> None:
+        try:
+            import torch
+        except ImportError:
+            self.skipTest("torch not installed")
+        dec = lambda x: float(x) if isinstance(x, str) else x  # noqa: E731
+        for vec in self.vectors["weight_update_vectors"]:
+            if vec.get("locked_mask") is not None:
+                continue
+            if vec["name"] in ("accept_huge_scale_weight_move", "reject_pre_cast_radius_boundary"):
+                continue
+            with self.subTest(vec=vec["name"]):
+                b_t = torch.tensor([dec(x) for x in vec["baseline"]], dtype=torch.float32)
+                c_t = torch.tensor([dec(x) for x in vec["candidate"]], dtype=torch.float32)
+                ok, dist, rem, reason = verify_weight_update_safety_ex(
+                    b_t,
+                    c_t,
+                    vec["r_invariant"],
+                    vec["budget"],
+                    vec["cost"],
+                )
+                self.assertEqual(ok, vec["expected_accepted"])
+                self.assertEqual(reason, vec["expected_reason"])
+                if vec["expected_distance"] == "Inf":
+                    self.assertTrue(math.isinf(dist))
+                else:
+                    self.assertAlmostEqual(dist, float(vec["expected_distance"]), places=5)
+                self.assertAlmostEqual(rem, float(vec["expected_remaining_budget"]), places=5)
 
     def test_tension_vectors(self) -> None:
         for vec in self.vectors["tension_vectors"]:
@@ -100,6 +131,12 @@ class TestWeftInvariants(unittest.TestCase):
         self.assertIsNotNone(cc, "C compiler (cc/clang/gcc) is required to verify weft_invariants.h")
         here = Path(__file__).resolve().parent
         c_src = here / "test_invariants_c.c"
+        vectors_path = here / "vectors.json"
+        expected_total = (
+            len(self.vectors["weight_update_vectors"])
+            + len(self.vectors["tension_vectors"])
+            + len(self.vectors["royalty_vectors"])
+        )
         with tempfile.TemporaryDirectory() as tmp:
             bin_path = Path(tmp) / "test_invariants_c"
             r_compile = subprocess.run(
@@ -108,9 +145,17 @@ class TestWeftInvariants(unittest.TestCase):
                 text=True,
             )
             self.assertEqual(r_compile.returncode, 0, f"C compile failed: {r_compile.stderr}")
-            r_run = subprocess.run([str(bin_path)], capture_output=True, text=True)
+            r_run = subprocess.run([str(bin_path), str(vectors_path)], capture_output=True, text=True)
             self.assertEqual(r_run.returncode, 0, f"C vector test failed: {r_run.stderr}")
-            self.assertIn("C_INVARIANTS_VECTORS_PASS", r_run.stdout)
+            self.assertIn(f"total={expected_total}", r_run.stdout)
+
+            # Mutation check: prove the compiled C runner reads the JSON file dynamically.
+            tampered = json.loads(vectors_path.read_text(encoding="utf-8"))
+            tampered["royalty_vectors"][0]["expected_weaver_wei"] = 999
+            tampered_path = Path(tmp) / "tampered_vectors.json"
+            tampered_path.write_text(json.dumps(tampered), encoding="utf-8")
+            r_bad = subprocess.run([str(bin_path), str(tampered_path)], capture_output=True, text=True)
+            self.assertNotEqual(r_bad.returncode, 0, "C runner accepted tampered vectors.json")
 
             # Differential C11-vs-Python stream (256 vectors incl. Zeno sub-ULP, N=65,536 boundary, locked_mask)
             vec_bin = Path(tmp) / "diff_vectors.bin"
