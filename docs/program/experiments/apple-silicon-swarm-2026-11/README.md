@@ -6,6 +6,16 @@ Runner: `run_e14.py` (this folder)
 Raw data: `results/e14_results.json`
 Preregistration and amendments log: `PREREGISTRATION.md`
 
+## How this folder is ordered
+
+| Stage | What | Where | Status |
+|---|---|---|---|
+| P0 | E14 ideas alone: subspace + horizontal transfer Beta vs Paper 1 blind Beta, 512 cells on MPS | `probe/` | Complete, 10 seeds. HGT Beta 70.6% of wins vs 0%, error falls 10.8x faster |
+| E14 first build | `swarm_loom.py` with three arms | not kept | Withdrawn. The champion cell got a gradient step (amendment A1). Raw data was overwritten and never committed |
+| E14 final | Zero-order E14 arms plus the PR #118 convergence arm | this README | Complete, 10 seeds, results below |
+
+The pure E14 arms (`paper1_blind`, `hgt_isolated`, `hgt_foraging`) and the convergence arm (`dissipative_chemostat`) ran in the same seeded run, so they compare directly.
+
 ## Result
 
 Three of five preregistered hypotheses held (H-S2, H-S3, H-S5). Two failed: H-S1 (4.55x speedup on the recorded run, threshold 5.0x) and H-S4 (`hgt_foraging` still had 2 to 6 idle cells per seed). The exploratory arm `dissipative_chemostat`, which adds the PR #118 L2 laws, ended coasting completely (0 idle cells in all 10 seeds). It also reduced error 27% less than `hgt_foraging`.
