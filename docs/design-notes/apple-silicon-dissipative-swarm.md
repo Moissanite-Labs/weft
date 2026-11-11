@@ -68,6 +68,7 @@ $$\Delta W_{\text{Beta}, i} = P_{\text{mask}} \odot \left( \eta_{\text{hgt}} (W_
 Measured on the M1 Max (`512` cells across `4` niches, `100` generations = `51,200` mitotic trials under the `C2` Frobenius ball gate $\lVert W' - W_0 \rVert_F \le R$):
 - **Paper 1 `blind_beta`**: `Alpha` won `9,738` times, `Beta` won **`0` times (`0.0%`)**, relative error fell `-0.26%`.
 - **Subspace + Horizontal Transfer (`hgt_beta`)**: `Alpha` won `3,933` times, `Beta` won **`8,941` times (`69.4%`)**, relative error fell **`-2.78%` (`10.7x` faster)**.
+- Across seeds 0 to 9 the pattern holds: blind `Beta` won 0 in every seed, `hgt_beta` took 70.6% of wins (62.6% to 74.9%) and cut error 10.8x faster (10.1x to 11.2x). Script and data: `docs/program/experiments/apple-silicon-swarm-2026-11/probe/` (Probe P0).
 
 ---
 

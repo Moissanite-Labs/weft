@@ -1,0 +1,148 @@
+{
+  "probe": "P0",
+  "device": "mps",
+  "torch_version": "2.15.0",
+  "timestamp": "2026-11-11T02:09:49Z",
+  "records": [
+    {
+      "seed": 0,
+      "blind_beta": {
+        "alpha_wins": 9738,
+        "beta_wins": 0,
+        "final_error_ratio": 0.9974381923675537
+      },
+      "hgt_beta": {
+        "alpha_wins": 3933,
+        "beta_wins": 8941,
+        "final_error_ratio": 0.9721688032150269
+      },
+      "seconds": 5.36
+    },
+    {
+      "seed": 1,
+      "blind_beta": {
+        "alpha_wins": 9546,
+        "beta_wins": 0,
+        "final_error_ratio": 0.9974572062492371
+      },
+      "hgt_beta": {
+        "alpha_wins": 3560,
+        "beta_wins": 8947,
+        "final_error_ratio": 0.9732010960578918
+      },
+      "seconds": 4.63
+    },
+    {
+      "seed": 2,
+      "blind_beta": {
+        "alpha_wins": 9317,
+        "beta_wins": 0,
+        "final_error_ratio": 0.9975417852401733
+      },
+      "hgt_beta": {
+        "alpha_wins": 3454,
+        "beta_wins": 8503,
+        "final_error_ratio": 0.9730995893478394
+      },
+      "seconds": 4.48
+    },
+    {
+      "seed": 3,
+      "blind_beta": {
+        "alpha_wins": 9562,
+        "beta_wins": 0,
+        "final_error_ratio": 0.9974968433380127
+      },
+      "hgt_beta": {
+        "alpha_wins": 3038,
+        "beta_wins": 9071,
+        "final_error_ratio": 0.9728225469589233
+      },
+      "seconds": 4.46
+    },
+    {
+      "seed": 4,
+      "blind_beta": {
+        "alpha_wins": 9455,
+        "beta_wins": 0,
+        "final_error_ratio": 0.9975442290306091
+      },
+      "hgt_beta": {
+        "alpha_wins": 3187,
+        "beta_wins": 8607,
+        "final_error_ratio": 0.9737318158149719
+      },
+      "seconds": 4.43
+    },
+    {
+      "seed": 5,
+      "blind_beta": {
+        "alpha_wins": 9417,
+        "beta_wins": 0,
+        "final_error_ratio": 0.9975435137748718
+      },
+      "hgt_beta": {
+        "alpha_wins": 4831,
+        "beta_wins": 8102,
+        "final_error_ratio": 0.9751616716384888
+      },
+      "seconds": 4.44
+    },
+    {
+      "seed": 6,
+      "blind_beta": {
+        "alpha_wins": 9358,
+        "beta_wins": 0,
+        "final_error_ratio": 0.9975383281707764
+      },
+      "hgt_beta": {
+        "alpha_wins": 3061,
+        "beta_wins": 8948,
+        "final_error_ratio": 0.9729142189025879
+      },
+      "seconds": 4.43
+    },
+    {
+      "seed": 7,
+      "blind_beta": {
+        "alpha_wins": 9602,
+        "beta_wins": 0,
+        "final_error_ratio": 0.9974891543388367
+      },
+      "hgt_beta": {
+        "alpha_wins": 3916,
+        "beta_wins": 9509,
+        "final_error_ratio": 0.9723943471908569
+      },
+      "seconds": 4.48
+    },
+    {
+      "seed": 8,
+      "blind_beta": {
+        "alpha_wins": 9384,
+        "beta_wins": 0,
+        "final_error_ratio": 0.9975121021270752
+      },
+      "hgt_beta": {
+        "alpha_wins": 3366,
+        "beta_wins": 8734,
+        "final_error_ratio": 0.9721947908401489
+      },
+      "seconds": 4.48
+    },
+    {
+      "seed": 9,
+      "blind_beta": {
+        "alpha_wins": 9351,
+        "beta_wins": 0,
+        "final_error_ratio": 0.9975445866584778
+      },
+      "hgt_beta": {
+        "alpha_wins": 4314,
+        "beta_wins": 8381,
+        "final_error_ratio": 0.9745607376098633
+      },
+      "seconds": 4.64
+    }
+  ]
+}
