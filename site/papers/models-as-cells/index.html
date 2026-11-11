@@ -6,7 +6,7 @@
   <title>Models as Cells: Self-modification bounded by distance from a saved baseline · ML Weft</title>
   <meta name="description" content="A model that keeps adapting after deployment needs a limit on how far it can drift, and the limit has to be something a program can check. ML Weft treats each model as a cell. The cell proposes candidate weight updates, and an update is committed only if three things hold: the candidate&#x27;s Frobenius…">
   <link rel="canonical" href="https://w3ft.org/papers/models-as-cells/">
-  <meta name="theme-color" content="#060a12">
+  <meta name="theme-color" content="#08090a">
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="ML Weft">
   <meta property="og:title" content="Models as Cells: Self-modification bounded by distance from a saved baseline">
@@ -70,6 +70,7 @@
   <main id="main">
     <header class="paper-hero navy-scope">
       <div class="wrap">
+        <div class="paper-hero-text">
         <nav class="crumbs" aria-label="Breadcrumb"><a href="/papers/">Papers</a><span aria-hidden="true">/</span><span>Paper 1</span></nav>
         <p class="eyebrow">Paper 1 · Version 1.1 · 9 November 2026</p>
         <h1>Models as Cells</h1>
@@ -84,6 +85,8 @@
           <a class="btn" href="https://github.com/Moissanite-Labs/weft/blob/main/papers/01-models-as-cells/paper.md">Source</a>
           <a class="btn" href="#cite">Cite</a>
         </div>
+        </div>
+        <div class="motif motif--ring" data-motif="ring-burst" aria-hidden="true"></div>
       </div>
     </header>
 
@@ -564,13 +567,13 @@ Only a commit consumes budget (<math display="inline" xmlns="http://www.w3.org/1
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
     <defs>
       <linearGradient id="mark-chrome" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="32" y2="32">
-        <stop offset="0" stop-color="#d7ebea"/><stop offset=".35" stop-color="#5a9892"/><stop offset=".55" stop-color="#b0d5d2"/><stop offset="1" stop-color="#487775"/>
+        <stop offset="0" stop-color="#cdeef6"/><stop offset=".35" stop-color="#3d9fb5"/><stop offset=".55" stop-color="#a3dbe7"/><stop offset="1" stop-color="#2c7385"/>
       </linearGradient>
       <linearGradient id="mark-gold" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="32" y2="32">
         <stop offset="0" stop-color="#efe3c8"/><stop offset=".35" stop-color="#d9c7a0"/><stop offset=".6" stop-color="#f7efdc"/><stop offset="1" stop-color="#bfa97c"/>
       </linearGradient>
       <symbol id="weave-mark" viewBox="0 0 32 32">
-        <rect x="1" y="1" width="30" height="30" rx="8" fill="#090d0f" stroke="url(#mark-chrome)" stroke-width="1.5"/>
+        <rect x="1" y="1" width="30" height="30" rx="8" fill="#08090a" stroke="url(#mark-chrome)" stroke-width="1.5"/>
         <g fill="none" stroke-width="3.2" stroke-linecap="round">
           <path d="M11 6v20M21 6v20" stroke="url(#mark-chrome)"/>
           <path d="M6 11h3.2M12.8 11h6.4M22.8 11H26" stroke="url(#mark-gold)"/>
