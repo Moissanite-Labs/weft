@@ -1,17 +1,16 @@
 #!/usr/bin/env python3
 """
-weft_v2_engine.py — Weft v2 Reference Runtime & Confirmatory Experimental Suite
+weft_v2_engine.py — Synthetic Design Simulations & C11-vs-Python Conformance Runner
 
-Implements and verifies all six architectural innovations of Weft v2, fusing
-Moissanite Labs' research (`weft`, `exo`, `abios`, `nullmodem`, `siliconcordat`,
-`Foundation-0`, `Proven-Commons`) with convergent Alphabet / Google DeepMind /
-Google Research breakthroughs (`Titans`, `Nested Learning`, `AlphaEvolve`,
-`AI Co-Scientist`, `ReDo Dormant Neurons`, `Mixture-of-Depths`, `Gemma Scope`
-JumpReLU SAEs, and `AlphaProof Code`).
-
-All experiments execute deterministically across N = 10 independent seeds
-(exceeding the 5-replicate confirmatory bar of Moissanite-Labs/weft#111 R5)
-and emit SHA-256 verified JSON certificates.
+Disclosure: Substantially authored by an AI tool (Gemini task-mode agent).
+Executes:
+  1. A 2,048-vector C11-vs-Python differential conformance check on `weft_v2_invariants.h`
+     within an explicit binary64 distance tolerance (`|err| <= 1e-9`).
+  2. Five toy-scale 10-seed NumPy design simulations (`E1`-`E5`) illustrating proposed
+     mechanisms. These synthetic simulations do NOT close `Moissanite-Labs/weft#111`
+     (`R1`-`R5` require independent execution on the real colony archives and `Tinker`
+     harness), and `E5`'s rank-deficient Procrustes baseline (`N_cal=256 < d=512`) is
+     sensitive to the host LAPACK SVD implementation.
 """
 
 from __future__ import annotations
@@ -21,6 +20,8 @@ import hashlib
 import json
 import math
 import os
+import platform
+import shutil
 import struct
 import subprocess
 import time
@@ -75,7 +76,7 @@ def compensated_frobenius_distance_py(
     else:
         diffs = np.abs(cw.astype(np.float64) - bw.astype(np.float64))
 
-    # Exact sequential scaled Neumaier matching C11 loop bit-for-bit
+    # Sequential scaled Neumaier matching C11 loop structure within binary64 tolerance
     scale = 0.0
     ssq = 1.0
     comp = 0.0
@@ -141,20 +142,61 @@ def weft_v2_verify_weight_update_py(
     return True, WEFT_OK, dist, float(next_b)
 
 
+
+def collect_execution_environment(cc_bin: str = "gcc", c_flags: Optional[List[str]] = None) -> Dict:
+    cpu_model = platform.processor() or "unknown"
+    cpuinfo = Path("/proc/cpuinfo")
+    if cpuinfo.exists():
+        for line in cpuinfo.read_text(errors="ignore").splitlines():
+            if line.lower().startswith("model name"):
+                cpu_model = line.split(":", 1)[1].strip()
+                break
+    elif shutil.which("sysctl"):
+        try:
+            out = subprocess.check_output(["sysctl", "-n", "machdep.cpu.brand_string"], text=True).strip()
+            if out:
+                cpu_model = out
+        except Exception:
+            pass
+
+    try:
+        cc_ver = subprocess.check_output([cc_bin, "--version"], text=True).splitlines()[0].strip()
+    except Exception:
+        cc_ver = cc_bin
+
+    blas_name = "unknown"
+    try:
+        cfg = np.__config__.show(mode="dicts")
+        blas_info = cfg.get("Build Dependencies", {}).get("blas", {})
+        lapack_info = cfg.get("Build Dependencies", {}).get("lapack", {})
+        blas_name = f"blas={blas_info.get('name', 'unknown')} ({blas_info.get('version', '?')}), lapack={lapack_info.get('name', 'unknown')} ({lapack_info.get('version', '?')})"
+    except Exception:
+        pass
+
+    return {
+        "os_platform": platform.platform(),
+        "machine_arch": platform.machine(),
+        "cpu_model": cpu_model,
+        "cpu_cores_logical": os.cpu_count(),
+        "c_compiler": cc_ver,
+        "c_compile_flags": c_flags or ["-O3", "-ffp-contract=off", "-std=c11", "-Wall", "-Wextra", "-Werror"],
+        "python_version": platform.python_version(),
+        "numpy_version": np.__version__,
+        "blas_lapack_backend": blas_name,
+    }
+
+
 def build_and_run_c11_conformance(work_dir: Path) -> Dict:
-    """Generates 2,048 conformance & adversarial vectors, compiles C11, verifies 100% parity."""
+    """Generates 2,048 conformance vectors, compiles C11, checks verdict parity and |dist_err| <= 1e-9."""
     rng = np.random.default_rng(20261111)
     bin_path = work_dir / "conformance_vectors.bin"
     rep_path = work_dir / "c11_conformance_report.json"
     exe_path = work_dir / "test_weft_v2_c11"
 
-    # Compile C11 strictly with -Wall -Wextra -Werror
+    cc_bin = shutil.which("gcc") or shutil.which("cc") or "cc"
+    c_flags = ["-O3", "-ffp-contract=off", "-std=c11", "-Wall", "-Wextra", "-Werror"]
     subprocess.run(
-        [
-            "gcc", "-O3", "-std=c11", "-Wall", "-Wextra", "-Werror",
-            str(work_dir / "test_weft_v2_c11.c"),
-            "-lm", "-o", str(exe_path)
-        ],
+        [cc_bin, *c_flags, str(work_dir / "test_weft_v2_c11.c"), "-lm", "-o", str(exe_path)],
         check=True,
     )
 
@@ -288,9 +330,19 @@ def build_and_run_c11_conformance(work_dir: Path) -> Dict:
 
     subprocess.run([str(exe_path), str(bin_path), str(rep_path)], check=True)
     report = json.loads(rep_path.read_text())
+    assert report["v2_c11_python_matches"] == num_vectors, f"C11 conformance mismatch: {report}"
+    env_meta = collect_execution_environment(cc_bin, c_flags)
+    report["execution_environment"] = env_meta
+    report["cross_platform_tolerance_note"] = (
+        "Distance agreement is enforced within binary64 tolerance <= 1e-9 (not exact across "
+        "compilers/ISAs). Observed max_distance_abs_error_c11_vs_py: "
+        f"{report['max_distance_abs_error_c11_vs_py']:.3e} on {env_meta['cpu_model']} ({env_meta['c_compiler']}); "
+        "7.105e-15 reported on Apple M-series (Apple clang 21 -O3, Python 3.13, numpy 2.5.4)."
+    )
+    rep_path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
     report["sample_conformance_vectors"] = vectors_meta
-    # Clean up large temporary binary vector stream after C11 verification
     bin_path.unlink(missing_ok=True)
+    exe_path.unlink(missing_ok=True)
     return report
 
 
@@ -1408,6 +1460,11 @@ def run_experiment_e5_latent_transfer(n_seeds: int = 10) -> Dict:
             "downstream_probe_r2_mean": round(float(np.mean(v["task_r2"])), 4),
             "human_auditable_features": bool(v["auditable"] > 0.5),
         }
+    summary["_environment_sensitivity_note"] = (
+        "raw_dense_nullmodem calibrates a 512x512 Procrustes map from N_cal=256 < 512 anchors; "
+        "its 256-D zero-singular-value subspace basis depends on the host LAPACK SVD routine "
+        "(0.6245 on Linux x86_64 scipy-openblas 0.3.27 / numpy 2.1.3 vs 0.626 on Apple M-series Accelerate / numpy 2.5.4)."
+    )
     return summary
 
 
@@ -1415,34 +1472,54 @@ def main() -> None:
     t_start = time.time()
     work_dir = Path(__file__).resolve().parent
 
-    print("[1/5] Running WEFT-INVARIANTS/2.0 C11 + Python Conformance & Adversarial Fuzzing (2,048 vectors)...")
+    print("[1/5] Running C11 + Python Differential Conformance Check (2,048 vectors, |dist_err| <= 1e-9)...")
     c11_rep = build_and_run_c11_conformance(work_dir)
 
-    print("[2/5] Running Experiment E1: Equal-Compute Orthogonal Spectral Mitosis vs. Fixed-Rank Heredity (N=10 seeds)...")
+    print("[2/5] Running Synthetic Simulation E1: Orthogonal Mitosis vs. Fixed-Rank Heredity (N=10 seeds)...")
     e1_rep = run_experiment_e1_mitosis(n_seeds=10)
 
-    print("[3/5] Running Experiment E2: 540,688B StratifiedMemoryArena x Titans & Nested Learning (N=10 seeds)...")
+    print("[3/5] Running Synthetic Simulation E2: 4-Stratum Arena Schedule Under Spike Noise (N=10 seeds)...")
     e2_rep = run_experiment_e2_continuum_plasm(n_seeds=10)
 
-    print("[4/5] Running Experiment E3: Colony Evaluation Cascade & AlphaEvolve MAP-Elites (N=10 seeds)...")
+    print("[4/5] Running Synthetic Simulation E3: Transform Pipeline Selection & Held-Out Check (N=10 seeds)...")
     e3_rep = run_experiment_e3_colony_cascade(n_seeds=10)
 
-    print("[5/5] Running Experiment E4 (Metabolic IC + MoD) & Experiment E5 (JumpReLU SYM-2P/Latent, N=10 seeds)...")
+    print("[5/5] Running Synthetic Simulations E4 (IC Confluence/Pruning) & E5 (Sparse Frame64 Transfer, N=10 seeds)...")
     e4_rep = run_experiment_e4_ic_confluence_and_mod()
     e5_rep = run_experiment_e5_latent_transfer(n_seeds=10)
 
     elapsed = round(time.time() - t_start, 2)
     certificates = {
-        "project": "Moissanite-Labs/weft — Weft v2 Ultimate Form Verification Suite",
+        "project": "Moissanite-Labs/weft — External Design Proposal & C11/Python Conformance Output",
         "schema": "WEFT-CERTIFICATES/2.0",
+        "artifact_description": (
+            "JSON output of local C11-vs-Python conformance tests and 10-seed synthetic NumPy "
+            "simulations with SHA-256 content hashes. Not a cryptographic audit ledger and not "
+            "a project ruling on Moissanite-Labs/weft#111."
+        ),
+        "authorship_disclosure": (
+            "Substantially written and executed by an AI tool (Gemini task-mode agent) inside "
+            "the recorded Linux x86_64 container; requires human review and DCO sign-off per CONTRIBUTING.md."
+        ),
+        "execution_environment": c11_rep["execution_environment"],
+        "evidence_boundaries": {
+            "c11_conformance": (
+                "Executed locally on the pinned host above: 2,048 binary vectors comparing "
+                "weft_v2_invariants.h against weft_v2_engine.py with distance tolerance <= 1e-9 "
+                "(bounded numerical tolerance across platforms/compilers)."
+            ),
+            "experiments_e1_to_e5": (
+                "Toy-scale seeded NumPy design simulations run by the authoring agent. "
+                "Do not close F1-F9 or R1-R5 of Issue #111; E5 Procrustes baseline varies "
+                "slightly across LAPACK SVD backends (~0.6245 OpenBLAS vs ~0.626 Accelerate)."
+            ),
+            "lean_file": (
+                "WeftInvariants.lean formalizes four toy Int/Nat lemmas only; not executed on "
+                "this Linux container (lean binary absent) and proves nothing about C11 or Python code."
+            ),
+        },
         "replicates_per_arm": 10,
         "execution_seconds": elapsed,
-        "evidence_taxonomy": {
-            "PROVEN": "Machine-checked algebraic/combinatorial identity or written mathematical theorem",
-            "VERIFIED": "Deterministic finite multi-seed computation & C11-Python differential test",
-            "KNOWN": "Published external prior art cited with canonical URL/DOI",
-            "CONJECTURE": "Open scaling hypothesis registered with explicit falsification line"
-        },
         "c11_conformance": c11_rep,
         "experiment_e1_mitosis": e1_rep,
         "experiment_e2_continuum_plasm": e2_rep,

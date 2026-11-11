@@ -1,33 +1,24 @@
 /-
-  WeftInvariants.lean — Formal Specification & Core Proofs for Weft v2
-  Aligned with Moissanite-Labs/weft, Proven-Commons, and AlphaProof Code methodology.
-
-  Formalizes:
-    1. Pythagorean Trust-Ball Conservation under Orthogonal Spectral Mitosis
-       (when <ΔW_parent, ΔW_child>_F = 0, squared Frobenius distances add without
-       interference cross-terms).
-    2. Strict Termination under ULP-Monotone Metabolic Deduction (eliminating
-       IEEE-754 Zeno free-step loops).
-    3. Multi-Stratum Nested Continuum Envelope for StratifiedMemoryArena.
-    4. Metabolic Confluence of Symmetric Interaction Combinators (γ, δ, ε).
+  WeftInvariants.lean — Toy Arithmetic Model (`Int` / `Nat`) of Paper Inequalities
+  ================================================================================
+  Disclosure & Scope Boundary:
+    - Authored with AI assistance (Gemini task-mode agent).
+    - This file is a TOY FORMALIZATION over idealized `Int` and `Nat` types proved
+      via `omega` and `decide`.
+    - It says NOTHING about IEEE-754 floating-point arithmetic (`binary32`/`binary64`),
+      and it does NOT parse, extract, or verify `weft_v2_invariants.h` or
+      `weft_v2_engine.py`.
+    - Execution note: `lean` is not installed on the Linux x86_64 container where
+      this bundle was generated; type-checking was reported externally on an Apple
+      M-series machine during PR #128 triage.
 -/
 
-namespace WeftV2
-
-/-- Abstract inner-product space model for flattened weight tensors in ℝ^N. -/
-structure OrthogonalUpdatePair where
-  normSqParent : Float
-  normSqChild  : Float
-  innerProd    : Float
-  rParentSq    : Float
-  rChildSq     : Float
-  rMaxSq       : Float
+namespace WeftV2ToyModel
 
 /--
-  Pythagorean Mitosis Predicate (exact algebraic identity over ordered rings/reals):
-  If `inner = 0`, `normSqParent ≤ rParentSq`, `normSqChild ≤ rChildSq`, and
-  `rParentSq + rChildSq ≤ rMaxSq`, then the combined squared Frobenius distance
-  `normSqParent + normSqChild + 2 * inner` satisfies `≤ rMaxSq`.
+  Toy integer model of the Pythagorean identity `||dW_p + dW_c||^2 = ||dW_p||^2 + ||dW_c||^2`
+  when `inner = 0`: if `np <= rp`, `nc <= rc`, and `rp + rc <= rmax`, then
+  `np + nc + 2 * inner <= rmax`.
 -/
 theorem pythagorean_mitosis_envelope
     (np nc inner rp rc rmax : Int)
@@ -40,10 +31,7 @@ theorem pythagorean_mitosis_envelope
   omega
 
 /--
-  General Bounded-Overlap Envelope:
-  Even under finite numerical orthogonalization residual `|inner| ≤ ov`,
-  if `np ≤ rp`, `nc ≤ rc`, and `rp + rc + 2 * ov ≤ rmax`, the combined
-  update strictly stays within `rmax`.
+  Toy integer model with bounded inner-product residual `inner <= ov`.
 -/
 theorem bounded_overlap_mitosis_envelope
     (np nc inner ov rp rc rmax : Int)
@@ -55,12 +43,10 @@ theorem bounded_overlap_mitosis_envelope
   omega
 
 /--
-  Strict Metabolic Termination Theorem (Anti-Zeno Guarantee):
-  Representing discrete IEEE-754 float32 ranks as natural numbers `B : Nat`
-  (the ordinal index of finite non-negative float32 values above 0.0f),
-  `nextafterf` enforces `B_{t+1} ≤ B_t - 1` on every accepted step.
-  Therefore, any sequence of `k` accepted weight updates from initial
-  ordinal budget `B0` satisfies `k ≤ B0`.
+  Toy natural-number ordinal termination lemma: if every accepted transition
+  strictly decreases a natural-number counter `b' < b`, any chain of `k` steps
+  satisfies `k <= b`. (Models the ordinal idea behind `nextafterf`, not IEEE-754
+  floating-point hardware semantics.)
 -/
 inductive ValidExecution : Nat → Nat → Prop where
   | halt (b : Nat) : ValidExecution b 0
@@ -73,11 +59,8 @@ theorem strict_metabolic_termination {b k : Nat} (h : ValidExecution b k) : k �
   | @step b b' k _ h_mono _ ih => omega
 
 /--
-  StratifiedMemoryArena 4-Tier Nested Continuum Bound:
-  Let `d_focal`, `d_sympathetic`, `d_hippocampal`, `d_locked` be the norms
-  of each stratum perturbation from `w_0`, with `d_locked = 0` enforced
-  bitwise by `cryptographic_lock`. By triangle inequality, total arena drift
-  is bounded by `R_focal + R_symp + R_hippo`.
+  Toy integer triangle-inequality sum across four additive stratum bounds when
+  the locked stratum perturbation `dl = 0`.
 -/
 theorem stratified_arena_envelope
     (df ds dh dl rf rs rh : Int)
@@ -90,9 +73,7 @@ theorem stratified_arena_envelope
   omega
 
 /--
-  Lafont Symmetric Interaction Combinator (C3 IC) Active-Pair Cost Model:
-  Every elementary interaction is either an annihilation (γ-γ, δ-δ, ε-ε)
-  or a commutation (γ-δ, γ-ε, δ-ε), each consuming positive integer cost ≥ 1.
+  Toy step-cost positivity table for the six symmetric interaction combinator rules.
 -/
 inductive ICRule where
   | annihilateGamma
@@ -114,4 +95,4 @@ def icRuleStepCost : ICRule → Nat
 theorem ic_rule_cost_positive (r : ICRule) : 1 ≤ icRuleStepCost r := by
   cases r <;> decide
 
-end WeftV2
+end WeftV2ToyModel
