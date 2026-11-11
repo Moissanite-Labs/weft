@@ -9,7 +9,7 @@ This manifest itself is not hashed (it would be self-referential).
 
 | File | sha256 | Size (bytes) | Class |
 |---|---|---|---|
-| CONSULT-2026-11-10.md | 38720375a0ed5681beff261c49508af7c25ce2086c5724255f77ffad00bb2d10 | 13300 | notes |
+| CONSULT-2026-11-10.md | ad7a044a27855ec4947859beea81a8d4ff356da56da8e42d1990471cf94efdb8 | 13795 | notes |
 | IDEAS.md | e16c11faf992b9fc956e8c4aee8eb1bba54c92d85a65fc24051b68769f353f42 | 36069 | notes |
 | README.md | 74cde704af1ded43e5a89a4eb80b2bddfeefa5e4a995e294eaa1a0f8757f2c9c | 6149 | notes |
 | TESTS.md | 58376fc97c57c8acc33d7cec789b03f010a061f926859973a81494db8bafa3bd | 130425 | notes |
@@ -45,7 +45,7 @@ This manifest itself is not hashed (it would be self-referential).
 | code/cells/stem.py | 8ffe3d4f79bc1c3bf8134a1d42ef7b3f694aa3e5d38fcb14aaba40cb3c743cd2 | 18935 | code |
 | code/cells/stem_report.py | 9dc87bdc82614bda93c3f3c6d499b9e97b03492cbd0cc9a1e972281ed0abb879 | 4481 | code |
 | code/cells/tests/debt_offline.py | 831797b5a487c12bf3cae78d5d1949abb674ea2e21a0194f1ab709460fa1d552 | 2288 | code |
-| code/cells/tests/dissipative_offline.py | c69538abb43c0566fd1caf6059dd0d82ab478a8d5140293beee5daf7c2e2ae4e | 18997 | code |
+| code/cells/tests/dissipative_offline.py | e98651fca6cf8bd04dacc4c9f53bb0244b3fef56def95d79cb9fd5b84f6b3d33 | 20179 | code |
 | code/cells/tests/lineage_offline.py | 3651e4492118bbc07a5cf1f15d7f11a9e30b8f22f4a633d7865adf0bb01e6e0c | 5068 | code |
 | code/cells/tests/metab_offline.py | afa9b48a44a4e84376648c0b8507d5b3e0a78fad066e4e56d155491ac8c148a2 | 3112 | code |
 | code/cells/tests/sp3_offline.py | 17f3b301602a035913adc82bc3068d8c27414b077b90c91d8f2798b189c3f9ee | 3106 | code |

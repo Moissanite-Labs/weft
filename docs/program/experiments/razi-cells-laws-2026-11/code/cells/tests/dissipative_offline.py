@@ -1,5 +1,18 @@
 """Offline verification of L2 Dissipative Heredity: Causal Laws for Silicon Life.
 
+Usage (required env):
+  RAZI_TOOLS_DIR   path to the tools/cells checkout (metab.py, lineage.py, cell.py)
+  RAZI_EXP_DIR     scratch directory for temporary run folders
+Optional:
+  RAZI_TEST_PATH_PREPEND  if set, prepended to PATH for subprocess.run (e.g. sandbox-exec stub)
+  RAZI_TEST_PY            if set, overrides cell.PY for kit scoring (Linux offline)
+
+If a required variable is missing, this script exits non-zero and names it.
+
+Deferred (review item 5): tests 4 and checks 6c–6d re-derive logic inline; only Test 0
+drives lineage.launch and metab.main. A follow-up PR should wire chemostat, est_input
+and step_cost through the real harness.
+
 Tests:
 0. Generation-0 Weismann without germ body: `lineage.launch` with no `.germ/<kit>/body` passes empty
    `CELL_GERM`; metab follows the blank/spore rest rule (accepted assay refunds unspent energy).
@@ -26,6 +39,21 @@ import json, math, os, shutil, subprocess, sys, tempfile
 from pathlib import Path
 from types import SimpleNamespace
 
+
+def _require_env(name: str) -> str:
+    val = os.environ.get(name, "").strip()
+    if not val:
+        print(f"dissipative_offline.py: required environment variable {name!r} is not set", file=sys.stderr)
+        sys.exit(2)
+    return val
+
+
+TOOLS_DIR = Path(_require_env("RAZI_TOOLS_DIR")).resolve()
+EXP_DIR = Path(_require_env("RAZI_EXP_DIR")).resolve()
+EXP_DIR.mkdir(parents=True, exist_ok=True)
+_PATH_PREPEND = os.environ.get("RAZI_TEST_PATH_PREPEND", "").strip()
+_TEST_PY = os.environ.get("RAZI_TEST_PY", "").strip()
+
 # Setup environment for tests
 os.environ["CELL_KIT"] = "fibmod"
 os.environ["CELL_E0"] = "200"
@@ -34,13 +62,11 @@ os.environ["CELL_PAY_ANY"] = "1"
 os.environ["CELL_LINEAGE"] = "1"
 os.environ["CELL_HEIR"] = "store-fibmod"
 
-TOOLS_DIR = Path.home() / "Work/razi-tools/cells"
 sys.path.insert(0, str(TOOLS_DIR))
 import cell as C, lineage as L, metab as M
 
-# Linux offline only: scoring python and lineage launch, without changing cell.py.
-if sys.platform != "darwin":
-    C.PY = "/usr/bin/python3"
+if _TEST_PY:
+    C.PY = _TEST_PY
 L.PY = sys.executable
 
 head = (
@@ -52,7 +78,7 @@ head = (
 slow = head + "out=[]\nfor l in sys.stdin.read().split():\n    for _ in range(6): r=fd(int(l))[0]\n    out.append(str(r))\nprint('\\n'.join(out))\n"
 fast = head + "print('\\n'.join(str(fd(int(l))[0]) for l in sys.stdin.read().split()))\n"
 
-run = Path(tempfile.mkdtemp(dir=str(Path.home() / "Work/razi-cells/exp"), prefix="offline-l2-"))
+run = Path(tempfile.mkdtemp(dir=str(EXP_DIR), prefix="offline-l2-"))
 script: dict[str, list[dict]] = {}
 ok: list[bool] = []
 
@@ -79,13 +105,13 @@ M.think = fake_think
 M.start_loop = lambda: None
 
 _real_subprocess_run = subprocess.run
-_shim_bin = str(Path.home() / "Work/razi-tools/bin")
 _intercept_launch_metab = False
 
 
 def patched_subprocess_run(cmd, stdout=None, stderr=subprocess.STDOUT, env=None, **kw):
     merged = {**(env or os.environ)}
-    merged["PATH"] = f"{_shim_bin}:{merged.get('PATH', '')}"
+    if _PATH_PREPEND:
+        merged["PATH"] = f"{_PATH_PREPEND}:{merged.get('PATH', '')}"
     if _intercept_launch_metab and len(cmd) >= 5 and cmd[2] == "seed" and "metab.py" in str(cmd[1]):
         return _launch_metab_main(cmd, stdout, merged)
     kw2 = {k: v for k, v in kw.items() if k != "env"}
@@ -133,7 +159,7 @@ def system_prompt_from_env(env: dict) -> str:
 # Test 0: Generation-0 Weismann without germ body (real lineage.launch env)
 # -------------------------------------------------------------------------
 print("--- Test 0: Generation-0 Weismann without germ body ---")
-g0_run = Path(tempfile.mkdtemp(dir=str(Path.home() / "Work/razi-cells/exp"), prefix="offline-l2-g0-"))
+g0_run = Path(tempfile.mkdtemp(dir=str(EXP_DIR), prefix="offline-l2-g0-"))
 (g0_run / ".germ" / "fibmod").mkdir(parents=True)  # kit slot exists, no body/ yet
 M.born(g0_run / "store-fibmod", 1000.0)
 need = {"kit": "fibmod", "need": "need"}
@@ -319,6 +345,7 @@ check("3b4. Spore competes at L.gate()", gate_res.get("kit") == "fibmod" and gat
 
 # -------------------------------------------------------------------------
 # Test 4: Chemostat Niche Bounty Accumulation
+# Deferred: re-implements the chemostat branch inline; does not run lineage.main.
 # -------------------------------------------------------------------------
 print("\n--- Test 4: Chemostat Niche Bounty Accumulation ---")
 bounty = {"fibmod": 400.0}
@@ -412,6 +439,7 @@ tpc = seen["tpc"] * 1.1 if "tpc" in seen else 1.0 / 2.8
 pad = 0 if "tpc" in seen else 600
 expected_est = (chars5 * tpc + pad) * top_mid
 
+# Deferred: re-implements est_input formula inline; does not run metab pick() against live ledger.
 check("6c. Step 5 input estimated at cache-write top rate", abs(est_pick - expected_est) < 1e-4, (est_pick, expected_est))
 
 # Verify actual step cost with full output cap does not exceed e5
@@ -419,12 +447,13 @@ check("6c. Step 5 input estimated at cache-write top rate", abs(est_pick - expec
 tok_actual = int(chars5 * seen["tpc"])
 u5_actual = dict(inp=4, cw=tok_actual, cr=0, out=cap_pick, rs=0, usd=None)
 cost5_actual = M.step_cost(m_pick, u5_actual)
+# Deferred: prices step_cost directly; does not exercise a full metab step.
 check("6d. Cost of capped step <= energy available (0 overdrafts)", cost5_actual <= e5 + 1e-6,
       f"cost {cost5_actual:.2f} <= energy {e5:.2f}")
 
 # Clean up temporary run directory and lock
 shutil.rmtree(run, ignore_errors=True)
-lock = Path.home() / "Work/razi-cells/.bench.lock"
+lock = EXP_DIR.parent / ".bench.lock"
 if lock.exists():
     try:
         lock.unlink()
