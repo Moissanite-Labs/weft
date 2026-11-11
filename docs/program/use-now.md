@@ -68,9 +68,9 @@ PY
 
 `mps_available: true` is an availability check, not a performance or correctness result. CPU and MPS comparisons need separate runs of the same workload, recorded device selection and tolerances. `papers/01-models-as-cells/experiments.py` supports explicit `--device {cpu,mps}`, `--check`, and `--check-mps` flags. Default execution remains CPU for deterministic CI checks.
 
-On the Apple M1 Max host, CPU execution runs in `float64`. It records an 81.24 ms median elapsed time per 12-generation cycle and reproduces the committed 0.278059 mean final error ratio.
+On the Apple M1 Max host, CPU execution runs in `float32`, as does MPS: the Plasm cycle builds float32 tensors on both devices, and only E1 uses float64. It records an 81.24 ms median elapsed time per 12-generation cycle and reproduces the committed 0.278059 mean final error ratio.
 
-MPS execution runs in `float32` because PyTorch MPS lacks `float64` support. It records a 121.96 ms median elapsed time and a 0.277101 mean final error ratio, a 0.05% to 1.5% per-seed difference from float64 CPU. Both devices yield identical gate decisions: 15.0 degrees first rejected angle, 120/120 committed proposals, zero core-row drift, and full watermark retention.
+MPS execution also runs in `float32` because PyTorch MPS lacks `float64` support, so E2 and E5 have the same precision on both devices. It records a 121.96 ms median elapsed time and a 0.277101 mean final error ratio, a 0.05% to 1.5% per-seed difference from the CPU run. The spread comes from the MPS generator drawing a different noise stream, not from precision. Both devices yield identical gate decisions: 15.0 degrees first rejected angle, 120/120 committed proposals, zero core-row drift, and full watermark retention.
 
 Compare the actual host record with the current [PyTorch MPS requirements](https://developer.apple.com/metal/pytorch/). Native Torch/MLX experiments and Chrome WebGPU/ONNX experiments are different stacks; a working native backend does not validate a browser model path.
 
