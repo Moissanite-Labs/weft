@@ -413,55 +413,6 @@
    "Tests",
    "What did the tests find?"
   ],
-  "e1-one-rule-at-a-time": [
-   "6.1 E1: one rule at a time",
-   "6.1 Rules",
-   "Each rule",
-   "E1 rules",
-   "Does each rule work?"
-  ],
-  "e2-differential-fuzzing": [
-   "6.2 E2: differential fuzzing",
-   "6.2 Fuzzing",
-   "Random nets",
-   "E2 fuzzing",
-   "Do random runs agree?"
-  ],
-  "e3-does-order-matter": [
-   "6.3 E3: does order matter?",
-   "6.3 Order",
-   "Order",
-   "E3 order",
-   "Does order change the answer?"
-  ],
-  "e4-can-a-record-be-replayed": [
-   "6.4 E4: replaying records",
-   "6.4 Replay",
-   "Replay",
-   "E4 replay",
-   "Can a record be redone?"
-  ],
-  "e5-decoder-fuzzing": [
-   "6.5 E5: decoder fuzzing",
-   "6.5 Decoder",
-   "Broken packets",
-   "E5 decoder",
-   "Does the decoder crash?"
-  ],
-  "e6-the-telemetry-line-and-abios": [
-   "6.6 E6: telemetry line and abios",
-   "6.6 Telemetry",
-   "The line",
-   "E6 line",
-   "What does the hash catch?"
-  ],
-  "e7-the-64-byte-frame": [
-   "6.7 E7: the 64-byte frame",
-   "6.7 Frame",
-   "Clock slot",
-   "E7 frame",
-   "Can the frame hold the time?"
-  ],
   "what-this-does-not-show": [
    "7. What this does not show",
    "7. Not shown",
@@ -485,13 +436,6 @@
   "the-binary-graph-format": "One exact byte encoding per graph, checked before allocation; structure is not checked.",
   "committed-execution-records": "One SHA-256 commitment binds a record; only a replay shows it is true.",
   "experiments": "Basic rules agree; storage gets ambiguous, loop-backs fail, self-test can’t replay, hash misses tampering.",
-  "e1-one-rule-at-a-time": "Basic rules match; three of six loop-back cases fail; two nets share 132 bytes.",
-  "e2-differential-fuzzing": "No readable run diverged; a third of simple nets turned ambiguous, median two steps.",
-  "e3-does-order-matter": "Reducer matched the reference or became unreadable, never a different readable answer.",
-  "e4-can-a-record-be-replayed": "Reducer-only records replay 60 of 60; the self-test’s record cannot be replayed.",
-  "e5-decoder-fuzzing": "No crash in 20,280 corrupted packets; two thirds of accepted ones are invalid nets.",
-  "e6-the-telemetry-line-and-abios": "Hash catches payload edits, not header edits or tampering; Python and browser agree.",
-  "e7-the-64-byte-frame": "The timestamp slot resolves only about two minutes; not wall-clock time.",
   "what-this-does-not-show": "Not shown: extended-rule correctness, valid executions, scale, universality, authentication; reference is no proof.",
   "toward-a-checkable-pipeline": "Seven fixes: four now in C3 version 2; three open, including proofs."
  },
@@ -503,13 +447,6 @@
   "the-binary-graph-format": "Each drawing is written as bytes in exactly one way, like one agreed spelling per word. The reader checks a packet before making room, so tiny packets can’t grab huge memory. It checks spelling, not whether the drawing makes sense.",
   "committed-execution-records": "The program seals start, steps and end into one fingerprint, so a swapped record would show. But a seal shows what was written, not that it’s true. Checking means redoing the steps, which the library can’t do yet.",
   "experiments": "Repeatable tests found the basic moves right, but stored drawings often got muddled, some tricky moves broke, and the program’s own receipt couldn’t be redone. The seal on live messages catches accidents, not deliberate cheating.",
-  "e1-one-rule-at-a-time": "Each rule was tried on a tiny drawing. Normal cases all worked. When a string looped back onto the pair, three of six cases went wrong. And two different drawings were stored exactly alike.",
-  "e2-differential-fuzzing": "600 random drawings ran in both versions, step by step. While the stored drawing was readable, they always agreed. But a third of easy drawings got muddled within a couple of steps, and most hard ones couldn’t be stored properly.",
-  "e3-does-order-matter": "In the second version, changing the order of steps never changed the answer. The program got that same answer or got muddled, never a different clear one. For Weft’s new pieces, this isn’t shown.",
-  "e4-can-a-record-be-replayed": "A receipt helps only if redoing its steps gives the same result. When every change went through the proper door, all 60 receipts redid perfectly. The self-test sneaked in changes off the receipt, so its receipt can’t be redone.",
-  "e5-decoder-fuzzing": "Packets were broken in over twenty thousand ways, and the reader never crashed in these tests. But it let in many packets describing nonsense drawings, so a second checker is needed.",
-  "e6-the-telemetry-line-and-abios": "Messages carry a fingerprint of their main part. It catches accidental damage there, but not changes to the front label, or a cheater who makes a new fingerprint. Accidents, not cheaters. Python and browser always agreed.",
-  "e7-the-64-byte-frame": "One slot stores the time too roughly, like a clock that ticks only every two minutes. Fine for moving pictures, but don’t read it as the real time.",
   "what-this-does-not-show": "Things this paper does not prove: that Weft’s new pieces work, that a receipt is honest, that it scales, or who made anything. The second version is a careful double-check, not a proof.",
   "toward-a-checkable-pipeline": "Seven fixes are listed. Four are in a newer version and pass the same double-checks, but this paper tested the old one. Three are still to do, including the final proofs."
  }

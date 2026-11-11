@@ -30,7 +30,7 @@
   "3fb8458b": [
    "W₀ is a <strong>saved baseline</strong>, R a fixed radius, b remaining budget, c step cost. Python, C11 and JavaScript implement it. Python (all twelve cases) and JavaScript (the six weight-update cases) test against one JSON conformance file; C11 against hand-written copies of most (§5.5).",
    "W₀ = <strong>saved baseline</strong>, R = radius, b = budget, c = cost. Python, C11, JS. Python (all 12) and JS (6 weight-update) share vectors; C11 hand-copied, most cases (§5.5).",
-   "W₀ = saved model. R = how far. Same rule, three language."
+   "W₀ = saved model. R = how far. Same rule, three language. C test hand copy, not all."
   ],
   "78141d93": [
    "Four contributions here:",
@@ -70,7 +70,7 @@
   "31261d9f": [
    "Layout: interface I4. Mapped CPU views share bytes; tensor reads copy, so “zero-copy” means the mapping, not the experiment.",
    "Layout I4. Views share; tensor reads copy. “Zero-copy” = mapping only.",
-   "Map share byte. Read copy."
+   "Map share byte. Read copy. Zero-copy only map."
   ],
   "216f9ef3": [
    "<strong>Core and periphery.</strong> The first 64 rows (d/4) of W form the frozen <strong>core</strong>. Mask M is zero on core rows, in (0,1) on periphery rows, smaller for large-magnitude columns. Every update is W′ = W + η(M⊙Δ), so core rows cannot change.",
@@ -175,7 +175,7 @@
   "82735404": [
    "<strong>Comparing sizes does not bound change.</strong> Equal-norm matrices can be arbitrarily far apart.",
    "<strong>Size ≠ change.</strong> Equal norms, arbitrarily far apart.",
-   "<strong>Same size, far apart.</strong>"
+   "<strong>Size not limit.</strong> Same size, far apart."
   ],
   "f4a81513": [
    "<strong>Proposition 2.</strong> Let ⟨W₀,Q⟩F = 0, ‖Q‖F = ‖W₀‖F, and Wθ = cosθ W₀ + sinθ Q. Then ‖Wθ‖F = ‖W₀‖F for all θ, and ‖Wθ−W₀‖F = 2sin(θ/2)‖W₀‖F.",
@@ -391,41 +391,6 @@
    "Tests run",
    "How was it tested?"
   ],
-  "e1-equal-sizes-large-moves": [
-   "5.1 E1: equal sizes",
-   "5.1 E1: size trap",
-   "Size trap",
-   "E1",
-   "Can a size check be fooled?"
-  ],
-  "e2-the-cell-cycle": [
-   "5.2 E2: cell cycle",
-   "5.2 E2: cycle",
-   "Full cycle",
-   "E2",
-   "Does the cell adapt?"
-  ],
-  "e3-the-watermark-under-attack": [
-   "5.3 E3: watermark attack",
-   "5.3 E3: watermark",
-   "Attack test",
-   "E3",
-   "Does the mark survive?"
-  ],
-  "e4-the-gate-inside-the-loop": [
-   "5.4 E4: gate in the loop",
-   "5.4 E4: radius",
-   "Radius sweep",
-   "E4",
-   "What if the limit is tight?"
-  ],
-  "e5-one-rule-three-languages": [
-   "5.5 E5: three languages",
-   "5.5 E5: languages",
-   "Same rule",
-   "E5",
-   "Do all versions agree?"
-  ],
   "what-this-does-not-show": [
    "6. Not shown",
    "6. Limits",
@@ -442,17 +407,12 @@
   ]
  },
  "tldr": {
-  "abstract": "A gate commits a model change only near a saved baseline; small experiments run, and their limits are reported.",
+  "abstract": "A gate commits a change only within R of a saved baseline, with budget left and the watermark intact; small tests show where it binds and where it doesn't.",
   "introduction": "The cell is a metaphor; the checked part is a predicate bounding distance from a saved baseline.",
   "the-cell": "One 256×256 matrix in fixed memory; a frozen core holds a watermark that periphery updates cannot move.",
   "one-generation": "Two candidates, scored exactly, at most one committed; “tension” is just distance, not a measurement.",
   "why-measure-distance-from-a-fixed-baseline": "Size checks miss large moves and per-step bounds add up; distance from a fixed baseline does neither.",
-  "experiments": "Every number comes from one seeded script on a CPU; Apple MPS is not measured.",
-  "e1-equal-sizes-large-moves": "Size comparison accepted all 37 norm-preserving moves; the distance gate rejected 34.",
-  "e2-the-cell-cycle": "Target error fell to 0.278 of its start on average, core drift was zero, and the gate never rejected anything.",
-  "e3-the-watermark-under-attack": "Masked updates never move the mark; a small rank-1 overwrite passes the gate but not the watermark check.",
-  "e4-the-gate-inside-the-loop": "Smaller radii mean fewer commits and more error; a reporting defect found here is fixed.",
-  "e5-one-rule-three-languages": "Python, JavaScript and C agree where tested; C does not yet read the shared vectors.",
+  "experiments": "Gate rejected 34 of 37 size-preserving moves; error fell to 0.278 of its start with zero core drift, but the default gate never bound; a rank-1 overwrite passes the gate, caught only by the watermark.",
   "what-this-does-not-show": "Not shown: scale, calibration, real selection, measured tension, adversaries, isolation or hardware.",
   "next-experiments": "Planned, not done: calibrate R, adapters as periphery, real lineages, measured tension, Lean proofs, MPS runs."
  },
@@ -462,12 +422,7 @@
   "the-cell": "The program’s numbers live in a fixed box of memory. The top quarter is locked, and a hidden name tag lives there, so normal changes can never rub it out. A separate check watches for anyone who tries to scribble on it another way.",
   "one-generation": "Each round, the program tries two small changes, one careful and one bolder. It keeps the better one only if it passes every check, or keeps neither. The thing called <em>tension</em> sounds like a feeling, but right now it is just another way of measuring distance.",
   "why-measure-distance-from-a-fixed-baseline": "Checking a kite only by its string length would miss it swinging to the other side of the sky. Checking each little step is not enough either, because steps add up. Weft measures distance from one saved spot, so as long as that spot is kept safe, the program never gets far away.",
-  "experiments": "All the tests come from one recipe that anyone can rerun and get the same numbers. They ran on an ordinary computer chip. Tests on Apple’s graphics chips have not been done.",
-  "e1-equal-sizes-large-moves": "A tricky change can turn a program upside down while keeping its size the same. A check that only looks at size said “fine” every time. Weft’s distance check said no to every change that went too far.",
-  "e2-the-cell-cycle": "The program got better at its practice task, and its locked part never moved. But the gate never had to say no, and the bolder try never won, so those parts were not really tested here.",
-  "e3-the-watermark-under-attack": "Normal changes never touched the hidden name tag, and big messy changes got caught. A small sneaky change aimed right at the tag got past the distance check, but the name-tag check caught it. So both checks are needed.",
-  "e4-the-gate-inside-the-loop": "When the leash is made shorter, the program stops at the end of it and improves less. This test also found a mistake in how results were reported, and that mistake has been fixed.",
-  "e5-one-rule-three-languages": "The same rule is written in three computer languages. They agree wherever they are tested, but the C version does not use the shared test list yet.",
+  "experiments": "A size-only check said yes to every tricky change, but Weft’s distance check said no to the ones that went too far. The program got better at its practice task without its locked part moving, though the leash was too long to ever pull tight. A small sneaky edit got past the distance check, and only the name-tag check caught it. Rerunning the script gives the same numbers, except for timings.",
   "what-this-does-not-show": "This was one tiny practice example, not a real AI system. The leash was set far too long to matter, the bolder try never had a fair chance, <em>tension</em> is not really measured, and the name tag would not hold up against someone who controls the training. Nothing here was tested on real models or special chips.",
   "next-experiments": "Next, the team plans to try this on a small real network, set the leash to fit the task, give both tries a fair race, and have a computer check the proofs. These are plans, not results."
  }

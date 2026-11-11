@@ -6,14 +6,11 @@ import { CONDENSED_PAPERS, hasCondensed, paperSlug } from "../../../site/assets/
 const PAPERS = new URL("../../../site/papers/", import.meta.url);
 const slugs = fs.readdirSync(PAPERS, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name);
 
-test("the condensed list matches the condensed.json files on disk", () => {
+test("the condensed list matches the condensed.json files on disk, for both page paths", () => {
   const onDisk = slugs.filter((s) => fs.existsSync(new URL(`${s}/condensed.json`, PAPERS))).sort();
   assert.deepEqual([...CONDENSED_PAPERS].sort(), onDisk);
-});
-
-test("every paper page without condensed.json is left alone", () => {
   for (const s of slugs) {
-    const has = fs.existsSync(new URL(`${s}/condensed.json`, PAPERS));
+    const has = onDisk.includes(s);
     assert.equal(hasCondensed(`/papers/${s}/`), has, s);
     assert.equal(hasCondensed(`/papers/${s}/index.html`), has, s);
   }
