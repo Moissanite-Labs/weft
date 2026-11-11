@@ -1,13 +1,33 @@
 {
-  "schema": "WEFT-INVARIANTS/2.0-C11-REPORT",
+  "arena_65536_checks_per_sec": 5589.87,
+  "arena_throughput_gweights_per_sec": 0.3663,
+  "cross_platform_tolerance_note": "Distance agreement is enforced within binary64 tolerance <= 1e-9 (not exact across compilers/ISAs). Observed max_distance_abs_error_c11_vs_py: 0.000e+00 on Intel(R) Xeon(R) Platinum 8481C (gcc (Debian 12.2.0-14+deb12u1) 12.2.0); 7.105e-15 reported on Apple M-series (Apple clang 21 -O3, Python 3.13, numpy 2.5.4).",
+  "distance_abs_tolerance_enforced": 1e-09,
+  "execution_environment": {
+    "blas_lapack_backend": "blas=scipy-openblas (0.3.27), lapack=scipy-openblas (0.3.27)",
+    "c_compile_flags": [
+      "-O3",
+      "-ffp-contract=off",
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror"
+    ],
+    "c_compiler": "gcc (Debian 12.2.0-14+deb12u1) 12.2.0",
+    "cpu_cores_logical": 2,
+    "cpu_model": "Intel(R) Xeon(R) Platinum 8481C",
+    "machine_arch": "x86_64",
+    "numpy_version": "2.1.3",
+    "os_platform": "Linux-6.12.105+-x86_64-with-glibc2.36",
+    "python_version": "3.11.2"
+  },
+  "last_bench_distance": 0.598664658,
+  "max_distance_abs_error_c11_vs_py": 0.0,
   "num_vectors": 2048,
-  "v2_c11_python_matches": 2048,
-  "v2_parity_rate": 1.00000000,
+  "schema": "WEFT-INVARIANTS/2.0-C11-REPORT",
   "v1_naive_divergences_caught": 317,
   "v1_zeno_free_steps_in_100k": 100000,
+  "v2_c11_python_matches": 2048,
   "v2_monotone_deduction_steps_in_1k": 1000,
-  "max_distance_abs_error_c11_vs_py": 0.000e+00,
-  "arena_65536_checks_per_sec": 5647.07,
-  "arena_throughput_gweights_per_sec": 0.3701,
-  "last_bench_distance": 0.598664658
+  "v2_parity_rate": 1.0
 }

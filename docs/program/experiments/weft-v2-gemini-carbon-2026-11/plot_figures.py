@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 plot_figures.py — Generates 4 publication-grade multi-panel vector PDF figures
-directly from the verified `certificates.json` output of `weft_v2_engine.py`.
+directly from the seeded `certificates.json` output of `weft_v2_engine.py`.
 """
 import json
 from pathlib import Path
@@ -35,8 +35,8 @@ C_SLATE   = "#475569"  # Neutral Slate
 
 
 def main() -> None:
-    suite_dir = Path("artifacts/file_generation/ttl=63d/intermediate/weft_v2_suite")
-    inter_dir = Path("artifacts/file_generation/ttl=63d/intermediate")
+    suite_dir = Path(__file__).resolve().parent
+    inter_dir = suite_dir
     cert = json.loads((suite_dir / "certificates.json").read_text())
 
     # -------------------------------------------------------------------------
@@ -229,7 +229,7 @@ def main() -> None:
     fig, axes = plt.subplots(1, 2, figsize=(9.8, 3.35), constrained_layout=True)
 
     ax = axes[0]
-    cats = ["2,048-Vector\nC11↔Py Parity (%)", "Anti-Zeno Step\nEnforcement (%)", "Boundary/Overflow\nSafety (%)"]
+    cats = ["2,048-Vec Verdict\n& <=1e-9 Tol (%)", "Anti-Zeno Step\nDeduction (%)", "Boundary/Scale\nChecks (%)"]
     v1_vals = [
         100.0 * (1.0 - c11["v1_naive_divergences_caught"] / c11["num_vectors"]),
         0.0,
@@ -245,8 +245,8 @@ def main() -> None:
     ax.set_xticks(xp)
     ax.set_xticklabels(cats)
     ax.set_ylim(0, 115)
-    ax.set_title("A. WEFT-INVARIANTS/2.0 Differential Security Audit")
-    ax.set_ylabel("Verified Pass Rate (%)")
+    ax.set_title("A. WEFT-INVARIANTS/2.0 Differential Conformance")
+    ax.set_ylabel("Vector Pass Rate (%)")
     ax.grid(True, axis="y", linestyle=":", alpha=0.45)
     ax.legend(loc="lower right", frameon=True, framealpha=0.92, edgecolor="#E2E8F0")
 

@@ -3,7 +3,7 @@
  *
  * Upgrades Moissanite-Labs/weft `weft/runtime/invariants/weft_invariants.h` with:
  *   1. Strict IEEE-754 finiteness guards (blocks NaN/Inf/negative-zero exploits).
- *   2. Frozen-core bitwise-exact invariance check (`locked_mask`).
+ *   2. Frozen-core IEEE-754 binary32 representation check (`locked_mask`, normalizing +/-0.0f).
  *   3. Scaled Neumaier compensated float64 Frobenius norm accumulation across
  *      65,536-float StratifiedMemoryArena strata (eliminates C11 float32 vs
  *      Python/JS float64 boundary consensus splits and float32 sq-overflow).
@@ -158,7 +158,7 @@ static inline bool weft_v2_compensated_frobenius_distance(
  * Hardened WEFT-INVARIANTS/2.0 weight-update predicate.
  * Enforces:
  *   1. All inputs finite, r_invariant >= 0, step_cost > 0, budget >= step_cost.
- *   2. Bitwise frozen-core preservation on locked_mask != NULL.
+ *   2. Frozen-core IEEE-754 representation check on locked_mask != NULL.
  *   3. Compensated binary64 Frobenius distance <= (double)r_invariant.
  *   4. Strict ULP-monotone budget decrease (`new_budget < old_budget`).
  */
