@@ -48,12 +48,28 @@ def sha256_bytes(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+PRINT_TEMPLATE_PATHS = (
+    "print-paper.html",
+    "print.css",
+    "fonts.css",
+)
+
+
 def template_digest() -> str:
+    """Hash print inputs only so site HTML template edits do not invalidate PDFs."""
     h = hashlib.sha256()
-    for path in sorted(TEMPLATES.rglob("*")):
+    for name in PRINT_TEMPLATE_PATHS:
+        path = TEMPLATES / name
         if path.is_file():
-            h.update(path.relative_to(TEMPLATES).as_posix().encode())
+            h.update(name.encode())
             h.update(path.read_bytes())
+    fonts_dir = TEMPLATES / "fonts"
+    if fonts_dir.is_dir():
+        for path in sorted(fonts_dir.rglob("*")):
+            if path.is_file():
+                rel = path.relative_to(TEMPLATES).as_posix()
+                h.update(rel.encode())
+                h.update(path.read_bytes())
     return h.hexdigest()
 
 
@@ -349,7 +365,8 @@ def main() -> int:
             prev = old_by_slug.get(p["slug"])
             if not prev or not pdf_path.is_file():
                 raise SystemExit(f"{p['slug']}: no existing PDF; build without --no-pdf first")
-            entry = prev
+            entry = dict(prev)
+            entry["templates_sha256"] = tdigest
         else:
             size = build_pdf(p, pdf_path)
             entry = {"slug": p["slug"], "number": p["number"], "version": p["version"], "pdf": pdf_name(p),
