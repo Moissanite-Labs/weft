@@ -30,7 +30,7 @@ This manifest itself is not hashed (it would be self-referential).
 | report.md | 9c0f2836c6632d5fdf81fd145c1a7ba5eabde944cc6dc5113a0279c398171e26 | 41054 | derived |
 | convergence.md | 0d9e93010b1fac28db11feef81c827767cd5988559861c63ed26afaef60fba02 | 9375 | notes |
 | corpus-findings.md | 32a13285451c54c2460729eaa227059783928f147fd9f8e6dabf125ffe8676fa | 11652 | notes |
-| heldout-audit-r1.md | bd25ae1a7e583a8bebd2631fbe6604f882bf53c5e0eaf2f67559c184ab71e36c | 7154 | derived |
+| heldout-audit-r1.md | 88fad5cb0593dd7c3c2095eea796a81f4dd08774dabd8c68899df14b6f9ab329 | 7168 | derived |
 
 Class notes:
 - data/*-summary.json: per-run summary files run summaries (calls, improvements, wall time, per-cell results) for runs g3, g4, b5 to b11). measured.
