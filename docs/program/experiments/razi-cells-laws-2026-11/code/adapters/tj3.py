@@ -11,7 +11,9 @@ Usage: python tj3.py DATA.json OUT.json [--arms gc,gn,gb,s] [--gens 12] [--k 2] 
 Key is read in memory by tinker_key and never printed."""
 import os, re, sys, time, json, math, random, argparse, collections
 from pathlib import Path
-sys.path.insert(0, os.path.expanduser("~/Work/razi-tools"))
+_razi_tools = os.path.expanduser("~/Work/razi-tools")
+if os.path.isdir(_razi_tools):
+    sys.path.insert(0, _razi_tools)
 import tinker_key
 os.environ["TINKER_API_KEY"] = tinker_key.get()
 import warnings; warnings.simplefilter("ignore")
@@ -113,13 +115,31 @@ def eval_nll(client_or_sc, hold=None, tok=None, renderer=None, arm="eval", tc=No
 
 def log_jsonl(rec: dict) -> None:
     rec["t"] = round(time.time() - T0, 2)
-    target_files = {Path(A.out).with_suffix(".jsonl"), Path(A.out).parent / "tj3.jsonl"}
-    for tf in target_files:
+    tf = Path(A.out).with_suffix(".jsonl")
+    try:
+        with open(tf, "a") as f:
+            f.write(json.dumps(rec) + "\n")
+    except Exception:
+        pass
+
+
+def release_rolling_slot(sc, name: str) -> None:
+    """Drop a rolling checkpoint name when an arm ends (best-effort)."""
+    if not ROLLING_SLOTS:
+        return
+    for meth in ("delete_checkpoint", "delete_state"):
+        fn = getattr(sc, meth, None)
+        if fn is None:
+            continue
         try:
-            with open(tf, "a") as f:
-                f.write(json.dumps(rec) + "\n")
-        except Exception:
-            pass
+            res = fn(name=name)
+            if hasattr(res, "result"):
+                res.result()
+            lap(f"released rolling slot {name}")
+            return
+        except Exception as e:
+            lap(f"release slot {name} via {meth}: {safe(e)}")
+    lap(f"could not release rolling slot {name}; run seeds sequentially if the free tier fills")
 
 # label prior: the loss of a predictor that knows only how often each label occurs in train
 pc = collections.Counter(r["label"] for r in D["train"]); n = sum(pc.values())
@@ -133,6 +153,8 @@ try:
     base = sc.create_lora_training_client(base_model=A.model, rank=A.rank, seed=A.seed)
     P0 = save(base, f"{A.tag}-s{A.seed}-p0")
     p0_nll = eval_nll(base, SETS[HOLD_NAME], TOK, rk, arm="start")
+    log_jsonl({"event": "eval", "arm": "start", "gen": 0, "seed": A.seed, "tag": A.tag,
+               "eval_nll": p0_nll, "split": HOLD_NAME})
     log_jsonl({"event": "save", "arm": "start", "gen": 0, "seed": A.seed, "tag": A.tag,
                "checkpoint": f"{A.tag}-s{A.seed}-p0", "path": P0, "eval_nll": p0_nll, "split": HOLD_NAME})
     R["start"] = {"gate": evalset(base, "gate", "start"), "test": evalset(base, "test", "start"), "eval_nll": p0_nll}
@@ -142,13 +164,16 @@ try:
         if arm in ("gc", "gn", "gb"):
             way = "bal" if arm == "gb" else "nat"
             tc = sc.create_training_client_from_state(P0); depth = 0
+            rolling_name = f"{A.tag}-s{A.seed}-{arm}-latest"
             for g in range(A.gens):
                 tl = train(tc, way, depth, arm); depth += A.k
                 gl = evalset(tc, "gate", arm)
                 nll = eval_nll(tc, SETS[HOLD_NAME], TOK, rk, arm=arm)
                 log.append({"gen": g, "depth": depth, "way": way, "train": tl, "gate": gl, "eval_nll": nll})
+                log_jsonl({"event": "eval", "arm": arm, "gen": g, "depth": depth, "seed": A.seed, "tag": A.tag,
+                           "eval_nll": nll, "train": tl, "gate": gl, "split": HOLD_NAME})
                 if arm != "gc" and g < A.gens - 1:
-                    save_name = f"{A.tag}-s{A.seed}-{arm}-latest" if ROLLING_SLOTS else f"{A.tag}-s{A.seed}-{arm}-g{g}"
+                    save_name = rolling_name if ROLLING_SLOTS else f"{A.tag}-s{A.seed}-{arm}-g{g}"
                     state_path = save(tc, save_name)
                     log_jsonl({"event": "save", "arm": arm, "gen": g + 1, "depth": depth, "seed": A.seed,
                                "tag": A.tag, "checkpoint": save_name, "path": state_path, "eval_nll": nll,
@@ -156,8 +181,11 @@ try:
                     tc = sc.create_training_client_from_state(state_path)
                 lap(f"{arm} gen {g} depth {depth} train {tl} gate {gl} eval_nll {nll}")
             final = tc
+            if arm != "gc" and ROLLING_SLOTS:
+                release_rolling_slot(sc, rolling_name)
         elif arm == "s":
             P, pg, depth, final = P0, R["start"]["gate"], 0, None
+            rolling_s = f"{A.tag}-s{A.seed}-s-latest"
             for g in range(A.gens // 2):
                 kids = []
                 for way in ("nat", "bal"):
@@ -177,11 +205,15 @@ try:
                                    "took": best["way"], "split": HOLD_NAME})
                 else:
                     nll = eval_nll(sc.create_training_client_from_state(P), SETS[HOLD_NAME], TOK, rk, arm="s") if P else None
+                log_jsonl({"event": "eval", "arm": "s", "gen": g, "depth": depth, "seed": A.seed, "tag": A.tag,
+                           "eval_nll": nll, "took": best["way"] if took else None, "split": HOLD_NAME})
                 log.append({"gen": g, "depth": depth, "parent_gate": pg,
                             "kids": [{x: k[x] for x in ("way", "train", "gate")} for k in kids],
                             "took": best["way"] if took else None, "eval_nll": nll})
                 lap(f"s gen {g} parent {pg} nat {kids[0]['gate']} bal {kids[1]['gate']} took {log[-1]['took']} eval_nll {nll}")
             if final is None: final = sc.create_training_client_from_state(P)
+            if ROLLING_SLOTS:
+                release_rolling_slot(sc, rolling_s)
         else: raise SystemExit("unknown arm " + arm)
         arm_test = evalset(final, "test", arm)
         arm_nll = eval_nll(final, SETS[HOLD_NAME], TOK, rk, arm=arm)

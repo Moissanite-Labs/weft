@@ -37,7 +37,8 @@
             4.81013,
             4.81013
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b5": {
           "median": 7.8171,
@@ -50,7 +51,8 @@
             7.8171,
             7.8171
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b6": {
           "median": 6.3907,
@@ -63,7 +65,8 @@
             6.39069,
             6.39069
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b7": {
           "median": 7.524,
@@ -76,7 +79,8 @@
             7.52403,
             7.52403
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b8": {
           "median": 7.524,
@@ -89,7 +93,8 @@
             7.52403,
             7.52403
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b9": {
           "median": 7.5226,
@@ -102,7 +107,8 @@
             7.52257,
             7.52257
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b10": {
           "median": 5.7405,
@@ -115,7 +121,8 @@
             5.74052,
             5.74052
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b11": {
           "median": 7.524,
@@ -128,7 +135,8 @@
             7.52403,
             7.52403
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "g3": {
           "median": 7.524,
@@ -141,7 +149,8 @@
             7.52403,
             7.52403
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "g4": {
           "median": 7.658,
@@ -154,9 +163,11 @@
             7.65801,
             7.65801
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         }
-      }
+      },
+      "invalidated": false
     },
     "csvsum": {
       "ref_median": 1.4432,
@@ -173,7 +184,8 @@
             1.41233,
             1.44316
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b5": {
           "median": 1.3816,
@@ -186,7 +198,8 @@
             1.36188,
             1.40762
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b6": {
           "median": 1.4385,
@@ -199,7 +212,8 @@
             1.43848,
             1.45127
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b7": {
           "median": 1.39,
@@ -212,7 +226,8 @@
             1.32293,
             1.50276
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b8": {
           "median": 2.8282,
@@ -225,7 +240,8 @@
             2.78624,
             2.82817
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b9": {
           "median": 3.8736,
@@ -238,7 +254,8 @@
             3.65168,
             4.02944
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b10": {
           "median": 3.764,
@@ -251,7 +268,8 @@
             3.76402,
             3.1428
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b11": {
           "median": 1.5655,
@@ -264,7 +282,8 @@
             1.56551,
             1.53589
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "g3": {
           "median": 0.0,
@@ -277,7 +296,8 @@
             0.0,
             0.0
           ],
-          "why": "case 0: wrong output"
+          "why": "case 0: wrong output",
+          "score_path": "unknown_prior_run"
         },
         "g4": {
           "median": 4.054,
@@ -290,9 +310,11 @@
             3.88686,
             3.93438
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         }
-      }
+      },
+      "invalidated": false
     },
     "fibmod": {
       "ref_median": 2.4245,
@@ -309,7 +331,8 @@
             2.36519,
             2.44321
           ],
-          "why": ""
+          "why": "",
+          "score_path": "not_recorded"
         },
         "b5": {
           "median": 10.9895,
@@ -322,7 +345,8 @@
             10.89959,
             10.98953
           ],
-          "why": ""
+          "why": "",
+          "score_path": "not_recorded"
         },
         "b6": {
           "median": 10.0899,
@@ -335,7 +359,8 @@
             8.94745,
             10.08988
           ],
-          "why": ""
+          "why": "",
+          "score_path": "not_recorded"
         },
         "b7": {
           "median": 2.4643,
@@ -348,7 +373,8 @@
             2.40896,
             2.47472
           ],
-          "why": ""
+          "why": "",
+          "score_path": "not_recorded"
         },
         "b8": {
           "median": 12.0543,
@@ -361,7 +387,8 @@
             12.05432,
             11.18787
           ],
-          "why": ""
+          "why": "",
+          "score_path": "not_recorded"
         },
         "b9": {
           "median": 6.9849,
@@ -374,7 +401,8 @@
             6.83386,
             6.99815
           ],
-          "why": ""
+          "why": "",
+          "score_path": "not_recorded"
         },
         "b10": {
           "median": 4.0227,
@@ -387,7 +415,8 @@
             3.95309,
             4.02271
           ],
-          "why": ""
+          "why": "",
+          "score_path": "not_recorded"
         },
         "b11": {
           "median": 8.5322,
@@ -400,7 +429,8 @@
             7.87462,
             8.73827
           ],
-          "why": ""
+          "why": "",
+          "score_path": "not_recorded"
         },
         "g3": {
           "median": 9.7131,
@@ -413,7 +443,8 @@
             8.87016,
             9.83671
           ],
-          "why": ""
+          "why": "",
+          "score_path": "not_recorded"
         },
         "g4": {
           "median": 11.5598,
@@ -426,9 +457,11 @@
             11.32702,
             12.13993
           ],
-          "why": ""
+          "why": "",
+          "score_path": "not_recorded"
         }
-      }
+      },
+      "invalidated": true
     },
     "lcs": {
       "ref_median": 0.863,
@@ -445,7 +478,8 @@
             0.8164,
             0.86989
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b5": {
           "median": 18.055,
@@ -458,7 +492,8 @@
             18.04612,
             20.47266
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b6": {
           "median": 19.0948,
@@ -471,7 +506,8 @@
             17.56827,
             21.23069
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b7": {
           "median": 19.063,
@@ -484,7 +520,8 @@
             18.40299,
             19.32784
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b8": {
           "median": 2.3518,
@@ -497,7 +534,8 @@
             2.36436,
             2.35182
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b9": {
           "median": 20.2298,
@@ -510,7 +548,8 @@
             20.83265,
             16.30834
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b10": {
           "median": 19.9358,
@@ -523,7 +562,8 @@
             20.56754,
             19.52632
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b11": {
           "median": 15.8858,
@@ -536,7 +576,8 @@
             16.06132,
             15.62217
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "g3": {
           "median": 20.371,
@@ -549,7 +590,8 @@
             19.1702,
             18.12225
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "g4": {
           "median": 18.7935,
@@ -562,9 +604,11 @@
             19.25833,
             16.69323
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         }
-      }
+      },
+      "invalidated": false
     },
     "maze": {
       "ref_median": 1.4391,
@@ -581,7 +625,8 @@
             1.51976,
             1.43097
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b5": {
           "median": 3.0224,
@@ -594,7 +639,8 @@
             2.9488,
             3.02236
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b6": {
           "median": 2.6293,
@@ -607,7 +653,8 @@
             2.69308,
             2.62928
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b7": {
           "median": 5.4389,
@@ -620,7 +667,8 @@
             5.43885,
             5.50958
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b8": {
           "median": 4.9489,
@@ -633,7 +681,8 @@
             4.90126,
             4.97859
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b9": {
           "median": 3.0548,
@@ -646,7 +695,8 @@
             2.46928,
             3.12923
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b10": {
           "median": 3.7562,
@@ -659,7 +709,8 @@
             3.60697,
             3.78222
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b11": {
           "median": 5.2272,
@@ -672,7 +723,8 @@
             5.30359,
             5.22725
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "g3": {
           "median": 4.7749,
@@ -685,7 +737,8 @@
             4.82621,
             4.77489
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "g4": {
           "median": 5.7438,
@@ -698,9 +751,11 @@
             5.89969,
             5.20793
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         }
-      }
+      },
+      "invalidated": false
     },
     "primes": {
       "ref_median": 16.6297,
@@ -717,7 +772,8 @@
             16.77462,
             15.46097
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b5": {
           "median": 18.0483,
@@ -730,7 +786,8 @@
             19.69315,
             18.04834
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b6": {
           "median": 16.2712,
@@ -743,7 +800,8 @@
             16.54302,
             16.27118
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b7": {
           "median": 17.6015,
@@ -756,7 +814,8 @@
             17.60155,
             15.90515
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b8": {
           "median": 18.169,
@@ -769,7 +828,8 @@
             19.08417,
             16.18268
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b9": {
           "median": 16.3703,
@@ -782,7 +842,8 @@
             16.86617,
             15.70063
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b10": {
           "median": 17.2623,
@@ -795,7 +856,8 @@
             16.60414,
             16.7213
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b11": {
           "median": 17.687,
@@ -808,7 +870,8 @@
             18.03456,
             15.89742
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "g3": {
           "median": 16.3426,
@@ -821,7 +884,8 @@
             17.88036,
             16.02792
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "g4": {
           "median": 15.9382,
@@ -834,9 +898,11 @@
             17.43422,
             15.0676
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         }
-      }
+      },
+      "invalidated": false
     },
     "sortints": {
       "ref_median": 1.6713,
@@ -853,7 +919,8 @@
             1.80233,
             1.6594
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b5": {
           "median": 2.874,
@@ -866,7 +933,8 @@
             2.9885,
             2.83993
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b6": {
           "median": 1.9716,
@@ -879,7 +947,8 @@
             1.97641,
             1.89316
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b7": {
           "median": 6.0484,
@@ -892,7 +961,8 @@
             6.20763,
             5.71324
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b8": {
           "median": 3.4319,
@@ -905,7 +975,8 @@
             3.4397,
             3.34238
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b9": {
           "median": 2.386,
@@ -918,7 +989,8 @@
             2.41155,
             2.38596
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b10": {
           "median": 4.0765,
@@ -931,7 +1003,8 @@
             4.17436,
             4.4378
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b11": {
           "median": 7.7362,
@@ -944,7 +1017,8 @@
             7.52077,
             7.75624
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "g3": {
           "median": 3.4632,
@@ -957,7 +1031,8 @@
             3.4653,
             3.46316
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "g4": {
           "median": 5.6062,
@@ -970,9 +1045,11 @@
             5.86354,
             5.79875
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         }
-      }
+      },
+      "invalidated": false
     },
     "wordfreq": {
       "ref_median": 9.6019,
@@ -989,7 +1066,8 @@
             10.00178,
             10.41539
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b5": {
           "median": 13.196,
@@ -1002,7 +1080,8 @@
             13.33195,
             13.19603
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b6": {
           "median": 9.9916,
@@ -1015,7 +1094,8 @@
             11.16897,
             6.2121
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b7": {
           "median": 11.8364,
@@ -1028,7 +1108,8 @@
             11.59076,
             11.83643
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b8": {
           "median": 15.2767,
@@ -1041,7 +1122,8 @@
             16.67903,
             16.03822
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b9": {
           "median": 11.753,
@@ -1054,7 +1136,8 @@
             11.2951,
             12.22469
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b10": {
           "median": 11.4256,
@@ -1067,7 +1150,8 @@
             9.788,
             11.45701
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "b11": {
           "median": 10.3787,
@@ -1080,7 +1164,8 @@
             8.76181,
             10.7391
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "g3": {
           "median": 12.6578,
@@ -1093,7 +1178,8 @@
             11.08032,
             11.5853
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         },
         "g4": {
           "median": 14.7452,
@@ -1106,9 +1192,11 @@
             13.43341,
             14.74518
           ],
-          "why": ""
+          "why": "",
+          "score_path": "unknown_prior_run"
         }
-      }
+      },
+      "invalidated": false
     }
   },
   "run_summaries": {
@@ -1172,82 +1260,117 @@
       "run": "b5",
       "model": "anthropic:claude-fable-5-1",
       "kept_per_100": 12.82,
-      "median_rel": 1.672,
-      "mean_rel": 4.289,
-      "wins_vs_ref": 7,
-      "total_tasks": 8
+      "median_rel": 1.625,
+      "mean_rel": 4.255,
+      "geom_rel": 2.092,
+      "wins_vs_ref": 5,
+      "total_tasks": 7,
+      "wins_rule": "beats_ref_spread"
     },
     {
       "run": "b6",
       "model": "openai:gpt-6-astra",
       "kept_per_100": 12.88,
-      "median_rel": 1.254,
-      "mean_rel": 4.205,
-      "wins_vs_ref": 6,
-      "total_tasks": 8
+      "median_rel": 1.18,
+      "mean_rel": 4.211,
+      "geom_rel": 1.813,
+      "wins_vs_ref": 4,
+      "total_tasks": 7,
+      "wins_rule": "beats_ref_spread"
     },
     {
       "run": "b7",
       "model": "opencode-go:hy4",
       "kept_per_100": 0.0,
-      "median_rel": 1.398,
-      "mean_rel": 4.415,
-      "wins_vs_ref": 7,
-      "total_tasks": 8
+      "median_rel": 1.564,
+      "mean_rel": 4.901,
+      "geom_rel": 2.49,
+      "wins_vs_ref": 4,
+      "total_tasks": 7,
+      "wins_rule": "beats_ref_spread"
     },
     {
       "run": "b8",
       "model": "opencode-go:gemini-4-argon",
       "kept_per_100": 10.34,
-      "median_rel": 2.007,
-      "mean_rel": 2.425,
-      "wins_vs_ref": 8,
-      "total_tasks": 8
+      "median_rel": 1.96,
+      "mean_rel": 2.061,
+      "geom_rel": 1.938,
+      "wins_vs_ref": 6,
+      "total_tasks": 7,
+      "wins_rule": "beats_ref_spread"
     },
     {
       "run": "b9",
       "model": "anthropic:claude-fable-5-1",
       "kept_per_100": 7.76,
-      "median_rel": 1.843,
-      "mean_rel": 4.541,
-      "wins_vs_ref": 7,
-      "total_tasks": 8
+      "median_rel": 1.564,
+      "mean_rel": 4.778,
+      "geom_rel": 2.318,
+      "wins_vs_ref": 5,
+      "total_tasks": 7,
+      "wins_rule": "beats_ref_spread"
     },
     {
       "run": "b10",
       "model": "opencode-go:gemini-4-argon",
       "kept_per_100": 12.5,
-      "median_rel": 2.049,
-      "mean_rel": 4.48,
-      "wins_vs_ref": 8,
-      "total_tasks": 8
+      "median_rel": 2.439,
+      "mean_rel": 4.883,
+      "geom_rel": 2.473,
+      "wins_vs_ref": 5,
+      "total_tasks": 7,
+      "wins_rule": "beats_ref_spread"
     },
     {
       "run": "b11",
       "model": "anthropic:claude-fable-5-1",
       "kept_per_100": 11.02,
-      "median_rel": 2.542,
-      "mean_rel": 4.373,
-      "wins_vs_ref": 8,
-      "total_tasks": 8
+      "median_rel": 1.564,
+      "mean_rel": 4.494,
+      "geom_rel": 2.496,
+      "wins_vs_ref": 4,
+      "total_tasks": 7,
+      "wins_rule": "beats_ref_spread"
     },
     {
       "run": "g3",
       "model": "DeepSeek v4.1 Flash",
       "kept_per_100": 3.12,
-      "median_rel": 1.818,
-      "mean_rel": 4.608,
-      "wins_vs_ref": 6,
-      "total_tasks": 8
+      "median_rel": 1.564,
+      "mean_rel": 4.694,
+      "geom_rel": null,
+      "wins_vs_ref": 5,
+      "total_tasks": 7,
+      "wins_rule": "beats_ref_spread"
     },
     {
       "run": "g4",
       "model": "DeepSeek v4.1 Flash",
       "kept_per_100": 1.57,
-      "median_rel": 3.082,
-      "mean_rel": 5.098,
-      "wins_vs_ref": 7,
-      "total_tasks": 8
+      "median_rel": 2.809,
+      "mean_rel": 5.145,
+      "geom_rel": 2.944,
+      "wins_vs_ref": 6,
+      "total_tasks": 7,
+      "wins_rule": "beats_ref_spread"
     }
-  ]
+  ],
+  "fibmod_invalidated": {
+    "invalidated": true,
+    "reason": "The committed macOS run used a shim that could score fibmod from audit-local _b7_fib code when a cell exposed no callable (removed in this revision). Which runs hit that path is unknown without the archive and per-cell score_path logs from that run. Fibmod rows are kept for forensics only and are excluded from aggregates until a full archive rerun.",
+    "score_paths_recorded": false
+  },
+  "cell_folder_sha256": {
+    "b5": "not_recorded",
+    "b6": "not_recorded",
+    "b7": "not_recorded",
+    "b8": "not_recorded",
+    "b9": "not_recorded",
+    "b10": "not_recorded",
+    "b11": "not_recorded",
+    "g3": "not_recorded",
+    "g4": "not_recorded"
+  },
+  "cell_folder_sha256_note": "Folder hashes were not captured on the original run; the harness now computes sha256 at audit time."
 }

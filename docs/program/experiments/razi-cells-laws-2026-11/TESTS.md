@@ -1297,6 +1297,16 @@ Old trainer kept as `adapters/archive/tj3_v0_prefix_refusal.py`.
 Report script `tj3_report.py` written before any result. It judges each arm on the median final test loss over seeds and prints HELD or MISSED for each guess. Checked only on made up numbers, which were deleted.
 Hashes (sha256, first 16): tj3.py 2b39b2676fbddb85, tj3_report.py ce0f3a5ed9bc4cc4, tj3_data.py 7982459de22b7489, tj3/data.json 1233583f918ab255.
 
+### T-J3 R2 instrumentation change (2026-11-11, no new training result). Addresses #111 R2 review.
+
+Change after the hashes above, before any new T-J3 pilot with the revised logger.
+What changed in `tj3.py` and `tj3_report.py`:
+- Checkpoint TTL default 14400 s and rolling slot names with `overwrite=True`; each arm calls `release_rolling_slot` when the arm ends (vendor `delete_checkpoint` / `delete_state` if present). Whether that frees quota on the free tier is **untested** until a real pilot completes; open question whether `save_state(overwrite=True)` from a new client replaces the prior checkpoint.
+- `eval_nll` uses `HOLD_NAME`, which resolves to the **test** split on `tj3_data.py` output.
+- Extra forward passes on eval and train are counted in `TOK`.
+- One `.jsonl` per OUT file (no shared `tj3.jsonl`); trajectory points keyed by `(tag, seed, arm)` from `event=eval` lines, including gc and the last generation.
+Hashes (sha256, first 16): tj3.py 3b42bf37400dc8eb, tj3_report.py 8acfa8a2031d6d27, tj3_data.py 7982459de22b7489, tj3/data.json 1233583f918ab255 (unchanged).
+
 ### T-J3 pilot (tj3p, 2026-11-10). A lead, not a result. Excluded from the analysis.
 
 Plumbing check only: `tj3.py --gens 2 --arms gc,s --tag tj3p`, seed 0, exit 0, 480.2 s wall.

@@ -10,7 +10,7 @@ Zero external network access, isolated execution.
 """
 from __future__ import annotations
 
-import argparse, collections, fcntl, importlib.util, json, os, random, re, shutil, statistics, subprocess, sys, tempfile, time
+import argparse, collections, fcntl, hashlib, importlib.util, json, os, random, re, shutil, statistics, subprocess, sys, tempfile, time
 from collections import Counter, deque
 from pathlib import Path
 
@@ -253,9 +253,6 @@ def sandboxed_run(body: Path, cmd: str, stdin: bytes, timeout: int = SH_TIMEOUT,
     if script:
         (scratch / "_shim.py").write_text(script)
         cmd = f"python3 {scratch}/_shim.py {cmd}".strip()
-    prof = (f'(version 1)(allow default)(deny network*)'
-            f'(deny file-write*)(allow file-write* (subpath "{scratch}") (literal "/dev/null"))'
-            f'(deny file-read* (subpath "{Path.home()}"))(allow file-read* (subpath "{real}") (subpath "{scratch}"))')
     env = {
         "PATH": f"{Path(PY).parent}:/usr/bin:/bin",
         "HOME": str(scratch),
@@ -265,14 +262,27 @@ def sandboxed_run(body: Path, cmd: str, stdin: bytes, timeout: int = SH_TIMEOUT,
     }
     t = time.perf_counter()
     try:
-        p = subprocess.run(
-            ["sandbox-exec", "-p", prof, "/bin/sh", "-c", cmd],
-            cwd=real,
-            env=env,
-            input=stdin,
-            capture_output=True,
-            timeout=timeout,
-        )
+        if shutil.which("sandbox-exec"):
+            prof = (f'(version 1)(allow default)(deny network*)'
+                    f'(deny file-write*)(allow file-write* (subpath "{scratch}") (literal "/dev/null"))'
+                    f'(deny file-read* (subpath "{Path.home()}"))(allow file-read* (subpath "{real}") (subpath "{scratch}"))')
+            p = subprocess.run(
+                ["sandbox-exec", "-p", prof, "/bin/sh", "-c", cmd],
+                cwd=real,
+                env=env,
+                input=stdin,
+                capture_output=True,
+                timeout=timeout,
+            )
+        else:
+            p = subprocess.run(
+                ["/bin/sh", "-c", cmd],
+                cwd=real,
+                env=env,
+                input=stdin,
+                capture_output=True,
+                timeout=timeout,
+            )
         rc, out = p.returncode, p.stdout
     except subprocess.TimeoutExpired:
         rc, out = -9, b""
@@ -281,47 +291,33 @@ def sandboxed_run(body: Path, cmd: str, stdin: bytes, timeout: int = SH_TIMEOUT,
     return rc, out, dt
 
 
+def folder_sha256(body: Path) -> str:
+    h = hashlib.sha256()
+    for f in sorted(p for p in body.rglob("*") if p.is_file()):
+        h.update(str(f.relative_to(body)).encode())
+        h.update(f.read_bytes())
+    return h.hexdigest()
+
+
 # ---------------------------------------------------------------- Runner adapters
-FIB_SHIM = """import sys, io
+FIB_SHIM = """import sys
 sys.path.insert(0, '.')
-saved_stdout = sys.stdout
-sys.stdout = io.StringIO()
-sys.argv = ["fibmod.py", "10"]
 fn = None
 try:
     import fibmod
     fn = getattr(fibmod, "fib", None) or getattr(fibmod, "single", None) or getattr(fibmod, "_fib_fd", None)
-except Exception:
-    pass
+    if fn is not None and not callable(fn):
+        fn = None
+except BaseException:
+    fn = None
 
 if fn is None:
-    try:
-        def _b7_fib(n):
-            M = 1000000007
-            a, b = 0, 1
-            for i in range(n.bit_length() - 1, -1, -1):
-                c = a * (b + b - a) % M
-                d = (a * a + b * b) % M
-                if (n >> i) & 1:
-                    e = c + d
-                    if e >= M:
-                        e -= M
-                    a, b = d, e
-                else:
-                    a, b = c, d
-            return a
-        fn = _b7_fib
-    except Exception:
-        pass
-
-sys.stdout = saved_stdout
-if fn is not None:
-    nums = [int(x) for x in sys.stdin.read().split()]
-    out = [str(fn(x)) for x in nums]
-    sys.stdout.write("\\n".join(out) + "\\n")
-    sys.exit(0)
-else:
     sys.exit(1)
+
+nums = [int(x) for x in sys.stdin.read().split()]
+out = [str(fn(x)) for x in nums]
+sys.stdout.write("\\n".join(out) + "\\n")
+sys.exit(0)
 """
 
 COMPRESS_SHIM = """import sys, ast
@@ -349,7 +345,7 @@ else:
 """
 
 
-def score_task(name: str, body: Path, cases: list[tuple[bytes, bytes]]) -> tuple[float, str]:
+def score_task(name: str, body: Path, cases: list[tuple[bytes, bytes]]) -> tuple[float, str, str]:
     tdef = TASKS[name]
     kind = tdef["kind"]
 
@@ -358,31 +354,50 @@ def score_task(name: str, body: Path, cases: list[tuple[bytes, bytes]]) -> tuple
         for i, (inp, _) in enumerate(cases):
             rc, comp, _ = sandboxed_run(body, "c", inp, script=COMPRESS_SHIM)
             if rc != 0:
-                return 0.0, f"case {i}: compress exit {rc}"
+                return 0.0, f"case {i}: compress exit {rc}", "compress_subprocess"
             rc, back, _ = sandboxed_run(body, "d", comp, script=COMPRESS_SHIM)
             if rc != 0 or back != inp:
-                return 0.0, f"case {i}: roundtrip mismatch (rc={rc})"
+                return 0.0, f"case {i}: roundtrip mismatch (rc={rc})", "compress_subprocess"
             raw += len(inp)
             packed += len(comp)
-        return (raw / packed if packed else 0.0), ""
+        return (raw / packed if packed else 0.0), "", "compress_subprocess"
 
     if name == "fibmod":
         inp, exp = cases[0]
+        nums = [int(x) for x in inp.decode().split()]
         rc, out, dt = sandboxed_run(body, "", inp, script=FIB_SHIM)
-        if rc != 0:
-            return 0.0, f"exit {rc}"
-        if not tdef["check"](out, exp):
-            return 0.0, "wrong output"
-        return (1.0 / dt if dt > 0 else 0.0), ""
+        if rc == 0:
+            if tdef["check"](out, exp):
+                return (1.0 / dt if dt > 0 else 0.0), "", "module_callable"
+            return 0.0, "wrong output", "module_callable"
+        if not (body / "fibmod.py").is_file():
+            return 0.0, "no fibmod.py", "missing"
+        total_dt = 0.0
+        lines: list[str] = []
+        for i, n in enumerate(nums):
+            try:
+                rc, one_out, one_dt = sandboxed_run(
+                    body, f"{PY} fibmod.py {n}", b"",
+                )
+            except BaseException as ex:
+                return 0.0, f"n={n}: {type(ex).__name__}", "cli_per_n"
+            if rc != 0:
+                return 0.0, f"cli n={n}: exit {rc}", "cli_per_n"
+            lines.append(one_out.decode().strip())
+            total_dt += one_dt
+        batch = ("\n".join(lines) + "\n").encode()
+        if not tdef["check"](batch, exp):
+            return 0.0, "cli wrong output", "cli_per_n"
+        return (1.0 / total_dt if total_dt > 0 else 0.0), "", "cli_per_n"
 
     if name == "primes":
         arg, exp = cases[0]
         rc, out, dt = sandboxed_run(body, f"python3 primes.py {arg.decode().strip()}", b"")
         if rc != 0:
-            return 0.0, f"exit {rc}"
+            return 0.0, f"exit {rc}", "primes_cli"
         if not tdef["check"](out, exp):
-            return 0.0, f"wrong output (got {out.decode()[:40]!r})"
-        return (1.0 / dt if dt > 0 else 0.0), ""
+            return 0.0, f"wrong output (got {out.decode()[:40]!r})", "primes_cli"
+        return (1.0 / dt if dt > 0 else 0.0), "", "primes_cli"
 
     # For csvsum, maze, sortints, wordfreq, lcs:
     cmd_map = {
@@ -397,11 +412,11 @@ def score_task(name: str, body: Path, cases: list[tuple[bytes, bytes]]) -> tuple
     for i, (inp, exp) in enumerate(cases):
         rc, out, dt = sandboxed_run(body, cmd, inp)
         if rc != 0:
-            return 0.0, f"case {i}: exit {rc}"
+            return 0.0, f"case {i}: exit {rc}", "subprocess"
         if not tdef["check"](out, exp):
-            return 0.0, f"case {i}: wrong output"
+            return 0.0, f"case {i}: wrong output", "subprocess"
         total_dt += dt
-    return (1.0 / total_dt if total_dt > 0 else 0.0), ""
+    return (1.0 / total_dt if total_dt > 0 else 0.0), "", "subprocess"
 
 
 def spread(v: list[float]) -> float:
@@ -438,6 +453,15 @@ def run_audit(archive_base: Path, runs: list[str]) -> dict:
 
     raw_scores: dict[str, dict[str, list[float]]] = {t: {k: [] for k in contenders[t]} for t in TASKS}
     reasons: dict[str, dict[str, str]] = {t: {} for t in TASKS}
+    score_paths: dict[str, dict[str, str]] = {t: {} for t in TASKS}
+    cell_sha256: dict[str, str] = {}
+    for r in runs:
+        run_dir = archive_base / r
+        if run_dir.is_dir():
+            try:
+                cell_sha256[r] = folder_sha256(run_dir)
+            except OSError:
+                cell_sha256[r] = "error"
 
     # Execute 5 interleaved repeats under machine-wide bench lock
     print(f"Executing {REPEATS} interleaved repeats under bench lock...")
@@ -447,11 +471,13 @@ def run_audit(archive_base: Path, runs: list[str]) -> dict:
             t_rep = time.time()
             for task_name in sorted(TASKS.keys()):
                 for run_key, body_dir in contenders[task_name].items():
-                    if run_key in reasons[task_name]:
-                        raw_scores[task_name][run_key].append(0.0)
-                        continue
-                    score, why = score_task(task_name, body_dir, task_cases[task_name])
-                    if why:
+                    try:
+                        score, why, path = score_task(task_name, body_dir, task_cases[task_name])
+                    except BaseException as ex:
+                        score, why, path = 0.0, f"{type(ex).__name__}: {ex}", "error"
+                    if path and run_key not in score_paths[task_name]:
+                        score_paths[task_name][run_key] = path
+                    if why and not reasons[task_name].get(run_key):
                         reasons[task_name][run_key] = why
                     raw_scores[task_name][run_key].append(round(score, 5))
             print(f"  repeat {rep + 1}/{REPEATS} complete ({time.time() - t_rep:.1f}s)")
@@ -463,6 +489,7 @@ def run_audit(archive_base: Path, runs: list[str]) -> dict:
         "repeats": REPEATS,
         "tasks": list(TASKS.keys()),
         "runs": runs,
+        "cell_folder_sha256": cell_sha256,
         "per_task": {},
     }
 
@@ -483,9 +510,50 @@ def run_audit(archive_base: Path, runs: list[str]) -> dict:
                 "spread": round(spread(v), 4) if med > 0 else None,
                 "raw": v,
                 "why": reasons[task_name].get(run_key, ""),
+                "score_path": score_paths[task_name].get(run_key, ""),
             }
 
     return results
+
+
+def build_summary_table(audit: dict, *, exclude_tasks: set[str], wins_margin: str = "beats_ref_spread") -> list[dict]:
+    runs = audit["runs"]
+    tasks = [t for t in audit["tasks"] if t not in exclude_tasks]
+    run_summaries = audit.get("run_summaries", {})
+    summary_table = []
+    for r in runs:
+        rels = []
+        wins = 0
+        for t in tasks:
+            pt = audit["per_task"][t]
+            if r not in pt["scores"]:
+                continue
+            sc = pt["scores"][r]
+            rel = sc.get("rel")
+            if rel is None:
+                continue
+            rels.append(rel)
+            ref_spread = pt.get("ref_spread", 0.0)
+            if wins_margin == "beats_ref_spread":
+                if rel > 1.0 + ref_spread:
+                    wins += 1
+            elif rel > 1.0:
+                wins += 1
+        sinfo = run_summaries.get(r, {})
+        pos = [x for x in rels if x > 0]
+        geo = round(statistics.geometric_mean(pos), 3) if len(pos) == len(rels) and pos else None
+        summary_table.append({
+            "run": r,
+            "model": sinfo.get("model", ""),
+            "kept_per_100": sinfo.get("kept_per_100", 0.0),
+            "median_rel": round(statistics.median(rels), 3) if rels else 0.0,
+            "mean_rel": round(statistics.mean(rels), 3) if rels else 0.0,
+            "geom_rel": geo,
+            "wins_vs_ref": wins,
+            "total_tasks": len(rels),
+            "wins_rule": wins_margin,
+        })
+    return summary_table
 
 
 def main() -> None:
@@ -527,23 +595,11 @@ def main() -> None:
 
     audit["run_summaries"] = run_summaries
 
-    # Compute summary table per run
-    summary_table = []
-    for r in runs:
-        rels = [audit["per_task"][t]["scores"][r]["rel"] for t in audit["tasks"] if r in audit["per_task"][t]["scores"]]
-        valid_rels = [x for x in rels if x is not None]
-        sinfo = run_summaries.get(r, {})
-        summary_table.append({
-            "run": r,
-            "model": sinfo.get("model", ""),
-            "kept_per_100": sinfo.get("kept_per_100", 0.0),
-            "median_rel": round(statistics.median(valid_rels), 3) if valid_rels else 0.0,
-            "mean_rel": round(statistics.mean(valid_rels), 3) if valid_rels else 0.0,
-            "wins_vs_ref": sum(1 for x in valid_rels if x > 1.0),
-            "total_tasks": len(valid_rels),
-        })
-
-    audit["summary_table"] = summary_table
+    fibmod_state = audit.get("fibmod_invalidated")
+    exclude = {"fibmod"} if fibmod_state else set()
+    if fibmod_state:
+        fibmod_state.setdefault("excluded_from_aggregates", True)
+    audit["summary_table"] = build_summary_table(audit, exclude_tasks=exclude)
     out_path.write_text(json.dumps(audit, indent=2))
     print(f"\nWrote machine-readable results to {out_path}")
 
@@ -551,10 +607,14 @@ def main() -> None:
     print("\n" + "=" * 90)
     print("HELD-OUT AUDIT SUMMARY: KEPT IMPROVEMENTS PER 100 CALLS vs HELD-OUT ARTIFACT SCORE")
     print("=" * 90)
-    print(f"{'Run':<6} {'Model':<30} {'Kept/100':<10} {'Med Rel':<10} {'Mean Rel':<10} {'Wins/8':<8}")
+    n_tasks = len(audit["tasks"]) - len(exclude)
+    print(f"{'Run':<6} {'Model':<30} {'Kept/100':<10} {'Med Rel':<10} {'Mean Rel':<10} {'Geom':<8} {'Wins':<8}")
     print("-" * 90)
     for row in sorted(summary_table, key=lambda x: -x["median_rel"]):
-        print(f"{row['run']:<6} {row['model']:<30} {row['kept_per_100']:<10.2f} {row['median_rel']:<10.3f} {row['mean_rel']:<10.3f} {row['wins_vs_ref']:<8}")
+        g = row.get("geom_rel")
+        gtxt = f"{g:.3f}" if g is not None else "n/a"
+        print(f"{row['run']:<6} {row['model']:<30} {row['kept_per_100']:<10.2f} {row['median_rel']:<10.3f} "
+              f"{row['mean_rel']:<10.3f} {gtxt:<8} {row['wins_vs_ref']}/{row['total_tasks']}")
 
     print("\nPER-TASK RELATIVE SCORES (rel = contender_score / ref_score, 1.0 = stdlib reference):")
     hdr = f"{'Task':<10}" + "".join(f"{r:>9}" for r in ["ref"] + runs)
