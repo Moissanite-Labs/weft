@@ -4,6 +4,7 @@
 Exploratory harness. Reads OPENAI_API_KEY from the environment. Writes logs
 to this directory only. See PREREGISTRATION.md.
 """
+import hashlib
 import json
 import os
 import re
@@ -164,11 +165,17 @@ def do_assay(cell: Path, log, command: str) -> str:
     return f"assay accepted. median={r['median']:.4f} spread={(r['spread'] or 0):.3f}"
 
 
+# Candidate eligibility requires r['ok'] (all assay runs clean and spread within
+# SPREAD_MAX). The selected winner is restored to disk before returning and is
+# re-evaluated there; the log records its content hash and before/after scores.
+# Fixed 2026-11-12 after zero-aska's PR #139 finding (winner was never written;
+# disk kept the last candidate). See RECONCILIATION-2026-11-12.md.
 def do_variants(cell: Path, log, path: str, versions: list[str]) -> str:
     p = inside(cell, path)
     if p is None:
         return "variants: path escapes the cell folder or is hidden."
     inc = p.read_text() if p.exists() else None
+    inc_hash = hashlib.sha256(inc.encode()).hexdigest() if inc is not None else None
     inc_res = run_assay(cell)
     inc_med = inc_res["median"] if inc_res and inc_res["ok"] else None
     if inc_med is None:
@@ -177,18 +184,37 @@ def do_variants(cell: Path, log, path: str, versions: list[str]) -> str:
     for i, v in enumerate(versions):
         p.write_text(v)
         r = run_assay(cell)
-        s = [x for x in r["scores"] if x is not None]
-        med = statistics.median(s) if s else 0.0
-        mn = min(s) if s else 0.0
-        log("variant", {"index": i, "scores": r["scores"], "median": med, "min": mn})
+        if r is None or not r["ok"]:
+            log("variant", {"index": i, "scores": r["scores"] if r else None,
+                            "ok": False})
+            continue
+        s = r["scores"]
+        med = statistics.median(s)
+        mn = min(s)
+        log("variant", {"index": i, "scores": s, "median": med, "min": mn,
+                        "ok": True})
         if med > best_med * WIN_MARGIN and mn >= inc_med * 0.97:
             best_i, best_med, best_min = i, med, mn
     if best_i is None:
         if inc is not None:
             p.write_text(inc)
-        log("variants_result", {"adopted": None, "incumbent_median": inc_med})
+        elif p.exists():
+            # restore the original absence: no candidate survives a no-win call
+            p.unlink()
+        log("variants_result", {"adopted": None, "incumbent_median": inc_med,
+                                "incumbent_sha256": inc_hash})
         return f"no variant beat the incumbent (median {inc_med:.4f}). Body unchanged."
-    log("variants_result", {"adopted": best_i, "median": best_med})
+    # restore the selected candidate to disk and re-evaluate it there
+    p.write_text(versions[best_i])
+    after = run_assay(cell)
+    winner_hash = hashlib.sha256(versions[best_i].encode()).hexdigest()
+    log("variants_result", {"adopted": best_i, "median": best_med,
+                            "content_sha256": winner_hash,
+                            "incumbent_sha256": inc_hash,
+                            "before_median": inc_med,
+                            "after_scores": after["scores"] if after else None,
+                            "after_median": after["median"] if after else None,
+                            "after_ok": bool(after and after["ok"])})
     return f"variant {best_i} adopted. median {best_med:.4f} vs incumbent {inc_med:.4f}."
 
 
