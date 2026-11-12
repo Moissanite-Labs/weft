@@ -435,6 +435,89 @@ def replay_execution(initial_bcp: bytes, steps: List[Dict[str, Any]]) -> FlatCom
     return vm
 
 
+def verify_execution(
+    initial_bcp: bytes,
+    steps: List[Dict[str, Any]],
+    final_bcp: bytes,
+    *,
+    strict: bool = True,
+) -> Dict[str, Any]:
+    """Check an execution by replaying it from `initial_bcp` (#77).
+
+    Each step is applied through `interact`, so a step that is not an active
+    pair fails the replay. With strict=True (the default) the op each step
+    produces must also match the recorded op. With strict=False the recorded
+    op labels are not compared; only the replay and the final graph are
+    checked.
+
+    Returns {"status", "first_failing_step", "commitment", "reasons"}.
+    "commitment" is the recomputed commitment record, or None when the replay
+    could not run to the end. "first_failing_step" is the 1-based number of
+    the first step that failed, or None when the failure is in the graphs
+    rather than in a step.
+    """
+    reasons: List[str] = []
+    first_failing_step: Optional[int] = None
+    if not isinstance(steps, (list, tuple)):
+        return {
+            "status": "FAIL",
+            "first_failing_step": None,
+            "commitment": None,
+            "reasons": ["steps must be a list of step records"],
+        }
+    try:
+        vm = deserialize_graph_bcp(initial_bcp)
+    except (ValueError, TypeError, MemoryError) as exc:
+        return {
+            "status": "FAIL",
+            "first_failing_step": None,
+            "commitment": None,
+            "reasons": [f"initial graph does not decode: {exc}"],
+        }
+    vm.snapshot_initial_graph()
+    for n, step in enumerate(steps, start=1):
+        if not isinstance(step, dict) or step.get("step") not in (None, n):
+            reasons.append(f"step {n}: numbered {step.get('step')!r}" if isinstance(step, dict) else f"step {n}: not a step record")
+            first_failing_step = n
+            break
+        try:
+            a, b = int(step["a"]), int(step["b"])
+        except (KeyError, TypeError, ValueError) as exc:
+            reasons.append(f"step {n}: unreadable step: {exc}")
+            first_failing_step = n
+            break
+        if strict and not vm.is_active_pair(a, b):
+            reasons.append(f"step {n}: ({a}, {b}) is not an active pair")
+            first_failing_step = n
+            break
+        kwargs = {k: step[k] for k in ("tension", "metabolic_budget") if k in step}
+        try:
+            op = vm.interact(a, b, **kwargs)
+        except (ValueError, KeyError, TypeError, MemoryError) as exc:
+            reasons.append(f"step {n}: replay failed: {exc}")
+            first_failing_step = n
+            break
+        if strict and op != step.get("op"):
+            reasons.append(f"step {n}: replay gave {op!r}, record says {step.get('op')!r}")
+            first_failing_step = n
+            break
+    if not reasons:
+        if serialize_graph_bcp(vm) != final_bcp:
+            reasons.append("final graph does not match final_bcp")
+    commitment = None
+    if not reasons:
+        commitment = _commitment_record(
+            vm.capacity, initial_bcp, vm.trace_log,
+            serialize_graph_bcp(vm), vm.reductions, len(vm.live_nodes()),
+        )
+    return {
+        "status": "FAIL" if reasons else "PASS",
+        "first_failing_step": first_failing_step,
+        "commitment": commitment,
+        "reasons": reasons,
+    }
+
+
 def verify_execution_record(initial_bcp: bytes, record: Dict[str, Any]) -> Dict[str, Any]:
     """Check a record by replaying it from `initial_bcp`.
 

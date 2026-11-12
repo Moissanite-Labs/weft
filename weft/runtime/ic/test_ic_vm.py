@@ -3,6 +3,7 @@
 
 import unittest
 
+import weft.runtime.ic.ic_vm as ic_vm
 from weft.runtime.ic import (
     FlatCombinatorVM,
     deserialize_graph_bcp,
@@ -10,6 +11,7 @@ from weft.runtime.ic import (
     replay_execution,
     run_combinator_self_test,
     serialize_graph_bcp,
+    verify_execution,
     verify_execution_record,
 )
 
@@ -191,3 +193,91 @@ class TestRecords(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestVerifyExecution(unittest.TestCase):
+    """#77: the named `verify_execution` entry point and its return contract."""
+
+    def run_net(self):
+        vm, a, b = pair(FlatCombinatorVM.CON, FlatCombinatorVM.DUP)
+        e = vm.alloc_node(vm.ERA)
+        vm.connect_ports(a, 1, e, 0)
+        initial = vm.snapshot_initial_graph()
+        vm.normalize()
+        record = vm.compute_execution_commitment()
+        return initial, record, serialize_graph_bcp(vm), e
+
+    def test_valid_record_passes_and_returns_recomputed_commitment(self) -> None:
+        initial, record, final, _e = self.run_net()
+        res = verify_execution(initial, record["steps"], final)
+        self.assertEqual(res["status"], "PASS")
+        self.assertIsNone(res["first_failing_step"])
+        self.assertEqual(res["reasons"], [])
+        self.assertEqual(res["commitment"]["trace_commitment_sha256"], record["trace_commitment_sha256"])
+        self.assertEqual(res["commitment"]["final_graph_sha256"], record["final_graph_sha256"])
+
+    def test_self_test_record_passes(self) -> None:
+        """The fixed self-test record verifies through the new entry point."""
+        captured = []
+
+        class Capturing(FlatCombinatorVM):
+            def __init__(self, *args, **kwargs):
+                super().__init__(*args, **kwargs)
+                captured.append(self)
+
+        original = ic_vm.FlatCombinatorVM
+        ic_vm.FlatCombinatorVM = Capturing
+        try:
+            record = ic_vm.run_combinator_self_test()
+        finally:
+            ic_vm.FlatCombinatorVM = original
+        vm = captured[0]
+        res = verify_execution(vm._initial_bcp, vm.trace_log, serialize_graph_bcp(vm))
+        self.assertEqual(res["status"], "PASS")
+        self.assertEqual(res["commitment"]["trace_commitment_sha256"], record["trace_commitment_sha256"])
+
+    def test_non_active_step_fails_at_that_step(self) -> None:
+        initial, record, final, e = self.run_net()
+        steps = [dict(s) for s in record["steps"]]
+        steps[0]["b"] = e  # (a, e) is not an active pair
+        res = verify_execution(initial, steps, final)
+        self.assertEqual(res["status"], "FAIL")
+        self.assertEqual(res["first_failing_step"], 1)
+        self.assertIsNone(res["commitment"])
+
+    def test_wrong_op_fails_strict_and_passes_non_strict(self) -> None:
+        initial, record, final, _e = self.run_net()
+        steps = [dict(s) for s in record["steps"]]
+        steps[0]["op"] = "ANNIHILATE(tagA=1,tagB=2,label=0)"
+        self.assertEqual(verify_execution(initial, steps, final)["first_failing_step"], 1)
+        res = verify_execution(initial, steps, final, strict=False)
+        self.assertEqual(res["status"], "PASS")
+
+    def test_swapped_final_graph_fails_without_a_failing_step(self) -> None:
+        initial, record, _final, _e = self.run_net()
+        other = pair(FlatCombinatorVM.CON, FlatCombinatorVM.CON)[0]
+        res = verify_execution(initial, record["steps"], serialize_graph_bcp(other))
+        self.assertEqual(res["status"], "FAIL")
+        self.assertIsNone(res["first_failing_step"])
+        self.assertIn("final graph", res["reasons"][0])
+
+    def test_dropped_step_fails_on_final_graph(self) -> None:
+        initial, record, final, _e = self.run_net()
+        res = verify_execution(initial, record["steps"][:-1], final)
+        self.assertEqual(res["status"], "FAIL")
+        self.assertIsNone(res["first_failing_step"])
+
+    def test_misnumbered_step_fails_at_that_step(self) -> None:
+        initial, record, final, _e = self.run_net()
+        steps = [dict(s) for s in record["steps"]]
+        steps[0]["step"] = 99
+        res = verify_execution(initial, steps, final)
+        self.assertEqual(res["status"], "FAIL")
+        self.assertEqual(res["first_failing_step"], 1)
+
+    def test_undecodable_initial_graph_fails(self) -> None:
+        _initial, record, final, _e = self.run_net()
+        res = verify_execution(b"not a bcp packet", record["steps"], final)
+        self.assertEqual(res["status"], "FAIL")
+        self.assertIsNone(res["commitment"])
+        self.assertIsNone(res["first_failing_step"])
