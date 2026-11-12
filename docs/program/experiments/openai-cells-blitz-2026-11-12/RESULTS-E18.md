@@ -18,7 +18,7 @@
 | E19a (astra, reasoning.effort=max, 13 partial cells incl. retries) | 1,443,226 / 206,301 | $24.75 |
 | E19b (astra, variants tool removed, 8 cells) | 381,261 / 35,083 | $5.57 |
 | Upper-bound total | 6,731,767 / 717,778 | ~$61.15 |
-| Actual per owner balance, after E18c | — | ~$2 |
+| Actual per owner balance (full battery, owner-reported 2026-11-12) | — | ~$30 |
 
 The gap between bound and actual is the cache discount on replayed context, and it is where the money went: most tokens were history replay, not new reasoning. Output-token spend (full price) is the binding term, roughly $20 by list price across E18a–E19b.
 
