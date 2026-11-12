@@ -1,0 +1,1 @@
+Implemented f.py using reversible numeric-template, hexadecimal, and base-36 transforms, selecting the smallest stdlib compression result with an explicit raw fallback. Validation accepted: baseline Δ₀=54.2662, final Δ*=58.4386 (+7.69% relative). Round-trip edge/random tests passed. Encoded length is at most |x|+1 for nonempty bytes and zero for empty bytes, so θ=2 suffices.

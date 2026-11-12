@@ -1,0 +1,5 @@
+python3 - <<'PY'
+import f
+x=open('x.bin','rb').read()
+print(100*(1-len(f.enc(x))/len(x)))
+PY

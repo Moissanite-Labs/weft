@@ -1,0 +1,1 @@
+Finalize f.py: use the best lossless stdlib codec found, report validation metric.

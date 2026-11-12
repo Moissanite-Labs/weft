@@ -1,0 +1,7 @@
+Ω ⇢ f.py ⇢ mk ⇢ tr ⇢ fin
+Ω ≝ ∀x∈B⁺: dec(enc x) = x ∧ |enc x| ≤ θ·|x|
+bd ≝ f.py · py3 · lib ⊆ {zlib,bz2,lzma,json,struct,re,math,itertools,collections}
+mk ≝ cmd ⇢ Δ∈[0,100] · Δ=0 ⇒ ∅
+tr ≝ vs ∈ [f.py]⁺ → max(Δ) · ✓ ⇐ Δ*>1.03·Δ₀ ∧ Δmin ≥ 0.97·Δ₀
+fin ≝ d q
+tool=1 · ids: s w v a d

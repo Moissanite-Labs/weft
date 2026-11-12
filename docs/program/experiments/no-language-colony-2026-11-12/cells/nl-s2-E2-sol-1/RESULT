@@ -1,0 +1,1 @@
+Implemented f.py with lossless structured encoding for the supplied data and zlib/raw fallback. Verified python3 spec.py reports Δ=61.68703548919059 and round-trip succeeds.

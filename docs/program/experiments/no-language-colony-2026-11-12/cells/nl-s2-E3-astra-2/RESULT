@@ -1,0 +1,1 @@
+ok=false; Δ=0; f.py implements import-free reversible encoding with raw fallback, but evaluation returned ∅ (σ>0.15), and validation returned ∅ (mk ≺ tr). No verified improvement is available.

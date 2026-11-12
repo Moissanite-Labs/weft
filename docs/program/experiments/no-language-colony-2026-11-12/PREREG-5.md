@@ -45,3 +45,9 @@ Let M be the 8x8 output matrix, r[i] = mean(abs(row i)), clamp(int(x), lo, hi).
 - row 4 -> termination: r4 > 0.9 ends the run
 
 Assay: byte round-trip on `x.bin`; score is the percentage size reduction, 0 if the round-trip fails. Retention: incumbent replaced iff round-trip ok and score > incumbent * 1.03. Rows 5 to 7 reserved. The template bodies and this registration are in `e4a.py` (docstring) and are pinned by mock-policy validation (MOCK=good run, 2026-11-12, passes retention) before any model call.
+
+## Stage 1 outcome and revised Stage 2 (registered 2026-11-12, before Stage 2 calls)
+
+Stage 1 smoke cost $2.59. Findings: astra operates E1/E2/E3 end to end (H-NL-C held, schema 100%, one refused order violation before any assay existed, one retained win); luna completes the world but never registers fitness through the instrument (H-NL-B as written falsified; both models registered E1 assays); E4a emitted zero matrices (H-NL-E held; H-NL-F not evaluable for lack of variance).
+
+Revised Stage 2, tighter than the original registration to honor the owner's no-waste directive: 2 cells each of E1, E2, E3 across astra, luna, sol (18 cells), plus one gpt-5.5 cell on E2 as the battery cross-check (5.5 was the 0-adoption outlier). Estimated $12 to $16. E4a/E4b/E4c are dropped (behavioral null with no discriminative variance). E4d embeddings decoder is an offered next step, not part of this prereg. Stop rule unchanged. Models: gpt-6-astra, gpt-6-luna, gpt-6-sol, gpt-5.5.

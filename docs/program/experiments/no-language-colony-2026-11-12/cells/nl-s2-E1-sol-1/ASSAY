@@ -1,0 +1,1 @@
+python3 -c 'import f; print(len(f.enc(open("x.bin","rb").read())))'
