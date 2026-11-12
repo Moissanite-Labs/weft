@@ -1,0 +1,6 @@
+Ω ≝ ∀x: dec(enc x) = x ∧ |enc x| ≤ θ·|x|
+bd ≝ f.py · py3 · stdlib ⊂
+mk ≝ `python3 spec.py` ⇢ Δ∈[0,100] · Δ=0 ⇒ ∅
+tr ≝ vs ∈ [f.py]⁺ → max(Δ) · ✓ ⇐ Δ*>1.03·Δ₀ ∧ Δmin ≥ 0.97·Δ₀
+fin ≝ d q
+tool=1 · ids: s w v a d

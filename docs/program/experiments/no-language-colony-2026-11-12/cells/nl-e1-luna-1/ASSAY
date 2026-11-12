@@ -1,0 +1,1 @@
+python3 f.py enc < x.bin | wc -c
