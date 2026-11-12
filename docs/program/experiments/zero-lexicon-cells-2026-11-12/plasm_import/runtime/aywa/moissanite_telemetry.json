@@ -1,0 +1,208 @@
+{
+  "schema": "SYM-2P/1.0",
+  "source": "fixture",
+  "organization": "Moissanite-Labs",
+  "origin_thread": "Moissanite-Labs/compass#5",
+  "active_nodes": 19,
+  "org_tension": 0.2053,
+  "gini_index": 0.2167,
+  "barycentric_state": {
+    "rounding": 0.18,
+    "density": 0.55,
+    "hue": 0.22,
+    "contrast": 0.12
+  },
+  "uniform_frame_64b_floats": [
+    19.0,
+    0.2053,
+    1762560000.0,
+    0.2167,
+    0.18,
+    0.55,
+    0.22,
+    0.12,
+    0.28,
+    0.84,
+    0.62,
+    0.54,
+    0.38,
+    0.32,
+    0.44,
+    0.3
+  ],
+  "binary_frame_bytes": 64,
+  "sym2p_wire_packet": ":01:03:0001[s-exp (active_nodes 19) (tension 0.2053) (gini 0.2167)]7095b5038539e979d2ace6df91a9458ddff99d42681fc2e638291c84608debe0",
+  "repositories": [
+    {
+      "name": "compass",
+      "role": "Origin Vision & Architecture Thread (#5)",
+      "commits": 14,
+      "prs": 3,
+      "issues": 5,
+      "layer": "governance",
+      "tension": 0.18
+    },
+    {
+      "name": "aywa",
+      "role": "WebGPU Spatial Canvas & Barycentric UI",
+      "commits": 42,
+      "prs": 8,
+      "issues": 4,
+      "layer": "interface",
+      "tension": 0.24
+    },
+    {
+      "name": "qalam",
+      "role": "Kinetic Typography & MSDF/Laya Engine",
+      "commits": 31,
+      "prs": 6,
+      "issues": 2,
+      "layer": "interface",
+      "tension": 0.19
+    },
+    {
+      "name": "splicers",
+      "role": "Darwin Mach/SCM_RIGHTS Splicer Substrate",
+      "commits": 27,
+      "prs": 5,
+      "issues": 3,
+      "layer": "substrate",
+      "tension": 0.32
+    },
+    {
+      "name": "alkindus",
+      "role": "Epistemic Verification & Benchmark Core",
+      "commits": 19,
+      "prs": 4,
+      "issues": 2,
+      "layer": "cognition",
+      "tension": 0.21
+    },
+    {
+      "name": "averroes",
+      "role": "Dialectical Debate & Consensus Engine",
+      "commits": 16,
+      "prs": 3,
+      "issues": 1,
+      "layer": "cognition",
+      "tension": 0.17
+    },
+    {
+      "name": "avicenna",
+      "role": "Homeostatic Diagnostic & Autonomic Loop",
+      "commits": 22,
+      "prs": 4,
+      "issues": 3,
+      "layer": "substrate",
+      "tension": 0.28
+    },
+    {
+      "name": "alhazen",
+      "role": "Optical Perception & Visual Grounding",
+      "commits": 15,
+      "prs": 2,
+      "issues": 1,
+      "layer": "interface",
+      "tension": 0.15
+    },
+    {
+      "name": "kindi",
+      "role": "Cryptographic Frequency & Watermark Core",
+      "commits": 21,
+      "prs": 4,
+      "issues": 2,
+      "layer": "ledger",
+      "tension": 0.22
+    },
+    {
+      "name": "farabi",
+      "role": "Polyphonic Resonance & Harmonic Scheduler",
+      "commits": 12,
+      "prs": 2,
+      "issues": 1,
+      "layer": "cognition",
+      "tension": 0.14
+    },
+    {
+      "name": "biruni",
+      "role": "Empirical Geodesic & Cross-Corpus Index",
+      "commits": 18,
+      "prs": 3,
+      "issues": 2,
+      "layer": "cognition",
+      "tension": 0.2
+    },
+    {
+      "name": "khwarizmi",
+      "role": "Algebraic Reduction & IC Rewrite Engine",
+      "commits": 29,
+      "prs": 6,
+      "issues": 3,
+      "layer": "substrate",
+      "tension": 0.29
+    },
+    {
+      "name": "tusi",
+      "role": "Coupled Oscillator & Orbital Kinematics",
+      "commits": 14,
+      "prs": 2,
+      "issues": 1,
+      "layer": "interface",
+      "tension": 0.16
+    },
+    {
+      "name": "khayyam",
+      "role": "Geometric Cubic Solver & Lattice Layout",
+      "commits": 11,
+      "prs": 2,
+      "issues": 1,
+      "layer": "interface",
+      "tension": 0.13
+    },
+    {
+      "name": "jazari",
+      "role": "Automata Mechanical Valve & Clockwork",
+      "commits": 24,
+      "prs": 5,
+      "issues": 2,
+      "layer": "substrate",
+      "tension": 0.26
+    },
+    {
+      "name": "banu-musa",
+      "role": "Feedback Control & Differential Float",
+      "commits": 13,
+      "prs": 2,
+      "issues": 1,
+      "layer": "substrate",
+      "tension": 0.18
+    },
+    {
+      "name": "suhrawardi",
+      "role": "Illuminationist Shader & Photonic Field",
+      "commits": 17,
+      "prs": 3,
+      "issues": 2,
+      "layer": "interface",
+      "tension": 0.21
+    },
+    {
+      "name": "mulla-sadra",
+      "role": "Substantial Motion & Weight Plasticity",
+      "commits": 20,
+      "prs": 4,
+      "issues": 2,
+      "layer": "cognition",
+      "tension": 0.25
+    },
+    {
+      "name": "moissanite-HQ",
+      "role": "Organization Charter & Sovereign Ledger",
+      "commits": 9,
+      "prs": 2,
+      "issues": 1,
+      "layer": "ledger",
+      "tension": 0.12
+    }
+  ]
+}
