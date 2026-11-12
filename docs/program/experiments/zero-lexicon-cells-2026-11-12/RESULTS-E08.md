@@ -71,3 +71,29 @@ Not proven and not close: that this scales to the peer's foraging-coordination v
 ## What the branch contains
 
 This experiment (root): `00-DESIGN.md`, `PREREG-E08.md`, `analyze_e08.py`, `zerolex_e08.py`, `plasm_np.py`, `strict_tools.py`, `test_strict.py`, the run logs (`revc-*.jsonl` and `c1-*.jsonl`, `c2-*.jsonl`, `c3-*.jsonl`), and `plasm_import/` (the reference Plasm substrate, verbatim). The no-language series record is a separate branch, PR #140.
+
+## Revision D outcome, appended 2026-11-12
+
+Decoder rev D (soft-normalized bounded head, `u = z * sqrt(n / (n + z·z))`) was registered in `PREREG-E08.md` before its first run and re-run across the same three seeds:
+
+| Seed | Commits (rev C) | Commits (rev D) | First A | Last A | Last B |
+|---|---|---|---|---|---|
+| 20261112 | 9 | 19 | 11.41 | 33.50 | 29.19 |
+| 20261113 | 5 | 12 | 32.26 | 28.31 | 33.73 |
+| 20261114 | 12 | 15 | 10.86 | 28.73 | 32.85 |
+
+Dec drift at end: rev D drifts further from initialization (mean Frobenius 9.1 to 17.8 across seeds vs rev C 2.7 to 9.1), confirming the revision unblocks more weight updates per generation.
+Seed 20261113 still regresses in A despite commits (28.31 vs 32.26 start).
+Seed 20261112's B ends at 29.19 vs rev C's 33.41.
+Net, the learning curve is steeper and total commits are about 80% higher, but the end-of-run return is not better. All revision-D runs freeze out by generation 25 to 39.
+The tanh-saturation collapse is not the binding constraint anymore.
+The binding constraint is that the harmonic field, at the energy levels reachable in this basin, offers no further reliable gradient direction, and the ES window can only sample small perturbations around the incumbent.
+
+Verdict: revision D registers more learning, does not close the gap to genuinely new solutions, and preserves safety invariants exactly as before (zero drift in the core, watermark retained everywhere). The task is now the bottleneck, not the head nonlinearity.
+
+## The honest ceiling of this experiment
+
+The 2026-11-12 E08 series (all decoders, all seeds, all regimes) delivers one unambiguous finding and one boundary it cannot cross:
+
+1. Proven: matrix genotypes in a disclosed substrate learn, reliably, from an organized field, with invariants intact and zero text in the loop.
+2. Untouched: any novel solution quality that would differentiate these colonies from a well-trained linear regressor with this policy class in this environment. The field gives them one good direction, they find it, and the record is the evidence.

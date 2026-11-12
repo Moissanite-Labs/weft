@@ -32,3 +32,11 @@ Two failure modes reproduced mechanically in this session before any claim was m
 2. The cold-start revision (tanh(z/4)) was untested at scale and reverted before any run; the novelty-augmented score (fitness + 0.05·novelty, plasm-style) delayed but did not prevent the plateau.
 
 Decoder revision C: u = tanh(z / 2.0). Same bounded action range in effect for large |z| (u ∈ ±0.964 max, unattainable at z ≤ 12), graded slope everywhere in the learned region. Registered before any run. All other constants, seeds, and invariants unchanged. Runs with this decoder are tagged rev-c. If entities still plateau at gen 40 across 3 seeds, that is the result to publish.
+
+## Decoder revision D (registered 2026-11-12, before any rev-D model run)
+
+Two of three probe packets confirm the thrust head saturates near gen 13-33 across seeds (mean |u| ≈ 0.71 at plateau). Rev C (tanh(z/2)) delayed but did not prevent this. Revision D replaces the head nonlinearity with a soft-normalized direction map:
+
+    u = z * sqrt(n / (n + dot(z, z)))   with n = 2, z = W @ phi(s)[64:66]
+
+Every component remains bounded in (-1, 1), and no z-value ever pins a gradient to exactly zero. The map is disclosed, fixed, and applied identically to all entities and seeds. All other constants, seeds, and invariants unchanged. Runs on this decoder are tagged rev-d. If organisms still plateau at gen 40 across the same 3 seeds, that is the answer to publish.

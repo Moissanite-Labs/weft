@@ -45,3 +45,6 @@ print("ok  word tokens outside the fixed vocabulary rejected")
 r = strict_formula("Δ := ∀x: dec(enc x) = x")
 assert r["ok"], r
 print("done")
+r = strict_body("import lzma\nprint('a very nice compressor written in English')\n")
+assert not r["ok"] and any(str(b).startswith("string-prose") for b in r["bad"]), r
+print("ok  English string constant rejected")

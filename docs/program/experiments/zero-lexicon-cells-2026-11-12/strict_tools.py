@@ -51,6 +51,11 @@ SAFE_NODES = (
     ast.ListComp, ast.DictComp, ast.SetComp, ast.GeneratorExp, ast.JoinedStr, ast.FormattedValue,
     ast.Import, ast.ImportFrom, ast.Assign, ast.Try, ast.ExceptHandler, ast.With,
     ast.keyword, ast.NamedExpr, ast.Expr,
+    # operator classes and comparison operators
+    ast.Add, ast.Sub, ast.Mult, ast.Div, ast.Mod, ast.Pow, ast.FloorDiv, ast.MatMult,
+    ast.LShift, ast.RShift, ast.BitOr, ast.BitAnd, ast.BitXor,
+    ast.UAdd, ast.USub, ast.Invert, ast.Not, ast.And, ast.Or,
+    ast.Lt, ast.LtE, ast.Gt, ast.GtE, ast.Eq, ast.NotEq, ast.In, ast.NotIn, ast.Is, ast.IsNot,
 )
 
 TOKEN_CLASS = re.compile(
@@ -95,8 +100,12 @@ def strict_body(src: str) -> dict:
     for node in ast.walk(tree):
         if not isinstance(node, SAFE_NODES):
             bad.append(type(node).__name__)
+        if isinstance(node, ast.Expr) and isinstance(node.value, ast.Constant) and isinstance(node.value.value, str):
+            docstrings.append(node.value.value)
         if isinstance(node, ast.Constant) and isinstance(node.value, str):
-            docstrings.append(node.value)
+            hits = _blocklist_hits(node.value)
+            if len(hits) >= 2:
+                bad.append(f"string-prose:{hits[:6]}")
         if isinstance(node, ast.Attribute):
             if not isinstance(node.attr, str) or not re.match(r"^[A-Za-z_][A-Za-z0-9_]*$", node.attr):
                 bad.append(f"attr:{node.attr!r}")
@@ -125,6 +134,11 @@ def _looks_user_ident(s):
 
 _BLOCK = set(
     "the a an and are as at be been but by for from has have he her his i if in into is it its me my no not of on or she so that their them then there they this to was we were what which who will with you your all also any about after again between both down during each first few may might must once only other some than too very can could should would shall may might must when where why how over under us use used uses using many more most other same own".split())
+def _blocklist_hits(text):
+    import re as _re
+    return [m.group(0).lower() for m in WORDRUN.finditer(text) if m.group(0).lower() in _BLOCK]
+
+
 def _contains_blocklist(s):
     parts = re.split(r"[^a-z0-9]+", s.lower())
     return any(p in _BLOCK for p in parts if p)

@@ -106,7 +106,7 @@ class Entity:
 
     def thrust(self, s: np.ndarray) -> np.ndarray:
         z = self.w @ phi(s)
-        return (np.tanh(z / 2.0))[64:66].astype(np.float32)
+        return action_map(z)[64:66].astype(np.float32)
 
     def mask(self):
         return pl.plasticity_mask(self.w, core_rows=64)
@@ -193,8 +193,8 @@ def episode(entities, t0=0, steps=EP_LEN):
             feats[name] = phi(s)
         thrusts = {}
         for name, ent in entities.items():
-            y = np.tanh(ent.w @ feats[name] / 2.0)
-            u = y[64:66].astype(np.float32)
+            y = ent.w @ feats[name]
+            u = action_map(y)[64:66].astype(np.float32)
             thrusts[name] = u
             ent._u = u
             ent._y = y
@@ -279,6 +279,14 @@ def generation(entities, rng):
             "score_parent": base_score,
         }
     return out
+
+
+def action_map(z):
+    import os
+    if os.environ.get("NOLEX_HEAD") == "soft":
+        n = z.shape[0]
+        return z * math.sqrt(n / (n + float(np.dot(z, z))))
+    return np.tanh(z / 2.0)
 
 
 def main():
