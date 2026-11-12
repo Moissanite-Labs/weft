@@ -1,0 +1,9 @@
+python3 - <<'PY'
+from pathlib import Path
+import compress
+src=Path('corpus_hard.txt').read_bytes()
+out=compress.pack(src)
+for i in range(14):
+    assert compress.unpack(compress.pack(src))==src
+print(100*(1-len(out)/len(src)))
+PY

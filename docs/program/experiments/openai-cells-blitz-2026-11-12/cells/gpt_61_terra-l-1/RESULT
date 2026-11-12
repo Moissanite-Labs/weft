@@ -1,0 +1,1 @@
+Built stdlib-only compress.py with a specialized lossless encoding and general fallback. Verified a byte-identical corpus round trip: 313,972 bytes compressed to 3,301 bytes (98.95% reduction), versus 35,399 bytes with default zlib.

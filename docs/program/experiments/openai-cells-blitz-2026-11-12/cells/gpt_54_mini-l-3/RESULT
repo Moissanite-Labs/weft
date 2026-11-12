@@ -1,0 +1,1 @@
+Built a stdlib-only `compress.py` that round-trips `corpus.txt` and supports `--decompress`. It currently uses zlib compression with a tiny custom header, and the assay verifies byte-identical restoration and reports a stable positive reduction of about 88.73%.

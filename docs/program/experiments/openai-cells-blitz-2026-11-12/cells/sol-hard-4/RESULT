@@ -1,0 +1,1 @@
+Built stdlib-only `compress.py` with reversible, format-aware packing of the corpus’s metadata, hexadecimal, and base-36 records. Verified both CLI commands restore the corpus byte-for-byte. The registered assay reports a stable 61.6464% size reduction (16,978 bytes versus 44,267), beating default zlib’s approximately 49.42%.

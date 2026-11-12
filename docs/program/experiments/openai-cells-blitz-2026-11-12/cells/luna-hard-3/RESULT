@@ -1,0 +1,1 @@
+Built `compress.py` as a stdlib-only compressor with reversible hex/base-36 line packing followed by zlib, plus CLI decompression. Verified byte-identical round-trip on `corpus_hard.txt`; output is 20,886 bytes versus 44,267 input (52.82% size reduction), beating default zlib’s 22,390-byte output. Registered assay passes consistently; tested variants did not improve the score.

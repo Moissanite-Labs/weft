@@ -1,0 +1,1 @@
+for i in 1 2 3 4 5; do python3 compress.py corpus.txt tmp/out.bin && python3 compress.py --decompress tmp/out.bin tmp/restored.txt && cmp -s corpus.txt tmp/restored.txt || { echo 0; exit 0; }; done; python3 -c "import os; print(100*(1-os.path.getsize('tmp/out.bin')/os.path.getsize('corpus.txt')))"

@@ -1,0 +1,11 @@
+python3 - <<'PY'
+import subprocess, pathlib
+src=pathlib.Path('corpus.txt').read_bytes()
+for _ in range(2):
+    subprocess.run(['python3','compress.py','corpus.txt','out.bin'],check=True)
+    subprocess.run(['python3','compress.py','--decompress','out.bin','restored.txt'],check=True)
+    if pathlib.Path('restored.txt').read_bytes()!=src:
+        print(0);break
+else:
+    print(100*(1-pathlib.Path('out.bin').stat().st_size/len(src)))
+PY

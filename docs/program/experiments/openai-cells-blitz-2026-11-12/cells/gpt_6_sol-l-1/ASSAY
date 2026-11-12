@@ -1,0 +1,10 @@
+python3 - <<'PY'
+import compress
+src=open('corpus.txt','rb').read()
+for i in range(20):
+    blob=compress.compress(src)
+    if compress.decompress(blob)!=src:
+        print(0)
+        raise SystemExit
+print(100*(1-len(blob)/len(src)))
+PY

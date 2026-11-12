@@ -1,0 +1,15 @@
+python3 - <<'PY'
+from pathlib import Path
+import subprocess, sys, os, tempfile
+inp='corpus.txt'
+out='tmp/assay.bin'
+rest='tmp/assay.txt'
+subprocess.run([sys.executable,'compress.py',inp,out], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+subprocess.run([sys.executable,'compress.py','--decompress',out,rest], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+if Path(inp).read_bytes() != Path(rest).read_bytes():
+    print(0)
+    raise SystemExit
+sin=Path(inp).stat().st_size
+sout=Path(out).stat().st_size
+print(100*(1-sout/sin))
+PY

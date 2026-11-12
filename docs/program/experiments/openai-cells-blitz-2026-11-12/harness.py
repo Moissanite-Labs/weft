@@ -31,11 +31,15 @@ TARGET_TASK = sys.argv[3] if len(sys.argv) > 3 else "compress"
 if not TARGET_NAME or not TARGET_CELL:
     sys.exit("usage: harness.py MODEL CELLTAG [TASK]")
 
-MAX_STEPS = 18
+CORPUSES = {"compress": "corpus.txt", "compress-hard": "corpus_hard.txt"}
+if TARGET_TASK not in CORPUSES:
+    sys.exit(f"unknown task {TARGET_TASK}")
+CORPUS_FILE = CORPUSES[TARGET_TASK]
+MAX_STEPS = int(os.environ.get("BLITZ_MAX_STEPS", "18"))
 CELL_WALL_S = 12 * 60
 GLOBAL_IN_TOK = 8_000_000
 GLOBAL_OUT_TOK = 2_500_000
-MAX_OUTPUT_TOKENS = 8192
+MAX_OUTPUT_TOKENS = int(os.environ.get("BLITZ_MAX_OUTPUT_TOKENS", "8192"))
 OUT_CAP = 4000
 ASSAY_RUNS = 3
 SPREAD_MAX = 0.15
@@ -52,12 +56,16 @@ SYSTEM = (
     "0.3 to 3 s) that process startup does not dominate. 3) improve with `variants` (cheap: several versions\n"
     "of one file in one reply, all scored). Only scored wins are kept. Read LIBRARY if present."
 )
+if os.environ.get("BLITZ_ABLATE") == "novariants":
+    SYSTEM = SYSTEM.replace("3) improve with `variants` (cheap: several versions\n"
+                            "of one file in one reply, all scored). Only scored wins are kept.",
+                            "3) improve however you can. No scoring tool is available to you.")
 
 NEED = (
-    "NEED: write a stdlib-only Python program `compress.py` in your folder that round-trips `corpus.txt`\n"
-    "(also in your folder): `python3 compress.py corpus.txt out.bin` writes the compressed form, and\n"
+    f"NEED: write a stdlib-only Python program `compress.py` in your folder that round-trips `{CORPUS_FILE}`\n"
+    f"(also in your folder): `python3 compress.py {CORPUS_FILE} out.bin` writes the compressed form, and\n"
     "`python3 compress.py --decompress out.bin restored.txt` restores it byte-identically.\n"
-    "Your assay prints one number: the percentage size reduction, 100 * (1 - bytes(out.bin)/bytes(corpus.txt)).\n"
+    f"Your assay prints one number: the percentage size reduction, 100 * (1 - bytes(out.bin)/bytes({CORPUS_FILE})).\n"
     "Fitness is 0 when the round trip is wrong in any byte. Higher is better.\n"
     "Rules: stdlib only. No imports outside the Python standard library. The corpus is fixed. Beat the\n"
     "trivial baseline (zlib with default settings) before anything else."
@@ -212,13 +220,18 @@ def tool_dispatch(cell: Path, log, name: str, args: dict) -> str:
 def api_call(model: str, instructions: str, input_items: list):
     body = {"model": model, "instructions": instructions, "input": input_items,
             "tools": TOOLS, "max_output_tokens": MAX_OUTPUT_TOKENS}
+    eff = os.environ.get("BLITZ_REASONING_EFFORT")
+    if eff:
+        body["reasoning"] = {"effort": eff}
+    if os.environ.get("BLITZ_ABLATE") == "novariants":
+        body["tools"] = [t for t in TOOLS if t["name"] != "variants"]
     data = json.dumps(body).encode()
     req = urllib.request.Request(API, data=data, headers={
         "content-type": "application/json", "authorization": f"Bearer {KEY}"})
     ctx = ssl.create_default_context(cafile=certifi.where())
     for attempt in range(5):
         try:
-            with urllib.request.urlopen(req, timeout=180, context=ctx) as resp:
+            with urllib.request.urlopen(req, timeout=int(os.environ.get('BLITZ_HTTP_TIMEOUT', '180')), context=ctx) as resp:
                 return json.loads(resp.read())
         except urllib.error.HTTPError as e:
             text = e.read().decode(errors="replace")[:2000]
@@ -238,7 +251,7 @@ def main():
     if cell.exists():
         sys.exit(f"cell dir {cell} exists; refusing to overwrite")
     cell.mkdir(parents=True)
-    (cell / "corpus.txt").write_bytes((ROOT / "corpus.txt").read_bytes())
+    (cell / CORPUS_FILE).write_bytes((ROOT / CORPUS_FILE).read_bytes())
     (cell / "NEED").write_text(NEED)
     logf = open(LOGS / f"{TARGET_CELL}.jsonl", "a")
 

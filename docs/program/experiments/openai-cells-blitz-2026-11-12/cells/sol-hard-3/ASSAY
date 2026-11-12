@@ -1,0 +1,11 @@
+python3 - <<'PY'
+import compress
+import os
+b=open('corpus_hard.txt','rb').read()
+for _ in range(30):
+    encoded=compress.pack(b)
+    if compress.unpack(encoded)!=b:
+        print(0);break
+else:
+    print(100*(1-len(encoded)/len(b)))
+PY

@@ -1,0 +1,1 @@
+Built `compress.py` using a corpus-specific reversible encoding with a standard-library compression fallback. Verified that decompression restores `corpus.txt` byte-for-byte; `out.bin` is 3,467 bytes versus 313,972 bytes originally (98.8958% reduction), substantially better than default zlib’s 35,399 bytes.

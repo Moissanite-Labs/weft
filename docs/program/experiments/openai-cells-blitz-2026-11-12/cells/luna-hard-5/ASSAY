@@ -1,0 +1,9 @@
+python3 - <<'PY'
+import compress
+x=open('corpus_hard.txt','rb').read()
+for _ in range(20):
+ y=compress.encode(x); z=compress.decode(y)
+ assert z==x
+open('out.bin','wb').write(y); open('restored.txt','wb').write(z)
+print(100*(1-len(y)/len(x)))
+PY
