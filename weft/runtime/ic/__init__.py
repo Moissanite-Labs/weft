@@ -12,6 +12,7 @@ from .ic_vm import (
     run_combinator_self_test,
     run_ic_verification,
     validate_port_graph,
+    verify_execution,
     verify_execution_record,
 )
 
@@ -26,5 +27,6 @@ __all__ = [
     "run_ic_verification",
     "serialize_graph_bcp",
     "validate_port_graph",
+    "verify_execution",
     "verify_execution_record",
 ]
