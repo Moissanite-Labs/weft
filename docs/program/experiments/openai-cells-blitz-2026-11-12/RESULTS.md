@@ -2,7 +2,7 @@
 
 - Date: 2026-11-12. Registered in `PREREGISTRATION.md` before any model call.
 - Status: exploratory blitz on expiring OpenAI credits. One task, 12 cells, n=4 per model. Nothing here is confirmatory and nothing should be cited as a project result.
-- Correction 2026-11-12 (post-review): the harness's `variants` selection did not write the selected winner back to disk. Every "adoption" in this file is a reported selection event, not a verified retained win. See `RECONCILIATION-2026-11-12.md`.
+- Correction 2026-11-12 (post-review): the harness's `variants` selection did not write the selected winner back to disk. Every "adoption" in this file was a reported selection event, not a verified retained win. Replay under the fixed semantics: all 38 persist as retained wins. See `RECONCILIATION-2026-11-12.md` and `REPLAY-2026-11-12.md`.
 - Task: `compress` from the razi-cells task set. Corpus: `corpus.txt`, 313,972 bytes, sha256 `a7727d6e5fdcd02dd8c22ddaee5109cd3119eef19c00ac28526d4625ec16d0fa`.
 - Models, all through `POST /v1/responses` with native function tools: gpt-6-astra, gpt-6-sol, gpt-6-luna. 4 cells each, max 18 steps.
 

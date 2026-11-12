@@ -1,0 +1,9 @@
+python3 - <<'PY'
+import compress,pathlib
+p=pathlib.Path('corpus_hard.txt').read_bytes(); q=None
+for _ in range(20):
+ q=compress.enc(p)
+ if compress.dec(q)!=p: print(0); raise SystemExit
+pathlib.Path('out.bin').write_bytes(q)
+print(100*(1-len(q)/len(p)))
+PY

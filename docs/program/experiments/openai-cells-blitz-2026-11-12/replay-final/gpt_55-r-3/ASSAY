@@ -1,0 +1,13 @@
+python3 - <<'PY'
+import os, subprocess, sys, tempfile, pathlib
+orig=pathlib.Path('corpus.txt').read_bytes(); c=len(orig); score=None
+with tempfile.TemporaryDirectory(dir='tmp') as d:
+    for i in range(8):
+        out=os.path.join(d,'out.bin'); res=os.path.join(d,'restored.txt')
+        r=subprocess.run([sys.executable,'compress.py','corpus.txt',out], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        if r.returncode: print(0); raise SystemExit
+        r=subprocess.run([sys.executable,'compress.py','--decompress',out,res], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        if r.returncode or pathlib.Path(res).read_bytes()!=orig: print(0); raise SystemExit
+        score=100*(1-os.path.getsize(out)/c)
+print(score if score and score>0 else 0)
+PY

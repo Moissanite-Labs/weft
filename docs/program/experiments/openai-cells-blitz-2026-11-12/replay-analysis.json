@@ -1,0 +1,3733 @@
+{
+ "summary": {
+  "cells": 87,
+  "paired_variants_calls": 109,
+  "historical_adoptions": 38,
+  "replay_same_winner": 38,
+  "replay_different_winner": 0,
+  "replay_would_not_adopt": 0,
+  "replay_total_adoptions_fixed_semantics": 38,
+  "anchor_true": 52,
+  "anchor_false": 35,
+  "anchor_none": 0,
+  "candidate_evals_reproduced_exact": 228,
+  "candidate_evals_drifted": 0,
+  "candidate_evals_missing": 0,
+  "candidate_evals_total": 228,
+  "roundtrip_ok": 87,
+  "roundtrip_total": 87,
+  "errors": []
+ },
+ "per_cell": [
+  {
+   "cell": "astra-1",
+   "paired": [
+    {
+     "cell": "astra-1",
+     "step": null,
+     "hist_adopted": 0,
+     "rep_outcome": "adopt",
+     "rep_winner": 0,
+     "inc_rep": 93.38157542710816,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       98.53490120138102,
+       98.53490120138102,
+       98.53490120138102
+      ],
+      [
+       97.44435809562636,
+       97.44435809562636,
+       97.44435809562636
+      ]
+     ]
+    },
+    {
+     "cell": "astra-1",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 98.53490120138102,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       98.88620641331075,
+       98.88620641331075,
+       98.88620641331075
+      ],
+      [
+       99.07794325608653,
+       99.07794325608653,
+       99.07794325608653
+      ]
+     ]
+    },
+    {
+     "cell": "astra-1",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 98.53490120138102,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       99.07794325608653,
+       99.07794325608653,
+       99.07794325608653
+      ],
+      [
+       99.0798542545195,
+       99.0798542545195,
+       99.0798542545195
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 6,
+    "exact": 6,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": false,
+   "error": null,
+   "sh_count": 8,
+   "elapsed_s": 17.0
+  },
+  {
+   "cell": "astra-2",
+   "paired": [
+    {
+     "cell": "astra-2",
+     "step": null,
+     "hist_adopted": 0,
+     "rep_outcome": "adopt",
+     "rep_winner": 0,
+     "inc_rep": 93.38061992789166,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       98.87856241957881,
+       98.87856241957881,
+       98.87856241957881
+      ],
+      [
+       98.90404239868523,
+       98.90404239868523,
+       98.90404239868523
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 2,
+    "exact": 2,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": false,
+   "error": null,
+   "sh_count": 4,
+   "elapsed_s": 7.2
+  },
+  {
+   "cell": "astra-3",
+   "paired": [
+    {
+     "cell": "astra-3",
+     "step": null,
+     "hist_adopted": 0,
+     "rep_outcome": "adopt",
+     "rep_winner": 0,
+     "inc_rep": 93.38061992789166,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       98.53203470373154,
+       98.53203470373154,
+       98.53203470373154
+      ],
+      [
+       97.44276559693222,
+       97.44276559693222,
+       97.44276559693222
+      ]
+     ]
+    },
+    {
+     "cell": "astra-3",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 98.53203470373154,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       98.88779891200488,
+       98.88779891200488,
+       98.88779891200488
+      ],
+      [
+       98.72886754232862,
+       98.72886754232862,
+       98.72886754232862
+      ]
+     ]
+    },
+    {
+     "cell": "astra-3",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 98.53203470373154,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       98.88779891200488,
+       98.88779891200488,
+       98.88779891200488
+      ],
+      [
+       98.88779891200488,
+       98.88779891200488,
+       98.88779891200488
+      ]
+     ]
+    },
+    {
+     "cell": "astra-3",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 98.53203470373154,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       98.88779891200488,
+       98.88779891200488,
+       98.88779891200488
+      ],
+      [
+       98.88779891200488,
+       98.88779891200488,
+       98.88779891200488
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 8,
+    "exact": 8,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": false,
+   "error": null,
+   "sh_count": 8,
+   "elapsed_s": 23.1
+  },
+  {
+   "cell": "astra-4",
+   "paired": [
+    {
+     "cell": "astra-4",
+     "step": null,
+     "hist_adopted": 0,
+     "rep_outcome": "adopt",
+     "rep_winner": 0,
+     "inc_rep": 93.38061992789166,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       98.87282942427987,
+       98.87282942427987,
+       98.87282942427987
+      ],
+      [
+       98.94672136368848,
+       98.94672136368848,
+       98.94672136368848
+      ]
+     ]
+    },
+    {
+     "cell": "astra-4",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 98.87282942427987,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       99.07635075739239,
+       99.07635075739239,
+       99.07635075739239
+      ],
+      [
+       99.06679576522748,
+       99.06679576522748,
+       99.06679576522748
+      ]
+     ]
+    },
+    {
+     "cell": "astra-4",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 98.87282942427987,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       99.07635075739239,
+       99.07635075739239,
+       99.07635075739239
+      ],
+      [
+       99.07284726026525,
+       99.07284726026525,
+       99.07284726026525
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 6,
+    "exact": 6,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": false,
+   "error": null,
+   "sh_count": 11,
+   "elapsed_s": 18.3
+  },
+  {
+   "cell": "astra-abl-1",
+   "paired": [],
+   "repro": {
+    "total": 0,
+    "exact": 0,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 6,
+   "elapsed_s": 2.3
+  },
+  {
+   "cell": "astra-abl-2",
+   "paired": [],
+   "repro": {
+    "total": 0,
+    "exact": 0,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 6,
+   "elapsed_s": 2.1
+  },
+  {
+   "cell": "astra-abl-3",
+   "paired": [],
+   "repro": {
+    "total": 0,
+    "exact": 0,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 7,
+   "elapsed_s": 2.2
+  },
+  {
+   "cell": "astra-abl-4",
+   "paired": [],
+   "repro": {
+    "total": 0,
+    "exact": 0,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 7,
+   "elapsed_s": 2.5
+  },
+  {
+   "cell": "astra-abl-hard-1",
+   "paired": [],
+   "repro": {
+    "total": 0,
+    "exact": 0,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 4,
+   "elapsed_s": 1.0
+  },
+  {
+   "cell": "astra-abl-hard-2",
+   "paired": [],
+   "repro": {
+    "total": 0,
+    "exact": 0,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 6,
+   "elapsed_s": 1.6
+  },
+  {
+   "cell": "astra-abl-hard-3",
+   "paired": [],
+   "repro": {
+    "total": 0,
+    "exact": 0,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 6,
+   "elapsed_s": 1.0
+  },
+  {
+   "cell": "astra-abl-hard-4",
+   "paired": [],
+   "repro": {
+    "total": 0,
+    "exact": 0,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 7,
+   "elapsed_s": 2.0
+  },
+  {
+   "cell": "astra-hard-1",
+   "paired": [
+    {
+     "cell": "astra-hard-1",
+     "step": null,
+     "hist_adopted": 0,
+     "rep_outcome": "adopt",
+     "rep_winner": 0,
+     "inc_rep": 54.79025007341812,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       61.935527593918714,
+       61.935527593918714,
+       61.935527593918714
+      ],
+      [
+       62.08010481848781,
+       62.08010481848781,
+       62.08010481848781
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 2,
+    "exact": 2,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": false,
+   "error": null,
+   "sh_count": 4,
+   "elapsed_s": 9.8
+  },
+  {
+   "cell": "astra-hard-2",
+   "paired": [
+    {
+     "cell": "astra-hard-2",
+     "step": null,
+     "hist_adopted": 0,
+     "rep_outcome": "adopt",
+     "rep_winner": 0,
+     "inc_rep": 54.7970271308198,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       62.11850814376398,
+       62.11850814376398,
+       62.11850814376398
+      ],
+      [
+       61.754806063207354,
+       61.754806063207354,
+       61.754806063207354
+      ]
+     ]
+    },
+    {
+     "cell": "astra-hard-2",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 62.11850814376398,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       62.11850814376398,
+       62.11850814376398,
+       62.11850814376398
+      ],
+      [
+       62.11850814376398,
+       62.11850814376398,
+       62.11850814376398
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 4,
+    "exact": 4,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": false,
+   "error": null,
+   "sh_count": 5,
+   "elapsed_s": 14.0
+  },
+  {
+   "cell": "astra-hard-3",
+   "paired": [
+    {
+     "cell": "astra-hard-3",
+     "step": null,
+     "hist_adopted": 0,
+     "rep_outcome": "adopt",
+     "rep_winner": 0,
+     "inc_rep": 54.7970271308198,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       61.562789436826534,
+       61.562789436826534,
+       61.562789436826534
+      ],
+      [
+       61.92875053651705,
+       61.92875053651705,
+       61.92875053651705
+      ]
+     ]
+    },
+    {
+     "cell": "astra-hard-3",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 61.562789436826534,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       61.93100955565094,
+       61.93100955565094,
+       61.93100955565094
+      ],
+      [
+       62.066550703684456,
+       62.066550703684456,
+       62.066550703684456
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 4,
+    "exact": 4,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": false,
+   "error": null,
+   "sh_count": 7,
+   "elapsed_s": 13.5
+  },
+  {
+   "cell": "astra-hard-4",
+   "paired": [
+    {
+     "cell": "astra-hard-4",
+     "step": null,
+     "hist_adopted": 0,
+     "rep_outcome": "adopt",
+     "rep_winner": 0,
+     "inc_rep": 54.7970271308198,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       62.10495402896063,
+       62.10495402896063,
+       62.10495402896063
+      ],
+      [
+       62.10495402896063,
+       62.10495402896063,
+       62.10495402896063
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 2,
+    "exact": 2,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": false,
+   "error": null,
+   "sh_count": 4,
+   "elapsed_s": 8.1
+  },
+  {
+   "cell": "astra-hard-5",
+   "paired": [
+    {
+     "cell": "astra-hard-5",
+     "step": null,
+     "hist_adopted": 0,
+     "rep_outcome": "adopt",
+     "rep_winner": 0,
+     "inc_rep": 54.7970271308198,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       61.61022883863827,
+       61.61022883863827,
+       61.61022883863827
+      ],
+      [
+       61.973930919194885,
+       61.973930919194885,
+       61.973930919194885
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 2,
+    "exact": 2,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": false,
+   "error": null,
+   "sh_count": 4,
+   "elapsed_s": 35.5
+  },
+  {
+   "cell": "astra-hard-6",
+   "paired": [
+    {
+     "cell": "astra-hard-6",
+     "step": null,
+     "hist_adopted": 0,
+     "rep_outcome": "adopt",
+     "rep_winner": 0,
+     "inc_rep": 54.7970271308198,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       61.953599746989866,
+       61.953599746989866,
+       61.953599746989866
+      ],
+      [
+       62.09817697155895,
+       62.09817697155895,
+       62.09817697155895
+      ]
+     ]
+    },
+    {
+     "cell": "astra-hard-6",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 61.953599746989866,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       62.12302618203176,
+       62.12302618203176,
+       62.12302618203176
+      ],
+      [
+       62.1117310863623,
+       62.1117310863623,
+       62.1117310863623
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 4,
+    "exact": 4,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": false,
+   "error": null,
+   "sh_count": 7,
+   "elapsed_s": 11.9
+  },
+  {
+   "cell": "astra-max-1",
+   "paired": [
+    {
+     "cell": "astra-max-1",
+     "step": null,
+     "hist_adopted": 0,
+     "rep_outcome": "adopt",
+     "rep_winner": 0,
+     "inc_rep": 92.712725975565,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       98.932070375702,
+       98.932070375702,
+       98.932070375702
+      ],
+      [
+       98.937803371001,
+       98.937803371001,
+       98.937803371001
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 2,
+    "exact": 2,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": false,
+   "error": null,
+   "sh_count": 7,
+   "elapsed_s": 11.4
+  },
+  {
+   "cell": "astra-max-1-retry",
+   "paired": [
+    {
+     "cell": "astra-max-1-retry",
+     "step": null,
+     "hist_adopted": 0,
+     "rep_outcome": "adopt",
+     "rep_winner": 0,
+     "inc_rep": 93.38030142815283,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       98.91964888588791,
+       98.91964888588791,
+       98.91964888588791
+      ],
+      [
+       0.0,
+       0.0,
+       0.0
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 2,
+    "exact": 2,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 9,
+   "elapsed_s": 12.9
+  },
+  {
+   "cell": "astra-max-2",
+   "paired": [],
+   "repro": {
+    "total": 0,
+    "exact": 0,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 4,
+   "elapsed_s": 0.7
+  },
+  {
+   "cell": "astra-max-2-retry",
+   "paired": [
+    {
+     "cell": "astra-max-2-retry",
+     "step": null,
+     "hist_adopted": 0,
+     "rep_outcome": "adopt",
+     "rep_winner": 0,
+     "inc_rep": 93.38157542710816,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       99.07635075739239,
+       99.07635075739239,
+       99.07635075739239
+      ],
+      [
+       99.06679576522748,
+       99.06679576522748,
+       99.06679576522748
+      ]
+     ]
+    },
+    {
+     "cell": "astra-max-2-retry",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 99.07635075739239,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       99.08463175060196,
+       99.08463175060196,
+       99.08463175060196
+      ],
+      [
+       99.08749824825144,
+       99.08749824825144,
+       99.08749824825144
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 4,
+    "exact": 4,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": false,
+   "error": null,
+   "sh_count": 11,
+   "elapsed_s": 14.6
+  },
+  {
+   "cell": "astra-max-3",
+   "paired": [
+    {
+     "cell": "astra-max-3",
+     "step": null,
+     "hist_adopted": 0,
+     "rep_outcome": "adopt",
+     "rep_winner": 0,
+     "inc_rep": 93.37966442867517,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       98.52980520555973,
+       98.52980520555973,
+       98.52980520555973
+      ],
+      [
+       98.88493241435542,
+       98.88493241435542,
+       98.88493241435542
+      ]
+     ]
+    },
+    {
+     "cell": "astra-max-3",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 98.52980520555973,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       99.07475825869822,
+       99.07475825869822,
+       99.07475825869822
+      ],
+      [
+       99.080809753736,
+       99.080809753736,
+       99.080809753736
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 4,
+    "exact": 4,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": false,
+   "error": null,
+   "sh_count": 8,
+   "elapsed_s": 15.1
+  },
+  {
+   "cell": "astra-max-4",
+   "paired": [
+    {
+     "cell": "astra-max-4",
+     "step": null,
+     "hist_adopted": 0,
+     "rep_outcome": "adopt",
+     "rep_winner": 0,
+     "inc_rep": 92.7254659651179,
+     "n_candidates_rep": 4,
+     "rep_scores": [
+      [
+       98.9279298790975,
+       98.9279298790975,
+       98.9279298790975
+      ],
+      [
+       98.85754143681602,
+       98.85754143681602,
+       98.85754143681602
+      ],
+      [
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       98.75562152039036,
+       98.75562152039036,
+       98.75562152039036
+      ]
+     ]
+    },
+    {
+     "cell": "astra-max-4",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 98.9279298790975,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       99.080809753736,
+       99.080809753736,
+       99.080809753736
+      ],
+      [
+       99.06934376313812,
+       99.06934376313812,
+       99.06934376313812
+      ]
+     ]
+    },
+    {
+     "cell": "astra-max-4",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 98.9279298790975,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       99.06934376313812,
+       99.06934376313812,
+       99.06934376313812
+      ],
+      [
+       99.080809753736,
+       99.080809753736,
+       99.080809753736
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 8,
+    "exact": 8,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": false,
+   "error": null,
+   "sh_count": 10,
+   "elapsed_s": 30.6
+  },
+  {
+   "cell": "astra-max-hard-1",
+   "paired": [],
+   "repro": {
+    "total": 0,
+    "exact": 0,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 3,
+   "elapsed_s": 0.3
+  },
+  {
+   "cell": "astra-max-hard-1-retry",
+   "paired": [
+    {
+     "cell": "astra-max-hard-1-retry",
+     "step": null,
+     "hist_adopted": 0,
+     "rep_outcome": "adopt",
+     "rep_winner": 0,
+     "inc_rep": 54.79025007341812,
+     "n_candidates_rep": 3,
+     "rep_scores": [
+      [
+       62.02814737840829,
+       62.02814737840829,
+       62.02814737840829
+      ],
+      [
+       62.10947206722841,
+       62.10947206722841,
+       62.10947206722841
+      ],
+      [
+       62.13206225856733,
+       62.13206225856733,
+       62.13206225856733
+      ]
+     ]
+    },
+    {
+     "cell": "astra-max-hard-1-retry",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 62.02814737840829,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       62.141098335102896,
+       62.141098335102896,
+       62.141098335102896
+      ],
+      [
+       62.1433573542368,
+       62.1433573542368,
+       62.1433573542368
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 5,
+    "exact": 5,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": false,
+   "error": null,
+   "sh_count": 7,
+   "elapsed_s": 20.5
+  },
+  {
+   "cell": "astra-max-hard-2",
+   "paired": [
+    {
+     "cell": "astra-max-hard-2",
+     "step": null,
+     "hist_adopted": 0,
+     "rep_outcome": "adopt",
+     "rep_winner": 0,
+     "inc_rep": 54.78799105428423,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       61.74576998667178,
+       61.74576998667178,
+       61.74576998667178
+      ],
+      [
+       62.10947206722841,
+       62.10947206722841,
+       62.10947206722841
+      ]
+     ]
+    },
+    {
+     "cell": "astra-max-hard-2",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 61.74576998667178,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       62.12302618203176,
+       62.12302618203176,
+       62.12302618203176
+      ],
+      [
+       62.136580296835106,
+       62.136580296835106,
+       62.136580296835106
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 4,
+    "exact": 4,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": false,
+   "error": null,
+   "sh_count": 10,
+   "elapsed_s": 14.3
+  },
+  {
+   "cell": "astra-max-hard-3",
+   "paired": [],
+   "repro": {
+    "total": 0,
+    "exact": 0,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 5,
+   "elapsed_s": 1.2
+  },
+  {
+   "cell": "astra-max-hard-3-retry",
+   "paired": [
+    {
+     "cell": "astra-max-hard-3-retry",
+     "step": null,
+     "hist_adopted": 0,
+     "rep_outcome": "adopt",
+     "rep_winner": 0,
+     "inc_rep": 54.7970271308198,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       61.73899292927011,
+       61.73899292927011,
+       61.73899292927011
+      ],
+      [
+       62.102695009826725,
+       62.102695009826725,
+       62.102695009826725
+      ]
+     ]
+    },
+    {
+     "cell": "astra-max-hard-3-retry",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 61.73899292927011,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       62.12302618203176,
+       62.12302618203176,
+       62.12302618203176
+      ],
+      [
+       62.13432127770122,
+       62.13432127770122,
+       62.13432127770122
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 4,
+    "exact": 4,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": false,
+   "error": null,
+   "sh_count": 11,
+   "elapsed_s": 17.2
+  },
+  {
+   "cell": "astra-max-hard-4",
+   "paired": [
+    {
+     "cell": "astra-max-hard-4",
+     "step": null,
+     "hist_adopted": 0,
+     "rep_outcome": "adopt",
+     "rep_winner": 0,
+     "inc_rep": 54.7970271308198,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       62.09365893329116,
+       62.09365893329116,
+       62.09365893329116
+      ],
+      [
+       62.11850814376398,
+       62.11850814376398,
+       62.11850814376398
+      ]
+     ]
+    },
+    {
+     "cell": "astra-max-hard-4",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 62.09365893329116,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       62.13206225856733,
+       62.13206225856733,
+       62.13206225856733
+      ],
+      [
+       62.13206225856733,
+       62.13206225856733,
+       62.13206225856733
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 4,
+    "exact": 4,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": false,
+   "error": null,
+   "sh_count": 9,
+   "elapsed_s": 16.5
+  },
+  {
+   "cell": "astra-max-hard-4-retry",
+   "paired": [
+    {
+     "cell": "astra-max-hard-4-retry",
+     "step": null,
+     "hist_adopted": 0,
+     "rep_outcome": "adopt",
+     "rep_winner": 0,
+     "inc_rep": 54.79025007341812,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       61.741251948404006,
+       61.741251948404006,
+       61.741251948404006
+      ],
+      [
+       62.10721304809452,
+       62.10721304809452,
+       62.10721304809452
+      ]
+     ]
+    },
+    {
+     "cell": "astra-max-hard-4-retry",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 61.741251948404006,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       62.12754422029955,
+       62.12754422029955,
+       62.12754422029955
+      ],
+      [
+       62.13206225856733,
+       62.13206225856733,
+       62.13206225856733
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 4,
+    "exact": 4,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": false,
+   "error": null,
+   "sh_count": 9,
+   "elapsed_s": 13.2
+  },
+  {
+   "cell": "astra-r-1",
+   "paired": [
+    {
+     "cell": "astra-r-1",
+     "step": null,
+     "hist_adopted": 0,
+     "rep_outcome": "adopt",
+     "rep_winner": 0,
+     "inc_rep": 93.38157542710816,
+     "n_candidates_rep": 4,
+     "rep_scores": [
+      [
+       98.87856241957881,
+       98.87856241957881,
+       98.87856241957881
+      ],
+      [
+       98.8014854827819,
+       98.8014854827819,
+       98.8014854827819
+      ],
+      [
+       98.74415552979247,
+       98.74415552979247,
+       98.74415552979247
+      ],
+      [
+       98.89512440599799,
+       98.89512440599799,
+       98.89512440599799
+      ]
+     ]
+    },
+    {
+     "cell": "astra-r-1",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 98.87856241957881,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       99.04450078350936,
+       99.04450078350936,
+       99.04450078350936
+      ],
+      [
+       98.9763418393997,
+       98.9763418393997,
+       98.9763418393997
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 6,
+    "exact": 6,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": false,
+   "error": null,
+   "sh_count": 6,
+   "elapsed_s": 16.2
+  },
+  {
+   "cell": "astra-r-2",
+   "paired": [
+    {
+     "cell": "astra-r-2",
+     "step": null,
+     "hist_adopted": 0,
+     "rep_outcome": "adopt",
+     "rep_winner": 0,
+     "inc_rep": 93.38157542710816,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       98.5326717032092,
+       98.5326717032092,
+       98.5326717032092
+      ],
+      [
+       97.44276559693222,
+       97.44276559693222,
+       97.44276559693222
+      ]
+     ]
+    },
+    {
+     "cell": "astra-r-2",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 98.5326717032092,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       98.82951345979897,
+       98.82951345979897,
+       98.82951345979897
+      ],
+      [
+       98.72313454702967,
+       98.72313454702967,
+       98.72313454702967
+      ]
+     ]
+    },
+    {
+     "cell": "astra-r-2",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 98.5326717032092,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       98.5326717032092,
+       98.5326717032092,
+       98.5326717032092
+      ],
+      [
+       98.5326717032092,
+       98.5326717032092,
+       98.5326717032092
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 6,
+    "exact": 6,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": false,
+   "error": null,
+   "sh_count": 8,
+   "elapsed_s": 19.3
+  },
+  {
+   "cell": "astra-r-3",
+   "paired": [
+    {
+     "cell": "astra-r-3",
+     "step": null,
+     "hist_adopted": 0,
+     "rep_outcome": "adopt",
+     "rep_winner": 0,
+     "inc_rep": 93.38061992789166,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       98.8827029161836,
+       98.8827029161836,
+       98.8827029161836
+      ],
+      [
+       98.93334437465762,
+       98.93334437465762,
+       98.93334437465762
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 2,
+    "exact": 2,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": false,
+   "error": null,
+   "sh_count": 3,
+   "elapsed_s": 6.8
+  },
+  {
+   "cell": "astra-r-4",
+   "paired": [
+    {
+     "cell": "astra-r-4",
+     "step": null,
+     "hist_adopted": 0,
+     "rep_outcome": "adopt",
+     "rep_winner": 0,
+     "inc_rep": 93.38157542710816,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       98.53490120138102,
+       98.53490120138102,
+       98.53490120138102
+      ],
+      [
+       97.44403959588753,
+       97.44403959588753,
+       97.44403959588753
+      ]
+     ]
+    },
+    {
+     "cell": "astra-r-4",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 98.53490120138102,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       98.88779891200488,
+       98.88779891200488,
+       98.88779891200488
+      ],
+      [
+       98.88875441122138,
+       98.88875441122138,
+       98.88875441122138
+      ]
+     ]
+    },
+    {
+     "cell": "astra-r-4",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 98.53490120138102,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       98.88779891200488,
+       98.88779891200488,
+       98.88779891200488
+      ],
+      [
+       98.74192603162065,
+       98.74192603162065,
+       98.74192603162065
+      ]
+     ]
+    },
+    {
+     "cell": "astra-r-4",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 98.53490120138102,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       98.53967869746347,
+       98.53967869746347,
+       98.53967869746347
+      ],
+      [
+       98.13518402914909,
+       98.13518402914909,
+       98.13518402914909
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 8,
+    "exact": 8,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": false,
+   "error": null,
+   "sh_count": 6,
+   "elapsed_s": 24.2
+  },
+  {
+   "cell": "astra-r-5",
+   "paired": [
+    {
+     "cell": "astra-r-5",
+     "step": null,
+     "hist_adopted": 0,
+     "rep_outcome": "adopt",
+     "rep_winner": 0,
+     "inc_rep": 93.38157542710816,
+     "n_candidates_rep": 3,
+     "rep_scores": [
+      [
+       98.80435198043138,
+       98.80435198043138,
+       98.80435198043138
+      ],
+      [
+       98.63618411832901,
+       98.63618411832901,
+       98.63618411832901
+      ],
+      [
+       98.77282050628719,
+       98.77282050628719,
+       98.77282050628719
+      ]
+     ]
+    },
+    {
+     "cell": "astra-r-5",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 98.80435198043138,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       99.00309581746143,
+       99.00309581746143,
+       99.00309581746143
+      ],
+      [
+       99.07794325608653,
+       99.07794325608653,
+       99.07794325608653
+      ]
+     ]
+    },
+    {
+     "cell": "astra-r-5",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 98.80435198043138,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       99.06647726548864,
+       99.06647726548864,
+       99.06647726548864
+      ],
+      [
+       99.07794325608653,
+       99.07794325608653,
+       99.07794325608653
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 7,
+    "exact": 7,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": false,
+   "error": null,
+   "sh_count": 7,
+   "elapsed_s": 22.9
+  },
+  {
+   "cell": "astra-r-6",
+   "paired": [
+    {
+     "cell": "astra-r-6",
+     "step": null,
+     "hist_adopted": 0,
+     "rep_outcome": "adopt",
+     "rep_winner": 0,
+     "inc_rep": 93.38157542710816,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       98.80435198043138,
+       98.80435198043138,
+       98.80435198043138
+      ],
+      [
+       98.77282050628719,
+       98.77282050628719,
+       98.77282050628719
+      ]
+     ]
+    },
+    {
+     "cell": "astra-r-6",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 98.80435198043138,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       98.98717083051991,
+       98.98717083051991,
+       98.98717083051991
+      ],
+      [
+       99.00373281693909,
+       99.00373281693909,
+       99.00373281693909
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 4,
+    "exact": 4,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": false,
+   "error": null,
+   "sh_count": 9,
+   "elapsed_s": 12.8
+  },
+  {
+   "cell": "astra-r-7",
+   "paired": [
+    {
+     "cell": "astra-r-7",
+     "step": null,
+     "hist_adopted": 0,
+     "rep_outcome": "adopt",
+     "rep_winner": 0,
+     "inc_rep": 92.71272597556471,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       98.7740945052425,
+       98.7740945052425,
+       98.7740945052425
+      ],
+      [
+       98.8056259793867,
+       98.8056259793867,
+       98.8056259793867
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 2,
+    "exact": 2,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": false,
+   "error": null,
+   "sh_count": 5,
+   "elapsed_s": 11.0
+  },
+  {
+   "cell": "astra-r-8",
+   "paired": [
+    {
+     "cell": "astra-r-8",
+     "step": null,
+     "hist_adopted": 0,
+     "rep_outcome": "adopt",
+     "rep_winner": 0,
+     "inc_rep": 93.38157542710816,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       98.89544290573681,
+       98.89544290573681,
+       98.89544290573681
+      ],
+      [
+       98.9690163454066,
+       98.9690163454066,
+       98.9690163454066
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 2,
+    "exact": 2,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": false,
+   "error": null,
+   "sh_count": 4,
+   "elapsed_s": 8.5
+  },
+  {
+   "cell": "gpt_54-l-1",
+   "paired": [
+    {
+     "cell": "gpt_54-l-1",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 93.37711643076453,
+     "n_candidates_rep": 3,
+     "rep_scores": [
+      [
+       93.37711643076453,
+       93.37711643076453,
+       93.37711643076453
+      ],
+      [
+       93.37711643076453,
+       93.37711643076453,
+       93.37711643076453
+      ],
+      [
+       93.37711643076453,
+       93.37711643076453,
+       93.37711643076453
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 3,
+    "exact": 3,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 4,
+   "elapsed_s": 18.4
+  },
+  {
+   "cell": "gpt_54-l-2",
+   "paired": [
+    {
+     "cell": "gpt_54-l-2",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 93.37743493050336,
+     "n_candidates_rep": 3,
+     "rep_scores": [
+      [
+       93.37743493050336,
+       93.37743493050336,
+       93.37743493050336
+      ],
+      [
+       93.37743493050336,
+       93.37743493050336,
+       93.37743493050336
+      ],
+      [
+       93.37743493050336,
+       93.37743493050336,
+       93.37743493050336
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 3,
+    "exact": 3,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 5,
+   "elapsed_s": 6.5
+  },
+  {
+   "cell": "gpt_54-l-3",
+   "paired": [
+    {
+     "cell": "gpt_54-l-3",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 1.0,
+     "n_candidates_rep": 3,
+     "rep_scores": [
+      [
+       1.0,
+       1.0,
+       1.0
+      ],
+      [
+       1.0,
+       1.0,
+       1.0
+      ],
+      [
+       1.0,
+       1.0,
+       1.0
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 3,
+    "exact": 3,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 3,
+   "elapsed_s": 1.7
+  },
+  {
+   "cell": "gpt_54_mini-l-1",
+   "paired": [],
+   "repro": {
+    "total": 0,
+    "exact": 0,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 5,
+   "elapsed_s": 0.6
+  },
+  {
+   "cell": "gpt_54_mini-l-2",
+   "paired": [],
+   "repro": {
+    "total": 0,
+    "exact": 0,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 4,
+   "elapsed_s": 0.9
+  },
+  {
+   "cell": "gpt_54_mini-l-3",
+   "paired": [],
+   "repro": {
+    "total": 0,
+    "exact": 0,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 2,
+   "elapsed_s": 0.1
+  },
+  {
+   "cell": "gpt_55-l-1",
+   "paired": [
+    {
+     "cell": "gpt_55-l-1",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 99.00755481380506,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       99.1461022001962,
+       99.1461022001962,
+       99.1461022001962
+      ],
+      [
+       99.0671142649663,
+       99.0671142649663,
+       99.0671142649663
+      ]
+     ]
+    },
+    {
+     "cell": "gpt_55-l-1",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 99.00755481380506,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       99.1461022001962,
+       99.1461022001962,
+       99.1461022001962
+      ],
+      [
+       88.73339023862,
+       88.73339023862,
+       88.73339023862
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 4,
+    "exact": 4,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 10,
+   "elapsed_s": 23.2
+  },
+  {
+   "cell": "gpt_55-l-2",
+   "paired": [
+    {
+     "cell": "gpt_55-l-2",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 99.0069178143274,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       99.04704878142,
+       99.04704878142,
+       99.04704878142
+      ],
+      [
+       99.13527320907598,
+       99.13527320907598,
+       99.13527320907598
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 2,
+    "exact": 2,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 11,
+   "elapsed_s": 4.7
+  },
+  {
+   "cell": "gpt_55-l-3",
+   "paired": [],
+   "repro": {
+    "total": 0,
+    "exact": 0,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 12,
+   "elapsed_s": 1.7
+  },
+  {
+   "cell": "gpt_55-r-1",
+   "paired": [],
+   "repro": {
+    "total": 0,
+    "exact": 0,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 11,
+   "elapsed_s": 2.9
+  },
+  {
+   "cell": "gpt_55-r-2",
+   "paired": [
+    {
+     "cell": "gpt_55-r-2",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 99.99777050182819,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       100.0,
+       100.0,
+       100.0
+      ],
+      [
+       100.0,
+       100.0,
+       100.0
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 2,
+    "exact": 2,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 6,
+   "elapsed_s": 13.2
+  },
+  {
+   "cell": "gpt_55-r-3",
+   "paired": [],
+   "repro": {
+    "total": 0,
+    "exact": 0,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 12,
+   "elapsed_s": 1.6
+  },
+  {
+   "cell": "gpt_55-r-4",
+   "paired": [],
+   "repro": {
+    "total": 0,
+    "exact": 0,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 13,
+   "elapsed_s": 3.1
+  },
+  {
+   "cell": "gpt_61_terra-l-1",
+   "paired": [
+    {
+     "cell": "gpt_61_terra-l-1",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 98.94863236212146,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       99.04227128533755,
+       99.04227128533755,
+       99.04227128533755
+      ],
+      [
+       99.0069178143274,
+       99.0069178143274,
+       99.0069178143274
+      ]
+     ]
+    },
+    {
+     "cell": "gpt_61_terra-l-1",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 98.94863236212146,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       99.08558724981845,
+       99.08558724981845,
+       99.08558724981845
+      ],
+      [
+       99.08431325086313,
+       99.08431325086313,
+       99.08431325086313
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 4,
+    "exact": 4,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 9,
+   "elapsed_s": 24.1
+  },
+  {
+   "cell": "gpt_61_terra-l-2",
+   "paired": [
+    {
+     "cell": "gpt_61_terra-l-2",
+     "step": null,
+     "hist_adopted": 0,
+     "rep_outcome": "adopt",
+     "rep_winner": 0,
+     "inc_rep": 92.71272597556471,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       98.99672582268482,
+       98.99672582268482,
+       98.99672582268482
+      ],
+      [
+       99.0438637840317,
+       99.0438637840317,
+       99.0438637840317
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 2,
+    "exact": 2,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": false,
+   "error": null,
+   "sh_count": 10,
+   "elapsed_s": 11.1
+  },
+  {
+   "cell": "gpt_61_terra-l-3",
+   "paired": [
+    {
+     "cell": "gpt_61_terra-l-3",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 98.74097053240416,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       98.9817563349598,
+       98.9817563349598,
+       98.9817563349598
+      ],
+      [
+       99.02252430153007,
+       99.02252430153007,
+       99.02252430153007
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 2,
+    "exact": 2,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 9,
+   "elapsed_s": 9.5
+  },
+  {
+   "cell": "gpt_61_terra-r-1",
+   "paired": [
+    {
+     "cell": "gpt_61_terra-r-1",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 99.07666925713121,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       99.07858025556419,
+       99.07858025556419,
+       99.07858025556419
+      ],
+      [
+       99.0817652529525,
+       99.0817652529525,
+       99.0817652529525
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 2,
+    "exact": 2,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 10,
+   "elapsed_s": 5.6
+  },
+  {
+   "cell": "gpt_61_terra-r-2",
+   "paired": [
+    {
+     "cell": "gpt_61_terra-r-2",
+     "step": null,
+     "hist_adopted": 0,
+     "rep_outcome": "adopt",
+     "rep_winner": 0,
+     "inc_rep": 93.38157542710816,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       98.86550393028678,
+       98.86550393028678,
+       98.86550393028678
+      ],
+      [
+       98.89894640286396,
+       98.89894640286396,
+       98.89894640286396
+      ]
+     ]
+    },
+    {
+     "cell": "gpt_61_terra-r-2",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 98.86550393028678,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       98.94098836838954,
+       98.94098836838954,
+       98.94098836838954
+      ],
+      [
+       98.95500235689806,
+       98.95500235689806,
+       98.95500235689806
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 4,
+    "exact": 4,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": false,
+   "error": null,
+   "sh_count": 10,
+   "elapsed_s": 21.9
+  },
+  {
+   "cell": "gpt_61_terra-r-3",
+   "paired": [
+    {
+     "cell": "gpt_61_terra-r-3",
+     "step": null,
+     "hist_adopted": 0,
+     "rep_outcome": "adopt",
+     "rep_winner": 0,
+     "inc_rep": 92.71272597556471,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       98.9722013427949,
+       98.9722013427949,
+       98.9722013427949
+      ],
+      [
+       98.99481482425185,
+       98.99481482425185,
+       98.99481482425185
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 2,
+    "exact": 2,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": false,
+   "error": null,
+   "sh_count": 9,
+   "elapsed_s": 38.6
+  },
+  {
+   "cell": "gpt_61_terra-r-4",
+   "paired": [],
+   "repro": {
+    "total": 0,
+    "exact": 0,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 10,
+   "elapsed_s": 2.5
+  },
+  {
+   "cell": "gpt_61_terra-r-5",
+   "paired": [
+    {
+     "cell": "gpt_61_terra-r-5",
+     "step": null,
+     "hist_adopted": 0,
+     "rep_outcome": "adopt",
+     "rep_winner": 0,
+     "inc_rep": 93.38157542710816,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       98.96137235167467,
+       98.96137235167467,
+       98.96137235167467
+      ],
+      [
+       98.95022486081561,
+       98.95022486081561,
+       98.95022486081561
+      ]
+     ]
+    },
+    {
+     "cell": "gpt_61_terra-r-5",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 98.96137235167467,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       99.02379830048538,
+       99.02379830048538,
+       99.02379830048538
+      ],
+      [
+       99.00755481380506,
+       99.00755481380506,
+       99.00755481380506
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 4,
+    "exact": 4,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": false,
+   "error": null,
+   "sh_count": 11,
+   "elapsed_s": 13.8
+  },
+  {
+   "cell": "gpt_61_terra-r-6",
+   "paired": [],
+   "repro": {
+    "total": 0,
+    "exact": 0,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 10,
+   "elapsed_s": 1.5
+  },
+  {
+   "cell": "gpt_6_astra-l-1",
+   "paired": [
+    {
+     "cell": "gpt_6_astra-l-1",
+     "step": null,
+     "hist_adopted": 0,
+     "rep_outcome": "adopt",
+     "rep_winner": 0,
+     "inc_rep": 93.38157542710816,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       98.5399971972023,
+       98.5399971972023,
+       98.5399971972023
+      ],
+      [
+       98.76931700916005,
+       98.76931700916005,
+       98.76931700916005
+      ]
+     ]
+    },
+    {
+     "cell": "gpt_6_astra-l-1",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 98.5399971972023,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       99.06615876574982,
+       99.06615876574982,
+       99.06615876574982
+      ],
+      [
+       98.8836584154001,
+       98.8836584154001,
+       98.8836584154001
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 4,
+    "exact": 4,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": false,
+   "error": null,
+   "sh_count": 7,
+   "elapsed_s": 16.4
+  },
+  {
+   "cell": "gpt_6_astra-l-2",
+   "paired": [
+    {
+     "cell": "gpt_6_astra-l-2",
+     "step": null,
+     "hist_adopted": 0,
+     "rep_outcome": "adopt",
+     "rep_winner": 0,
+     "inc_rep": 93.38157542710816,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       98.85371943995005,
+       98.85371943995005,
+       98.85371943995005
+      ],
+      [
+       98.89894640286396,
+       98.89894640286396,
+       98.89894640286396
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 2,
+    "exact": 2,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": false,
+   "error": null,
+   "sh_count": 5,
+   "elapsed_s": 8.4
+  },
+  {
+   "cell": "gpt_6_astra-l-3",
+   "paired": [
+    {
+     "cell": "gpt_6_astra-l-3",
+     "step": null,
+     "hist_adopted": 0,
+     "rep_outcome": "adopt",
+     "rep_winner": 0,
+     "inc_rep": 93.38157542710816,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       98.71549055329774,
+       98.71549055329774,
+       98.71549055329774
+      ],
+      [
+       98.48489674238468,
+       98.48489674238468,
+       98.48489674238468
+      ]
+     ]
+    },
+    {
+     "cell": "gpt_6_astra-l-3",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 98.71549055329774,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       98.88238441644478,
+       98.88238441644478,
+       98.88238441644478
+      ],
+      [
+       98.80721847808086,
+       98.80721847808086,
+       98.80721847808086
+      ]
+     ]
+    },
+    {
+     "cell": "gpt_6_astra-l-3",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 98.71549055329774,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       98.71549055329774,
+       98.71549055329774,
+       98.71549055329774
+      ],
+      [
+       98.71549055329774,
+       98.71549055329774,
+       98.71549055329774
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 6,
+    "exact": 6,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": false,
+   "error": null,
+   "sh_count": 6,
+   "elapsed_s": 19.9
+  },
+  {
+   "cell": "gpt_6_sol-l-1",
+   "paired": [
+    {
+     "cell": "gpt_6_sol-l-1",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 99.04832278037532,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       99.07507675843705,
+       99.07507675843705,
+       99.07507675843705
+      ],
+      [
+       99.0680697641828,
+       99.0680697641828,
+       99.0680697641828
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 2,
+    "exact": 2,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 12,
+   "elapsed_s": 2.7
+  },
+  {
+   "cell": "gpt_6_sol-l-2",
+   "paired": [
+    {
+     "cell": "gpt_6_sol-l-2",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 99.05596677410725,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       98.90436089842406,
+       98.90436089842406,
+       98.90436089842406
+      ],
+      [
+       98.910093893723,
+       98.910093893723,
+       98.910093893723
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 2,
+    "exact": 2,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 7,
+   "elapsed_s": 2.8
+  },
+  {
+   "cell": "gpt_6_sol-l-3",
+   "paired": [
+    {
+     "cell": "gpt_6_sol-l-3",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 98.89576140547564,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       99.04513778298701,
+       99.04513778298701,
+       99.04513778298701
+      ],
+      [
+       99.04641178194234,
+       99.04641178194234,
+       99.04641178194234
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 2,
+    "exact": 2,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 6,
+   "elapsed_s": 6.2
+  },
+  {
+   "cell": "luna-1",
+   "paired": [
+    {
+     "cell": "luna-1",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 98.44699527346388,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       98.72536404520147,
+       98.72536404520147,
+       98.72536404520147
+      ],
+      [
+       98.77600550367549,
+       98.77600550367549,
+       98.77600550367549
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 2,
+    "exact": 2,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 12,
+   "elapsed_s": 4.8
+  },
+  {
+   "cell": "luna-2",
+   "paired": [],
+   "repro": {
+    "total": 0,
+    "exact": 0,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 13,
+   "elapsed_s": 1.1
+  },
+  {
+   "cell": "luna-3",
+   "paired": [
+    {
+     "cell": "luna-3",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 98.89162090887086,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       88.73243473940352,
+       88.73243473940352,
+       88.73243473940352
+      ],
+      [
+       88.73243473940352,
+       88.73243473940352,
+       88.73243473940352
+      ]
+     ]
+    },
+    {
+     "cell": "luna-3",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 98.89162090887086,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       98.60369714496834,
+       98.60369714496834,
+       98.60369714496834
+      ],
+      [
+       98.26099142598703,
+       98.26099142598703,
+       98.26099142598703
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 4,
+    "exact": 4,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 11,
+   "elapsed_s": 10.3
+  },
+  {
+   "cell": "luna-4",
+   "paired": [],
+   "repro": {
+    "total": 0,
+    "exact": 0,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 14,
+   "elapsed_s": 8.8
+  },
+  {
+   "cell": "luna-hard-1",
+   "paired": [
+    {
+     "cell": "luna-hard-1",
+     "step": null,
+     "hist_adopted": 0,
+     "rep_outcome": "adopt",
+     "rep_winner": 0,
+     "inc_rep": 51.254885128877035,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       53.39869428694062,
+       53.39869428694062,
+       53.39869428694062
+      ],
+      [
+       null,
+       null,
+       null
+      ]
+     ]
+    },
+    {
+     "cell": "luna-hard-1",
+     "step": null,
+     "hist_adopted": 0,
+     "rep_outcome": "adopt",
+     "rep_winner": 0,
+     "inc_rep": 53.39869428694062,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       56.473219328167716,
+       56.473219328167716,
+       56.473219328167716
+      ],
+      [
+       57.05378724557797,
+       57.05378724557797,
+       57.05378724557797
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 4,
+    "exact": 4,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": false,
+   "error": null,
+   "sh_count": 9,
+   "elapsed_s": 11.1
+  },
+  {
+   "cell": "luna-hard-2",
+   "paired": [
+    {
+     "cell": "luna-hard-2",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 58.81356315087989,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       58.935550184110056,
+       58.935550184110056,
+       58.935550184110056
+      ],
+      [
+       58.935550184110056,
+       58.935550184110056,
+       58.935550184110056
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 2,
+    "exact": 2,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 13,
+   "elapsed_s": 7.9
+  },
+  {
+   "cell": "luna-hard-3",
+   "paired": [
+    {
+     "cell": "luna-hard-3",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 52.81812636953035,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       52.92204124968938,
+       52.92204124968938,
+       52.92204124968938
+      ],
+      [
+       null,
+       null,
+       null
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 2,
+    "exact": 2,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 4,
+   "elapsed_s": 1.3
+  },
+  {
+   "cell": "luna-hard-4",
+   "paired": [
+    {
+     "cell": "luna-hard-4",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 54.30230194049743,
+     "n_candidates_rep": 3,
+     "rep_scores": [
+      [
+       54.96193552759392,
+       54.96193552759392,
+       54.96193552759392
+      ],
+      [
+       54.835430456095956,
+       54.835430456095956,
+       54.835430456095956
+      ],
+      [
+       54.84446653263153,
+       54.84446653263153,
+       54.84446653263153
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 3,
+    "exact": 3,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 9,
+   "elapsed_s": 25.9
+  },
+  {
+   "cell": "luna-hard-5",
+   "paired": [
+    {
+     "cell": "luna-hard-5",
+     "step": null,
+     "hist_adopted": 0,
+     "rep_outcome": "adopt",
+     "rep_winner": 0,
+     "inc_rep": 51.270698262814285,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       52.81134931212868,
+       52.81134931212868,
+       52.81134931212868
+      ],
+      [
+       52.91300517315381,
+       52.91300517315381,
+       52.91300517315381
+      ]
+     ]
+    },
+    {
+     "cell": "luna-hard-5",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 58.35724128583368,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       58.35724128583368,
+       58.35724128583368,
+       58.35724128583368
+      ],
+      [
+       58.47245126166219,
+       58.47245126166219,
+       58.47245126166219
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 4,
+    "exact": 4,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 9,
+   "elapsed_s": 3.0
+  },
+  {
+   "cell": "luna-hard-6",
+   "paired": [
+    {
+     "cell": "luna-hard-6",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 60.75406058689317,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       60.75406058689317,
+       60.75406058689317,
+       60.75406058689317
+      ],
+      [
+       60.7450245103576,
+       60.7450245103576,
+       60.7450245103576
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 2,
+    "exact": 2,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 7,
+   "elapsed_s": 3.6
+  },
+  {
+   "cell": "sol-1",
+   "paired": [
+    {
+     "cell": "sol-1",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 98.94321786656135,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       98.98334883365396,
+       98.98334883365396,
+       98.98334883365396
+      ],
+      [
+       98.9827118341763,
+       98.9827118341763,
+       98.9827118341763
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 2,
+    "exact": 2,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 10,
+   "elapsed_s": 2.3
+  },
+  {
+   "cell": "sol-2",
+   "paired": [],
+   "repro": {
+    "total": 0,
+    "exact": 0,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 11,
+   "elapsed_s": 2.8
+  },
+  {
+   "cell": "sol-3",
+   "paired": [
+    {
+     "cell": "sol-3",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 99.0438637840317,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       99.06775126444396,
+       99.06775126444396,
+       99.06775126444396
+      ],
+      [
+       99.1050157338871,
+       99.1050157338871,
+       99.1050157338871
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 2,
+    "exact": 2,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 11,
+   "elapsed_s": 6.3
+  },
+  {
+   "cell": "sol-4",
+   "paired": [
+    {
+     "cell": "sol-4",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 98.71740155173073,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       99.04768578089767,
+       99.04768578089767,
+       99.04768578089767
+      ],
+      [
+       98.90595339711822,
+       98.90595339711822,
+       98.90595339711822
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 2,
+    "exact": 2,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 14,
+   "elapsed_s": 6.3
+  },
+  {
+   "cell": "sol-hard-1",
+   "paired": [
+    {
+     "cell": "sol-hard-1",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 62.02137032100662,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       62.102695009826725,
+       62.102695009826725,
+       62.102695009826725
+      ],
+      [
+       62.09139991415727,
+       62.09139991415727,
+       62.09139991415727
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 2,
+    "exact": 2,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 13,
+   "elapsed_s": 3.1
+  },
+  {
+   "cell": "sol-hard-2",
+   "paired": [
+    {
+     "cell": "sol-hard-2",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 61.01158876815687,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       62.11850814376398,
+       62.11850814376398,
+       62.11850814376398
+      ],
+      [
+       54.79476811168591,
+       54.79476811168591,
+       54.79476811168591
+      ]
+     ]
+    },
+    {
+     "cell": "sol-hard-2",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 61.01158876815687,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       62.11850814376398,
+       62.11850814376398,
+       62.11850814376398
+      ],
+      [
+       54.79476811168591,
+       54.79476811168591,
+       54.79476811168591
+      ]
+     ]
+    },
+    {
+     "cell": "sol-hard-2",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 61.01158876815687,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       62.11850814376398,
+       62.11850814376398,
+       62.11850814376398
+      ],
+      [
+       54.79476811168591,
+       54.79476811168591,
+       54.79476811168591
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 6,
+    "exact": 6,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 9,
+   "elapsed_s": 11.4
+  },
+  {
+   "cell": "sol-hard-3",
+   "paired": [
+    {
+     "cell": "sol-hard-3",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 59.970180947432624,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       61.02514288296022,
+       61.02514288296022,
+       61.02514288296022
+      ],
+      [
+       60.98899857681794,
+       60.98899857681794,
+       60.98899857681794
+      ]
+     ]
+    },
+    {
+     "cell": "sol-hard-3",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 59.970180947432624,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       61.02514288296022,
+       61.02514288296022,
+       61.02514288296022
+      ],
+      [
+       60.98899857681794,
+       60.98899857681794,
+       60.98899857681794
+      ]
+     ]
+    },
+    {
+     "cell": "sol-hard-3",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 59.970180947432624,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       61.02514288296022,
+       61.02514288296022,
+       61.02514288296022
+      ],
+      [
+       60.98899857681794,
+       60.98899857681794,
+       60.98899857681794
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 6,
+    "exact": 6,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 10,
+   "elapsed_s": 16.2
+  },
+  {
+   "cell": "sol-hard-4",
+   "paired": [
+    {
+     "cell": "sol-hard-4",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 60.995775634219626,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       61.64637314478054,
+       61.64637314478054,
+       61.64637314478054
+      ],
+      [
+       61.64637314478054,
+       61.64637314478054,
+       61.64637314478054
+      ]
+     ]
+    },
+    {
+     "cell": "sol-hard-4",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 60.995775634219626,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       61.64637314478054,
+       61.64637314478054,
+       61.64637314478054
+      ],
+      [
+       61.64637314478054,
+       61.64637314478054,
+       61.64637314478054
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 4,
+    "exact": 4,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 8,
+   "elapsed_s": 4.5
+  },
+  {
+   "cell": "sol-hard-5",
+   "paired": [
+    {
+     "cell": "sol-hard-5",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 61.027401902094105,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       61.677999412655026,
+       61.677999412655026,
+       61.677999412655026
+      ],
+      [
+       61.65766824045,
+       61.65766824045,
+       61.65766824045
+      ]
+     ]
+    },
+    {
+     "cell": "sol-hard-5",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 61.027401902094105,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       61.677999412655026,
+       61.677999412655026,
+       61.677999412655026
+      ],
+      [
+       61.677999412655026,
+       61.677999412655026,
+       61.677999412655026
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 4,
+    "exact": 4,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 8,
+   "elapsed_s": 10.6
+  },
+  {
+   "cell": "sol-hard-6",
+   "paired": [
+    {
+     "cell": "sol-hard-6",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 61.03417895949579,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       61.684776470056704,
+       61.684776470056704,
+       61.684776470056704
+      ],
+      [
+       61.03417895949579,
+       61.03417895949579,
+       61.03417895949579
+      ]
+     ]
+    },
+    {
+     "cell": "sol-hard-6",
+     "step": null,
+     "hist_adopted": null,
+     "rep_outcome": "no-win",
+     "rep_winner": null,
+     "inc_rep": 61.03417895949579,
+     "n_candidates_rep": 2,
+     "rep_scores": [
+      [
+       61.684776470056704,
+       61.684776470056704,
+       61.684776470056704
+      ],
+      [
+       61.03417895949579,
+       61.03417895949579,
+       61.03417895949579
+      ]
+     ]
+    }
+   ],
+   "repro": {
+    "total": 4,
+    "exact": 4,
+    "drift": 0,
+    "missing": 0
+   },
+   "anchor": true,
+   "error": null,
+   "sh_count": 11,
+   "elapsed_s": 13.1
+  }
+ ],
+ "roundtrip": {
+  "astra-1": "ok",
+  "astra-2": "ok",
+  "astra-3": "ok",
+  "astra-4": "ok",
+  "astra-abl-1": "ok",
+  "astra-abl-2": "ok",
+  "astra-abl-3": "ok",
+  "astra-abl-4": "ok",
+  "astra-abl-hard-1": "ok",
+  "astra-abl-hard-2": "ok",
+  "astra-abl-hard-3": "ok",
+  "astra-abl-hard-4": "ok",
+  "astra-hard-1": "ok",
+  "astra-hard-2": "ok",
+  "astra-hard-3": "ok",
+  "astra-hard-4": "ok",
+  "astra-hard-5": "ok",
+  "astra-hard-6": "ok",
+  "astra-max-1": "ok",
+  "astra-max-1-retry": "ok",
+  "astra-max-2": "ok",
+  "astra-max-2-retry": "ok",
+  "astra-max-3": "ok",
+  "astra-max-4": "ok",
+  "astra-max-hard-1": "ok",
+  "astra-max-hard-1-retry": "ok",
+  "astra-max-hard-2": "ok",
+  "astra-max-hard-3": "ok",
+  "astra-max-hard-3-retry": "ok",
+  "astra-max-hard-4": "ok",
+  "astra-max-hard-4-retry": "ok",
+  "astra-r-1": "ok",
+  "astra-r-2": "ok",
+  "astra-r-3": "ok",
+  "astra-r-4": "ok",
+  "astra-r-5": "ok",
+  "astra-r-6": "ok",
+  "astra-r-7": "ok",
+  "astra-r-8": "ok",
+  "gpt_54-l-1": "ok",
+  "gpt_54-l-2": "ok",
+  "gpt_54-l-3": "ok",
+  "gpt_54_mini-l-1": "ok",
+  "gpt_54_mini-l-2": "ok",
+  "gpt_54_mini-l-3": "ok",
+  "gpt_55-l-1": "ok",
+  "gpt_55-l-2": "ok",
+  "gpt_55-l-3": "ok",
+  "gpt_55-r-1": "ok",
+  "gpt_55-r-2": "ok",
+  "gpt_55-r-3": "ok",
+  "gpt_55-r-4": "ok",
+  "gpt_61_terra-l-1": "ok",
+  "gpt_61_terra-l-2": "ok",
+  "gpt_61_terra-l-3": "ok",
+  "gpt_61_terra-r-1": "ok",
+  "gpt_61_terra-r-2": "ok",
+  "gpt_61_terra-r-3": "ok",
+  "gpt_61_terra-r-4": "ok",
+  "gpt_61_terra-r-5": "ok",
+  "gpt_61_terra-r-6": "ok",
+  "gpt_6_astra-l-1": "ok",
+  "gpt_6_astra-l-2": "ok",
+  "gpt_6_astra-l-3": "ok",
+  "gpt_6_sol-l-1": "ok",
+  "gpt_6_sol-l-2": "ok",
+  "gpt_6_sol-l-3": "ok",
+  "luna-1": "ok",
+  "luna-2": "ok",
+  "luna-3": "ok",
+  "luna-4": "ok",
+  "luna-hard-1": "ok",
+  "luna-hard-2": "ok",
+  "luna-hard-3": "ok",
+  "luna-hard-4": "ok",
+  "luna-hard-5": "ok",
+  "luna-hard-6": "ok",
+  "sol-1": "ok",
+  "sol-2": "ok",
+  "sol-3": "ok",
+  "sol-4": "ok",
+  "sol-hard-1": "ok",
+  "sol-hard-2": "ok",
+  "sol-hard-3": "ok",
+  "sol-hard-4": "ok",
+  "sol-hard-5": "ok",
+  "sol-hard-6": "ok"
+ }
+}

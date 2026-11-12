@@ -45,11 +45,12 @@
 
 - A confirmatory claim. R5-style re-derivation on the real archives, 5 original seeds under publication conditions, independent reviewer, remains undone. The E18 numbers are exploratory with excellent hygiene, not evidence for a paper claim.
 - A fingerprint. The embedding control actively argues against reading model identity from code outputs.
+- Retained wins as run. The buggy selector kept none of the 38 selections on disk. Replay under the fixed harness verified 38 of 38 would persist, with zero decision changes.
 - A fix for the fibmod dispute (#116) or the Weismann bug (#118). Credits were spent on the OpenAI side only. Those findings are untouched.
 
 ## Bottom line
 
-About $30 bought the transport, one flagship falsification (gpt-5.5, by reported selections), one family ranking (astra above terra above luna, about sol, 5.4 and 5.5 for selection-tool adherence), and a retention caveat: zero of 38 reported selections survived to disk under the old harness. It also bought the attribution control and the corpus-ceiling design rule for assays.
+About $30 bought the transport, one flagship falsification (gpt-5.5, by reported selections), one family ranking (astra above terra above luna, about sol, 5.4 and 5.5 for selection-tool adherence), and the retention finding: zero of 38 selections survived the old harness, all 38 would persist under the fixed one (`REPLAY-2026-11-12.md`). It also bought the attribution control and the corpus-ceiling design rule for assays.
 
 The registered hypotheses tally 8 held and 9 falsified against the reported counter. The single worst buy was the max-effort wave. The single best was the ladder.
 

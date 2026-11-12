@@ -1,0 +1,13 @@
+python3 - <<'PY'
+import pathlib, compress
+src=pathlib.Path('corpus.txt').read_bytes()
+packed=compress.encode(src)
+pathlib.Path('out.bin').write_bytes(packed)
+if compress.decode(pathlib.Path('out.bin').read_bytes()) != src:
+ print(0); raise SystemExit
+for _ in range(40):
+ p=compress.encode(src)
+ if compress.decode(p) != src:
+  print(0); raise SystemExit
+print(100*(1-len(packed)/len(src)))
+PY
