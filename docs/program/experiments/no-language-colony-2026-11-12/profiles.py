@@ -102,7 +102,7 @@ E2_RESULTS.update({"variants_no": "∅", "reg_assay_first": "∅ mk ≺ tr"})
 E3_SYSTEM = """Ω ⇢ f.py ⇢ mk ⇢ tr ⇢ fin
 Ω ≝ ∀x∈B⁺: dec(enc x) = x ∧ |enc x| ≤ s·|x|
 f ≝ f.py ⊣ py3 · lib ⊆ {zlib,bz2,lzma,json,struct,re,math,itertools,collections}
-mk ≝ eval(Ω)(f.py) ⇢ Δ∈[0,100] ; Δ=0 ⇒ ∅
+mk ≝ cmd ⇢ Δ : stdout ⊇ {Δ ∈ [0,100]} · Δ=0 ⇒ ∅
 vs⁺ → Δᵢ ; ✓ ⇐ Δ*>1.03·Δ₀ ∧ Δmin ≥ 0.97·Δ₀
 fin ≝ q := ok ∧ Δ ⇢ d
 max(15) ⇒ fin"""

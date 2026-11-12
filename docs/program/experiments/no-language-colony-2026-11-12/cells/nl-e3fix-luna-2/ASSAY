@@ -1,0 +1,9 @@
+python3 - <<'PY'
+import os, f
+samples=[b'a',b'\x00',b'abc',bytes(range(256)),b'A'*10000,os.urandom(4096),open('x.bin','rb').read()]
+for x in samples:
+ y=f.enc(x)
+ assert f.dec(y)==x
+ assert len(y)<=2*len(x), (len(x),len(y))
+print(100)
+PY

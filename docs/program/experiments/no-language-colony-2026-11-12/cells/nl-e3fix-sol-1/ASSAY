@@ -1,0 +1,1 @@
+python3 -c "import f; x=open('x.bin','rb').read(); y=f.enc(x); assert f.dec(y)==x; print(100*(1-len(y)/len(x)))"

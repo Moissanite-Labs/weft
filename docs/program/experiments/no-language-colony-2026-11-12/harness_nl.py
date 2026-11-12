@@ -26,6 +26,16 @@ from cellutil import inside, sandbox_run, parse_score, run_assay, python_leaks, 
 from profiles import PROFILES, tools_common
 from lint import assert_clean
 
+STRICT = os.environ.get("NOL_STRICT") == "1"
+if STRICT:
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "zero-lexicon-cells-2026-11-12"))
+    try:
+        from strict_tools import strict_body
+    except Exception as _e:
+        print(f"strict mode disabled: {_e}", file=_sys.stderr)
+        STRICT = False
+
 ROOT = Path(__file__).resolve().parent
 CELLS = ROOT / "cells"
 LOGS = ROOT / "logs"
@@ -119,6 +129,11 @@ def tool_dispatch(cell: Path, log, name: str, args: dict) -> str:
             return RESULTS["no_path"]
         p.parent.mkdir(parents=True, exist_ok=True)
         content = str(args.get("x", ""))
+        if STRICT and p.name == "f.py":
+            verdict = strict_body(content)
+            if not verdict["ok"]:
+                log("strict_reject", {"path": p.name, "reason": verdict["reason"], "bad": verdict["bad"][:8]})
+                return "!strict"
         p.write_text(content)
         leaks = python_leaks(content) if p.name in ("f.py", "spec.py") else {"comment_hits": 0, "docstring_hits": 0}
         log("write", {"path": p.name,

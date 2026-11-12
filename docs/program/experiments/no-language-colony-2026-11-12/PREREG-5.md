@@ -1,6 +1,6 @@
 # PREREG-5 - No-language colony experiments (registered 2026-11-12, before any run of this series)
 
-Owner approved a $60, expiring-credit budget for this series on 2026-11-12. Stages and caps: Stage F (free), Stage 1 smoke about $6, Stage 2 about $15. The 2026-11-12 blitz/battery remains closed; nothing here is authorized to rerun it.
+Owner approved a $60, expiring-credit budget for this series on 2026-11-12. Stages and caps: Stage F (free), Stage 1 smoke about $6, Stage 2 about $15. The 2026-11-12 blitz/battery remains closed. nothing here is authorized to rerun it.
 
 Common constants: corpus `corpus_hard.txt` (sha256 `00abb98851008a506a270c84646431194f943e80f16d17da3d1b2e5242a9ef76`), 15 steps, 3-run assay validation, the fixed `do_variants` semantics (winner persisted, eligibility requires `r['ok']`). Exploratory throughout. No confirmatory claim from this series without independent review.
 
@@ -11,8 +11,8 @@ E1 constructed symbolic palette, E2 pure code carrier, E3 pure formulae, E4a mat
 ## Hypotheses
 
 - H-NL-A (ranking, E2/E1/E3 vs E4): Completion order across profiles is E2 >= E1 >= E3 >> E4a. Falsified if E4a round-trips at least one cell, or E3 >= E2 on validity.
-- H-NL-B (E1 constructed notation): gpt-6-astra registers a valid, stable assay in at least 1 of 2 smoke cells under E1; sol and luna do not (0 of 2 each). Exploratory, n=2.
-- H-NL-C (E2 code carrier): For astra, E2 completion rate is within 15 percentage points of its English-battery baseline (21/21 reported selections; 15/15 default-effort). Falsified if astra completes 0 of 2 smoke cells.
+- H-NL-B (E1 constructed notation): gpt-6-astra registers a valid, stable assay in at least 1 of 2 smoke cells under E1. sol and luna do not (0 of 2 each). Exploratory, n=2.
+- H-NL-C (E2 code carrier): For astra, E2 completion rate is within 15 percentage points of its English-battery baseline (21/21 reported selections. 15/15 default-effort). Falsified if astra completes 0 of 2 smoke cells.
 - H-NL-D (E3 formulae): Every valid assay registered under E3 contains no hallucinated operators outside the preregistered vocabulary. Falsified if any model registers an assay whose command references undefined symbols.
 - H-NL-E (E4a parametric): Zero cells produce a correct round-trip body in any model. Falsified if any E4a cell round-trips.
 - H-NL-F (E4a gradient): In at least one E4a cell, matrix entries correlate with assay fitness across steps beyond chance (Spearman rho > 0.5 across the cell's own steps). Falsified if all models are uncorrelated.
@@ -30,7 +30,7 @@ Identical logging schema to the battery plus profile fields: `profile`, `leak_wo
 ## Stages and spend
 
 - Stage 1, about $6 cap: smoke, luna and astra on E1-E3, astra on E4a, 1 to 2 cells each. Fix harness bugs before Stage 2.
-- Stage 2, about $15 cap: 4 cells x {E1, E2, E3} x {astra, sol, luna}, and {E4a, E4c} x {astra, sol, luna}; E4b only if E4a shows any signal.
+- Stage 2, about $15 cap: 4 cells x {E1, E2, E3} x {astra, sol, luna}, and {E4a, E4c} x {astra, sol, luna}. E4b only if E4a shows any signal.
 - Stop rules: any profile whose smoke cells show zero parseable actions in 5 consecutive steps gets cut early and reported. Any profile unexpectedly expensive (over $3 for 2 cells) gets paused for owner review. Model spend is logged per wave in this file's successor `RESULTS-NL.md`.
 - Deliverables to repo: profiles, lint, harness, PREREG, per-cell logs, `RESULTS-NL.md` with held/falsified tally, same-day.
 
@@ -44,10 +44,49 @@ Let M be the 8x8 output matrix, r[i] = mean(abs(row i)), clamp(int(x), lo, hi).
 - row 3 -> secondary s = clamp(int(r3 * 4), 0, 3): zlib memLevel = s+1 / bz2 blocksize = s+1 / f=2 and f=3 dict_size = [1,4,16,64] MB[s]
 - row 4 -> termination: r4 > 0.9 ends the run
 
-Assay: byte round-trip on `x.bin`; score is the percentage size reduction, 0 if the round-trip fails. Retention: incumbent replaced iff round-trip ok and score > incumbent * 1.03. Rows 5 to 7 reserved. The template bodies and this registration are in `e4a.py` (docstring) and are pinned by mock-policy validation (MOCK=good run, 2026-11-12, passes retention) before any model call.
+Assay: byte round-trip on `x.bin`. score is the percentage size reduction, 0 if the round-trip fails. Retention: incumbent replaced iff round-trip ok and score > incumbent * 1.03. Rows 5 to 7 reserved. The template bodies and this registration are in `e4a.py` (docstring) and are pinned by mock-policy validation (MOCK=good run, 2026-11-12, passes retention) before any model call.
 
 ## Stage 1 outcome and revised Stage 2 (registered 2026-11-12, before Stage 2 calls)
 
-Stage 1 smoke cost $2.59. Findings: astra operates E1/E2/E3 end to end (H-NL-C held, schema 100%, one refused order violation before any assay existed, one retained win); luna completes the world but never registers fitness through the instrument (H-NL-B as written falsified; both models registered E1 assays); E4a emitted zero matrices (H-NL-E held; H-NL-F not evaluable for lack of variance).
+Stage 1 smoke cost $2.59. Findings: astra operates E1/E2/E3 end to end. H-NL-C held, schema 100%, one refused order violation before any assay existed, one retained win. Luna completes the world but never registers fitness through the instrument. H-NL-B as written was falsified. Both models registered E1 assays. E4a emitted zero matrices. H-NL-E held. H-NL-F was not evaluable for lack of variance.
 
-Revised Stage 2, tighter than the original registration to honor the owner's no-waste directive: 2 cells each of E1, E2, E3 across astra, luna, sol (18 cells), plus one gpt-5.5 cell on E2 as the battery cross-check (5.5 was the 0-adoption outlier). Estimated $12 to $16. E4a/E4b/E4c are dropped (behavioral null with no discriminative variance). E4d embeddings decoder is an offered next step, not part of this prereg. Stop rule unchanged. Models: gpt-6-astra, gpt-6-luna, gpt-6-sol, gpt-5.5.
+Revised Stage 2, tighter than the original registration to honor the owner's no-waste directive.
+2 cells each of E1, E2, E3 across astra, luna, sol (18 cells), plus one gpt-5.5 cell on E2 as the battery cross-check (5.5 was the 0-adoption outlier). Estimated $12 to $16. E4a/E4b/E4c are dropped (behavioral null with no discriminative variance). E4d embeddings decoder is an offered next step, not part of this prereg. Stop rule unchanged. Models: gpt-6-astra, gpt-6-luna, gpt-6-sol, gpt-5.5.
+
+## E3 repair (registered 2026-11-12, before any repaired-E3 run)
+
+The E3 channel failed uniformly (all 9 cells passed literal strings like `"mk"` or `"f.py"` as the assay command instead of a shell command printing a scalar). Diagnosis: the spec's measure contract was underspecified by one clause.
+
+Revision: one added math clause, `mk ≝ cmd ⇢ Δ : stdout ⊇ {Δ ∈ [0,100]} · Δ=0 ⇒ ∅`, stating that the assay command must print exactly one number Δ in the unit of the fitness scale. No other E3 content changed.
+
+H-NL-M (repair works): after the one-clause fix, at least 2 of 6 E3 cells register a valid stable assay at first attempt. Exploratory, 6 cells (astra x2, sol x2, luna x2), ~$2. If 0 of 6 register, the channel's failure is not the missing clause and the E3 result stands as published. No further revision attempts without new preregistration.
+
+## E4d embeddings decoder (registered 2026-11-12, before any E4d run)
+
+The residual statistical-entity avenue for text-emitting cells. Procedure:
+
+- The cell gets the English-free instrument (same profile family as E2) but with one structural difference: no tool schema. Every turn, the model may emit arbitrary text.
+- The harness decodes that text to an action via a fixed, disclosed codebook: 8 descriptions of actions (read cell state, write f.py, run a command, register an assay, submit improved variants, finish task), embedded with OpenAI `text-embedding-3-small` at the start of the run, cosine-argmax at each turn, threshold 0.10 (disabled below).
+- Actions carry no arguments the cell didn't emit. a turn "register assay" needs a command string to materialize the assay: parsed via the first fenced code block or `cmd:` prefix, otherwise the assay call is rejected as uninterpretable.
+- Score is the unchanged fixed instrument (round-trip on x.bin, 3-run assay validation, `r['ok']`, winner persisted).
+
+Hypotheses:
+
+- H-NL-N (decode works): at least 1 of 3 cells (astra, sol, luna) reaches assay registration. Falsified if all three fail to register.
+- H-NL-O (beats E4a): at least 1 E4d cell round-trips. Falsified if none round-trip (E4a was 0 round-trips. E4d is the strongest claimant at this budget).
+- H-NL-P (astra E4d ≥ sol E4d): astra ≥ sol on registration+retained wins. Exploratory. If reversed, reported as such.
+
+Stop rule: if all three cells fail to produce interpretable actions by step 8, stop, record the null, drop the avenue.
+
+## Stage 3 outcomes (2026-11-12)
+
+E3 repair clause added to the channel and 6 cells launched (astra, luna, sol, x2):
+- H-NL-M HELD: all six registered at least one stable assay. As-shipped E3 failure was the missing `cmd ⇢ Δ` contract, not capability.
+- Wins: zero across all six cells. Consistent with prior observation. Wins are rare outside astra's code channel.
+- luna-2 recorded a constant `echo 42` assay as ok. The stability gate accepts any scalar. Disclosed as instrument limitation.
+
+E4d (embedding decoder) ran with 3 cells, one per model, 15 steps:
+- H-NL-N FALSIFIED. No action ever decoded above the 0.10 threshold. All cells stuck in exposition mode.
+- H-NL-O FALSIFIED: zero round-trips.
+- H-NL-P: indistinguishable null (n=1 per model, all identical).
+- Verdict: E4d closed. Do not rerun without restructuring the codebook and the threshold by new prereg.

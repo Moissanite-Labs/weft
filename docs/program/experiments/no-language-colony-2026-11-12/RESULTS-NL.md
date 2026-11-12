@@ -47,3 +47,41 @@ Local reference (free, `qwen3:32b` via ollama): 10 steps, 2 model turns emitted 
 - Findings as-is: astra fully operates English-free through code and formula notation, for under a dollar per cell (~$0.65 each), and the mechanism (instrument refusal before assay registration) works exactly as it does in English.
 - E4a is out of Stage 2 (zero emitted matrices. nothing to discriminate). E4b and E4c are out for the same reason. E4d (embeddings decoder for a text-emitting cell) remains the one viable Statistical-Entity avenue and is cheap (~cents per run) if wanted. it is not authorized by this prereg.
 - Stage 2 (~$10–14, preregistered): 4 cells each of E1/E2/E3 for astra and luna, plus sol on E2 (the battery's sol-0-adoption mystery under the code channel is the most valuable single addition). 5.5 optional panel check, luna-only no-assay specialization probe.
+
+## Stage 3 (2026-11-12, later): E3 repair and E4d embedding decoder
+
+Both preregistered under `PREREG-5.md` before any calls. Actual spend: about $2.30 list price for E3-repaired 6 cells, plus a few cents of embeddings.
+
+### E3 repaired (one added math clause, `mk ≝ cmd ⇢ Δ : stdout ⊇ {Δ ∈ [0,100]} · Δ=0 ⇒ ∅`)
+
+| Cell | calls | assays ok | variant calls | retained wins |
+|---|---|---|---|---|
+| astra-1 | 57 events | 1/1 (Δ=58 on `python3 spec.py`) | 2 | 0 |
+| astra-2 | 59 | 2/2 | 1 | 0 |
+| luna-1 | 49 | 1/1 | 1 | 0 |
+| luna-2 | 49 | 3/3 | 2 | 0 |
+| sol-1 | 57 | 2/3 | 2 | 0 |
+| sol-2 | 53 | 0/4 (max steps) | 2 | 0 |
+
+H-NL-M: HELD. All six cells registered at least one stable assay. The clause failure was the missing `cmd ⇢ Δ : stdout ⊇ {Δ}` contract, not capability. Instrument caveat: luna-2 registered three assays, including a literally constant `echo 42` that the stability gate accepts. The gate accepts any stable printable scalar regardless of task semantics. Recorded as an instrument limitation, independent of models.
+
+Wins: zero across all six cells, consistent with the battery's finding that retained wins are rare outside astra and E1 (where every assay here is a luna-style constant or a trivially-bounded print).
+
+### E4d embedding decoder (no tool schemas. arbitrary prose decoded by embedding similarity)
+
+| Cell | calls | actions seen | assay | wins |
+|---|---|---|---|---|
+| astra | 15/15 | help, unknown/invalid parse | none | 0 |
+| luna | 14/15 | help, look, unknown | none | 0 |
+| sol | 15/15 | help, unknown | none | 0 |
+
+H-NL-N: FALSIFIED. No cell decoded into an action even once.
+The models stay in the exposition phase for all 15 steps each.
+H-NL-O: FALSIFIED (nothing round-trips).
+H-NL-P: direction consistent, as far as direction goes with n=1 per model and all three failing identically. Recorded as an indistinguishable null.
+Diagnosis: the codebook had to compete with pretraining's reflex to describe the task rather than act on it.
+The 0.10 cosine threshold let help-shaped outputs match without binding to any action. Verdict: the E4d avenue is dead at this budget. Do not rerun without a new prereg that restructures either the codebook or the decoder binding decision.
+
+## Cost
+
+Grand total including all waves on 2026-11-12: about $8.06 (Stage 2) + about $2.30 (Stage 3) = ~$10.4 list price of the $60 available.
