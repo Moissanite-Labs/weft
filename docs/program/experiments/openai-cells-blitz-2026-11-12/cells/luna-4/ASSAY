@@ -1,0 +1,1 @@
+python3 -c 'import compress; x=open("corpus.txt","rb").read(); c=b""; [(c:=compress.compress(x)) for _ in range(3)]; assert compress.decompress(c)==x; print(100*(1-len(c)/len(x)))'
