@@ -1,0 +1,13 @@
+{
+  "pristine_registration_accepted": true,
+  "mutations": {
+    "validation": {
+      "rejected": true,
+      "reason": "Registered episode data changed: seed-171.json"
+    },
+    "test": {
+      "rejected": true,
+      "reason": "Registered episode data changed: seed-171.json"
+    }
+  }
+}

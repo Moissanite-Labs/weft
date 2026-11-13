@@ -1,0 +1,541 @@
+
+window.getCssVar = window.getCssVar || function(name, fallback) {
+  try {
+    var v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    return v || fallback || '';
+  } catch (e) { return fallback || ''; }
+};
+
+
+(function() {
+  if (window.__lumiCanvasGuard) return;
+  window.__lumiCanvasGuard = true;
+  var MAX_PX = 4096, MIN_FONT_PX = 12;
+  try {
+    var CP = HTMLCanvasElement.prototype;
+    var BOX = {width: 'clientWidth', height: 'clientHeight'}, D = {};
+    Object.keys(BOX).forEach(function(p) {
+      D[p] = Object.getOwnPropertyDescriptor(CP, p);
+    });
+    var tracking = function(el, p) {
+      var box = el[BOX[p]];
+      return !el.style[p] && box > 0 && box === D[p].get.call(el) &&
+          box === el['__lumiLast' + p];
+    };
+    var MAX = {width: 'maxWidth', height: 'maxHeight'};
+    var PAD = {width: ['paddingLeft', 'paddingRight'],
+               height: ['paddingTop', 'paddingBottom']};
+    var avail = function(el, p) {
+      var pe = el.parentElement;
+      if (!pe) return 0;
+      var cs = getComputedStyle(pe);
+      return pe[BOX[p]] - parseFloat(cs[PAD[p][0]]) -
+          parseFloat(cs[PAD[p][1]]);
+    };
+    Object.keys(BOX).forEach(function(p) {
+      var d = D[p];
+      if (!d || !d.set || !d.get) return;
+      Object.defineProperty(CP, p, {
+        configurable: true, enumerable: d.enumerable, get: d.get,
+        set: function(v) {
+          var n = +v, box = this[BOX[p]];
+          if (n > MAX_PX) n = MAX_PX;
+          if (n > box && tracking(this, p)) {
+            var el = this, pins = {};
+            Object.keys(BOX).forEach(function(q) {
+              if (tracking(el, q)) pins[q] = avail(el, q) ||
+                  el['__lumiBox' + q];
+            });
+            Object.keys(pins).forEach(function(q) {
+              el.style[q] = '100%';
+              el.style[MAX[q]] = pins[q] + 'px';
+            });
+            n = box;
+          }
+          this['__lumiBox' + p] = box;
+          this['__lumiLast' + p] = n;
+          d.set.call(this, isNaN(n) ? v : n);
+        }
+      });
+    });
+  } catch (e) {}
+  try {
+    var XP = CanvasRenderingContext2D.prototype;
+    var px = /(\d*\.?\d+)px/;
+    var floorFont = function(ctx) {
+      var f = ctx.font, m = px.exec(f);
+      if (m && +m[1] >= 4 && +m[1] < MIN_FONT_PX) ctx.font = f.replace(px, MIN_FONT_PX + 'px');
+    };
+    ['fillText', 'strokeText', 'measureText'].forEach(function(k) {
+      var o = XP[k];
+      if (typeof o !== 'function') return;
+      XP[k] = function() { floorFont(this); return o.apply(this, arguments); };
+    });
+  } catch (e) {}
+})();
+
+
+(function() {
+  function syncBody() {
+    var dt = document.documentElement.getAttribute('data-theme');
+    if (document.body && (dt === 'dark' || dt === 'light')) {
+      document.body.classList.toggle('dark-mode', dt === 'dark');
+    }
+  }
+  function applyTheme(theme) {
+    if (theme !== 'dark' && theme !== 'light') return;
+    document.documentElement.setAttribute('data-theme', theme);
+    syncBody();
+  }
+  if (typeof MutationObserver === 'function') {
+    new MutationObserver(syncBody).observe(document.documentElement, {
+      attributes: true, attributeFilter: ['data-theme']
+    });
+  }
+  if (typeof document.addEventListener === 'function') {
+    document.addEventListener('DOMContentLoaded', syncBody);
+  }
+  try {
+    var mq = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+    if (mq) {
+      if (!document.documentElement.hasAttribute('data-theme')) {
+        applyTheme(mq.matches ? 'dark' : 'light');
+      } else {
+        syncBody();
+      }
+      if (mq.addEventListener) {
+        mq.addEventListener('change', function(e) {
+          applyTheme(e.matches ? 'dark' : 'light');
+        });
+      }
+    }
+  } catch (e) {}
+  window.addEventListener('message', function(e) {
+    if (e.data && (e.data.type === 'set-theme' || e.data.type === 'APPLY_THEME') && e.data.theme) {
+      applyTheme(e.data.theme);
+    }
+  });
+})();
+
+
+    (function () {
+      function getCssVar(name, fallback) {
+        return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
+      }
+
+      function syncSliderProgress(slider) {
+        const min = parseFloat(slider.min || '0');
+        const max = parseFloat(slider.max || '100');
+        const val = parseFloat(slider.value || '0');
+        const pct = max > min ? ((val - min) / (max - min)) * 100 : 0;
+        slider.style.setProperty('--progress', pct.toFixed(1) + '%');
+      }
+
+      const canvas = document.getElementById('sim-canvas');
+      const ctx = canvas.getContext('2d');
+      const inRadius = document.getElementById('in-radius');
+      const valRadius = document.getElementById('val-radius');
+      const inAlpha = document.getElementById('in-alpha');
+      const valAlpha = document.getElementById('val-alpha');
+      const valDisp = document.getElementById('val-disp');
+      const valCore = document.getElementById('val-core');
+      const valCommits = document.getElementById('val-commits');
+      const lblMetricName = document.getElementById('lbl-metric-name');
+      const captionLeft = document.getElementById('caption-left');
+      const btnStep = document.getElementById('btn-step');
+      const btnReset = document.getElementById('btn-reset');
+      const btnPlay = document.getElementById('btn-play');
+      const modeBtns = document.querySelectorAll('.lumi-segmented-btn');
+
+      const N = 8;
+      const CORE_ROWS = 2;
+      let mode = 'matrix';
+      let playing = true;
+      let commits = 0;
+      let clampedLast = false;
+      let fitness = 0.82;
+      let tClock = 0;
+
+      const W0 = new Float32Array(N * N);
+      const W = new Float32Array(N * N);
+      const hippo = new Float32Array(N);
+
+      let stimX = 0.68;
+      let stimY = 0.45;
+      let cellX = 0.5;
+      let cellY = 0.5;
+      let pulseAmp = 0.0;
+
+      function seededVal(i, j) {
+        const v = Math.sin((i + 1) * 3.17 + (j + 1) * 1.93) * 0.65;
+        return Math.max(-0.9, Math.min(0.9, v));
+      }
+
+      function initBaseline() {
+        for (let r = 0; r < N; r++) {
+          for (let c = 0; c < N; c++) {
+            const v = (mode === 'causal' && r === c) ? 0.0 : seededVal(r + (mode === 'parametric' ? 2 : 0), c);
+            W0[r * N + c] = v;
+            W[r * N + c] = v;
+          }
+        }
+        for (let i = 0; i < N; i++) hippo[i] = 0;
+        commits = 0;
+        clampedLast = false;
+        updateKPIs();
+      }
+
+      function frobeniusDisplacement(cand) {
+        let sumSq = 0;
+        for (let i = 0; i < N * N; i++) {
+          const d = cand[i] - W0[i];
+          sumSq += d * d;
+        }
+        return Math.sqrt(sumSq);
+      }
+
+      function coreDrift(cand) {
+        let sumSq = 0;
+        for (let i = 0; i < CORE_ROWS * N; i++) {
+          const d = cand[i] - W0[i];
+          sumSq += d * d;
+        }
+        return Math.sqrt(sumSq);
+      }
+
+      function klProxy(cand) {
+        const dF = frobeniusDisplacement(cand);
+        return 0.5 * dF * dF * 0.65;
+      }
+
+      function buildSensoryVector() {
+        const dx = stimX - cellX;
+        const dy = stimY - cellY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        return [
+          dx * 2.0,
+          dy * 2.0,
+          Math.tanh(1.0 - dist * 2.2),
+          Math.sin(tClock * 2.1),
+          Math.cos(tClock * 1.7),
+          pulseAmp,
+          stimX * 2.0 - 1.0,
+          stimY * 2.0 - 1.0
+        ];
+      }
+
+      function forwardDecode(mat, s) {
+        const out = new Float32Array(N);
+        for (let r = 0; r < N; r++) {
+          let acc = 0;
+          for (let c = 0; c < N; c++) {
+            acc += mat[r * N + c] * s[c];
+          }
+          if (mode === 'causal' && r >= 2) {
+            acc += 0.35 * out[r - 1];
+          }
+          out[r] = Math.tanh(acc);
+        }
+        return out;
+      }
+
+      function scoreCandidate(cand, s, alpha) {
+        const y = forwardDecode(cand, s);
+        const targetDx = Math.tanh((stimX - cellX) * 3.0);
+        const targetDy = Math.tanh((stimY - cellY) * 3.0);
+        const err = Math.abs(y[2] - targetDx) + Math.abs(y[3] - targetDy);
+        let nov = 0;
+        for (let i = 0; i < N; i++) {
+          nov += Math.abs(y[i] - hippo[i]);
+        }
+        nov /= N;
+        return (1.2 - 0.5 * err) + alpha * 0.35 * nov;
+      }
+
+      function stepMitosis() {
+        const R = parseFloat(inRadius.value);
+        const alpha = parseFloat(inAlpha.value);
+        const s = buildSensoryVector();
+
+        const candA = new Float32Array(W);
+        const candB = new Float32Array(W);
+
+        for (let r = CORE_ROWS; r < N; r++) {
+          for (let c = 0; c < N; c++) {
+            if (mode === 'causal' && r === c) continue;
+            const idx = r * N + c;
+            const gradHint = (r === 2 ? (stimX - cellX) : (r === 3 ? (stimY - cellY) : Math.sin(tClock + idx))) * s[c];
+            candA[idx] += 0.045 * gradHint + (Math.random() - 0.5) * 0.025;
+            candB[idx] += 0.085 * gradHint + (Math.random() - 0.5) * (0.09 + 0.14 * alpha);
+          }
+        }
+
+        function gateCheck(cand) {
+          const metric = mode === 'parametric' ? klProxy(cand) : frobeniusDisplacement(cand);
+          return { ok: metric <= R && coreDrift(cand) === 0, metric: metric };
+        }
+
+        const gA = gateCheck(candA);
+        const gB = gateCheck(candB);
+        const baseScore = scoreCandidate(W, s, alpha);
+        let best = null;
+        let bestScore = baseScore - 0.002;
+
+        if (gA.ok) {
+          const sA = scoreCandidate(candA, s, alpha);
+          if (sA > bestScore) { best = candA; bestScore = sA; }
+        }
+        if (gB.ok) {
+          const sB = scoreCandidate(candB, s, alpha);
+          if (sB > bestScore) { best = candB; bestScore = sB; }
+        }
+
+        clampedLast = (!gA.ok || !gB.ok);
+        if (best) {
+          W.set(best);
+          const yNew = forwardDecode(W, s);
+          for (let i = 0; i < N; i++) {
+            hippo[i] = 0.85 * hippo[i] + 0.15 * yNew[i];
+          }
+          commits += 1;
+          fitness = Math.max(0.1, Math.min(0.99, bestScore / 1.25));
+        }
+        updateKPIs();
+      }
+
+      function updateKPIs() {
+        const R = parseFloat(inRadius.value);
+        const disp = mode === 'parametric' ? klProxy(W) : frobeniusDisplacement(W);
+        const cDrift = coreDrift(W);
+        lblMetricName.textContent = mode === 'parametric'
+          ? 'KL Trust Bound D_KL(q_θ || q_0)'
+          : (mode === 'causal' ? 'Causal Graph Shift ||A - A0||_F' : 'Invariant Displacement ||W - W0||_F');
+        valDisp.textContent = disp.toFixed(3) + ' ≤ ' + R.toFixed(2) + (clampedLast ? ' (GATE)' : '');
+        valCore.textContent = cDrift.toFixed(4) + ' (LOCKED)';
+        valCommits.textContent = commits + ' · fit ' + fitness.toFixed(2);
+      }
+
+      function drawFrame() {
+        const dpr = window.devicePixelRatio || 1;
+        const rect = canvas.getBoundingClientRect();
+        const w = Math.max(300, Math.floor(rect.width));
+        const h = Math.max(220, Math.floor(rect.height));
+        if (canvas.width !== w * dpr || canvas.height !== h * dpr) {
+          canvas.width = w * dpr;
+          canvas.height = h * dpr;
+        }
+        ctx.save();
+        ctx.scale(dpr, dpr);
+        ctx.clearRect(0, 0, w, h);
+
+        const ink = getCssVar('--on-surface', '#111111');
+        const muted = getCssVar('--on-surface-variant', '#666666');
+        const primary = getCssVar('--primary', '#3186ff');
+        const chart3 = getCssVar('--chart-3', '#228a49');
+        const chart8 = getCssVar('--chart-8', '#997112');
+        const strokeDef = getCssVar('--stroke-default', '#d4d4d8');
+
+        const s = buildSensoryVector();
+        const y = forwardDecode(W, s);
+
+        if (playing) {
+          tClock += 0.028;
+          cellX += (0.5 + 0.32 * y[2] - cellX) * 0.06;
+          cellY += (0.5 + 0.32 * y[3] - cellY) * 0.06;
+          pulseAmp *= 0.94;
+          if (Math.floor(tClock * 35) % 24 === 0) {
+            stepMitosis();
+          }
+        }
+
+        const split = w < 520 ? w * 0.46 : 236;
+        const pad = 12;
+        const gridSize = Math.min(split - pad * 2, h - 42);
+        const cellSz = gridSize / N;
+        const gx0 = pad;
+        const gy0 = 28;
+
+        ctx.font = '12px "Google Sans Code", monospace';
+        ctx.fillStyle = muted;
+        ctx.fillText(mode === 'causal' ? 'CAUSAL DAG A[8×8]' : (mode === 'parametric' ? 'MOMENTS θ[8×8]' : 'MATRIX W[8×8]'), gx0, 16);
+
+        for (let r = 0; r < N; r++) {
+          for (let c = 0; c < N; c++) {
+            const v = W[r * N + c];
+            const mag = Math.min(1, Math.abs(v));
+            const x = gx0 + c * cellSz;
+            const cy = gy0 + r * cellSz;
+            ctx.globalAlpha = 0.16 + 0.78 * mag;
+            ctx.fillStyle = v >= 0 ? primary : chart8;
+            ctx.beginPath();
+            ctx.roundRect(x + 1.5, cy + 1.5, cellSz - 3, cellSz - 3, 4);
+            ctx.fill();
+          }
+        }
+        ctx.globalAlpha = 1.0;
+
+        ctx.strokeStyle = chart3;
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([4, 3]);
+        ctx.strokeRect(gx0, gy0, gridSize, cellSz * CORE_ROWS);
+        ctx.setLineDash([]);
+
+        const fx0 = split + 14;
+        const fw = w - fx0 - 8;
+        const fh = h - 20;
+        const fy0 = 10;
+
+        ctx.strokeStyle = strokeDef;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.roundRect(fx0, fy0, fw, fh, 12);
+        ctx.stroke();
+
+        ctx.font = '12px "Google Sans Code", monospace';
+        ctx.fillStyle = muted;
+        ctx.fillText('HARNESS PHENOTYPE DECODER: y_t = f(W, s_t)', fx0 + 12, fy0 + 18);
+
+        const sx = fx0 + stimX * fw;
+        const sy = fy0 + stimY * fh;
+        ctx.strokeStyle = chart8;
+        ctx.lineWidth = 1.25;
+        ctx.setLineDash([3, 3]);
+        ctx.beginPath();
+        ctx.arc(sx, sy, 10 + pulseAmp * 18, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        const ox = fx0 + cellX * fw;
+        const oy = fy0 + cellY * fh;
+
+        ctx.strokeStyle = muted;
+        ctx.globalAlpha = 0.45;
+        ctx.lineWidth = 1.2;
+        ctx.setLineDash([2, 4]);
+        ctx.beginPath();
+        ctx.moveTo(ox, oy);
+        ctx.lineTo(sx, sy);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.globalAlpha = 1.0;
+
+        const ringR = 34 + 14 * Math.abs(y[4]) + 6 * Math.sin(tClock * 3.0);
+        ctx.strokeStyle = primary;
+        ctx.globalAlpha = 0.28;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(ox, oy, ringR, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.globalAlpha = 1.0;
+
+        const lobes = 5 + Math.floor((Math.abs(y[0]) + Math.abs(y[1])) * 3.5);
+        const baseR = 20 + 8 * Math.abs(y[5]);
+        const rot = tClock * (0.6 + 0.8 * y[6]);
+
+        ctx.beginPath();
+        for (let k = 0; k <= 72; k++) {
+          const ang = (k / 72) * Math.PI * 2;
+          const mod = 1 + 0.26 * Math.cos(lobes * ang + rot) + 0.12 * y[7] * Math.sin(3 * ang - rot);
+          const rr = baseR * mod;
+          const px = ox + Math.cos(ang) * rr;
+          const py = oy + Math.sin(ang) * rr;
+          if (k === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+        ctx.globalAlpha = 0.2;
+        ctx.fillStyle = primary;
+        ctx.fill();
+        ctx.globalAlpha = 1.0;
+        ctx.strokeStyle = primary;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.fillStyle = chart3;
+        ctx.beginPath();
+        ctx.arc(ox, oy, 5.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        if (mode === 'causal') {
+          for (let j = 0; j < 3; j++) {
+            const ang = rot + j * (Math.PI * 2 / 3);
+            const cx2 = ox + Math.cos(ang) * (ringR * 0.78);
+            const cy2 = oy + Math.sin(ang) * (ringR * 0.78);
+            ctx.fillStyle = ink;
+            ctx.beginPath();
+            ctx.arc(cx2, cy2, 3, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+
+        ctx.restore();
+        requestAnimationFrame(drawFrame);
+      }
+
+      function pointerToField(e) {
+        const rect = canvas.getBoundingClientRect();
+        const split = rect.width < 520 ? rect.width * 0.46 : 236;
+        const fx0 = split + 14;
+        const fw = rect.width - fx0 - 8;
+        const fh = rect.height - 20;
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        if (x >= fx0) {
+          stimX = Math.max(0.08, Math.min(0.92, (x - fx0) / fw));
+          stimY = Math.max(0.12, Math.min(0.88, (y - 10) / fh));
+        }
+      }
+
+      canvas.addEventListener('pointermove', pointerToField);
+      canvas.addEventListener('pointerdown', function (e) {
+        pointerToField(e);
+        pulseAmp = 1.0;
+        stepMitosis();
+      });
+
+      inRadius.addEventListener('input', function () {
+        syncSliderProgress(inRadius);
+        valRadius.textContent = parseFloat(inRadius.value).toFixed(2);
+        updateKPIs();
+      });
+
+      inAlpha.addEventListener('input', function () {
+        syncSliderProgress(inAlpha);
+        valAlpha.textContent = parseFloat(inAlpha.value).toFixed(2);
+      });
+
+      btnStep.addEventListener('click', function () {
+        pulseAmp = 0.8;
+        stepMitosis();
+      });
+
+      btnReset.addEventListener('click', function () {
+        initBaseline();
+      });
+
+      btnPlay.addEventListener('click', function () {
+        playing = !playing;
+        btnPlay.textContent = playing ? 'Pause' : 'Play';
+      });
+
+      modeBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          modeBtns.forEach(function (b) { b.classList.remove('is-active'); });
+          btn.classList.add('is-active');
+          mode = btn.getAttribute('data-mode');
+          captionLeft.textContent = mode === 'causal'
+            ? 'Genotype: Structural causal matrix A (zero-diagonal DAG + do(X) rollouts)'
+            : (mode === 'parametric'
+              ? 'Genotype: Sufficient statistics θ = (μ, Σ) bounded by KL trust region'
+              : 'Genotype: 8×8 Float32 tensor (rows 0..1 frozen watermark, rows 2..7 plastic)');
+          initBaseline();
+        });
+      });
+
+      syncSliderProgress(inRadius);
+      syncSliderProgress(inAlpha);
+      initBaseline();
+      requestAnimationFrame(drawFrame);
+    })();
+  
+/*luminous-slider-normalizer*/(function(){function f(r){if(!r||r.type!=='range')return;var mn=parseFloat(r.min||'0'),mx=parseFloat(r.max||'100'),v=parseFloat(r.value);if(isNaN(v))v=(mn+mx)/2;var p=mx>mn?((v-mn)/(mx-mn))*100:50;r.style.setProperty('--progress',p+'%');r.style.removeProperty('--slider-fill');}function all(){document.querySelectorAll('input[type="range"], .lumi-slider').forEach(f);}document.addEventListener('input',function(e){f(e.target);});document.addEventListener('change',function(e){f(e.target);});window.addEventListener('message',function(e){var d=e&&e.data;if(d&&(d.type==='SUPPLEMENTAL_DATA_UPDATE'||d.type==='RESTORE_STATE')){all();setTimeout(all,0);setTimeout(all,50);}});if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){all();setTimeout(all,0);});else{all();setTimeout(all,0);}})();

@@ -1,0 +1,987 @@
+{
+  "seed": 293,
+  "splits": {
+    "train": [
+      {
+        "initial_x": 3,
+        "stimuli": [
+          {
+            "target": 2,
+            "urgent": false
+          },
+          {
+            "target": 2,
+            "urgent": false
+          },
+          {
+            "target": 2,
+            "urgent": false
+          },
+          {
+            "target": 2,
+            "urgent": false
+          },
+          {
+            "target": 2,
+            "urgent": false
+          },
+          {
+            "target": 2,
+            "urgent": true
+          },
+          {
+            "target": -1,
+            "urgent": false
+          },
+          {
+            "target": -1,
+            "urgent": true
+          },
+          {
+            "target": -1,
+            "urgent": false
+          },
+          {
+            "target": -1,
+            "urgent": true
+          },
+          {
+            "target": -1,
+            "urgent": true
+          },
+          {
+            "target": -1,
+            "urgent": true
+          }
+        ]
+      },
+      {
+        "initial_x": 3,
+        "stimuli": [
+          {
+            "target": 1,
+            "urgent": false
+          },
+          {
+            "target": 1,
+            "urgent": true
+          },
+          {
+            "target": 1,
+            "urgent": true
+          },
+          {
+            "target": 1,
+            "urgent": false
+          },
+          {
+            "target": 1,
+            "urgent": false
+          },
+          {
+            "target": 1,
+            "urgent": true
+          },
+          {
+            "target": 0,
+            "urgent": false
+          },
+          {
+            "target": 0,
+            "urgent": true
+          },
+          {
+            "target": 0,
+            "urgent": false
+          },
+          {
+            "target": 0,
+            "urgent": false
+          },
+          {
+            "target": 0,
+            "urgent": true
+          },
+          {
+            "target": 0,
+            "urgent": true
+          }
+        ]
+      },
+      {
+        "initial_x": 3,
+        "stimuli": [
+          {
+            "target": 5,
+            "urgent": false
+          },
+          {
+            "target": 5,
+            "urgent": true
+          },
+          {
+            "target": 5,
+            "urgent": true
+          },
+          {
+            "target": 7,
+            "urgent": false
+          },
+          {
+            "target": 7,
+            "urgent": true
+          },
+          {
+            "target": 7,
+            "urgent": false
+          },
+          {
+            "target": 2,
+            "urgent": false
+          },
+          {
+            "target": 2,
+            "urgent": false
+          },
+          {
+            "target": 2,
+            "urgent": false
+          },
+          {
+            "target": 3,
+            "urgent": true
+          },
+          {
+            "target": 3,
+            "urgent": false
+          },
+          {
+            "target": 3,
+            "urgent": false
+          }
+        ]
+      },
+      {
+        "initial_x": 3,
+        "stimuli": [
+          {
+            "target": 3,
+            "urgent": false
+          },
+          {
+            "target": 3,
+            "urgent": true
+          },
+          {
+            "target": 3,
+            "urgent": true
+          },
+          {
+            "target": 4,
+            "urgent": false
+          },
+          {
+            "target": 4,
+            "urgent": false
+          },
+          {
+            "target": 4,
+            "urgent": false
+          },
+          {
+            "target": 3,
+            "urgent": true
+          },
+          {
+            "target": 3,
+            "urgent": false
+          },
+          {
+            "target": 3,
+            "urgent": false
+          },
+          {
+            "target": 3,
+            "urgent": true
+          },
+          {
+            "target": 3,
+            "urgent": true
+          },
+          {
+            "target": 3,
+            "urgent": false
+          }
+        ]
+      }
+    ],
+    "validation": [
+      {
+        "initial_x": 3,
+        "stimuli": [
+          {
+            "target": 7,
+            "urgent": false
+          },
+          {
+            "target": 7,
+            "urgent": false
+          },
+          {
+            "target": 7,
+            "urgent": true
+          },
+          {
+            "target": 7,
+            "urgent": false
+          },
+          {
+            "target": 7,
+            "urgent": true
+          },
+          {
+            "target": 7,
+            "urgent": true
+          },
+          {
+            "target": 7,
+            "urgent": true
+          },
+          {
+            "target": 7,
+            "urgent": false
+          },
+          {
+            "target": 7,
+            "urgent": true
+          },
+          {
+            "target": 0,
+            "urgent": true
+          },
+          {
+            "target": 0,
+            "urgent": true
+          },
+          {
+            "target": 0,
+            "urgent": false
+          }
+        ]
+      },
+      {
+        "initial_x": 3,
+        "stimuli": [
+          {
+            "target": -2,
+            "urgent": false
+          },
+          {
+            "target": -2,
+            "urgent": true
+          },
+          {
+            "target": -2,
+            "urgent": false
+          },
+          {
+            "target": 0,
+            "urgent": false
+          },
+          {
+            "target": 0,
+            "urgent": false
+          },
+          {
+            "target": 0,
+            "urgent": true
+          },
+          {
+            "target": 6,
+            "urgent": true
+          },
+          {
+            "target": 6,
+            "urgent": true
+          },
+          {
+            "target": 6,
+            "urgent": true
+          },
+          {
+            "target": 8,
+            "urgent": false
+          },
+          {
+            "target": 8,
+            "urgent": false
+          },
+          {
+            "target": 8,
+            "urgent": false
+          }
+        ]
+      },
+      {
+        "initial_x": 3,
+        "stimuli": [
+          {
+            "target": 8,
+            "urgent": false
+          },
+          {
+            "target": 8,
+            "urgent": true
+          },
+          {
+            "target": 8,
+            "urgent": true
+          },
+          {
+            "target": 8,
+            "urgent": false
+          },
+          {
+            "target": 8,
+            "urgent": false
+          },
+          {
+            "target": 8,
+            "urgent": false
+          },
+          {
+            "target": 3,
+            "urgent": true
+          },
+          {
+            "target": 3,
+            "urgent": false
+          },
+          {
+            "target": 3,
+            "urgent": false
+          },
+          {
+            "target": 0,
+            "urgent": true
+          },
+          {
+            "target": 0,
+            "urgent": false
+          },
+          {
+            "target": 0,
+            "urgent": true
+          }
+        ]
+      },
+      {
+        "initial_x": 3,
+        "stimuli": [
+          {
+            "target": 1,
+            "urgent": false
+          },
+          {
+            "target": 1,
+            "urgent": false
+          },
+          {
+            "target": 1,
+            "urgent": false
+          },
+          {
+            "target": 0,
+            "urgent": true
+          },
+          {
+            "target": 0,
+            "urgent": true
+          },
+          {
+            "target": 0,
+            "urgent": true
+          },
+          {
+            "target": 0,
+            "urgent": true
+          },
+          {
+            "target": 0,
+            "urgent": false
+          },
+          {
+            "target": 0,
+            "urgent": true
+          },
+          {
+            "target": 0,
+            "urgent": true
+          },
+          {
+            "target": 0,
+            "urgent": false
+          },
+          {
+            "target": 0,
+            "urgent": true
+          }
+        ]
+      }
+    ],
+    "test": [
+      {
+        "initial_x": 3,
+        "stimuli": [
+          {
+            "target": 3,
+            "urgent": true
+          },
+          {
+            "target": 3,
+            "urgent": false
+          },
+          {
+            "target": 3,
+            "urgent": false
+          },
+          {
+            "target": 3,
+            "urgent": true
+          },
+          {
+            "target": 3,
+            "urgent": true
+          },
+          {
+            "target": 3,
+            "urgent": true
+          },
+          {
+            "target": 7,
+            "urgent": false
+          },
+          {
+            "target": 7,
+            "urgent": false
+          },
+          {
+            "target": 7,
+            "urgent": true
+          },
+          {
+            "target": 7,
+            "urgent": true
+          },
+          {
+            "target": 7,
+            "urgent": true
+          },
+          {
+            "target": 7,
+            "urgent": true
+          },
+          {
+            "target": 3,
+            "urgent": false
+          },
+          {
+            "target": 3,
+            "urgent": true
+          },
+          {
+            "target": 3,
+            "urgent": false
+          },
+          {
+            "target": 5,
+            "urgent": false
+          }
+        ]
+      },
+      {
+        "initial_x": 3,
+        "stimuli": [
+          {
+            "target": 6,
+            "urgent": false
+          },
+          {
+            "target": 6,
+            "urgent": true
+          },
+          {
+            "target": 6,
+            "urgent": true
+          },
+          {
+            "target": 6,
+            "urgent": false
+          },
+          {
+            "target": 6,
+            "urgent": true
+          },
+          {
+            "target": 6,
+            "urgent": false
+          },
+          {
+            "target": 8,
+            "urgent": true
+          },
+          {
+            "target": 8,
+            "urgent": true
+          },
+          {
+            "target": 8,
+            "urgent": false
+          },
+          {
+            "target": 8,
+            "urgent": true
+          },
+          {
+            "target": 8,
+            "urgent": true
+          },
+          {
+            "target": 8,
+            "urgent": false
+          },
+          {
+            "target": 3,
+            "urgent": false
+          },
+          {
+            "target": 3,
+            "urgent": false
+          },
+          {
+            "target": 3,
+            "urgent": true
+          },
+          {
+            "target": 3,
+            "urgent": false
+          }
+        ]
+      },
+      {
+        "initial_x": 3,
+        "stimuli": [
+          {
+            "target": 1,
+            "urgent": false
+          },
+          {
+            "target": 1,
+            "urgent": false
+          },
+          {
+            "target": 1,
+            "urgent": false
+          },
+          {
+            "target": 2,
+            "urgent": true
+          },
+          {
+            "target": 2,
+            "urgent": true
+          },
+          {
+            "target": 2,
+            "urgent": true
+          },
+          {
+            "target": 3,
+            "urgent": false
+          },
+          {
+            "target": 3,
+            "urgent": true
+          },
+          {
+            "target": 3,
+            "urgent": true
+          },
+          {
+            "target": 8,
+            "urgent": true
+          },
+          {
+            "target": 8,
+            "urgent": false
+          },
+          {
+            "target": 8,
+            "urgent": true
+          },
+          {
+            "target": 4,
+            "urgent": false
+          },
+          {
+            "target": 4,
+            "urgent": false
+          },
+          {
+            "target": 4,
+            "urgent": true
+          },
+          {
+            "target": 8,
+            "urgent": true
+          }
+        ]
+      },
+      {
+        "initial_x": 3,
+        "stimuli": [
+          {
+            "target": 2,
+            "urgent": false
+          },
+          {
+            "target": 2,
+            "urgent": true
+          },
+          {
+            "target": 2,
+            "urgent": true
+          },
+          {
+            "target": 5,
+            "urgent": true
+          },
+          {
+            "target": 5,
+            "urgent": true
+          },
+          {
+            "target": 5,
+            "urgent": false
+          },
+          {
+            "target": -1,
+            "urgent": true
+          },
+          {
+            "target": -1,
+            "urgent": true
+          },
+          {
+            "target": -1,
+            "urgent": true
+          },
+          {
+            "target": 6,
+            "urgent": false
+          },
+          {
+            "target": 6,
+            "urgent": true
+          },
+          {
+            "target": 6,
+            "urgent": false
+          },
+          {
+            "target": 5,
+            "urgent": true
+          },
+          {
+            "target": 5,
+            "urgent": true
+          },
+          {
+            "target": 5,
+            "urgent": true
+          },
+          {
+            "target": 1,
+            "urgent": true
+          }
+        ]
+      },
+      {
+        "initial_x": 3,
+        "stimuli": [
+          {
+            "target": 8,
+            "urgent": false
+          },
+          {
+            "target": 8,
+            "urgent": false
+          },
+          {
+            "target": 8,
+            "urgent": false
+          },
+          {
+            "target": 5,
+            "urgent": false
+          },
+          {
+            "target": 5,
+            "urgent": true
+          },
+          {
+            "target": 5,
+            "urgent": false
+          },
+          {
+            "target": 5,
+            "urgent": true
+          },
+          {
+            "target": 5,
+            "urgent": false
+          },
+          {
+            "target": 5,
+            "urgent": false
+          },
+          {
+            "target": -1,
+            "urgent": false
+          },
+          {
+            "target": -1,
+            "urgent": false
+          },
+          {
+            "target": -1,
+            "urgent": true
+          },
+          {
+            "target": 4,
+            "urgent": true
+          },
+          {
+            "target": 4,
+            "urgent": true
+          },
+          {
+            "target": 4,
+            "urgent": true
+          },
+          {
+            "target": 6,
+            "urgent": true
+          }
+        ]
+      },
+      {
+        "initial_x": 3,
+        "stimuli": [
+          {
+            "target": 8,
+            "urgent": true
+          },
+          {
+            "target": 8,
+            "urgent": true
+          },
+          {
+            "target": 8,
+            "urgent": true
+          },
+          {
+            "target": 8,
+            "urgent": true
+          },
+          {
+            "target": 8,
+            "urgent": true
+          },
+          {
+            "target": 8,
+            "urgent": false
+          },
+          {
+            "target": 1,
+            "urgent": true
+          },
+          {
+            "target": 1,
+            "urgent": false
+          },
+          {
+            "target": 1,
+            "urgent": false
+          },
+          {
+            "target": 7,
+            "urgent": true
+          },
+          {
+            "target": 7,
+            "urgent": true
+          },
+          {
+            "target": 7,
+            "urgent": true
+          },
+          {
+            "target": 7,
+            "urgent": true
+          },
+          {
+            "target": 7,
+            "urgent": true
+          },
+          {
+            "target": 7,
+            "urgent": false
+          },
+          {
+            "target": 3,
+            "urgent": true
+          }
+        ]
+      },
+      {
+        "initial_x": 3,
+        "stimuli": [
+          {
+            "target": 6,
+            "urgent": true
+          },
+          {
+            "target": 6,
+            "urgent": false
+          },
+          {
+            "target": 6,
+            "urgent": true
+          },
+          {
+            "target": 5,
+            "urgent": true
+          },
+          {
+            "target": 5,
+            "urgent": true
+          },
+          {
+            "target": 5,
+            "urgent": true
+          },
+          {
+            "target": 5,
+            "urgent": false
+          },
+          {
+            "target": 5,
+            "urgent": true
+          },
+          {
+            "target": 5,
+            "urgent": true
+          },
+          {
+            "target": 0,
+            "urgent": false
+          },
+          {
+            "target": 0,
+            "urgent": true
+          },
+          {
+            "target": 0,
+            "urgent": false
+          },
+          {
+            "target": 1,
+            "urgent": false
+          },
+          {
+            "target": 1,
+            "urgent": false
+          },
+          {
+            "target": 1,
+            "urgent": true
+          },
+          {
+            "target": -2,
+            "urgent": false
+          }
+        ]
+      },
+      {
+        "initial_x": 3,
+        "stimuli": [
+          {
+            "target": 3,
+            "urgent": true
+          },
+          {
+            "target": 3,
+            "urgent": false
+          },
+          {
+            "target": 3,
+            "urgent": true
+          },
+          {
+            "target": 3,
+            "urgent": false
+          },
+          {
+            "target": 3,
+            "urgent": false
+          },
+          {
+            "target": 3,
+            "urgent": true
+          },
+          {
+            "target": 0,
+            "urgent": true
+          },
+          {
+            "target": 0,
+            "urgent": true
+          },
+          {
+            "target": 0,
+            "urgent": false
+          },
+          {
+            "target": 0,
+            "urgent": false
+          },
+          {
+            "target": 0,
+            "urgent": true
+          },
+          {
+            "target": 0,
+            "urgent": true
+          },
+          {
+            "target": -1,
+            "urgent": true
+          },
+          {
+            "target": -1,
+            "urgent": false
+          },
+          {
+            "target": -1,
+            "urgent": false
+          },
+          {
+            "target": 3,
+            "urgent": true
+          }
+        ]
+      }
+    ]
+  }
+}

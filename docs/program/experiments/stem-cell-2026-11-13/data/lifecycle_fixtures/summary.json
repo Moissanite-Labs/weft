@@ -1,0 +1,22 @@
+{
+  "valid_selection": {
+    "accepted": true,
+    "axioms": []
+  },
+  "wrong_winner": {
+    "accepted": false,
+    "axioms": null
+  },
+  "tie_wrong_winner": {
+    "accepted": false,
+    "axioms": null
+  },
+  "valid_allocation": {
+    "accepted": true,
+    "axioms": []
+  },
+  "wrong_clone": {
+    "accepted": false,
+    "axioms": null
+  }
+}

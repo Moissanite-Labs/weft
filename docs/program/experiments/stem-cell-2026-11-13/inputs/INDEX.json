@@ -1,0 +1,90 @@
+{
+  "artifacts": [
+    {
+      "path": "inputs/statistical-cell.html.txt",
+      "bytes": 118361,
+      "sha256": "38cf7d7757cdb1729123d5dfc69c5def14c736bc9eb85e54d267dc46e4dff4d5",
+      "script_bytes": 19193,
+      "external_script_or_media": [],
+      "script_function_names": [
+        "syncBody",
+        "applyTheme",
+        "getCssVar",
+        "syncSliderProgress",
+        "seededVal",
+        "initBaseline",
+        "frobeniusDisplacement",
+        "coreDrift",
+        "klProxy",
+        "buildSensoryVector",
+        "forwardDecode",
+        "scoreCandidate",
+        "stepMitosis",
+        "gateCheck",
+        "updateKPIs",
+        "drawFrame",
+        "pointerToField",
+        "f",
+        "all"
+      ],
+      "network_api_mentions": {
+        "fetch(": 0,
+        "XMLHttpRequest": 0,
+        "WebSocket": 0,
+        "EventSource": 0,
+        "navigator.gpu": 0,
+        "Math.random": 2,
+        "requestAnimationFrame": 2,
+        "setInterval": 0
+      },
+      "credential_and_personal_path_scan": "passed",
+      "execution": "not executed; archived as inert text",
+      "embedded_privacy_marker_counts": {
+        "email_addresses": 0,
+        "password_inputs": 0,
+        "authorization_literals": 0,
+        "local_storage_mentions": 0,
+        "session_storage_mentions": 0
+      }
+    },
+    {
+      "path": "inputs/ic-to-plasm.html.txt",
+      "bytes": 114128,
+      "sha256": "02fe8c2f14151260aae962a74cdfff39e5163f98a904838560d757ace2a5b65b",
+      "script_bytes": 15600,
+      "external_script_or_media": [],
+      "script_function_names": [
+        "syncBody",
+        "applyTheme",
+        "getCssVar",
+        "syncSlider",
+        "buildGraph",
+        "updateKPIs",
+        "sampleMatrixVal",
+        "draw",
+        "f",
+        "all"
+      ],
+      "network_api_mentions": {
+        "fetch(": 0,
+        "XMLHttpRequest": 0,
+        "WebSocket": 0,
+        "EventSource": 0,
+        "navigator.gpu": 0,
+        "Math.random": 0,
+        "requestAnimationFrame": 2,
+        "setInterval": 0
+      },
+      "credential_and_personal_path_scan": "passed",
+      "execution": "not executed; archived as inert text",
+      "embedded_privacy_marker_counts": {
+        "email_addresses": 0,
+        "password_inputs": 0,
+        "authorization_literals": 0,
+        "local_storage_mentions": 0,
+        "session_storage_mentions": 0
+      }
+    }
+  ],
+  "note": "Verbatim HTML source plus derived static script/text extractions. No browser execution."
+}

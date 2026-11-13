@@ -1,0 +1,70 @@
+{
+  "accepted": false,
+  "kernel_checked": false,
+  "axioms": null,
+  "theorem": "StemLifecycle.certificate",
+  "toolchain": "leanprover/lean4:v4.35.0",
+  "request": {
+    "kind": "selection",
+    "genomes": [
+      {
+        "gain_num": 1,
+        "gain_den": 1,
+        "deadband": 0,
+        "bias": 0,
+        "cap_low": 2,
+        "cap_high": 2
+      },
+      {
+        "gain_num": 1,
+        "gain_den": 2,
+        "deadband": 1,
+        "bias": 0,
+        "cap_low": 1,
+        "cap_high": 2
+      }
+    ],
+    "costs": [
+      10,
+      10
+    ],
+    "eligible": [
+      true,
+      true
+    ],
+    "winner_index": 1
+  },
+  "request_sha256": "48d511357cee35b607bf4358bf6480dd847d797606a0124e77cfe8649e599e48",
+  "proof_sha256": "23bcd7cabe8dee40b2cb3bee9cedb06e50b2e0382511c4e86a0ad4644f1e84a6",
+  "spec_sha256": "abc1cde4b14fd63d2ffa6a55f01b91001828a2e0456ce488ad6b4e0d3b2ccd89",
+  "verifier_sha256": "175783104cfa1bdcc40b22496ae103ee55a23066a0c0128b0d8126a971a80918",
+  "compilerlogs": [
+    {
+      "command": [
+        "--version"
+      ],
+      "returncode": 0,
+      "stdout": "Lean (version 4.35.0, arm64-apple-darwin24.6.0, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "-o",
+        "Core.olean",
+        "Core.lean"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "Certificate.lean"
+      ],
+      "returncode": 1,
+      "stdout": "Certificate.lean:16:108: error: Tactic `decide` proved that the proposition\n  policies.length \u2264 5 \u2227\n    (List.drop winner policies).head? = some chosen \u2227\n      (List.drop winner eligible).head? = some true \u2227\n        (List.drop winner costs).head? = some 10 \u2227\n          ((List.drop 0 eligible).head? = some true \u2192 10 < 10 \u2228 10 = 10 \u2227 winner \u2264 0) \u2227\n            ((List.drop 1 eligible).head? = some true \u2192 10 < 10 \u2228 10 = 10 \u2227 winner \u2264 1)\nis false\nStemLifecycle.certificate :\n  policies.length \u2264 5 \u2227\n    (List.drop winner policies).head? = some chosen \u2227\n      (List.drop winner eligible).head? = some true \u2227\n        (List.drop winner costs).head? = some 10 \u2227\n          ((List.drop 0 eligible).head? = some true \u2192 10 < 10 \u2228 10 = 10 \u2227 winner \u2264 0) \u2227\n            ((List.drop 1 eligible).head? = some true \u2192 10 < 10 \u2228 10 = 10 \u2227 winner \u2264 1)\n'StemLifecycle.certificate' depends on axioms: [sorryAx]\n",
+      "stderr": ""
+    }
+  ],
+  "scope": "Exact concrete stable-min selection or bounded clone allocation over supplied data; prior score/eligibility provenance and runtime binding remain host responsibilities."
+}

@@ -1,0 +1,70 @@
+{
+  "accepted": true,
+  "kernel_checked": true,
+  "axioms": [],
+  "theorem": "StemLifecycle.certificate",
+  "toolchain": "leanprover/lean4:v4.35.0",
+  "request": {
+    "kind": "selection",
+    "genomes": [
+      {
+        "gain_num": 1,
+        "gain_den": 1,
+        "deadband": 0,
+        "bias": 0,
+        "cap_low": 2,
+        "cap_high": 2
+      },
+      {
+        "gain_num": 1,
+        "gain_den": 2,
+        "deadband": 1,
+        "bias": 0,
+        "cap_low": 1,
+        "cap_high": 2
+      }
+    ],
+    "costs": [
+      20,
+      10
+    ],
+    "eligible": [
+      true,
+      true
+    ],
+    "winner_index": 1
+  },
+  "request_sha256": "deacf071daf3fdcd2d3896d12b5fc81d985db325b7365a2255c26e3fbe6b5525",
+  "proof_sha256": "00cb68d4b5fe84ebdf6370eb073d4bafe1bf6529f43140a09477b719c49d32d1",
+  "spec_sha256": "abc1cde4b14fd63d2ffa6a55f01b91001828a2e0456ce488ad6b4e0d3b2ccd89",
+  "verifier_sha256": "175783104cfa1bdcc40b22496ae103ee55a23066a0c0128b0d8126a971a80918",
+  "compilerlogs": [
+    {
+      "command": [
+        "--version"
+      ],
+      "returncode": 0,
+      "stdout": "Lean (version 4.35.0, arm64-apple-darwin24.6.0, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "-o",
+        "Core.olean",
+        "Core.lean"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "Certificate.lean"
+      ],
+      "returncode": 0,
+      "stdout": "StemLifecycle.certificate :\n  policies.length \u2264 5 \u2227\n    (List.drop winner policies).head? = some chosen \u2227\n      (List.drop winner eligible).head? = some true \u2227\n        (List.drop winner costs).head? = some 10 \u2227\n          ((List.drop 0 eligible).head? = some true \u2192 10 < 20 \u2228 10 = 20 \u2227 winner \u2264 0) \u2227\n            ((List.drop 1 eligible).head? = some true \u2192 10 < 10 \u2228 10 = 10 \u2227 winner \u2264 1)\n'StemLifecycle.certificate' does not depend on any axioms\n",
+      "stderr": ""
+    }
+  ],
+  "scope": "Exact concrete stable-min selection or bounded clone allocation over supplied data; prior score/eligibility provenance and runtime binding remain host responsibilities."
+}

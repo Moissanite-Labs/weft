@@ -1,0 +1,26 @@
+{
+  "command": [
+    "python3",
+    "-m",
+    "unittest",
+    "-v",
+    "test_api_worker.py",
+    "test_colony.py",
+    "test_proof_gate.py",
+    "test_lifecycle_gate.py"
+  ],
+  "returncode": 0,
+  "source_sha256": {
+    "analyze_results.py": "6e262859a6d8470344eeeab88e3cf58ea19974964292074c30c05dbc082b9570",
+    "lifecycle_gate.py": "175783104cfa1bdcc40b22496ae103ee55a23066a0c0128b0d8126a971a80918",
+    "test_api_worker.py": "89e633e85cf44ccd1be8b827109ef111e3386e62cb28f59bdca18c78ba7a7a63",
+    "test_proof_gate.py": "43377828cfc4db5ff0bbd9b991032baf0a33d42a63819dc5e4ef79d08dfd0695",
+    "colony.py": "4939f87edb59d3dff8bd902038537986ac10aa93f55104b7394f3e00dc777ff9",
+    "proof_gate.py": "0ced22da415e00215e28ca663ab2e34a39b7d49c6f352079b4c19f1c1f67201d",
+    "api_worker.py": "3da6672bbed832d54095bbd15f62af20530fb997343f3ec0ab4c23019b4e9626",
+    "test_lifecycle_gate.py": "2db1d4c23621aaa44bef0ff014ee293ed07c0be62160319e2288423ce514ed4e",
+    "run_experiment.py": "a58c5d0550ff6d2bce0d0bb20e46dd7442f101f282224922e0be47889e6bbb5e",
+    "run_proof_fixtures.py": "4175e8b37044fc65d06522edeb29c420b04d81d20766559dea4bbaf5a5d6bc59",
+    "test_colony.py": "251dc241574c712ff7a1013dccfb9f76bf18d66e82dac9191702d7378e32bb68"
+  }
+}

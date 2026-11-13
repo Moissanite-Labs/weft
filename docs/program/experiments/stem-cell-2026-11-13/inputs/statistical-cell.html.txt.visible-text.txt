@@ -1,0 +1,19 @@
+Weft Zero-Lexicon Statistical Entity & Harness Decoder
+Naked Matrix W
+Parametric (μ, Σ)
+Causal SCM do(X)
+Step A/B Mitosis
+Reset W0
+Pause
+Invariant Displacement ||W - W0||_F
+0.000 / 1.200
+Frozen Core Drift (Rows 0..1)
+0.0000 (LOCKED)
+Speculative A/B Commits · Fitness
+0 · fit 0.82
+Genotype: 8×8 Float32 tensor (rows 0..1 frozen watermark, rows 2..7 plastic)
+Move pointer or click in field to inject sensory stimulus s_t (zero words on wire)
+Safety Gate Bound (R)
+1.20
+Exploratory Novelty (α)
+0.35

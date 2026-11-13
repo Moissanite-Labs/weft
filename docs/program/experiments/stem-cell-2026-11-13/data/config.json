@@ -1,0 +1,64 @@
+{
+  "version": "stem-integer-v1",
+  "seeds": [
+    171,
+    293
+  ],
+  "branches": [
+    "quiet",
+    "urgent"
+  ],
+  "generations": 2,
+  "children_per_request": 4,
+  "train_episodes": 4,
+  "validation_episodes": 4,
+  "test_episodes": 8,
+  "train_steps": 12,
+  "validation_steps": 12,
+  "test_steps": 16,
+  "initial_x": 3,
+  "target_min": -2,
+  "target_max": 8,
+  "root_norm_sq": 8,
+  "anchors": [
+    [
+      1,
+      1,
+      0
+    ],
+    [
+      0,
+      0,
+      1
+    ]
+  ],
+  "frozen": [
+    2
+  ],
+  "root_stem": {
+    "gain_num": 1,
+    "gain_den": 1,
+    "deadband": 0,
+    "bias": 0,
+    "cap_low": 2,
+    "cap_high": 2
+  },
+  "fixed_hand_controller": {
+    "gain_num": 1,
+    "gain_den": 2,
+    "deadband": 1,
+    "bias": 0,
+    "cap_low": 1,
+    "cap_high": 2
+  },
+  "max_colony_cells": 4,
+  "max_cpu_workers": 2,
+  "pressure_free_percent_pause": 10,
+  "pressure_free_percent_single_worker": 25,
+  "selection": "strictly lower validation total integer cost; ties retain parent, otherwise earliest submitted child",
+  "allocation": "one immutable root stem; up to three copies allocated to positive paired validation benefits, initially one each then remaining to greatest benefit (quiet wins equal benefits)",
+  "teacher_model": "gpt-6-astra",
+  "max_output_tokens": 6000,
+  "causal_pairing": "Within each seed/split, both demand branches have identical targets, urgency and initial_x; only integer cost weights differ.",
+  "scope": "Exploratory controller differentiation; every policy step uses exact integer arithmetic; no natural-world safety claim."
+}

@@ -1,0 +1,16 @@
+Morphogenetic IC-to-Plasm Developmental Unfolding
+M1 Morphogenetic IC
+C2 Scrambled IC
+D Direct Matrix ES
+Step IC Reduction
+Mutate BCP Seed
+Genotype Wire Size · Compression
+492 B · 2,131.3× (vs 512²)
+IC Trace (Steps · VLV Tension)
+6 steps · tension 42 / 85
+E11 12-Seed Return · Core Drift
++39.51 · drift 0.0000
+C3 Genotype: 24-node WEFT BCP graph (CON, DUP, FRC, SUP, VLV, ERA)
+C1 Phenotype: Top 25% core locked (WM cos 1.000) · Bottom 75% unfolded cilia
+Unfolded Plasm Scale (2^D)
+512²
