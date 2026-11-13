@@ -1,0 +1,13 @@
+**(a) Yes, within rounding precision.** For example, the displayed first row has norm approximately \(6.9986\), consistent with the reported \(6.9987\) when entries were rounded to four decimals. The overall statistics also satisfy, within rounding,
+\[
+\|W\|_F^2=4096\bigl(\mathrm{std}^2+\mathrm{mean}^2\bigr),
+\]
+using population standard deviation. The listed top rows use zero-based indexing.
+
+**(b) A small experimental edit:** shrink the five highest-norm rows by 1%:
+\[
+W'_{i,:}=0.99W_{i,:},\qquad i\in\{50,8,3,32,49\},
+\]
+leaving all other rows unchanged.
+
+This is **only a heuristic to test**, not an established way to reduce looping. These synthetic weights and their norms do not identify repetition-causing circuitry. For an actual model, retain the edit only if controlled evaluation shows less looping without unacceptable quality loss.

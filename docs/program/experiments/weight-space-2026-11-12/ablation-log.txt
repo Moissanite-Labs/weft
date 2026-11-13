@@ -1,0 +1,520 @@
+=== zero_blocks=0
+/Users/kethuda/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+The attention mask is not set and cannot be inferred from input because pad token is same as eos token. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+[00] loop  loop_n=1 frac=0.94 distinct_2=0.07 | A little dog named Max wanted to
+[01] loop  loop_n=1 frac=0.92 distinct_2=0.09 | Sara found a little box under a tree
+[02] loop  loop_n=1 frac=0.93 distinct_2=0.08 | Tim had a bright red ball in his
+[03] loop  loop_n=1 frac=0.95 distinct_2=0.06 | Lily liked to draw pictures of
+[04] loop  loop_n=1 frac=0.93 distinct_2=0.08 | A small cat climbed to the top of
+[05] loop  loop_n=1 frac=0.93 distinct_2=0.08 | Emma and Noah went to the beach with
+[06] loop  loop_n=1 frac=0.93 distinct_2=0.08 | A little car named Benny the yellow
+[07] loop  loop_n=1 frac=0.93 distinct_2=0.08 | Mom told a story about the day they
+[08] loop  loop_n=1 frac=0.94 distinct_2=0.07 | Zoe saw a small bird outside her
+[09] loop  loop_n=1 frac=0.94 distinct_2=0.07 | A curious boy named Eli opened the
+[10] loop  loop_n=1 frac=0.93 distinct_2=0.08 | Sofia wanted to buy a big bag of
+[11] loop  loop_n=1 frac=0.75 distinct_2=0.10 | A little girl named Mia played with
+[12] loop  loop_n=1 frac=0.92 distinct_2=0.10 | A rabbit lived in a hole at the bottom o
+[13] loop  loop_n=1 frac=0.94 distinct_2=0.07 | Ben lost his favorite toy in the
+[14] loop  loop_n=1 frac=0.94 distinct_2=0.07 | Anna's red kite got stuck in the
+[15] ok    loop_n=None frac=0.00 distinct_2=1.00 | One day a little duck named Dash
+[16] loop  loop_n=1 frac=0.93 distinct_2=0.08 | The sun was shining and the little boy
+[17] loop  loop_n=1 frac=0.83 distinct_2=0.09 | A small brown dog ran away from
+[18] loop  loop_n=1 frac=0.91 distinct_2=0.10 | A boy named Jake found a magical
+[19] loop  loop_n=1 frac=0.95 distinct_2=0.06 | Mom was baking cookies and little
+[20] loop  loop_n=1 frac=0.95 distinct_2=0.06 | A puppy named Buddy liked to
+[21] loop  loop_n=1 frac=0.93 distinct_2=0.08 | Lilly wanted to go to the big park
+[22] loop  loop_n=1 frac=0.93 distinct_2=0.08 | A quiet cat lived in a tall house
+[23] loop  loop_n=1 frac=0.93 distinct_2=0.08 | Sam looked up at the sky and saw
+[24] loop  loop_n=1 frac=0.93 distinct_2=0.08 | A little red wagon pulled a heavy
+[25] loop  loop_n=1 frac=0.94 distinct_2=0.07 | A bird named Kiki flew high over
+[26] loop  loop_n=1 frac=0.94 distinct_2=0.07 | The little girl loved to sing and
+[27] loop  loop_n=1 frac=0.93 distinct_2=0.08 | An old man lived in a tiny
+[28] loop  loop_n=1 frac=0.96 distinct_2=0.05 | A baby elephant wanted to
+[29] loop  loop_n=1 frac=0.96 distinct_2=0.05 | A frog jumped into the
+[30] loop  loop_n=1 frac=0.97 distinct_2=0.05 | A tiny bear found a
+[31] loop  loop_n=1 frac=0.96 distinct_2=0.05 | Tommy helped his mom make
+[32] loop  loop_n=1 frac=0.95 distinct_2=0.06 | In the garden there was a
+[33] loop  loop_n=1 frac=0.78 distinct_2=0.08 | A little yellow bird
+[34] loop  loop_n=1 frac=0.96 distinct_2=0.06 | The moon came out and the
+[35] loop  loop_n=1 frac=0.58 distinct_2=0.07 | A small rabbit hopped
+[36] loop  loop_n=1 frac=0.98 distinct_2=0.03 | Sam had a
+[37] loop  loop_n=1 frac=0.97 distinct_2=0.05 | The rain fell and the
+[38] loop  loop_n=1 frac=0.97 distinct_2=0.04 | Molly found an
+[39] loop  loop_n=1 frac=0.96 distinct_2=0.05 | Noah and his dog named
+[40] loop  loop_n=1 frac=0.97 distinct_2=0.05 | A little girl with a
+[41] loop  loop_n=1 frac=0.94 distinct_2=0.07 | A boy and a girl sat on
+[42] loop  loop_n=1 frac=0.98 distinct_2=0.04 | A puppy chased a
+[43] loop  loop_n=1 frac=0.95 distinct_2=0.06 | Mom said they could go to
+[44] loop  loop_n=1 frac=0.94 distinct_2=0.06 | A little kite flew
+[45] loop  loop_n=1 frac=0.96 distinct_2=0.05 | The trees grew tall
+[46] ok    loop_n=None frac=0.00 distinct_2=1.00 | A small duck waddled
+[47] loop  loop_n=1 frac=0.97 distinct_2=0.04 | In the deep forest
+[48] ok    loop_n=None frac=0.00 distinct_2=0.83 | An old cat named
+[49] loop  loop_n=1 frac=0.97 distinct_2=0.05 | A small boy wore a
+[50] loop  loop_n=1 frac=0.97 distinct_2=0.04 | A windy day and
+[51] ok    loop_n=None frac=0.00 distinct_2=1.00 | A little girl sang
+[52] loop  loop_n=1 frac=0.98 distinct_2=0.03 | A duckling was
+[53] loop  loop_n=1 frac=0.79 distinct_2=0.08 | A frog hopped
+[54] loop  loop_n=1 frac=0.98 distinct_2=0.04 | A boy found a
+[55] loop  loop_n=1 frac=0.96 distinct_2=0.05 | The small dog slept
+[56] loop  loop_n=1 frac=0.97 distinct_2=0.04 | A bird flew over
+[57] loop  loop_n=1 frac=0.70 distinct_2=0.09 | A quiet girl sat
+[58] loop  loop_n=1 frac=0.97 distinct_2=0.04 | A short story about
+[59] loop  loop_n=1 frac=0.98 distinct_2=0.03 | My name is
+loops=56/60  distinct_2=0.123
+=== zero_blocks=1
+/Users/kethuda/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+The attention mask is not set and cannot be inferred from input because pad token is same as eos token. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+[00] loop  loop_n=1 frac=0.93 distinct_2=0.08 | A little dog named Max wanted to
+[01] loop  loop_n=1 frac=0.76 distinct_2=0.13 | Sara found a little box under a tree
+[02] ok    loop_n=None frac=0.00 distinct_2=1.00 | Tim had a bright red ball in his
+[03] loop  loop_n=1 frac=0.95 distinct_2=0.06 | Lily liked to draw pictures of
+[04] loop  loop_n=1 frac=0.93 distinct_2=0.08 | A small cat climbed to the top of
+[05] ok    loop_n=None frac=0.00 distinct_2=1.00 | Emma and Noah went to the beach with
+[06] loop  loop_n=1 frac=0.93 distinct_2=0.08 | A little car named Benny the yellow
+[07] ok    loop_n=None frac=0.00 distinct_2=1.00 | Mom told a story about the day they
+[08] loop  loop_n=1 frac=0.93 distinct_2=0.08 | Zoe saw a small bird outside her
+[09] loop  loop_n=1 frac=0.92 distinct_2=0.09 | A curious boy named Eli opened the
+[10] loop  loop_n=1 frac=0.93 distinct_2=0.08 | Sofia wanted to buy a big bag of
+[11] ok    loop_n=None frac=0.00 distinct_2=1.00 | A little girl named Mia played with
+[12] loop  loop_n=1 frac=0.92 distinct_2=0.10 | A rabbit lived in a hole at the bottom o
+[13] loop  loop_n=1 frac=0.92 distinct_2=0.09 | Ben lost his favorite toy in the
+[14] loop  loop_n=1 frac=0.93 distinct_2=0.08 | Anna's red kite got stuck in the
+[15] ok    loop_n=None frac=0.00 distinct_2=1.00 | One day a little duck named Dash
+[16] loop  loop_n=1 frac=0.90 distinct_2=0.11 | The sun was shining and the little boy
+[17] loop  loop_n=1 frac=0.93 distinct_2=0.08 | A small brown dog ran away from
+[18] loop  loop_n=1 frac=0.93 distinct_2=0.08 | A boy named Jake found a magical
+[19] loop  loop_n=1 frac=0.95 distinct_2=0.06 | Mom was baking cookies and little
+[20] loop  loop_n=1 frac=0.94 distinct_2=0.07 | A puppy named Buddy liked to
+[21] ok    loop_n=None frac=0.00 distinct_2=1.00 | Lilly wanted to go to the big park
+[22] ok    loop_n=None frac=0.00 distinct_2=1.00 | A quiet cat lived in a tall house
+[23] loop  loop_n=1 frac=0.91 distinct_2=0.10 | Sam looked up at the sky and saw
+[24] loop  loop_n=1 frac=0.93 distinct_2=0.08 | A little red wagon pulled a heavy
+[25] ok    loop_n=None frac=0.00 distinct_2=1.00 | A bird named Kiki flew high over
+[26] ok    loop_n=None frac=0.00 distinct_2=1.00 | The little girl loved to sing and
+[27] loop  loop_n=1 frac=0.93 distinct_2=0.08 | An old man lived in a tiny
+[28] loop  loop_n=1 frac=0.95 distinct_2=0.06 | A baby elephant wanted to
+[29] loop  loop_n=1 frac=0.94 distinct_2=0.07 | A frog jumped into the
+[30] loop  loop_n=1 frac=0.95 distinct_2=0.06 | A tiny bear found a
+[31] ok    loop_n=None frac=0.00 distinct_2=1.00 | Tommy helped his mom make
+[32] loop  loop_n=1 frac=0.94 distinct_2=0.07 | In the garden there was a
+[33] loop  loop_n=1 frac=0.92 distinct_2=0.06 | A little yellow bird
+[34] loop  loop_n=1 frac=0.93 distinct_2=0.08 | The moon came out and the
+[35] ok    loop_n=None frac=0.00 distinct_2=1.00 | A small rabbit hopped
+[36] loop  loop_n=1 frac=0.97 distinct_2=0.04 | Sam had a
+[37] loop  loop_n=1 frac=0.95 distinct_2=0.06 | The rain fell and the
+[38] loop  loop_n=1 frac=0.96 distinct_2=0.05 | Molly found an
+[39] loop  loop_n=1 frac=0.95 distinct_2=0.06 | Noah and his dog named
+[40] loop  loop_n=1 frac=0.95 distinct_2=0.06 | A little girl with a
+[41] ok    loop_n=None frac=0.00 distinct_2=1.00 | A boy and a girl sat on
+[42] loop  loop_n=1 frac=0.96 distinct_2=0.05 | A puppy chased a
+[43] ok    loop_n=None frac=0.00 distinct_2=1.00 | Mom said they could go to
+[44] ok    loop_n=None frac=0.00 distinct_2=1.00 | A little kite flew
+[45] loop  loop_n=1 frac=0.97 distinct_2=0.04 | The trees grew tall
+[46] ok    loop_n=None frac=0.00 distinct_2=1.00 | A small duck waddled
+[47] loop  loop_n=1 frac=0.96 distinct_2=0.05 | In the deep forest
+[48] ok    loop_n=None frac=0.00 distinct_2=1.00 | An old cat named
+[49] loop  loop_n=1 frac=0.95 distinct_2=0.06 | A small boy wore a
+[50] loop  loop_n=1 frac=0.95 distinct_2=0.06 | A windy day and
+[51] ok    loop_n=None frac=0.00 distinct_2=1.00 | A little girl sang
+[52] loop  loop_n=1 frac=0.96 distinct_2=0.05 | A duckling was
+[53] ok    loop_n=None frac=0.00 distinct_2=1.00 | A frog hopped
+[54] loop  loop_n=1 frac=0.96 distinct_2=0.05 | A boy found a
+[55] loop  loop_n=1 frac=0.94 distinct_2=0.08 | The small dog slept
+[56] loop  loop_n=1 frac=0.94 distinct_2=0.07 | A bird flew over
+[57] ok    loop_n=None frac=0.00 distinct_2=1.00 | A quiet girl sat
+[58] loop  loop_n=1 frac=0.95 distinct_2=0.06 | A short story about
+[59] loop  loop_n=1 frac=0.96 distinct_2=0.05 | My name is
+loops=41/60  distinct_2=0.364
+=== zero_blocks=2
+/Users/kethuda/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+The attention mask is not set and cannot be inferred from input because pad token is same as eos token. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+[00] loop  loop_n=1 frac=0.87 distinct_2=0.11 | A little dog named Max wanted to
+[01] loop  loop_n=1 frac=0.91 distinct_2=0.10 | Sara found a little box under a tree
+[02] ok    loop_n=None frac=0.00 distinct_2=1.00 | Tim had a bright red ball in his
+[03] loop  loop_n=1 frac=0.81 distinct_2=0.19 | Lily liked to draw pictures of
+[04] loop  loop_n=1 frac=0.38 distinct_2=0.32 | A small cat climbed to the top of
+[05] loop  loop_n=1 frac=0.88 distinct_2=0.13 | Emma and Noah went to the beach with
+[06] ok    loop_n=None frac=0.00 distinct_2=1.00 | A little car named Benny the yellow
+[07] ok    loop_n=None frac=0.00 distinct_2=0.92 | Mom told a story about the day they
+[08] loop  loop_n=1 frac=0.94 distinct_2=0.07 | Zoe saw a small bird outside her
+[09] loop  loop_n=1 frac=0.80 distinct_2=0.15 | A curious boy named Eli opened the
+[10] ok    loop_n=None frac=0.00 distinct_2=1.00 | Sofia wanted to buy a big bag of
+[11] loop  loop_n=1 frac=0.93 distinct_2=0.08 | A little girl named Mia played with
+[12] loop  loop_n=1 frac=0.86 distinct_2=0.15 | A rabbit lived in a hole at the bottom o
+[13] loop  loop_n=1 frac=0.51 distinct_2=0.30 | Ben lost his favorite toy in the
+[14] loop  loop_n=1 frac=0.55 distinct_2=0.24 | Anna's red kite got stuck in the
+[15] ok    loop_n=None frac=0.00 distinct_2=1.00 | One day a little duck named Dash
+[16] loop  loop_n=1 frac=0.87 distinct_2=0.14 | The sun was shining and the little boy
+[17] loop  loop_n=1 frac=0.92 distinct_2=0.09 | A small brown dog ran away from
+[18] ok    loop_n=None frac=0.00 distinct_2=1.00 | A boy named Jake found a magical
+[19] loop  loop_n=1 frac=0.95 distinct_2=0.06 | Mom was baking cookies and little
+[20] loop  loop_n=1 frac=0.52 distinct_2=0.35 | A puppy named Buddy liked to
+[21] loop  loop_n=1 frac=0.91 distinct_2=0.10 | Lilly wanted to go to the big park
+[22] loop  loop_n=1 frac=0.85 distinct_2=0.16 | A quiet cat lived in a tall house
+[23] loop  loop_n=1 frac=0.90 distinct_2=0.11 | Sam looked up at the sky and saw
+[24] ok    loop_n=None frac=0.00 distinct_2=1.00 | A little red wagon pulled a heavy
+[25] loop  loop_n=1 frac=0.55 distinct_2=0.26 | A bird named Kiki flew high over
+[26] ok    loop_n=None frac=0.00 distinct_2=1.00 | The little girl loved to sing and
+[27] ok    loop_n=None frac=0.00 distinct_2=1.00 | An old man lived in a tiny
+[28] loop  loop_n=1 frac=0.83 distinct_2=0.18 | A baby elephant wanted to
+[29] loop  loop_n=1 frac=0.43 distinct_2=0.36 | A frog jumped into the
+[30] loop  loop_n=1 frac=0.83 distinct_2=0.13 | A tiny bear found a
+[31] ok    loop_n=None frac=0.00 distinct_2=1.00 | Tommy helped his mom make
+[32] loop  loop_n=1 frac=0.91 distinct_2=0.10 | In the garden there was a
+[33] loop  loop_n=1 frac=0.95 distinct_2=0.06 | A little yellow bird
+[34] loop  loop_n=1 frac=0.94 distinct_2=0.07 | The moon came out and the
+[35] loop  loop_n=1 frac=0.96 distinct_2=0.05 | A small rabbit hopped
+[36] ok    loop_n=None frac=0.00 distinct_2=1.00 | Sam had a
+[37] loop  loop_n=1 frac=0.95 distinct_2=0.06 | The rain fell and the
+[38] loop  loop_n=1 frac=0.97 distinct_2=0.04 | Molly found an
+[39] loop  loop_n=1 frac=0.93 distinct_2=0.08 | Noah and his dog named
+[40] loop  loop_n=1 frac=0.24 distinct_2=0.56 | A little girl with a
+[41] loop  loop_n=1 frac=0.87 distinct_2=0.14 | A boy and a girl sat on
+[42] loop  loop_n=1 frac=0.91 distinct_2=0.10 | A puppy chased a
+[43] loop  loop_n=1 frac=0.86 distinct_2=0.14 | Mom said they could go to
+[44] loop  loop_n=1 frac=0.94 distinct_2=0.07 | A little kite flew
+[45] ok    loop_n=None frac=0.00 distinct_2=1.00 | The trees grew tall
+[46] loop  loop_n=1 frac=0.96 distinct_2=0.05 | A small duck waddled
+[47] loop  loop_n=1 frac=0.31 distinct_2=0.50 | In the deep forest
+[48] loop  loop_n=1 frac=0.94 distinct_2=0.07 | An old cat named
+[49] loop  loop_n=1 frac=0.81 distinct_2=0.13 | A small boy wore a
+[50] loop  loop_n=1 frac=0.94 distinct_2=0.07 | A windy day and
+[51] loop  loop_n=1 frac=0.29 distinct_2=0.32 | A little girl sang
+[52] ok    loop_n=None frac=0.00 distinct_2=0.60 | A duckling was
+[53] loop  loop_n=1 frac=0.97 distinct_2=0.04 | A frog hopped
+[54] loop  loop_n=1 frac=0.49 distinct_2=0.34 | A boy found a
+[55] loop  loop_n=1 frac=0.96 distinct_2=0.05 | The small dog slept
+[56] loop  loop_n=1 frac=0.44 distinct_2=0.34 | A bird flew over
+[57] loop  loop_n=1 frac=0.96 distinct_2=0.05 | A quiet girl sat
+[58] ok    loop_n=None frac=0.00 distinct_2=0.55 | A short story about
+[59] loop  loop_n=1 frac=0.43 distinct_2=0.22 | My name is
+loops=46/60  distinct_2=0.342
+=== zero_blocks=3
+/Users/kethuda/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+The attention mask is not set and cannot be inferred from input because pad token is same as eos token. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+[00] ok    loop_n=None frac=0.00 distinct_2=1.00 | A little dog named Max wanted to
+[01] loop  loop_n=1 frac=0.66 distinct_2=0.16 | Sara found a little box under a tree
+[02] loop  loop_n=1 frac=0.76 distinct_2=0.18 | Tim had a bright red ball in his
+[03] loop  loop_n=1 frac=0.26 distinct_2=0.52 | Lily liked to draw pictures of
+[04] loop  loop_n=1 frac=0.87 distinct_2=0.12 | A small cat climbed to the top of
+[05] loop  loop_n=1 frac=0.87 distinct_2=0.12 | Emma and Noah went to the beach with
+[06] loop  loop_n=1 frac=0.93 distinct_2=0.08 | A little car named Benny the yellow
+[07] loop  loop_n=1 frac=0.92 distinct_2=0.09 | Mom told a story about the day they
+[08] loop  loop_n=1 frac=0.87 distinct_2=0.13 | Zoe saw a small bird outside her
+[09] loop  loop_n=1 frac=0.89 distinct_2=0.12 | A curious boy named Eli opened the
+[10] loop  loop_n=1 frac=0.92 distinct_2=0.09 | Sofia wanted to buy a big bag of
+[11] loop  loop_n=1 frac=0.64 distinct_2=0.13 | A little girl named Mia played with
+[12] loop  loop_n=1 frac=0.86 distinct_2=0.15 | A rabbit lived in a hole at the bottom o
+[13] loop  loop_n=1 frac=0.89 distinct_2=0.12 | Ben lost his favorite toy in the
+[14] loop  loop_n=1 frac=0.83 distinct_2=0.15 | Anna's red kite got stuck in the
+[15] loop  loop_n=1 frac=0.91 distinct_2=0.10 | One day a little duck named Dash
+[16] ok    loop_n=None frac=0.00 distinct_2=1.00 | The sun was shining and the little boy
+[17] loop  loop_n=1 frac=0.87 distinct_2=0.14 | A small brown dog ran away from
+[18] loop  loop_n=1 frac=0.93 distinct_2=0.08 | A boy named Jake found a magical
+[19] loop  loop_n=1 frac=0.94 distinct_2=0.07 | Mom was baking cookies and little
+[20] loop  loop_n=1 frac=0.89 distinct_2=0.12 | A puppy named Buddy liked to
+[21] loop  loop_n=1 frac=0.92 distinct_2=0.09 | Lilly wanted to go to the big park
+[22] loop  loop_n=1 frac=0.87 distinct_2=0.14 | A quiet cat lived in a tall house
+[23] loop  loop_n=1 frac=0.87 distinct_2=0.12 | Sam looked up at the sky and saw
+[24] ok    loop_n=None frac=0.00 distinct_2=1.00 | A little red wagon pulled a heavy
+[25] loop  loop_n=1 frac=0.86 distinct_2=0.15 | A bird named Kiki flew high over
+[26] loop  loop_n=1 frac=0.85 distinct_2=0.16 | The little girl loved to sing and
+[27] loop  loop_n=1 frac=0.89 distinct_2=0.12 | An old man lived in a tiny
+[28] ok    loop_n=None frac=0.00 distinct_2=1.00 | A baby elephant wanted to
+[29] loop  loop_n=1 frac=0.88 distinct_2=0.13 | A frog jumped into the
+[30] loop  loop_n=1 frac=0.66 distinct_2=0.11 | A tiny bear found a
+[31] loop  loop_n=1 frac=0.91 distinct_2=0.10 | Tommy helped his mom make
+[32] loop  loop_n=1 frac=0.85 distinct_2=0.13 | In the garden there was a
+[33] ok    loop_n=None frac=0.00 distinct_2=1.00 | A little yellow bird
+[34] loop  loop_n=1 frac=0.84 distinct_2=0.14 | The moon came out and the
+[35] loop  loop_n=1 frac=0.93 distinct_2=0.09 | A small rabbit hopped
+[36] loop  loop_n=1 frac=0.71 distinct_2=0.19 | Sam had a
+[37] loop  loop_n=1 frac=0.56 distinct_2=0.19 | The rain fell and the
+[38] loop  loop_n=1 frac=0.81 distinct_2=0.14 | Molly found an
+[39] loop  loop_n=1 frac=0.95 distinct_2=0.06 | Noah and his dog named
+[40] loop  loop_n=1 frac=0.61 distinct_2=0.11 | A little girl with a
+[41] loop  loop_n=1 frac=0.27 distinct_2=0.20 | A boy and a girl sat on
+[42] ok    loop_n=None frac=0.00 distinct_2=1.00 | A puppy chased a
+[43] loop  loop_n=1 frac=0.89 distinct_2=0.12 | Mom said they could go to
+[44] loop  loop_n=1 frac=0.82 distinct_2=0.12 | A little kite flew
+[45] loop  loop_n=1 frac=0.93 distinct_2=0.08 | The trees grew tall
+[46] loop  loop_n=1 frac=0.90 distinct_2=0.11 | A small duck waddled
+[47] loop  loop_n=1 frac=0.93 distinct_2=0.08 | In the deep forest
+[48] loop  loop_n=1 frac=0.95 distinct_2=0.06 | An old cat named
+[49] loop  loop_n=1 frac=0.84 distinct_2=0.11 | A small boy wore a
+[50] loop  loop_n=1 frac=0.83 distinct_2=0.09 | A windy day and
+[51] loop  loop_n=1 frac=0.73 distinct_2=0.11 | A little girl sang
+[52] loop  loop_n=1 frac=0.55 distinct_2=0.11 | A duckling was
+[53] loop  loop_n=1 frac=0.95 distinct_2=0.07 | A frog hopped
+[54] loop  loop_n=1 frac=0.71 distinct_2=0.10 | A boy found a
+[55] ok    loop_n=None frac=0.00 distinct_2=1.00 | The small dog slept
+[56] loop  loop_n=1 frac=0.88 distinct_2=0.12 | A bird flew over
+[57] loop  loop_n=1 frac=0.79 distinct_2=0.13 | A quiet girl sat
+[58] loop  loop_n=1 frac=0.90 distinct_2=0.08 | A short story about
+[59] ok    loop_n=None frac=0.00 distinct_2=1.00 | My name is
+loops=52/60  distinct_2=0.242
+=== zero_blocks=4
+/Users/kethuda/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+The attention mask is not set and cannot be inferred from input because pad token is same as eos token. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+[00] ok    loop_n=None frac=0.00 distinct_2=0.80 | A little dog named Max wanted to
+[01] loop  loop_n=1 frac=0.88 distinct_2=0.13 | Sara found a little box under a tree
+[02] ok    loop_n=None frac=0.00 distinct_2=0.61 | Tim had a bright red ball in his
+[03] ok    loop_n=None frac=0.00 distinct_2=0.78 | Lily liked to draw pictures of
+[04] loop  loop_n=1 frac=0.91 distinct_2=0.10 | A small cat climbed to the top of
+[05] ok    loop_n=None frac=0.00 distinct_2=1.00 | Emma and Noah went to the beach with
+[06] ok    loop_n=None frac=0.00 distinct_2=0.94 | A little car named Benny the yellow
+[07] loop  loop_n=1 frac=0.88 distinct_2=0.13 | Mom told a story about the day they
+[08] ok    loop_n=None frac=0.00 distinct_2=0.53 | Zoe saw a small bird outside her
+[09] loop  loop_n=1 frac=0.91 distinct_2=0.10 | A curious boy named Eli opened the
+[10] ok    loop_n=None frac=0.00 distinct_2=1.00 | Sofia wanted to buy a big bag of
+[11] loop  loop_n=1 frac=0.38 distinct_2=0.42 | A little girl named Mia played with
+[12] loop  loop_n=1 frac=0.90 distinct_2=0.11 | A rabbit lived in a hole at the bottom o
+[13] loop  loop_n=1 frac=0.88 distinct_2=0.13 | Ben lost his favorite toy in the
+[14] ok    loop_n=None frac=0.00 distinct_2=0.64 | Anna's red kite got stuck in the
+[15] loop  loop_n=1 frac=0.26 distinct_2=0.63 | One day a little duck named Dash
+[16] ok    loop_n=None frac=0.00 distinct_2=0.92 | The sun was shining and the little boy
+[17] ok    loop_n=None frac=0.00 distinct_2=0.85 | A small brown dog ran away from
+[18] ok    loop_n=None frac=0.00 distinct_2=0.60 | A boy named Jake found a magical
+[19] loop  loop_n=1 frac=0.93 distinct_2=0.08 | Mom was baking cookies and little
+[20] ok    loop_n=None frac=0.00 distinct_2=0.78 | A puppy named Buddy liked to
+[21] ok    loop_n=None frac=0.00 distinct_2=0.57 | Lilly wanted to go to the big park
+[22] loop  loop_n=1 frac=0.90 distinct_2=0.11 | A quiet cat lived in a tall house
+[23] loop  loop_n=1 frac=0.91 distinct_2=0.10 | Sam looked up at the sky and saw
+[24] loop  loop_n=1 frac=0.85 distinct_2=0.16 | A little red wagon pulled a heavy
+[25] ok    loop_n=None frac=0.00 distinct_2=0.92 | A bird named Kiki flew high over
+[26] ok    loop_n=None frac=0.00 distinct_2=0.80 | The little girl loved to sing and
+[27] loop  loop_n=1 frac=0.85 distinct_2=0.10 | An old man lived in a tiny
+[28] ok    loop_n=None frac=0.00 distinct_2=1.00 | A baby elephant wanted to
+[29] loop  loop_n=1 frac=0.90 distinct_2=0.11 | A frog jumped into the
+[30] loop  loop_n=1 frac=0.95 distinct_2=0.06 | A tiny bear found a
+[31] loop  loop_n=1 frac=0.30 distinct_2=0.48 | Tommy helped his mom make
+[32] loop  loop_n=1 frac=0.94 distinct_2=0.07 | In the garden there was a
+[33] ok    loop_n=None frac=0.00 distinct_2=1.00 | A little yellow bird
+[34] loop  loop_n=1 frac=0.94 distinct_2=0.07 | The moon came out and the
+[35] ok    loop_n=None frac=0.00 distinct_2=0.94 | A small rabbit hopped
+[36] ok    loop_n=None frac=0.00 distinct_2=0.78 | Sam had a
+[37] loop  loop_n=1 frac=0.95 distinct_2=0.06 | The rain fell and the
+[38] loop  loop_n=1 frac=0.97 distinct_2=0.04 | Molly found an
+[39] ok    loop_n=None frac=0.00 distinct_2=1.00 | Noah and his dog named
+[40] loop  loop_n=1 frac=0.95 distinct_2=0.06 | A little girl with a
+[41] ok    loop_n=None frac=0.00 distinct_2=1.00 | A boy and a girl sat on
+[42] ok    loop_n=None frac=0.00 distinct_2=0.61 | A puppy chased a
+[43] ok    loop_n=None frac=0.00 distinct_2=1.00 | Mom said they could go to
+[44] ok    loop_n=None frac=0.00 distinct_2=1.00 | A little kite flew
+[45] loop  loop_n=1 frac=0.95 distinct_2=0.06 | The trees grew tall
+[46] ok    loop_n=None frac=0.00 distinct_2=1.00 | A small duck waddled
+[47] loop  loop_n=1 frac=0.94 distinct_2=0.07 | In the deep forest
+[48] ok    loop_n=None frac=0.00 distinct_2=0.58 | An old cat named
+[49] loop  loop_n=1 frac=0.91 distinct_2=0.10 | A small boy wore a
+[50] ok    loop_n=None frac=0.00 distinct_2=1.00 | A windy day and
+[51] ok    loop_n=None frac=0.00 distinct_2=0.48 | A little girl sang
+[52] ok    loop_n=None frac=0.00 distinct_2=1.00 | A duckling was
+[53] ok    loop_n=None frac=0.00 distinct_2=0.73 | A frog hopped
+[54] loop  loop_n=1 frac=0.96 distinct_2=0.05 | A boy found a
+[55] ok    loop_n=None frac=0.00 distinct_2=1.00 | The small dog slept
+[56] ok    loop_n=None frac=0.00 distinct_2=1.00 | A bird flew over
+[57] ok    loop_n=None frac=0.00 distinct_2=0.70 | A quiet girl sat
+[58] loop  loop_n=1 frac=0.94 distinct_2=0.07 | A short story about
+[59] ok    loop_n=None frac=0.00 distinct_2=0.92 | My name is
+loops=26/60  distinct_2=0.534
+=== zero_blocks=5
+/Users/kethuda/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+The attention mask is not set and cannot be inferred from input because pad token is same as eos token. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+[00] ok    loop_n=None frac=0.00 distinct_2=0.93 | A little dog named Max wanted to
+[01] loop  loop_n=1 frac=0.84 distinct_2=0.15 | Sara found a little box under a tree
+[02] loop  loop_n=1 frac=0.86 distinct_2=0.16 | Tim had a bright red ball in his
+[03] ok    loop_n=None frac=0.00 distinct_2=0.89 | Lily liked to draw pictures of
+[04] loop  loop_n=1 frac=0.90 distinct_2=0.12 | A small cat climbed to the top of
+[05] ok    loop_n=None frac=0.00 distinct_2=1.00 | Emma and Noah went to the beach with
+[06] ok    loop_n=None frac=0.00 distinct_2=1.00 | A little car named Benny the yellow
+[07] loop  loop_n=1 frac=0.33 distinct_2=0.51 | Mom told a story about the day they
+[08] loop  loop_n=1 frac=0.59 distinct_2=0.45 | Zoe saw a small bird outside her
+[09] ok    loop_n=None frac=0.00 distinct_2=0.58 | A curious boy named Eli opened the
+[10] ok    loop_n=None frac=0.00 distinct_2=1.00 | Sofia wanted to buy a big bag of
+[11] ok    loop_n=None frac=0.00 distinct_2=0.80 | A little girl named Mia played with
+[12] ok    loop_n=None frac=0.00 distinct_2=0.90 | A rabbit lived in a hole at the bottom o
+[13] ok    loop_n=None frac=0.00 distinct_2=0.75 | Ben lost his favorite toy in the
+[14] ok    loop_n=None frac=0.00 distinct_2=0.96 | Anna's red kite got stuck in the
+[15] ok    loop_n=None frac=0.00 distinct_2=0.83 | One day a little duck named Dash
+[16] ok    loop_n=None frac=0.00 distinct_2=1.00 | The sun was shining and the little boy
+[17] ok    loop_n=None frac=0.00 distinct_2=0.93 | A small brown dog ran away from
+[18] loop  loop_n=1 frac=0.81 distinct_2=0.20 | A boy named Jake found a magical
+[19] loop  loop_n=1 frac=0.54 distinct_2=0.38 | Mom was baking cookies and little
+[20] ok    loop_n=None frac=0.00 distinct_2=0.83 | A puppy named Buddy liked to
+[21] loop  loop_n=1 frac=0.23 distinct_2=0.66 | Lilly wanted to go to the big park
+[22] loop  loop_n=1 frac=0.43 distinct_2=0.20 | A quiet cat lived in a tall house
+[23] loop  loop_n=1 frac=0.28 distinct_2=0.30 | Sam looked up at the sky and saw
+[24] ok    loop_n=None frac=0.00 distinct_2=1.00 | A little red wagon pulled a heavy
+[25] ok    loop_n=None frac=0.00 distinct_2=0.94 | A bird named Kiki flew high over
+[26] loop  loop_n=1 frac=0.64 distinct_2=0.27 | The little girl loved to sing and
+[27] loop  loop_n=1 frac=0.42 distinct_2=0.20 | An old man lived in a tiny
+[28] ok    loop_n=None frac=0.00 distinct_2=0.67 | A baby elephant wanted to
+[29] ok    loop_n=None frac=0.00 distinct_2=0.93 | A frog jumped into the
+[30] loop  loop_n=1 frac=0.74 distinct_2=0.24 | A tiny bear found a
+[31] ok    loop_n=None frac=0.00 distinct_2=0.76 | Tommy helped his mom make
+[32] loop  loop_n=1 frac=0.83 distinct_2=0.19 | In the garden there was a
+[33] ok    loop_n=None frac=0.00 distinct_2=0.82 | A little yellow bird
+[34] ok    loop_n=None frac=0.00 distinct_2=0.65 | The moon came out and the
+[35] loop  loop_n=1 frac=0.72 distinct_2=0.31 | A small rabbit hopped
+[36] loop  loop_n=1 frac=0.88 distinct_2=0.14 | Sam had a
+[37] loop  loop_n=1 frac=0.85 distinct_2=0.18 | The rain fell and the
+[38] loop  loop_n=1 frac=0.62 distinct_2=0.50 | Molly found an
+[39] loop  loop_n=1 frac=0.42 distinct_2=0.21 | Noah and his dog named
+[40] loop  loop_n=1 frac=0.41 distinct_2=0.32 | A little girl with a
+[41] loop  loop_n=1 frac=0.70 distinct_2=0.29 | A boy and a girl sat on
+[42] ok    loop_n=None frac=0.00 distinct_2=0.71 | A puppy chased a
+[43] loop  loop_n=1 frac=0.32 distinct_2=0.70 | Mom said they could go to
+[44] ok    loop_n=None frac=0.00 distinct_2=1.00 | A little kite flew
+[45] loop  loop_n=1 frac=0.23 distinct_2=0.66 | The trees grew tall
+[46] loop  loop_n=1 frac=0.47 distinct_2=0.12 | A small duck waddled
+[47] ok    loop_n=None frac=0.00 distinct_2=0.91 | In the deep forest
+[48] loop  loop_n=1 frac=0.43 distinct_2=0.22 | An old cat named
+[49] loop  loop_n=1 frac=0.36 distinct_2=0.38 | A small boy wore a
+[50] ok    loop_n=None frac=0.00 distinct_2=1.00 | A windy day and
+[51] ok    loop_n=None frac=0.00 distinct_2=0.56 | A little girl sang
+[52] ok    loop_n=None frac=0.00 distinct_2=0.57 | A duckling was
+[53] ok    loop_n=None frac=0.00 distinct_2=0.81 | A frog hopped
+[54] loop  loop_n=1 frac=0.34 distinct_2=0.51 | A boy found a
+[55] ok    loop_n=None frac=0.00 distinct_2=0.45 | The small dog slept
+[56] ok    loop_n=None frac=0.00 distinct_2=1.00 | A bird flew over
+[57] loop  loop_n=1 frac=0.81 distinct_2=0.11 | A quiet girl sat
+[58] ok    loop_n=None frac=0.00 distinct_2=0.90 | A short story about
+[59] loop  loop_n=1 frac=0.24 distinct_2=0.58 | My name is
+loops=29/60  distinct_2=0.589
+=== zero_blocks=6
+/Users/kethuda/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+The attention mask is not set and cannot be inferred from input because pad token is same as eos token. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+[00] ok    loop_n=None frac=0.00 distinct_2=0.47 | A little dog named Max wanted to
+[01] ok    loop_n=None frac=0.00 distinct_2=0.40 | Sara found a little box under a tree
+[02] loop  loop_n=1 frac=0.27 distinct_2=0.37 | Tim had a bright red ball in his
+[03] ok    loop_n=None frac=0.00 distinct_2=0.39 | Lily liked to draw pictures of
+[04] ok    loop_n=None frac=0.00 distinct_2=0.39 | A small cat climbed to the top of
+[05] ok    loop_n=None frac=0.00 distinct_2=0.56 | Emma and Noah went to the beach with
+[06] ok    loop_n=None frac=0.00 distinct_2=0.33 | A little car named Benny the yellow
+[07] ok    loop_n=None frac=0.00 distinct_2=0.43 | Mom told a story about the day they
+[08] loop  loop_n=1 frac=0.27 distinct_2=0.40 | Zoe saw a small bird outside her
+[09] ok    loop_n=None frac=0.00 distinct_2=0.47 | A curious boy named Eli opened the
+[10] ok    loop_n=None frac=0.00 distinct_2=0.39 | Sofia wanted to buy a big bag of
+[11] ok    loop_n=None frac=0.00 distinct_2=0.32 | A little girl named Mia played with
+[12] loop  loop_n=1 frac=0.34 distinct_2=0.39 | A rabbit lived in a hole at the bottom o
+[13] loop  loop_n=1 frac=0.25 distinct_2=0.31 | Ben lost his favorite toy in the
+[14] ok    loop_n=None frac=0.00 distinct_2=0.34 | Anna's red kite got stuck in the
+[15] ok    loop_n=None frac=0.00 distinct_2=0.46 | One day a little duck named Dash
+[16] ok    loop_n=None frac=0.00 distinct_2=0.41 | The sun was shining and the little boy
+[17] ok    loop_n=None frac=0.00 distinct_2=0.38 | A small brown dog ran away from
+[18] ok    loop_n=None frac=0.00 distinct_2=0.46 | A boy named Jake found a magical
+[19] loop  loop_n=1 frac=0.26 distinct_2=0.30 | Mom was baking cookies and little
+[20] ok    loop_n=None frac=0.00 distinct_2=0.41 | A puppy named Buddy liked to
+[21] ok    loop_n=None frac=0.00 distinct_2=0.51 | Lilly wanted to go to the big park
+[22] ok    loop_n=None frac=0.00 distinct_2=0.19 | A quiet cat lived in a tall house
+[23] ok    loop_n=None frac=0.00 distinct_2=0.47 | Sam looked up at the sky and saw
+[24] loop  loop_n=1 frac=0.36 distinct_2=0.35 | A little red wagon pulled a heavy
+[25] ok    loop_n=None frac=0.00 distinct_2=0.64 | A bird named Kiki flew high over
+[26] loop  loop_n=1 frac=0.25 distinct_2=0.32 | The little girl loved to sing and
+[27] ok    loop_n=None frac=0.00 distinct_2=0.49 | An old man lived in a tiny
+[28] ok    loop_n=None frac=0.00 distinct_2=0.57 | A baby elephant wanted to
+[29] loop  loop_n=1 frac=0.93 distinct_2=0.08 | A frog jumped into the
+[30] loop  loop_n=1 frac=0.41 distinct_2=0.23 | A tiny bear found a
+[31] ok    loop_n=None frac=0.00 distinct_2=0.22 | Tommy helped his mom make
+[32] ok    loop_n=None frac=0.00 distinct_2=0.44 | In the garden there was a
+[33] ok    loop_n=None frac=0.00 distinct_2=0.37 | A little yellow bird
+[34] loop  loop_n=1 frac=0.27 distinct_2=0.22 | The moon came out and the
+[35] ok    loop_n=None frac=0.00 distinct_2=0.48 | A small rabbit hopped
+[36] ok    loop_n=None frac=0.00 distinct_2=0.38 | Sam had a
+[37] ok    loop_n=None frac=0.00 distinct_2=0.43 | The rain fell and the
+[38] loop  loop_n=1 frac=0.97 distinct_2=0.04 | Molly found an
+[39] ok    loop_n=None frac=0.00 distinct_2=0.37 | Noah and his dog named
+[40] ok    loop_n=None frac=0.00 distinct_2=0.16 | A little girl with a
+[41] ok    loop_n=None frac=0.00 distinct_2=0.41 | A boy and a girl sat on
+[42] loop  loop_n=1 frac=0.30 distinct_2=0.44 | A puppy chased a
+[43] ok    loop_n=None frac=0.00 distinct_2=0.30 | Mom said they could go to
+[44] ok    loop_n=None frac=0.00 distinct_2=0.58 | A little kite flew
+[45] ok    loop_n=None frac=0.00 distinct_2=0.38 | The trees grew tall
+[46] ok    loop_n=None frac=0.00 distinct_2=0.37 | A small duck waddled
+[47] ok    loop_n=None frac=0.00 distinct_2=0.40 | In the deep forest
+[48] loop  loop_n=1 frac=0.24 distinct_2=0.35 | An old cat named
+[49] loop  loop_n=1 frac=0.35 distinct_2=0.34 | A small boy wore a
+[50] loop  loop_n=1 frac=0.24 distinct_2=0.31 | A windy day and
+[51] loop  loop_n=1 frac=0.29 distinct_2=0.24 | A little girl sang
+[52] ok    loop_n=None frac=0.00 distinct_2=0.58 | A duckling was
+[53] ok    loop_n=None frac=0.00 distinct_2=0.40 | A frog hopped
+[54] loop  loop_n=1 frac=0.35 distinct_2=0.35 | A boy found a
+[55] loop  loop_n=1 frac=0.25 distinct_2=0.32 | The small dog slept
+[56] ok    loop_n=None frac=0.00 distinct_2=0.41 | A bird flew over
+[57] ok    loop_n=None frac=0.00 distinct_2=0.31 | A quiet girl sat
+[58] ok    loop_n=None frac=0.00 distinct_2=0.47 | A short story about
+[59] loop  loop_n=1 frac=0.27 distinct_2=0.36 | My name is
+loops=19/60  distinct_2=0.378
+=== zero_blocks=7
+/Users/kethuda/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+The attention mask is not set and cannot be inferred from input because pad token is same as eos token. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+[00] ok    loop_n=None frac=0.00 distinct_2=0.45 | A little dog named Max wanted to
+[01] loop  loop_n=1 frac=0.26 distinct_2=0.31 | Sara found a little box under a tree
+[02] loop  loop_n=1 frac=0.28 distinct_2=0.32 | Tim had a bright red ball in his
+[03] ok    loop_n=None frac=0.00 distinct_2=0.36 | Lily liked to draw pictures of
+[04] loop  loop_n=1 frac=0.31 distinct_2=0.24 | A small cat climbed to the top of
+[05] ok    loop_n=None frac=0.00 distinct_2=0.49 | Emma and Noah went to the beach with
+[06] loop  loop_n=1 frac=0.33 distinct_2=0.22 | A little car named Benny the yellow
+[07] loop  loop_n=1 frac=0.29 distinct_2=0.35 | Mom told a story about the day they
+[08] loop  loop_n=1 frac=0.23 distinct_2=0.29 | Zoe saw a small bird outside her
+[09] ok    loop_n=None frac=0.00 distinct_2=0.42 | A curious boy named Eli opened the
+[10] ok    loop_n=None frac=0.00 distinct_2=0.41 | Sofia wanted to buy a big bag of
+[11] ok    loop_n=None frac=0.00 distinct_2=0.44 | A little girl named Mia played with
+[12] loop  loop_n=1 frac=0.26 distinct_2=0.49 | A rabbit lived in a hole at the bottom o
+[13] ok    loop_n=None frac=0.00 distinct_2=0.29 | Ben lost his favorite toy in the
+[14] ok    loop_n=None frac=0.00 distinct_2=0.33 | Anna's red kite got stuck in the
+[15] ok    loop_n=None frac=0.00 distinct_2=0.45 | One day a little duck named Dash
+[16] loop  loop_n=1 frac=0.29 distinct_2=0.35 | The sun was shining and the little boy
+[17] loop  loop_n=1 frac=0.26 distinct_2=0.36 | A small brown dog ran away from
+[18] ok    loop_n=None frac=0.00 distinct_2=0.39 | A boy named Jake found a magical
+[19] ok    loop_n=None frac=0.00 distinct_2=0.41 | Mom was baking cookies and little
+[20] loop  loop_n=1 frac=0.23 distinct_2=0.35 | A puppy named Buddy liked to
+[21] ok    loop_n=None frac=0.00 distinct_2=0.47 | Lilly wanted to go to the big park
+[22] loop  loop_n=1 frac=0.23 distinct_2=0.28 | A quiet cat lived in a tall house
+[23] loop  loop_n=1 frac=0.31 distinct_2=0.22 | Sam looked up at the sky and saw
+[24] ok    loop_n=None frac=0.00 distinct_2=0.36 | A little red wagon pulled a heavy
+[25] loop  loop_n=1 frac=0.23 distinct_2=0.48 | A bird named Kiki flew high over
+[26] loop  loop_n=1 frac=0.32 distinct_2=0.19 | The little girl loved to sing and
+[27] loop  loop_n=1 frac=0.27 distinct_2=0.28 | An old man lived in a tiny
+[28] loop  loop_n=1 frac=0.31 distinct_2=0.33 | A baby elephant wanted to
+[29] loop  loop_n=1 frac=0.32 distinct_2=0.17 | A frog jumped into the
+[30] loop  loop_n=1 frac=0.27 distinct_2=0.36 | A tiny bear found a
+[31] ok    loop_n=None frac=0.00 distinct_2=0.43 | Tommy helped his mom make
+[32] ok    loop_n=None frac=0.00 distinct_2=0.40 | In the garden there was a
+[33] ok    loop_n=None frac=0.00 distinct_2=0.46 | A little yellow bird
+[34] loop  loop_n=1 frac=0.32 distinct_2=0.17 | The moon came out and the
+[35] loop  loop_n=1 frac=0.32 distinct_2=0.25 | A small rabbit hopped
+[36] loop  loop_n=1 frac=0.32 distinct_2=0.20 | Sam had a
+[37] ok    loop_n=None frac=0.00 distinct_2=0.44 | The rain fell and the
+[38] loop  loop_n=1 frac=0.24 distinct_2=0.30 | Molly found an
+[39] ok    loop_n=None frac=0.00 distinct_2=0.43 | Noah and his dog named
+[40] loop  loop_n=1 frac=0.30 distinct_2=0.18 | A little girl with a
+[41] loop  loop_n=1 frac=0.31 distinct_2=0.19 | A boy and a girl sat on
+[42] loop  loop_n=1 frac=0.31 distinct_2=0.19 | A puppy chased a
+[43] ok    loop_n=None frac=0.00 distinct_2=0.43 | Mom said they could go to
+[44] ok    loop_n=None frac=0.00 distinct_2=0.36 | A little kite flew
+[45] loop  loop_n=1 frac=0.32 distinct_2=0.19 | The trees grew tall
+[46] loop  loop_n=1 frac=0.32 distinct_2=0.27 | A small duck waddled
+[47] ok    loop_n=None frac=0.00 distinct_2=0.29 | In the deep forest
+[48] loop  loop_n=1 frac=0.25 distinct_2=0.33 | An old cat named
+[49] ok    loop_n=None frac=0.00 distinct_2=0.39 | A small boy wore a
+[50] loop  loop_n=1 frac=0.31 distinct_2=0.17 | A windy day and
+[51] loop  loop_n=1 frac=0.31 distinct_2=0.17 | A little girl sang
+[52] loop  loop_n=1 frac=0.23 distinct_2=0.40 | A duckling was
+[53] loop  loop_n=1 frac=0.31 distinct_2=0.20 | A frog hopped
+[54] loop  loop_n=1 frac=0.23 distinct_2=0.32 | A boy found a
+[55] loop  loop_n=1 frac=0.29 distinct_2=0.28 | The small dog slept
+[56] loop  loop_n=1 frac=0.32 distinct_2=0.16 | A bird flew over
+[57] loop  loop_n=1 frac=0.30 distinct_2=0.19 | A quiet girl sat
+[58] ok    loop_n=None frac=0.00 distinct_2=0.37 | A short story about
+[59] ok    loop_n=None frac=0.00 distinct_2=0.43 | My name is
+loops=36/60  distinct_2=0.324
