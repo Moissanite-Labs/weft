@@ -1,0 +1,1 @@
+Implemented f.py with enc/dec (also encode/decode aliases) and a tagged raw/zlib/bz2/lzma format. Verified round trips and the bound |enc(x)| ≤ 2|x| for nonempty test inputs. The requested benchmark did not return a result.

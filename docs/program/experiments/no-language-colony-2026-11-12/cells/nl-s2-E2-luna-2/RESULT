@@ -1,0 +1,1 @@
+f.py implemented and verified with python3 spec.py: Δ=54.7677, round-trip check passes. Compresses via shortest bz2/lzma/zlib encoding with raw fallback.

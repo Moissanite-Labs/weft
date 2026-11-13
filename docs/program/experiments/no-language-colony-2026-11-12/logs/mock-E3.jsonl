@@ -1,0 +1,14 @@
+{"t": 1794519280.652519, "kind": "tool_call", "profile": "E3", "step": 0, "name": "w", "args": {"p": "f.py", "x": "import zlib\nd=open('x.bin','rb').read()\nprint(100*(1-len(zlib.compress(d))/len(d\u2026"}}
+{"t": 1794519280.6531892, "kind": "write", "profile": "E3", "path": "f.py", "bytes": 84, "comment_hits": 0, "docstring_hits": 0, "comment_words": [], "docstring_words": []}
+{"t": 1794519280.6532328, "kind": "tool_result", "profile": "E3", "step": 0, "name": "w", "result": "\u2713"}
+{"t": 1794519280.6533382, "kind": "tool_call", "profile": "E3", "step": 1, "name": "a", "args": {"c": "python3 f.py"}}
+{"t": 1794519280.787364, "kind": "assay", "profile": "E3", "command": "python3 f.py", "scores": [49.42056159215669, 49.42056159215669, 49.42056159215669], "median": 49.42056159215669, "spread": 0.0, "ok": true}
+{"t": 1794519280.7875478, "kind": "tool_result", "profile": "E3", "step": 1, "name": "a", "result": "\u0394=49.4206 ok=1 \u03c3=0.000"}
+{"t": 1794519280.787568, "kind": "tool_call", "profile": "E3", "step": 2, "name": "v", "args": {"p": "f.py", "vs": ["import zlib\nd=open('x.bin','rb').read()\nprint(100*(1-len(zlib.compress(d))/len(d)))\n", "import lzma\nd=open('x.bin','rb').read()\nprint(100*(1-len(lzma.compress(d,preset=9))/len(d)))\n"]}}
+{"t": 1794519281.0582862, "kind": "variant", "profile": "E3", "i": 0, "scores": [49.42056159215669, 49.42056159215669, 49.42056159215669], "median": 49.42056159215669, "min": 49.42056159215669, "ok": true}
+{"t": 1794519281.286174, "kind": "variant", "profile": "E3", "i": 1, "scores": [54.26841665348905, 54.26841665348905, 54.26841665348905], "median": 54.26841665348905, "min": 54.26841665348905, "ok": true}
+{"t": 1794519281.502839, "kind": "variants_result", "profile": "E3", "adopted": 1, "median": 54.26841665348905, "content_sha256": "cf4151354ca660b359458baf8ed44a98441f8ecb9db5afc781a5d8c43395c633", "incumbent_sha256": "e2a6971dab80f62bdf2776b44674a43a42d36c9702204700f55895669d5d89bc", "before_median": 49.42056159215669, "after_scores": [54.26841665348905, 54.26841665348905, 54.26841665348905], "after_median": 54.26841665348905, "after_ok": true}
+{"t": 1794519281.502999, "kind": "tool_result", "profile": "E3", "step": 2, "name": "v", "result": "\u2713 \u0394*=54.2684 \u0394\u2080=49.4206"}
+{"t": 1794519281.50302, "kind": "tool_call", "profile": "E3", "step": 3, "name": "d", "args": {"q": "\u039478"}}
+{"t": 1794519281.503412, "kind": "tool_result", "profile": "E3", "step": 3, "name": "d", "result": "\u2205fin"}
+{"t": 1794519281.503432, "kind": "finished", "profile": "E3", "step": "mock", "wins": 0, "calls": 4}

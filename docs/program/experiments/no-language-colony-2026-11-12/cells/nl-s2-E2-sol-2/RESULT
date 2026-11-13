@@ -1,0 +1,1 @@
+Implemented a lossless standard-library codec in f.py. `python3 spec.py` scores 60.7541; round-trip verified on x.bin.

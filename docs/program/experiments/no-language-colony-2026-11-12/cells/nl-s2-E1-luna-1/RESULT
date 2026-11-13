@@ -1,0 +1,1 @@
+Implemented f.py with enc/dec modes. It chooses the shortest of raw, zlib, bz2, and lzma representations, and round-trips x.bin exactly. Tested using `python3 f.py enc`; validator reports Δ=1.0000, ok=1, σ=0.000.

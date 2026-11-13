@@ -1,0 +1,1 @@
+Implemented f.py using only the Python standard library. Validation accepted: Δ increased from 54.2662 to 58.7661 (+8.29%). Lossless framed encoding with reversible hexadecimal/base-36 packing and compression selection. Round-trip and size-bound tests passed; empty input stays empty, and nonempty output is at most |x|+1 bytes (θ=2).

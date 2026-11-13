@@ -1,0 +1,1 @@
+ok Δ=56.5026; Δ₀=25.0141; variant Δ=[56.5026,56.9465,56.5003,56.4664]. f.py uses no imports; round-trip checks passed; |enc(x)| ≤ 2|x| for nonempty x.

@@ -1,0 +1,5 @@
+def enc(x):
+    return x
+
+def dec(x):
+    return x
