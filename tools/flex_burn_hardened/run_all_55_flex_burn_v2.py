@@ -69,9 +69,11 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import contextlib
 import hashlib
 import http.server
 import json
+import fcntl
 import math
 import os
 import re
@@ -405,23 +407,129 @@ class MasterSharedBudgetLedger:
         self._cap_closed_reason: str = ""
         self._reload_prior_spend_from_ledger()
 
+    def _closed_sibling_path(self) -> Path:
+        return Path(str(self.ledger_log_path) + ".closed")
+
+    def _closed_dir_marker_path(self) -> Path:
+        return self.ledger_log_path.parent / f".flex_burn_cap_closed.{self.ledger_log_path.name}"
+
+    def _seen_stamp_path(self) -> Path:
+        return self.ledger_log_path.parent / f".flex_burn_ledger_seen.{self.ledger_log_path.name}"
+
+    def _lock_path(self) -> Path:
+        return Path(str(self.ledger_log_path) + ".lock")
+
+    def _write_json_fsync(self, path: Path, payload: Dict[str, Any]) -> None:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        data = json.dumps(payload, ensure_ascii=True, allow_nan=False) + "\n"
+        with path.open("w", encoding="utf-8") as fh:
+            fh.write(data)
+            fh.flush()
+            os.fsync(fh.fileno())
+
+    def _read_json_object(self, path: Path) -> Optional[Dict[str, Any]]:
+        try:
+            raw = path.read_text(encoding="utf-8")
+            obj = json.loads(raw)
+        except (OSError, json.JSONDecodeError, TypeError, ValueError):
+            return None
+        return obj if isinstance(obj, dict) else None
+
+    @contextlib.contextmanager
+    def _ledger_file_lock(self):
+        lock_path = self._lock_path()
+        lock_path.parent.mkdir(parents=True, exist_ok=True)
+        fh = lock_path.open("a+")
+        try:
+            fcntl.flock(fh.fileno(), fcntl.LOCK_EX)
+            yield
+        finally:
+            try:
+                fcntl.flock(fh.fileno(), fcntl.LOCK_UN)
+            except OSError:
+                pass
+            fh.close()
+
     def _reload_prior_spend_from_ledger(self) -> None:
         """Load already-settled spend from the ledger file so a later process inherits the remaining cap.
 
         A non-empty line that is not valid JSON, or a record with a negative or
         non-finite USD amount, closes the cap: later reserves are refused until
-        an operator repairs the file.
+        an operator repairs the file and explicitly removes the durable close
+        markers. A later cumulative below one already seen also closes the cap,
+        and spent is at least the maximum cumulative seen.
+
+        A first run has no ledger, no close markers, and no seen stamp, so
+        reserves are allowed. The first successful append writes the seen stamp.
+        After that, a missing, empty, renamed-away, or replaced ledger is a lost
+        record, not a first run, and the cap closes.
         """
-        if not self.ledger_log_path.is_file():
+        with self._ledger_file_lock():
+            self._reload_prior_spend_from_ledger_locked()
+
+    def _honor_durable_close_markers(self) -> Optional[float]:
+        """Return any spent amount stored on a durable close marker, or None."""
+        marked_spent: Optional[float] = None
+        sources = []
+        sibling = self._closed_sibling_path()
+        directory = self._closed_dir_marker_path()
+        if sibling.is_file():
+            sources.append(sibling)
+        if directory.is_file():
+            sources.append(directory)
+        if not sources:
+            return None
+        reason = f"durable cap-closed marker at {sources[0]}"
+        for path in sources:
+            obj = self._read_json_object(path)
+            if obj:
+                if obj.get("reason"):
+                    reason = str(obj["reason"])
+                if is_finite_nonnegative(obj.get("spent_usd")):
+                    value = float(obj["spent_usd"])
+                    marked_spent = value if marked_spent is None else max(marked_spent, value)
+        self._cap_closed = True
+        self._cap_closed_reason = reason
+        print(
+            f"[master] Ledger cap closed: {reason}. "
+            "Refusing new reserves until an operator repairs the ledger.",
+            file=sys.stderr,
+        )
+        return marked_spent
+
+    def _ledger_file_is_empty(self, raw_text: str) -> bool:
+        return not any(line.strip() for line in raw_text.splitlines())
+
+    def _reload_prior_spend_from_ledger_locked(self) -> None:
+        marked_spent = self._honor_durable_close_markers()
+        jsonl_missing = not self.ledger_log_path.is_file()
+        raw_text = ""
+        if not jsonl_missing:
+            try:
+                raw_text = self.ledger_log_path.read_text(encoding="utf-8")
+            except OSError as exc:
+                self._close_cap(f"cannot read ledger file {self.ledger_log_path}: {exc}")
+                if marked_spent is not None:
+                    self.spent_usd = max(self.spent_usd, marked_spent)
+                return
+        jsonl_empty = jsonl_missing or self._ledger_file_is_empty(raw_text)
+        if jsonl_empty:
+            if self._cap_closed:
+                if marked_spent is not None:
+                    self.spent_usd = max(self.spent_usd, marked_spent)
+                return
+            if self._seen_stamp_path().is_file():
+                self._close_cap(
+                    f"ledger file is missing or empty after spend was recorded: {self.ledger_log_path}"
+                )
+                return
+            # Genuinely first run: no ledger, no close marker, no seen stamp.
             return
-        try:
-            raw_text = self.ledger_log_path.read_text(encoding="utf-8")
-        except OSError as exc:
-            self._close_cap(f"cannot read ledger file {self.ledger_log_path}: {exc}")
-            return
+
         prior_spent = 0.0
         prior_std = 0.0
         prior_seq = 0
+        max_cumulative = 0.0
         saw_cumulative = False
         for raw in raw_text.splitlines():
             line = raw.strip()
@@ -433,11 +541,15 @@ class MasterSharedBudgetLedger:
                 self._close_cap(
                     f"torn or invalid ledger line in {self.ledger_log_path}: {line[:120]!r}"
                 )
+                self.spent_usd = max(self.spent_usd, prior_spent, max_cumulative)
+                if marked_spent is not None:
+                    self.spent_usd = max(self.spent_usd, marked_spent)
                 return
             if not isinstance(entry, dict):
                 self._close_cap(
                     f"corrupt ledger record in {self.ledger_log_path}: line is not an object"
                 )
+                self.spent_usd = max(self.spent_usd, prior_spent, max_cumulative)
                 return
             money_keys = (
                 "call_cost_usd",
@@ -451,6 +563,7 @@ class MasterSharedBudgetLedger:
                     self._close_cap(
                         f"corrupt ledger amount {key}={entry[key]!r} in {self.ledger_log_path}"
                     )
+                    self.spent_usd = max(self.spent_usd, prior_spent, max_cumulative)
                     return
             if "seq" in entry:
                 try:
@@ -464,10 +577,18 @@ class MasterSharedBudgetLedger:
             if "standard_equiv_usd" in entry:
                 std_cost = float(entry["standard_equiv_usd"])
             if "master_cumulative_spent_usd" in entry:
-                prior_spent = float(entry["master_cumulative_spent_usd"])
+                cumulative = float(entry["master_cumulative_spent_usd"])
+                if saw_cumulative and cumulative < max_cumulative - 1e-12:
+                    self._close_cap(
+                        f"later master_cumulative_spent_usd {cumulative} is below "
+                        f"already-seen {max_cumulative} in {self.ledger_log_path}"
+                    )
                 saw_cumulative = True
+                max_cumulative = max(max_cumulative, cumulative)
+                prior_spent = max_cumulative
             elif not saw_cumulative:
                 prior_spent += call_cost
+                max_cumulative = max(max_cumulative, prior_spent)
             if not is_finite_nonnegative(prior_spent):
                 self._close_cap(
                     f"corrupt cumulative spent {prior_spent!r} in {self.ledger_log_path}"
@@ -493,7 +614,9 @@ class MasterSharedBudgetLedger:
         if not is_finite_nonnegative(prior_spent):
             self._close_cap(f"corrupt reloaded spent {prior_spent!r} in {self.ledger_log_path}")
             return
-        self.spent_usd = prior_spent
+        self.spent_usd = max(prior_spent, max_cumulative)
+        if marked_spent is not None:
+            self.spent_usd = max(self.spent_usd, marked_spent)
         self.standard_equiv_usd = prior_std if is_finite_nonnegative(prior_std) else 0.0
         self._seq = prior_seq
 
@@ -505,6 +628,21 @@ class MasterSharedBudgetLedger:
             "Refusing new reserves until an operator repairs the ledger.",
             file=sys.stderr,
         )
+        payload = {
+            "closed": True,
+            "ledger": self.ledger_log_path.name,
+            "reason": reason,
+            "utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+            "spent_usd": self.spent_usd if is_finite_nonnegative(self.spent_usd) else 0.0,
+        }
+        for path in (self._closed_sibling_path(), self._closed_dir_marker_path()):
+            try:
+                self._write_json_fsync(path, payload)
+            except (OSError, TypeError, ValueError) as exc:
+                print(
+                    f"[master] Failed to write durable cap-closed marker {path}: {exc}",
+                    file=sys.stderr,
+                )
 
     def _append_ledger_line_locked(self, entry: Dict[str, Any]) -> None:
         """Append one complete JSON line, then the caller may credit spent_usd.
@@ -512,7 +650,9 @@ class MasterSharedBudgetLedger:
         Safe ordering: validate and write the full line (flush + fsync) before
         any in-memory spent_usd update. If the append raises, the cap is closed
         for this process, spent_usd is left unchanged, and in-flight
-        reservations are kept so later reserves are refused.
+        reservations are kept so later reserves are refused. An exclusive file
+        lock is taken around append and reload so concurrent processes share
+        one ledger without dropping a completed line.
         """
         money_keys = (
             "call_cost_usd",
@@ -532,11 +672,17 @@ class MasterSharedBudgetLedger:
             self._close_cap(f"refusing to write a non-JSON ledger amount: {exc}")
             raise LedgerWriteError(str(exc)) from exc
         try:
-            self.ledger_log_path.parent.mkdir(parents=True, exist_ok=True)
-            with self.ledger_log_path.open("a", encoding="utf-8") as fh:
-                fh.write(line)
-                fh.flush()
-                os.fsync(fh.fileno())
+            with self._ledger_file_lock():
+                self.ledger_log_path.parent.mkdir(parents=True, exist_ok=True)
+                with self.ledger_log_path.open("a", encoding="utf-8") as fh:
+                    fh.write(line)
+                    fh.flush()
+                    os.fsync(fh.fileno())
+                seen = {
+                    "ledger": self.ledger_log_path.name,
+                    "utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+                }
+                self._write_json_fsync(self._seen_stamp_path(), seen)
         except OSError as exc:
             self._close_cap(f"ledger append failed for {self.ledger_log_path}: {exc}")
             raise LedgerWriteError(str(exc)) from exc

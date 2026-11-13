@@ -675,5 +675,96 @@ class ProofR3LedgerSafetyTests(unittest.TestCase):
             self.assertEqual(reserved, 0.0)
 
 
+class ProofR4ReloadDurabilityTests(unittest.TestCase):
+    """R4 scenarios from review 5886722464: durable cap close, monotonic cumulative."""
+
+    def _sixteen_25(self, mod, ledger):
+        return ledger.try_reserve(
+            "weft_111", "gpt-6-astra", "flex", 1_000_000, 100_000
+        )
+
+    def _sixteen_2125(self, mod, ledger):
+        return ledger.try_reserve(
+            "weft_111", "gpt-6-astra", "flex", 1_000_000, 99_000
+        )
+
+    def test_durable_cap_closed_survives_deleted_renamed_or_empty_ledger(self):
+        """After a torn line closes the cap, unlink, rename, or an empty replacement still refuses $16.25."""
+        mod = load_mod()
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            path = root / "ledger.jsonl"
+            ledger = _ledger(mod, 16.25, path)
+            ok, reserved, _ = self._sixteen_25(mod, ledger)
+            self.assertTrue(ok)
+            ledger.commit_unresolved_hold("weft_111", reserved, reason="probe_hold")
+            data = path.read_bytes()
+            self.assertGreater(len(data), 40)
+            path.write_bytes(data[:40])
+            closed = _ledger(mod, 16.25, path)
+            ok_closed, reserved_closed, _ = self._sixteen_25(mod, closed)
+            self.assertFalse(ok_closed)
+            self.assertEqual(reserved_closed, 0.0)
+
+            path.unlink()
+            after_unlink = _ledger(mod, 16.25, path)
+            ok_u, reserved_u, _ = self._sixteen_25(mod, after_unlink)
+            self.assertFalse(ok_u, msg="deleted ledger accepted the $16.25 reserve")
+            self.assertEqual(reserved_u, 0.0)
+
+            path.write_bytes(data[:40])
+            renamed = root / "ledger.jsonl.aside"
+            path.rename(renamed)
+            after_rename = _ledger(mod, 16.25, path)
+            ok_r, reserved_r, _ = self._sixteen_25(mod, after_rename)
+            self.assertFalse(ok_r, msg="renamed ledger accepted the $16.25 reserve")
+            self.assertEqual(reserved_r, 0.0)
+
+            path.write_text("", encoding="utf-8")
+            after_empty = _ledger(mod, 16.25, path)
+            ok_e, reserved_e, _ = self._sixteen_25(mod, after_empty)
+            self.assertFalse(ok_e, msg="empty replacement ledger accepted the $16.25 reserve")
+            self.assertEqual(reserved_e, 0.0)
+
+    def test_later_lower_cumulative_does_not_drop_spend(self):
+        """A 16.25 line followed by a 0.01 line must not reload as 0.01 spent."""
+        mod = load_mod()
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "ledger.jsonl"
+            first = {
+                "seq": 1,
+                "event": "unresolved_hold",
+                "reason": "probe_hold",
+                "track": "weft_111",
+                "call_cost_usd": 16.25,
+                "reserved_usd": 16.25,
+                "computed_call_cost_usd": 16.25,
+                "master_cumulative_spent_usd": 16.25,
+                "master_remaining_usd": 0.0,
+                "over_cap_usd": 0.0,
+            }
+            second = {
+                "seq": 2,
+                "event": "settled",
+                "track": "weft_111",
+                "call_cost_usd": 0.01,
+                "reserved_usd": 0.01,
+                "computed_call_cost_usd": 0.01,
+                "master_cumulative_spent_usd": 0.01,
+                "master_remaining_usd": 16.24,
+                "over_cap_usd": 0.0,
+            }
+            path.write_text(
+                json.dumps(first, ensure_ascii=True) + "\n"
+                + json.dumps(second, ensure_ascii=True) + "\n",
+                encoding="utf-8",
+            )
+            reloaded = _ledger(mod, 16.25, path)
+            self.assertGreaterEqual(reloaded.spent_usd, 16.25 - 1e-9)
+            ok, reserved, _reason = self._sixteen_2125(mod, reloaded)
+            self.assertFalse(ok)
+            self.assertEqual(reserved, 0.0)
+
+
 if __name__ == "__main__":
     unittest.main()
