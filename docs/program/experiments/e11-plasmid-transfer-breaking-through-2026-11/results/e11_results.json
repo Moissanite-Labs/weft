@@ -2,7 +2,7 @@
   "experiment": "E11",
   "issue": 149,
   "prereg": "PREREG.md",
-  "commit": "unknown",
+  "commit": "aa27f8c5ded2e27a4644bf12e795c943dfa3585e",
   "elapsed_s": 8.959,
   "seeds_cross": [
     17,

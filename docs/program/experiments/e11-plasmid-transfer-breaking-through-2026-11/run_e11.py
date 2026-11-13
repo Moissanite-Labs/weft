@@ -434,11 +434,8 @@ def aggregate(runs: List[Dict]) -> Dict:
         acc = [r["results_by_arm"][arm]["new_task_accuracy"] for r in runs]
         sh = [r["results_by_arm"][arm]["shifted_probe_pass_count"] for r in runs]
         iid = [1.0 if r["results_by_arm"][arm]["iid_all_kept_pass"] else 0.0 for r in runs]
-        cert = [
-            r["results_by_arm"][arm].get("cert_ut_dwf", np.nan)
-            for r in runs
-            if "cert_ut_dwf" in r["results_by_arm"][arm]
-        ]
+        cert = [r["results_by_arm"][arm].get("cert_ut_dwf") for r in runs]
+        cert_vals = [c for c in cert if c is not None]
         out[arm] = {
             "new_task_accuracy_mean": float(np.mean(acc)),
             "new_task_accuracy_std": float(np.std(acc, ddof=1)) if len(acc) > 1 else 0.0,
@@ -447,7 +444,7 @@ def aggregate(runs: List[Dict]) -> Dict:
             "shifted_pass_mean": float(np.mean(sh)),
             "shifted_pass_per_seed": sh,
             "iid_retention_rate": float(np.mean(iid)),
-            "cert_ut_dwf_mean": float(np.nanmean(cert)),
+            "cert_ut_dwf_mean": float(np.mean(cert_vals)) if cert_vals else float("nan"),
         }
     return out
 
