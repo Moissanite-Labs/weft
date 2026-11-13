@@ -29,6 +29,11 @@
 #define WEFT_V2_HOMEOSTATIC_MIN_DEFAULT   15.0
 #define WEFT_V2_HOMEOSTATIC_MAX_DEFAULT   35.0
 #define WEFT_V2_MDR_TRIGGER_DEFAULT        2.5
+/* Orthogonal-gradient floor for the MDR gate. Values below this are treated as
+ * IEEE-754 rounding dust and never satisfy a capacity-limit comparison. Chosen
+ * three orders of magnitude above observed binary64 dust on converged iterates
+ * (~3e-12) and far below any gradient that would matter for mitosis. */
+#define WEFT_V2_MDR_ORTH_FLOOR           1e-9
 #define WEFT_V2_ORTH_TOL_DEFAULT           1e-5
 #define WEFT_V2_ROYALTY_UPSTREAM_BPS    1500ULL
 
@@ -265,13 +270,22 @@ static inline bool weft_v2_verify_tension_and_mitosis_trigger(
         return false;
     }
 
-    double mdr = grad_orth_norm / (grad_parallel_norm + 1e-12);
+    /* MDR gate, division-free. A capacity limit requires a meaningful orthogonal
+     * gradient: at or above the sub-floor dust threshold, and at or above the
+     * threshold times the parallel component (cross-multiplied). Callers that
+     * want the legacy ratio can read grad_orth_norm / max(grad_parallel_norm,
+     * WEFT_V2_MDR_ORTH_FLOOR). Rounding dust on a converged parallel direction
+     * no longer triggers capacity mitosis, and an exactly-zero parallel gradient
+     * with a real orthogonal signal still triggers it. */
+    bool capacity_limit = (grad_parallel_norm <= 1e-3)
+        && (grad_orth_norm >= WEFT_V2_MDR_ORTH_FLOOR)
+        && (grad_orth_norm >= mdr_threshold * grad_parallel_norm);
     weft_plateau_regime_t regime = WEFT_PLATEAU_NONE;
     bool trigger = false;
 
     if (heldout_error <= error_floor) {
         regime = WEFT_PLATEAU_TASK_CEILING;
-    } else if (grad_parallel_norm <= 1e-3 && mdr >= mdr_threshold) {
+    } else if (capacity_limit) {
         regime = WEFT_PLATEAU_CAPACITY_LIMIT;
         trigger = true;
     } else if (grad_parallel_norm <= 1e-3) {
