@@ -1,0 +1,44 @@
+{
+  "request_file": "seed-107.weights_only.round-1.json",
+  "request_sha256": "a3df4500ef6aaf9c684d8009f94049753b10b6ae9c23a0f291012ac4a03f9650",
+  "response": {
+    "id": "resp_039b8a27044b3004016af6607d827487d1b19cc4e62fc806fb",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 6004,
+      "input_tokens_details": {
+        "cache_write_tokens": 6001,
+        "cached_tokens": 0
+      },
+      "output_tokens": 910,
+      "output_tokens_details": {
+        "reasoning_tokens": 724
+      },
+      "total_tokens": 6914
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794531453,
+    "output": [
+      {
+        "id": "msg_039b8a27044b3004016af66099149087d189e056c778ad2073",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"hypothesis\":\"Conservative movement-readout changes should strengthen obstacle and neighbor avoidance and reduce high-urgency movement error, while keeping low-urgency drift small. The x correction approximately cancels goal components; the y correction uses the existing obstacle-neighbor feature. Hidden parameters and the hazard readout remain unchanged, preserving hazard predictions exactly.\",\"edits\":[{\"tensor\":\"w2\",\"index\":[0,0],\"delta\":0.07029},{\"tensor\":\"w2\",\"index\":[0,7],\"delta\":-0.08437},{\"tensor\":\"w2\",\"index\":[0,9],\"delta\":0.11},{\"tensor\":\"b2\",\"index\":[0],\"delta\":-0.0073},{\"tensor\":\"w2\",\"index\":[1,8],\"delta\":-0.06},{\"tensor\":\"b2\",\"index\":[1],\"delta\":-0.0381}]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  },
+  "elapsed_seconds": 31.063027875032276,
+  "estimated_usd": 0.1205425,
+  "estimate_kind": "reported tokens"
+}

@@ -1,0 +1,44 @@
+{
+  "request_file": "seed-71.weights_only.round-2.json",
+  "request_sha256": "4c1e5db6bc171ebae0b572bc35289b806dc14356e8227c7de0347d6ad0628b7c",
+  "response": {
+    "id": "resp_062943c57e02f47f016af662b9c19487d1b78624d884eef8c3",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 6277,
+      "input_tokens_details": {
+        "cache_write_tokens": 6274,
+        "cached_tokens": 0
+      },
+      "output_tokens": 341,
+      "output_tokens_details": {
+        "reasoning_tokens": 165
+      },
+      "total_tokens": 6618
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794532025,
+    "output": [
+      {
+        "id": "msg_062943c57e02f47f016af662c1047087d19280b5940544442e",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"hypothesis\":\"Increase the validated movement-only adjustment by 47% to strengthen obstacle and neighbor avoidance further. The prior measured drift suggests low-urgency drift will remain below the 0.0005 budget, although this is not yet validated. Keeping all hidden parameters and the hazard readout unchanged preserves hazard predictions exactly. All deltas are cumulative relative to the original source.\",\"edits\":[{\"tensor\":\"w2\",\"index\":[0,1],\"delta\":-0.02058},{\"tensor\":\"w2\",\"index\":[0,2],\"delta\":0.1029},{\"tensor\":\"b2\",\"index\":[0],\"delta\":-0.07644},{\"tensor\":\"w2\",\"index\":[1,5],\"delta\":0.08085},{\"tensor\":\"b2\",\"index\":[1],\"delta\":-0.046893}]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  },
+  "elapsed_seconds": 10.386646582977846,
+  "estimated_usd": 0.095505,
+  "estimate_kind": "reported tokens"
+}

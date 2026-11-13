@@ -1,0 +1,44 @@
+{
+  "request_file": "seed-131.neither.round-1.json",
+  "request_sha256": "1f1de4574b5dbf8704eb8cf60bcbe589a0787e7a2ba527d3f1e4212284db85c8",
+  "response": {
+    "id": "resp_040cf8f450785c89016af6609c6e3c87d1b194ef67c061749b",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 5290,
+      "input_tokens_details": {
+        "cache_write_tokens": 5287,
+        "cached_tokens": 0
+      },
+      "output_tokens": 1215,
+      "output_tokens_details": {
+        "reasoning_tokens": 1114
+      },
+      "total_tokens": 6505
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794531484,
+    "output": [
+      {
+        "id": "msg_040cf8f450785c89016af660c012d087d1bc03b7da7ba05e78",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"hypothesis\":\"With weights and hidden activations withheld, avoidance-specific parameter directions cannot be identified. As a conservative first probe, a small negative move_x output-bias adjustment follows the aggregate active-example residual direction. It preserves hazard exactly and bounds squared movement drift per input by 0.000025, including at low urgency; validation must establish whether it improves movement.\",\"edits\":[{\"tensor\":\"b2\",\"index\":[0],\"delta\":-0.005}]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  },
+  "elapsed_seconds": 38.249824375147,
+  "estimated_usd": 0.1268675,
+  "estimate_kind": "reported tokens"
+}

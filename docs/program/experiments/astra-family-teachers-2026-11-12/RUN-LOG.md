@@ -43,3 +43,11 @@ All 21 family proposals were valid. Nineteen passed validation gates and two wer
 Behavior-only passed the primary criterion on zero of three seeds. Scrambled weights passed on one of three, seed 43. Truthful hidden activations accompanied numerical weights, so these results cannot isolate their respective contributions. Follow-up experiments test this confound.
 
 Family and calibration replay matched exactly after completion, and the API worker stopped. The archive contains 22 responses including calibration, with estimated API cost $6.2913975 at the recorded rates. This is not an invoice. The separate TLS failure remains archived even though the analysis response-file suffix does not count it in its failure total.
+
+## Completed factorial follow-up
+
+All 40 factorial proposals were valid. Thirty-four passed validation gates and six were rejected. Final gate selection kept the unchanged source in two arm/family cases. Mean IID active-error reductions across five source seeds were 20.10% for weights only, 18.06% for hidden activations only and 19.50% for both. With neither, mean error increased by 0.118%.
+
+Each information-bearing arm met the combined IID improvement and retention criterion on only one of five seeds. None did so under the shifted distribution. These are target-error gains with weak preservation, without evidence of robust success. Follow-up conditional experiments are running separately.
+
+The factorial replay matched exactly. Its 40 response artifacts have an estimated API cost of $5.230925 at the recorded rates, separate from the first-study estimate and without an invoice claim.

@@ -1,0 +1,44 @@
+{
+  "request_file": "seed-131.hidden_only.round-2.json",
+  "request_sha256": "492043ecfe60949d3155465e13ed13efd84e97172a2b8de1ad69e2980e03c51e",
+  "response": {
+    "id": "resp_05924d6a8d0a3704016af6629e3d6087d19013a8215415dd4a",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 8547,
+      "input_tokens_details": {
+        "cache_write_tokens": 8544,
+        "cached_tokens": 0
+      },
+      "output_tokens": 297,
+      "output_tokens_details": {
+        "reasoning_tokens": 130
+      },
+      "total_tokens": 8844
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794531998,
+    "output": [
+      {
+        "id": "msg_05924d6a8d0a3704016af662a3ae9487d1b54899f8d6895243",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"hypothesis\":\"Scale the previously validated movement-only adjustment to 1.9 times its original magnitude. The observed low-urgency drift suggests this should remain within the drift budget while further improving active avoidance. Keeping hidden parameters and the hazard readout unchanged preserves hazard predictions exactly. All deltas are cumulative relative to the original source.\",\"edits\":[{\"tensor\":\"w2\",\"index\":[0,1],\"delta\":-0.0228},{\"tensor\":\"w2\",\"index\":[0,2],\"delta\":-0.0855},{\"tensor\":\"b2\",\"index\":[0],\"delta\":0.0722},{\"tensor\":\"w2\",\"index\":[1,7],\"delta\":-0.076},{\"tensor\":\"b2\",\"index\":[1],\"delta\":-0.0456}]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  },
+  "elapsed_seconds": 7.775792417116463,
+  "estimated_usd": 0.12168,
+  "estimate_kind": "reported tokens"
+}

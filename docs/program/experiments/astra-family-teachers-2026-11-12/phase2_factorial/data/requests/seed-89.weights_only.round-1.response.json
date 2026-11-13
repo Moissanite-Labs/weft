@@ -1,0 +1,44 @@
+{
+  "request_file": "seed-89.weights_only.round-1.json",
+  "request_sha256": "1a9664d6577507053f30b59dfd8220c0e39a9111a5529814d054f6ab68a48ff3",
+  "response": {
+    "id": "resp_034c95f4e48bfd8c016af661243a8087d1b8acb478ef1b332d",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 6010,
+      "input_tokens_details": {
+        "cache_write_tokens": 6007,
+        "cached_tokens": 0
+      },
+      "output_tokens": 849,
+      "output_tokens_details": {
+        "reasoning_tokens": 690
+      },
+      "total_tokens": 6859
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794531620,
+    "output": [
+      {
+        "id": "msg_034c95f4e48bfd8c016af6613c82b487d188f6e28b9e2b0516",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"hypothesis\":\"A small movement-only readout adjustment strengthens obstacle and neighbor avoidance while leaving the hazard output exactly unchanged. Bias compensation limits baseline movement shifts, and conservative magnitudes aim to keep low-urgency drift within budget.\",\"edits\":[{\"tensor\":\"w2\",\"index\":[0,0],\"delta\":-0.055},{\"tensor\":\"b2\",\"index\":[0],\"delta\":0.03},{\"tensor\":\"w2\",\"index\":[1,3],\"delta\":-0.018},{\"tensor\":\"w2\",\"index\":[1,7],\"delta\":-0.035},{\"tensor\":\"w2\",\"index\":[1,9],\"delta\":-0.05},{\"tensor\":\"b2\",\"index\":[1],\"delta\":0.006}]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  },
+  "elapsed_seconds": 27.37845329195261,
+  "estimated_usd": 0.1175675,
+  "estimate_kind": "reported tokens"
+}

@@ -1,0 +1,44 @@
+{
+  "request_file": "seed-163.weights_hidden.round-2.json",
+  "request_sha256": "43ef73bbd3d2f5adced4c5eaf662819526372d0fd0d7e682c6e71770511c4ad0",
+  "response": {
+    "id": "resp_03b4af700b8bf5f4016af662ad955087d1b679bfd300a3c215",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 9298,
+      "input_tokens_details": {
+        "cache_write_tokens": 9295,
+        "cached_tokens": 0
+      },
+      "output_tokens": 300,
+      "output_tokens_details": {
+        "reasoning_tokens": 105
+      },
+      "total_tokens": 9598
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794532013,
+    "output": [
+      {
+        "id": "msg_03b4af700b8bf5f4016af662b1fde487d1bb97a740e98752a7",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"hypothesis\":\"Increase the validated movement-only correction to 1.5 times its original magnitude. This should further reduce active avoidance error while keeping estimated low-urgency drift near 0.00046, below the 0.0005 budget. All hidden parameters and hazard readouts remain unchanged, preserving the hazard estimate exactly. Deltas are cumulative relative to the original source.\",\"edits\":[{\"tensor\":\"w2\",\"index\":[0,8],\"delta\":-0.078},{\"tensor\":\"w2\",\"index\":[0,9],\"delta\":-0.0324},{\"tensor\":\"b2\",\"index\":[0],\"delta\":-0.02592},{\"tensor\":\"w2\",\"index\":[1,0],\"delta\":-0.0828},{\"tensor\":\"w2\",\"index\":[1,3],\"delta\":-0.03},{\"tensor\":\"b2\",\"index\":[1],\"delta\":0.02796}]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  },
+  "elapsed_seconds": 6.719843667000532,
+  "estimated_usd": 0.1312175,
+  "estimate_kind": "reported tokens"
+}

@@ -1,0 +1,44 @@
+{
+  "request_file": "seed-71.weights_hidden.round-1.json",
+  "request_sha256": "bca692eb5786e7452b1961f99af0bd6d0a2a759dc3f43ea3cda5c5f65c634989",
+  "response": {
+    "id": "resp_0e27dcae16c0d612016af66108b20087d1b16dd7d01def974f",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 9009,
+      "input_tokens_details": {
+        "cache_write_tokens": 9006,
+        "cached_tokens": 0
+      },
+      "output_tokens": 730,
+      "output_tokens_details": {
+        "reasoning_tokens": 598
+      },
+      "total_tokens": 9739
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794531592,
+    "output": [
+      {
+        "id": "msg_0e27dcae16c0d612016af6611ef9f487d185b11e0b934e4377",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"hypothesis\":\"A conservative movement-output correction using the existing obstacle/neighbor-sensitive hidden units should reduce active avoidance error. Centering these corrections with movement biases limits low-urgency drift. Keeping all hidden parameters and hazard-output parameters unchanged preserves the hazard estimate exactly.\",\"edits\":[{\"tensor\":\"w2\",\"index\":[0,2],\"delta\":0.085},{\"tensor\":\"b2\",\"index\":[0],\"delta\":-0.05525},{\"tensor\":\"w2\",\"index\":[1,5],\"delta\":0.065},{\"tensor\":\"b2\",\"index\":[1],\"delta\":-0.04225}]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  },
+  "elapsed_seconds": 24.961960207903758,
+  "estimated_usd": 0.149105,
+  "estimate_kind": "reported tokens"
+}
