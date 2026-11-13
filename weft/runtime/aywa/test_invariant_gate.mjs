@@ -12,6 +12,9 @@ const vectors = JSON.parse(
 const SPECIAL = { Inf: Infinity, "-Inf": -Infinity, NaN: NaN };
 const decode = (x) => (typeof x === "string" && x in SPECIAL ? SPECIAL[x] : x);
 
+// reject_negative_cost is deferred pending issue #168: the published
+// site/assets/js/invariant-gate.js gate still subtracts a negative cost.
+// reject_zero_cost stays in this run.
 const BROWSER_DEFERRED = new Set([
   "reject_pre_cast_radius_boundary",
   "accept_huge_scale_weight_move",
