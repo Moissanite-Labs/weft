@@ -106,5 +106,5 @@
     "run_experiment.py": "fbdf2f1cc132e9f5655d6a1acadf841242cb26d085099b108cf32f2ecbdf0797",
     "lab.py": "40ebc91a1e6b299dfc49a443138ab8457eba5aad3cda0fde520de2f2eaf9311f"
   },
-  "replay": "python run_experiment.py replay --out /Users/kethuda/work/weft-astra-teachers-20261112/docs/program/experiments/astra-family-teachers-2026-11-12/data"
+  "replay": "python run_experiment.py replay --out data"
 }
