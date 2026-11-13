@@ -1,6 +1,6 @@
 # Astra family teacher experiment
 
-This experiment tests persistent numerical edits to small policy cells and transfer to related siblings. The first family experiment is complete. Follow-up experiments are in progress. The completed inversion calibration passed its registered gate. It does not establish family-policy improvement or editing of pretrained language models.
+This experiment tests persistent numerical edits to small policy cells and transfer to related siblings. All four studies are complete, with 96 archived paid responses. The completed inversion calibration passed its registered gate. It does not establish family-policy improvement or editing of pretrained language models.
 
 The reference environment uses Python 3.14.6, NumPy 2.5.4 and certifi 2026.10.23. Run these commands from the repository root:
 
@@ -31,7 +31,7 @@ Preparation generates checkpoints and request files without contacting a teacher
 python run_experiment.py replay --out data
 ```
 
-Until `data/results.json` and `data/manifest.json` exist, that command must fail. Numeric family replay verifies the recorded artifact manifest and the computation modules. It does not prove original API transport identity.
+The completed archive includes `data/results.json` and `data/manifest.json`. Numeric family replay verifies the recorded artifact manifest and the computation modules. It does not prove original API transport identity.
 
 For a separately authorized paid reproduction, the optional worker accepts a key at a hidden prompt and request paths on subsequent lines:
 
@@ -62,6 +62,10 @@ API token usage is retained when returned by the service. Coding-agent token usa
 
 The weight-visible arm reduced active-context movement error by 19.107%, 21.860% and 20.768% across the three source seeds. Two of three met both the improvement and retention criteria on fresh IID observations. None met retention on the shifted distribution. Behavior-only met the primary criterion on zero seeds, and scrambled weights met it on one.
 
-The weight-visible packets also supplied truthful hidden activations. This comparison cannot attribute the advantage to numerical weights alone. Follow-up factorial and conditional experiments are testing that distinction separately. See RESULTS.md for per-seed results, controls and family transfer.
+The weight-visible packets also supplied truthful hidden activations. This comparison cannot attribute the advantage to numerical weights alone. The completed factorial and conditional follow-ups test that distinction separately. See RESULTS.md for per-seed results, controls and family transfer.
 
 The 22 archived API responses include calibration. Estimated API cost is $6.2913975 using the recorded token rates, not an invoice. The earlier TLS transport failure is archived separately.
+
+## Completed archive
+
+Read RESULTS-BRIEF.md for the four-study findings and API-USAGE.json for the per-response token ledger. Phase-specific reports are phase2_factorial/RESULTS.md, phase3_conditional/RESULTS.md and phase4_fidelity/RESULTS.md. CROSS-STUDY.md compares the peer NC1 archive with these experiments.

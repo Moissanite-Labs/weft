@@ -1,6 +1,6 @@
 # Experiment run log
 
-The first study is complete. Follow-up studies are in progress. Earlier checkpoints below retain their original timing and claim boundaries.
+All four studies are complete. Earlier checkpoints retain their original timing. Earlier checkpoints below retain their original timing and claim boundaries.
 
 | Checkpoint | Record |
 | --- | --- |
@@ -48,7 +48,7 @@ Family and calibration replay matched exactly after completion, and the API work
 
 All 40 factorial proposals were valid. Thirty-four passed validation gates and six were rejected. Final gate selection kept the unchanged source in two arm/family cases. Mean IID active-error reductions across five source seeds were 20.10% for weights only, 18.06% for hidden activations only and 19.50% for both. With neither, mean error increased by 0.118%.
 
-Each information-bearing arm met the combined IID improvement and retention criterion on only one of five seeds. None did so under the shifted distribution. These are target-error gains with weak preservation, without evidence of robust success. Follow-up conditional experiments are running separately.
+Each information-bearing arm met the combined IID improvement and retention criterion on only one of five seeds. None did so under the shifted distribution. These are target-error gains with weak preservation, without evidence of robust success. The conditional follow-up is recorded below.
 
 The factorial replay matched exactly. Its 40 response artifacts have an estimated API cost of $5.230925 at the recorded rates, separate from the first-study estimate and without an invoice claim.
 
@@ -57,3 +57,13 @@ The factorial replay matched exactly. Its 40 response artifacts have an estimate
 All 22 paid probes returned valid answers and exact replay completed. Sparse planted-row readout was correct on 12/12 probes, mechanical row edits on 6/6 and planted equivalence judgments on 2/2. The two numerical threshold rules agreed with their paired classifier on 99.8046875% and 99.90234375% of 2,048 fresh inputs. No binary threshold-inference pass criterion was registered.
 
 These are sparse readout, arithmetic editing and approximate numerical inference results. They do not establish dense-weight precision or broader policy improvement. The local classifier is separate from the original checkpoint in the peer archive linked from phase4_fidelity/RESULTS.md.
+
+## Completed conditional follow-up and final capture
+
+All 12 conditional teacher responses completed. No source seed met the primary criterion on both final distributions. Selected successful candidates used ordinary ridge fitting, rather than manual direct surgery. Conditional errors and shared-arena collision counts improved partially. Of 48 evaluated candidates, 47 used ridge fitting.
+
+The single manual candidate was informed by an earlier fitted patch and was rejected. This does not establish a general manual-versus-fitting comparison. These gains do not establish general weight reading or robust satisfaction of the complete objective.
+
+Final conditional replay matched exactly, with results hash edc94c5c0b51bdb4b17bc8796f48abc5372cf6408433189de508f82d7de26c69. An initial analysis command used an incorrect argument and failed before report rendering. Correcting that command did not change experimental outcomes.
+
+All workers stopped after 96 paid responses: 22 first-study responses including calibration, 40 factorial, 12 conditional and 22 fidelity probes. API-USAGE.json counts each original response once. Estimated API cost is $28.2913675 at the recorded rates, without an invoice claim. Cached input tokens were zero in the saved usage. Coding-agent tokens remain unavailable.

@@ -1,0 +1,7 @@
+{
+  "request": "seed-211.tools.round-4.json",
+  "event": "not sent on first batch because concurrent conservative budget reservations exceeded local cap",
+  "paid_attempts_at_deferral": 0,
+  "action": "submit after prior requests completed and reservations released",
+  "protocol_change": false
+}
