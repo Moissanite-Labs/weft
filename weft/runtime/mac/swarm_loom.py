@@ -2,36 +2,26 @@
 """
 Apple Silicon Swarm Loom Substrate (Codebase C1 / Mac MPS Micro-Swarm)
 ======================================================================
-Implements Step 1 of the first-principles Apple Silicon micro-swarm architecture:
+Implements the Apple Silicon micro-swarm architecture:
   1. StratifiedSwarmArena: Zero-copy POSIX shared-memory arena (max 30-byte name for
      macOS PSHMNAMLEN) holding header, focal weights, energy ledger, and niche
      specializations, with leak-free teardown across Python versions.
   2. VectorizedPlasmColony: High-throughput PyTorch / MPS batched mitotic loom
-     executing parallel colony evolution across N ecological niche tiles.
+     executing parallel colony evolution across N ecological niche tiles, supporting
+     both uniform-rank tiles (E14) and graded-rank / conditioned tiles (E15).
   3. Strict C1/C2 Invariants: Deterministic linear provenance watermark in frozen
      core subspace (zero drift, cosine == 1.0) and vectorized Frobenius ball gate.
-  4. Four Strictly Zero-Order (Gradient-Free) Mitosis Modes:
+  4. Five Strictly Zero-Order (Gradient-Free) Mitosis Modes:
      - "paper1_blind": Paper 1 isotropic A/B baseline (cautious vs 5x exploratory noise).
      - "hgt_isolated": Zero-order low-rank subspace mutation + horizontal gene transfer
        and directional memory (velocity) on a single tile without foraging.
      - "hgt_foraging": Zero-order subspace mutation + HGT with static multi-niche
        foraging, basal upkeep, and apoptosis re-colonization.
-     - "dissipative_chemostat": Full convergence with PR #118 (L2 Dissipative Heredity):
-       adds Law 2a Weismann soma barrier (only cells that score an accepted improvement
-       bank harvested bounty; coasting cells dissipate harvest), Law 2b dynamic chemostat
-       flux accumulation on stalled tiles + gap-potentiated payout scaling, and Law 2c
-       asymmetric Soma + Spore re-seeding into high-flux tiles.
-
-Structural Correspondence with PR #118 (L2 Dissipative Heredity):
-  - Law 2a (Irreversible Soma / Weismann Barrier): Basal upkeep drains energy every
-    generation; cells must earn tile bounty through winning adaptations or undergo
-    apoptosis (unspent energy dissipates).
-  - Law 2b (Chemostat Flux & Gap-Potentiated Reward): Each niche tile has a finite
-    bounty pool; under-served tiles concentrate bounty, acting as economic magnets
-    that draw recolonized daughters into uncrowded problem regions.
-  - Law 2c (Soma + Spore Division): Mitosis generates a conservative soma (Alpha:
-    cautious local refinement) and an exploratory spore (HGT-Beta: low-rank subspace
-    mutation + horizontal gene transfer pooling peer lessons across the colony).
+     - "dissipative_chemostat": E14 convergence arm with PR #118 L2 laws.
+     - "graded_chemostat": E15 L2 chemostat with the unsolved-gap allocation
+       rule `(unsolved_gap / mean)^2`, mass-conserving tile pools, niche-clean
+       Soma/Spore inheritance under configurable `spore_fraction`, and optional
+       zero-order homeostatic step-scale cooling (`adaptive_step`).
 """
 
 from __future__ import annotations
@@ -42,7 +32,7 @@ import math
 import os
 import time
 from multiprocessing import shared_memory
-from typing import Any, Dict, Optional, Tuple, Union
+from typing import Any, Dict, Optional, Sequence, Tuple, Union
 
 import numpy as np
 import torch
@@ -225,6 +215,10 @@ class VectorizedPlasmColony:
         seed: int = 0,
         arena_name: Optional[str] = None,
         arena: Optional[StratifiedSwarmArena] = None,
+        tile_ranks: Optional[Sequence[int]] = None,
+        tile_condition_numbers: Optional[Sequence[float]] = None,
+        spore_fraction: float = 0.25,
+        adaptive_step: bool = False,
     ):
         if device is None:
             self.device = select_compute_device()
@@ -232,6 +226,9 @@ class VectorizedPlasmColony:
             self.device = torch.device(device)
         else:
             self.device = device
+
+        if not (0.0 <= float(spore_fraction) <= 1.0):
+            raise ValueError(f"spore_fraction must lie in [0, 1], got {spore_fraction!r}")
 
         self.n_cells = int(n_cells)
         self.dim = int(dim)
@@ -242,10 +239,26 @@ class VectorizedPlasmColony:
         self.basal_upkeep = float(basal_upkeep)
         self.tile_bounty = float(tile_bounty)
         self.seed = int(seed)
+        self.spore_fraction = float(spore_fraction)
+        self.adaptive_step = bool(adaptive_step)
         self.batch_size = 16
         # Seed the global RNG too: per-step mutation noise (torch.randn on the
         # colony device) draws from it, so runs are reproducible per seed.
         torch.manual_seed(self.seed)
+
+        if tile_ranks is not None:
+            if len(tile_ranks) != self.n_niches:
+                raise ValueError("len(tile_ranks) must equal n_niches")
+            self.tile_ranks = [int(r) for r in tile_ranks]
+        else:
+            self.tile_ranks = [self.subspace_rank] * self.n_niches
+
+        if tile_condition_numbers is not None:
+            if len(tile_condition_numbers) != self.n_niches:
+                raise ValueError("len(tile_condition_numbers) must equal n_niches")
+            self.tile_condition_numbers = [float(c) for c in tile_condition_numbers]
+        else:
+            self.tile_condition_numbers = [1.0] * self.n_niches
 
         # Core-periphery partition (top quarter rows frozen)
         self.core_rows = self.dim // 4
@@ -302,6 +315,10 @@ class VectorizedPlasmColony:
         self.died = torch.zeros(self.n_cells, dtype=torch.bool, device=self.device)
         # Zero-order directional memory (tensor equivalent of genome.md last winning delta)
         self.velocity = torch.zeros_like(self.W)
+        # Per-cell zero-order step scale (used when adaptive_step=True in graded_chemostat)
+        self.step_scale = torch.full(
+            (self.n_cells,), 0.012, dtype=torch.float32, device=self.device
+        )
 
         # Cumulative telemetry
         self.alpha_wins = 0
@@ -311,10 +328,10 @@ class VectorizedPlasmColony:
         self.generation = 0
         self.mean_tension = 22.0
 
-        # Ecological environment: N distinct peripheral low-rank target tiles
+        # Ecological environment: N distinct peripheral target tiles
         gen_env = torch.Generator(device="cpu")
         gen_env.manual_seed(self.seed + 1000)
-        self.X_tiles = (
+        x_tiles_cpu = (
             torch.randn(
                 self.n_niches,
                 self.batch_size,
@@ -323,20 +340,38 @@ class VectorizedPlasmColony:
                 dtype=torch.float32,
             )
             * 0.25
-        ).to(self.device)
+        )
+        if tile_condition_numbers is not None:
+            for m, cond_m in enumerate(self.tile_condition_numbers):
+                if cond_m > 1.0:
+                    xm = x_tiles_cpu[m]
+                    orig_norm = torch.linalg.matrix_norm(xm, ord="fro")
+                    u_x, s_x, vh_x = torch.linalg.svd(xm, full_matrices=False)
+                    k_sv = s_x.numel()
+                    decay = torch.logspace(
+                        0.0, -math.log10(cond_m), steps=k_sv, dtype=torch.float32
+                    )
+                    s_cond = s_x * decay
+                    xm_cond = (u_x * s_cond.unsqueeze(0)) @ vh_x
+                    xm_cond = xm_cond * (
+                        orig_norm / (torch.linalg.matrix_norm(xm_cond, ord="fro") + 1e-8)
+                    )
+                    x_tiles_cpu[m] = xm_cond
+        self.X_tiles = x_tiles_cpu.to(self.device)
 
         delta_niches = torch.zeros(
             self.n_niches, self.dim, self.dim, device=self.device
         )
         for m in range(self.n_niches):
+            rank_m = self.tile_ranks[m]
             u_m = torch.randn(
                 self.dim - self.core_rows,
-                self.subspace_rank,
+                rank_m,
                 generator=gen_env,
                 dtype=torch.float32,
             )
             v_m = torch.randn(
-                self.subspace_rank,
+                rank_m,
                 self.dim,
                 generator=gen_env,
                 dtype=torch.float32,
@@ -413,12 +448,13 @@ class VectorizedPlasmColony:
 
     def step(self, mode: str = "hgt_foraging") -> Dict[str, Any]:
         """
-        Execute a single generation under one of four mitotic regimes.
+        Execute a single generation under one of five mitotic regimes.
         All regimes are zero-order: they use forward error evaluations only.
           - "paper1_blind"
           - "hgt_isolated"
           - "hgt_foraging"
           - "dissipative_chemostat"
+          - "graded_chemostat"
         """
         t0 = time.perf_counter()
         if self.device.type == "mps":
@@ -520,6 +556,7 @@ class VectorizedPlasmColony:
             k_bounty = max(1, self.n_cells // (2 * self.n_niches))
             for m in range(self.n_niches):
                 errs_m = errors[:, m]
+                self.best_tile_error[m] = torch.minimum(self.best_tile_error[m], errs_m.min())
                 topk_vals, topk_idx = torch.topk(errs_m, k_bounty, largest=False)
                 ranks = torch.arange(k_bounty, device=self.device, dtype=torch.float32)
                 weights = 1.0 / (ranks + 1.0)
@@ -632,8 +669,7 @@ class VectorizedPlasmColony:
             self.accepted_updates[b_won | a_won] += 1
 
         elif mode == "dissipative_chemostat":
-            # Full Convergence of PR #118 (L2 Dissipative Heredity) + E14 Swarm Loom:
-            # 1. Strictly zero-order Mitosis on currently bound niches
+            # Unchanged E14 implementation preserved for direct comparison.
             x_assigned = self.X_tiles[self.niches]
             y_assigned = self.Y_tiles[self.niches]
             y_pred = torch.bmm(x_assigned, self.W)
@@ -689,7 +725,6 @@ class VectorizedPlasmColony:
             self.W[a_won] = w_cand_a[a_won]
             self.accepted_updates[b_won | a_won] += 1
 
-            # 2. Law 2b (Chemostat Flux & Gap-Potentiated Reward) + Law 2a (Weismann Barrier)
             post_errors = self.evaluate_all_tiles()
             earnings = torch.zeros(self.n_cells, self.n_niches, device=self.device)
             k_bounty = max(1, self.n_cells // (2 * self.n_niches))
@@ -700,10 +735,8 @@ class VectorizedPlasmColony:
                     self.best_tile_error[m] = min_err_m
                     self.chemostat_pool[m] = self.tile_bounty
                 else:
-                    # Stalled tile accumulates unharvested chemostat flux
                     self.chemostat_pool[m] += 0.5 * self.tile_bounty
 
-                # Gap-potentiated multiplier from metab.py Law 2b
                 sense_m = torch.clamp(1.0 - (self.best_tile_error[m] / self.E0[m]), min=0.0, max=0.95)
                 gap_mult = torch.clamp(1.0 / torch.clamp(1.0 - sense_m, min=0.25), max=4.0)
                 eff_bounty_m = self.chemostat_pool[m] * gap_mult
@@ -713,24 +746,18 @@ class VectorizedPlasmColony:
                 weights = 1.0 / (ranks + 1.0)
                 shares = eff_bounty_m * (weights / weights.sum())
                 earnings[topk_idx, m] += shares
-                # Law 2a (Weismann Soma Barrier, PR #118): only cells that have
-                # achieved at least one accepted adaptation (accepted_updates > 0)
-                # unlock harvested bounty; unadapted coasters dissipate harvest (0.0).
                 proven_soma = (self.accepted_updates[topk_idx] > 0).float()
                 unlocked_shares = shares * proven_soma
                 self.energy[topk_idx] += unlocked_shares
 
-            # Ecological Niche Binding
             has_earnings = earnings.max(dim=1).values > 0
             best_earn_niche = torch.argmax(earnings, dim=1)
             rel_errors = post_errors / self.E0.unsqueeze(0)
             best_fit_niche = torch.argmin(rel_errors, dim=1)
             self.niches = torch.where(has_earnings, best_earn_niche, best_fit_niche)
 
-            # Law 2a Irreversible Soma Drain
             self.energy -= self.basal_upkeep
 
-            # 3. Law 2c: Asymmetric Soma + Spore Division on Apoptosis into High-Flux Tiles
             dead_mask = self.energy <= 0.0
             n_dead = int(dead_mask.sum().item())
             if n_dead > 0:
@@ -744,7 +771,6 @@ class VectorizedPlasmColony:
                         0, len(high_energy_idx), (n_dead,), device=self.device
                     )
                 ]
-                # Draw re-seeded daughters toward highest chemostat-flux / under-served tiles
                 tile_counts = torch.bincount(
                     self.niches[~dead_mask], minlength=self.n_niches
                 ).float()
@@ -756,9 +782,6 @@ class VectorizedPlasmColony:
                     )[:n_dead]
 
                 dead_indices = torch.where(dead_mask)[0]
-                # Asymmetric division: birth 0 (even) is Soma (inherits donor body),
-                # birth >= 1 (odd) is Spore (resets periphery to W0 + fresh subspace probe,
-                # inheriting only frozen core watermark and directional memory velocity).
                 is_spore = (torch.arange(n_dead, device=self.device) % 2) == 1
                 self.spore_births += int(is_spore.sum().item())
 
@@ -785,6 +808,205 @@ class VectorizedPlasmColony:
                 self.energy[dead_indices] = self.initial_energy * 0.5
                 self.niches[dead_indices] = target_niches
                 self.accepted_updates[dead_indices] = 0
+
+        elif mode == "graded_chemostat":
+            # E15 Repaired L2 Chemostat:
+            # 1. Zero-order Mitosis with optional homeostatic step-scale regulation
+            x_assigned = self.X_tiles[self.niches]
+            y_assigned = self.Y_tiles[self.niches]
+            y_pred = torch.bmm(x_assigned, self.W)
+            err_curr = torch.linalg.norm(y_pred - y_assigned, ord="fro", dim=(-2, -1))
+
+            cell_tension = 15.0 + 35.0 * (err_curr / (self.E0[self.niches] + 1e-8))
+            self.mean_tension = float(cell_tension.mean().item())
+
+            champs = torch.zeros(self.n_niches, dtype=torch.long, device=self.device)
+            for m in range(self.n_niches):
+                m_cells = torch.where(self.niches == m)[0]
+                if len(m_cells) > 0:
+                    best_idx = m_cells[torch.argmin(err_curr[m_cells])]
+                    champs[m] = best_idx
+                else:
+                    champs[m] = torch.argmin(errors[:, m])
+
+            champ_indices = champs[self.niches]
+            hgt = self.W[champ_indices] - self.W
+            dir_b = 0.5 * hgt + 0.5 * self.velocity[champ_indices]
+
+            scale_b_step = self.step_scale.view(self.n_cells, 1, 1)
+            scale_a_step = scale_b_step * (0.01 / 0.012)
+
+            u_mut = torch.randn(self.n_cells, self.dim, self.subspace_rank, device=self.device)
+            v_mut = torch.randn(self.n_cells, self.subspace_rank, self.dim, device=self.device)
+            sub_mut = torch.bmm(u_mut, v_mut) * scale_b_step
+            delta_b = self.plasticity_mask * (dir_b + sub_mut)
+            w_cand_b = self.W + delta_b
+
+            delta_a = self.plasticity_mask * (torch.randn_like(self.W) * scale_a_step)
+            w_cand_a = self.W + delta_a
+
+            dist_a = torch.linalg.matrix_norm(w_cand_a - self.W0, ord="fro", dim=(1, 2))
+            proj_a = torch.clamp(self.r_invariant / (dist_a + 1e-8), max=1.0).unsqueeze(1).unsqueeze(2)
+            w_cand_a = self.W0 + (w_cand_a - self.W0) * proj_a
+
+            dist_b = torch.linalg.matrix_norm(w_cand_b - self.W0, ord="fro", dim=(1, 2))
+            proj_b = torch.clamp(self.r_invariant / (dist_b + 1e-8), max=1.0).unsqueeze(1).unsqueeze(2)
+            w_cand_b = self.W0 + (w_cand_b - self.W0) * proj_b
+
+            err_a = torch.linalg.norm(
+                torch.bmm(x_assigned, w_cand_a) - y_assigned, ord="fro", dim=(-2, -1)
+            )
+            err_b = torch.linalg.norm(
+                torch.bmm(x_assigned, w_cand_b) - y_assigned, ord="fro", dim=(-2, -1)
+            )
+
+            improved = (err_a < err_curr) | (err_b < err_curr)
+            b_beats_a = err_b < err_a
+            b_won = improved & b_beats_a
+            a_won = improved & (~b_beats_a)
+
+            self.beta_wins += int(b_won.sum().item())
+            self.alpha_wins += int(a_won.sum().item())
+            self.velocity[b_won] = w_cand_b[b_won] - self.W[b_won]
+            self.velocity[a_won] = w_cand_a[a_won] - self.W[a_won]
+            self.W[b_won] = w_cand_b[b_won]
+            self.W[a_won] = w_cand_a[a_won]
+            self.accepted_updates[b_won | a_won] += 1
+
+            if self.adaptive_step:
+                self.step_scale[improved] = torch.clamp(
+                    self.step_scale[improved] * 1.03, max=0.016
+                )
+                self.step_scale[~improved] = torch.clamp(
+                    self.step_scale[~improved] * 0.90, min=0.0010
+                )
+
+            # 2. Unsolved-gap allocation rule and mass-conserving pool + Law 2a
+            post_errors = self.evaluate_all_tiles()
+            min_errs = post_errors.min(dim=0).values
+            self.best_tile_error = torch.minimum(self.best_tile_error, min_errs)
+
+            unsolved_gap = torch.clamp(
+                self.best_tile_error / (self.E0 + 1e-8), min=0.05, max=1.0
+            )
+            gap_mult = torch.clamp(
+                (unsolved_gap / unsolved_gap.mean()) ** 2, min=0.25, max=4.0
+            )
+
+            unlocked_earnings = torch.zeros(self.n_cells, self.n_niches, device=self.device)
+            k_bounty = max(1, self.n_cells // (2 * self.n_niches))
+            ranks = torch.arange(k_bounty, device=self.device, dtype=torch.float32)
+            rank_weights = (1.0 / (ranks + 1.0))
+            rank_weights = rank_weights / rank_weights.sum()
+
+            for m in range(self.n_niches):
+                self.chemostat_pool[m] = torch.clamp(
+                    self.chemostat_pool[m] + 0.5 * self.tile_bounty * gap_mult[m],
+                    max=8.0 * self.tile_bounty,
+                )
+                offer_m = torch.minimum(
+                    self.chemostat_pool[m], self.tile_bounty * gap_mult[m]
+                )
+                errs_m = post_errors[:, m]
+                _, topk_idx = torch.topk(errs_m, k_bounty, largest=False)
+                shares = offer_m * rank_weights
+                proven_soma = (self.accepted_updates[topk_idx] > 0).float()
+                unlocked_shares = shares * proven_soma
+                unlocked_earnings[topk_idx, m] += unlocked_shares
+                self.energy[topk_idx] += unlocked_shares
+                self.chemostat_pool[m] = torch.clamp(
+                    self.chemostat_pool[m] - unlocked_shares.sum(), min=0.0
+                )
+
+            # Ecological Niche Binding toward gap-potentiated reward
+            has_earnings = unlocked_earnings.max(dim=1).values > 0
+            best_earn_niche = torch.argmax(unlocked_earnings, dim=1)
+            rel_errors = post_errors / (self.E0.unsqueeze(0) + 1e-8)
+            forage_utility = (gap_mult * (self.chemostat_pool / self.tile_bounty)).unsqueeze(0) / (
+                rel_errors + 1e-6
+            )
+            best_forage_niche = torch.argmax(forage_utility, dim=1)
+            self.niches = torch.where(has_earnings, best_earn_niche, best_forage_niche)
+
+            # Law 2a Irreversible Soma Drain
+            self.energy -= self.basal_upkeep
+
+            # 3. Repaired Niche-Clean Law 2c: Bresenham Spore Quota + Same-Niche Soma Donors
+            dead_mask = self.energy <= 0.0
+            n_dead = int(dead_mask.sum().item())
+            if n_dead > 0:
+                prev_recol = self.recolonizations
+                self.recolonizations += n_dead
+                self.died = self.died | dead_mask
+                alive_mask = ~dead_mask
+                alive_idx = torch.where(alive_mask)[0]
+                if len(alive_idx) == 0:
+                    alive_idx = torch.tensor([0], device=self.device)
+
+                tile_counts = torch.bincount(
+                    self.niches[alive_mask], minlength=self.n_niches
+                ).float()
+                flux_priority = (self.chemostat_pool * gap_mult) / (tile_counts + 1.0)
+                ranked_niches = torch.argsort(flux_priority, descending=True)
+                target_niches = ranked_niches.repeat(
+                    (n_dead // self.n_niches) + 1
+                )[:n_dead]
+
+                cum_idx = torch.arange(
+                    prev_recol, prev_recol + n_dead, device=self.device, dtype=torch.float32
+                )
+                is_spore = torch.floor((cum_idx + 1.0) * self.spore_fraction) > torch.floor(
+                    cum_idx * self.spore_fraction
+                )
+                self.spore_births += int(is_spore.sum().item())
+
+                dead_indices = torch.where(dead_mask)[0]
+                donor_indices = alive_idx[
+                    torch.randint(0, len(alive_idx), (n_dead,), device=self.device)
+                ]
+                same_niche_donor = torch.zeros(n_dead, dtype=torch.bool, device=self.device)
+                for k in range(n_dead):
+                    tn = int(target_niches[k].item())
+                    cand_donors = alive_idx[self.niches[alive_idx] == tn]
+                    if len(cand_donors) > 0:
+                        best_local = cand_donors[torch.argmax(self.energy[cand_donors])]
+                        donor_indices[k] = best_local
+                        same_niche_donor[k] = True
+
+                u_sp = torch.randn(n_dead, self.dim, self.subspace_rank, device=self.device)
+                v_sp = torch.randn(n_dead, self.subspace_rank, self.dim, device=self.device)
+                spore_probe = torch.bmm(u_sp, v_sp) * 0.012
+
+                soma_w = (
+                    self.W[donor_indices].clone()
+                    + self.plasticity_mask[dead_indices]
+                    * (torch.randn_like(self.W[dead_indices]) * 0.008)
+                )
+                spore_w = (
+                    self.W0[dead_indices].clone()
+                    + self.plasticity_mask[dead_indices] * spore_probe
+                )
+                self.W[dead_indices] = torch.where(
+                    is_spore.unsqueeze(1).unsqueeze(2), spore_w, soma_w
+                )
+                self.W[dead_indices, : self.core_rows, :] = self.w_watermarked[
+                    : self.core_rows, :
+                ].unsqueeze(0)
+
+                clean_vel = torch.where(
+                    (~is_spore & same_niche_donor).unsqueeze(1).unsqueeze(2),
+                    self.velocity[donor_indices].clone(),
+                    torch.zeros_like(self.velocity[dead_indices]),
+                )
+                self.velocity[dead_indices] = clean_vel
+                self.step_scale[dead_indices] = torch.where(
+                    is_spore,
+                    torch.full((n_dead,), 0.012, dtype=torch.float32, device=self.device),
+                    self.step_scale[donor_indices].clone(),
+                )
+                self.energy[dead_indices] = self.initial_energy * 0.5
+                self.niches[dead_indices] = target_niches
+                self.accepted_updates[dead_indices] = 0
         else:
             raise ValueError(f"Unknown mode: {mode!r}")
 
@@ -796,6 +1018,12 @@ class VectorizedPlasmColony:
 
         # Calculate structured telemetry
         final_errors = self.evaluate_all_tiles()
+        self.best_tile_error = torch.minimum(
+            self.best_tile_error, final_errors.min(dim=0).values
+        )
+        per_tile_best_ratio = self.best_tile_error / (self.E0 + 1e-8)
+        worst_tile_err_ratio = float(per_tile_best_ratio.max().item())
+
         min_tile_err_ratio = float(
             (final_errors.min(dim=1).values / self.E0.min()).mean().item()
         )
@@ -854,6 +1082,9 @@ class VectorizedPlasmColony:
             "beta_win_share": beta_win_share,
             "mean_min_tile_error_ratio": min_tile_err_ratio,
             "mean_assigned_error_ratio": assigned_err_ratio,
+            "worst_tile_error_ratio": worst_tile_err_ratio,
+            "per_tile_best_error_ratio": [float(x) for x in per_tile_best_ratio.detach().cpu().tolist()],
+            "tile_cell_counts": [int(x) for x in counts.detach().cpu().tolist()],
             "niche_coverage": niche_coverage,
             "niche_entropy_bits": niche_entropy_bits,
             "max_core_drift": core_drift,
@@ -862,6 +1093,7 @@ class VectorizedPlasmColony:
             "apoptosis_recolonizations": self.recolonizations,
             "spore_births": self.spore_births,
             "mean_chemostat_pool": float(self.chemostat_pool.mean().item()),
+            "mean_step_scale": float(self.step_scale.mean().item()),
             "idle_surviving_cells": idle_surviving_cells,
             "elapsed_ms": elapsed_ms,
         }
