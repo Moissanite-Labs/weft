@@ -1,0 +1,44 @@
+{
+  "request_file": "seed-307.tools.round-4.json",
+  "request_sha256": "f28024dfb8dd05ae9089cb96013be13b69b2681f17842cc8464ecfb475c803b1",
+  "response": {
+    "id": "resp_0eb2c81dcbc70d8f016af664b8ea6c87d183db95882b24c614",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 47592,
+      "input_tokens_details": {
+        "cache_write_tokens": 47589,
+        "cached_tokens": 0
+      },
+      "output_tokens": 1928,
+      "output_tokens_details": {
+        "reasoning_tokens": 458
+      },
+      "total_tokens": 49520
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794532536,
+    "output": [
+      {
+        "id": "msg_0eb2c81dcbc70d8f016af664c8064c87d1bbd42e213f5683e3",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"hypothesis\":\"The 60% complementary-geometry candidate passed every supplied gate and improved both passing directions and paired context contrast. Retain it as a reference, then increase complementary geometry cautiously toward the preservation boundary. A fourth candidate combines 70% geometry with gentler negative-urgency-anchored gating to reduce drift. All candidates start from the original source, preserve frozen parameters and hazard readout, and refit only movement. New candidates remain unverified; unchanged hazard readout alone does not guarantee hazard retention.\",\"candidates\":[{\"label\":\"accepted_sixty_percent_reference\",\"operations\":[{\"op\":\"set_hidden\",\"unit\":5,\"weights\":[-0.048025463,0.517788204,0.009166376,-0.04708173,-0.032731931,0.018851029,0.427701357,-0.405653201],\"bias\":0.220985759},{\"op\":\"set_hidden\",\"unit\":13,\"weights\":[-0.046250957,0.612304881,0.002575928,-0.036164454,0.018846634,-0.041743977,-0.413618874,0.543748301],\"bias\":-0.177431857},{\"op\":\"set_hidden\",\"unit\":12,\"weights\":[-0.65551683,0.100974553,-0.009660568,-0.02486798,-0.022258237,0.066836398,0.54821416,-0.549901769],\"bias\":0.209090744},{\"op\":\"set_hidden\",\"unit\":14,\"weights\":[0.822040246,0.040607976,-0.052734479,-0.008293631,-0.044798878,-0.002611287,0.277608506,-0.810421684],\"bias\":0.178190005},{\"op\":\"ridge_readout\",\"units\":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],\"alpha\":0.03,\"blend\":1.0}]},{\"label\":\"seventy_percent_complementary_geometry\",\"operations\":[{\"op\":\"set_hidden\",\"unit\":5,\"weights\":[-0.036019097,0.525841153,0.006874782,-0.035311298,-0.024548948,0.014138272,0.427701357,-0.454239901],\"bias\":0.220985759},{\"op\":\"set_hidden\",\"unit\":13,\"weights\":[-0.034688218,0.596728661,0.001931946,-0.027123341,0.014134976,-0.031307983,-0.413618874,0.557811376],\"bias\":-0.177431857},{\"op\":\"set_hidden\",\"unit\":12,\"weights\":[-0.654137622,0.075730915,-0.007245426,-0.018650985,-0.016693678,0.050127299,0.54821416,-0.574926327],\"bias\":0.209090744},{\"op\":\"set_hidden\",\"unit\":14,\"weights\":[0.779030185,0.030455982,-0.039550859,-0.006220223,-0.033599159,-0.001958465,0.277608506,-0.770316263],\"bias\":0.178190005},{\"op\":\"ridge_readout\",\"units\":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],\"alpha\":0.03,\"blend\":1.0}]},{\"label\":\"eighty_percent_complementary_geometry\",\"operations\":[{\"op\":\"set_hidden\",\"unit\":5,\"weights\":[-0.024012731,0.533894102,0.004583188,-0.023540865,-0.016365965,0.009425514,0.427701357,-0.502826601],\"bias\":0.220985759},{\"op\":\"set_hidden\",\"unit\":13,\"weights\":[-0.023125478,0.581152441,0.001287964,-0.018082227,0.009423317,-0.020871988,-0.413618874,0.571874151],\"bias\":-0.177431857},{\"op\":\"set_hidden\",\"unit\":12,\"weights\":[-0.652758415,0.050487277,-0.004830284,-0.01243399,-0.011129119,0.033418199,0.54821416,-0.599950885],\"bias\":0.209090744},{\"op\":\"set_hidden\",\"unit\":14,\"weights\":[0.736020123,0.020303988,-0.026367239,-0.004146815,-0.022399439,-0.001305644,0.277608506,-0.730210842],\"bias\":0.178190005},{\"op\":\"ridge_readout\",\"units\":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],\"alpha\":0.03,\"blend\":1.0}]},{\"label\":\"seventy_percent_geometry_gentler_anchored_gate\",\"operations\":[{\"op\":\"set_hidden\",\"unit\":5,\"weights\":[-0.036019097,0.525841153,0.006874782,-0.035311298,-0.024548948,0.014138272,0.377701357,-0.454239901],\"bias\":0.195985759},{\"op\":\"set_hidden\",\"unit\":13,\"weights\":[-0.034688218,0.596728661,0.001931946,-0.027123341,0.014134976,-0.031307983,-0.363618874,0.557811376],\"bias\":-0.152431857},{\"op\":\"set_hidden\",\"unit\":12,\"weights\":[-0.654137622,0.075730915,-0.007245426,-0.018650985,-0.016693678,0.050127299,0.49821416,-0.574926327],\"bias\":0.184090744},{\"op\":\"set_hidden\",\"unit\":14,\"weights\":[0.779030185,0.030455982,-0.039550859,-0.006220223,-0.033599159,-0.001958465,0.227608506,-0.770316263],\"bias\":0.153190005},{\"op\":\"ridge_readout\",\"units\":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],\"alpha\":0.03,\"blend\":1.0}]}]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  },
+  "elapsed_seconds": 28.09551770798862,
+  "estimated_usd": 0.6912925,
+  "estimate_kind": "reported tokens"
+}
