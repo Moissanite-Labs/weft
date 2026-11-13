@@ -1,6 +1,6 @@
 # Astra family teacher experiment
 
-This experiment tests persistent numerical edits to small policy cells and transfer to related siblings. Family experiments are in progress. The completed inversion calibration passed its registered gate. It does not establish family-policy improvement or editing of pretrained language models.
+This experiment tests persistent numerical edits to small policy cells and transfer to related siblings. The first family experiment is complete. Follow-up experiments are in progress. The completed inversion calibration passed its registered gate. It does not establish family-policy improvement or editing of pretrained language models.
 
 The reference environment uses Python 3.14.6, NumPy 2.5.4 and certifi 2026.10.23. Run these commands from the repository root:
 
@@ -57,3 +57,11 @@ The 22-request total includes calibration and all family arms. Calibration consu
 | data/results.json, data/manifest.json | Final family outcomes and replay record, when complete |
 
 API token usage is retained when returned by the service. Coding-agent token usage is unavailable to this harness. Credentials and internal reasoning traces are excluded. Observable answer text, usage counters and normalized errors remain in the public research record. RUN-LOG.md records checkpoints and completed checks.
+
+## First family results
+
+The weight-visible arm reduced active-context movement error by 19.107%, 21.860% and 20.768% across the three source seeds. Two of three met both the improvement and retention criteria on fresh IID observations. None met retention on the shifted distribution. Behavior-only met the primary criterion on zero seeds, and scrambled weights met it on one.
+
+The weight-visible packets also supplied truthful hidden activations. This comparison cannot attribute the advantage to numerical weights alone. Follow-up factorial and conditional experiments are testing that distinction separately. See RESULTS.md for per-seed results, controls and family transfer.
+
+The 22 archived API responses include calibration. Estimated API cost is $6.2913975 using the recorded token rates, not an invoice. The earlier TLS transport failure is archived separately.
