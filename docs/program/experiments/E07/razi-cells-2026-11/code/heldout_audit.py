@@ -504,6 +504,8 @@ def run_audit(
     repeats: int = REPEATS,
     bench_lock: Path | None = None,
     task_names: list[str] | None = None,
+    audit_seed: int | None = None,
+    folder_hashes: dict | None = None,
 ) -> dict:
     lock_path = bench_lock or BENCH_LOCK
     lock_path.parent.mkdir(parents=True, exist_ok=True)
@@ -511,9 +513,11 @@ def run_audit(
     temp_dir = Path(tempfile.mkdtemp(prefix="audit-ref-", dir=os.path.realpath(tempfile.gettempdir())))
 
     # Pre-generate cases
+    legacy_fallback = audit_seed is None
+    effective_seed = 20261110 if audit_seed is None else audit_seed
     task_cases = {}
     for task_name, tdef in active.items():
-        rng = random.Random(f"heldout-r1-{task_name}-20261110")
+        rng = random.Random(f"heldout-r1-{task_name}-{effective_seed}")
         task_cases[task_name] = tdef["gen"](rng)
 
     # Build reference directories
@@ -581,11 +585,41 @@ def run_audit(
     shutil.rmtree(temp_dir, ignore_errors=True)
 
     # Compile results
+    import platform, subprocess as _sp
+    repo_root = Path(__file__).resolve().parent
+    try:
+        git_commit = _sp.check_output(["git", "rev-parse", "HEAD"], cwd=repo_root, text=True).strip()
+    except Exception:
+        git_commit = "unknown"
+    try:
+        cpu_brand = _sp.check_output(["sysctl", "-n", "machdep.cpu.brand_string"], text=True).strip()
+    except Exception:
+        try:
+            cpu_brand = _sp.check_output(["sysctl", "-n", "hw.model"], text=True).strip()
+        except Exception:
+            cpu_brand = platform.processor() or platform.machine() or "unknown"
     results = {
         "repeats": repeats,
         "tasks": list(active.keys()),
         "runs": runs,
         "cell_folder_sha256": cell_sha256,
+        "staged_pre_folder_sha256": folder_hashes,
+        "audit_seed": effective_seed,
+        "audit_seed_legacy_fallback": legacy_fallback,
+        "provenance": {
+            "git_commit": git_commit,
+            "operator_handle": os.environ.get("AUDIT_OPERATOR", "ahrazzle-agent (audited by Ahraz Arifuddin)"),
+            "execution_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+            "os_version": platform.platform(),
+            "cpu_brand": cpu_brand,
+            "python_version": platform.python_version(),
+            "audit_seed": effective_seed,
+            "interleave_task_order": sorted(active.keys()),
+            "contender_order_per_task": ["ref"] + runs,
+            "sandbox": shutil.which("sandbox-exec") is not None,
+            "bench_lock": str(bench_lock or BENCH_LOCK),
+            "wins_rule": "rel > 1.0 + ref_spread (reference-noise threshold)",
+        },
         "per_task": {},
     }
 
@@ -714,6 +748,10 @@ def main() -> None:
     parser.add_argument("--repeats", type=int, default=REPEATS, help="Interleaved repeat count")
     parser.add_argument("--tasks", default="", help="Comma-separated task subset (default: all)")
     parser.add_argument("--bench-lock", default="", help="Override bench lock path (for offline checks)")
+    parser.add_argument("--seed", type=int, default=None,
+                        help="Fresh operator-chosen 64-bit audit seed. If omitted, the legacy committed seed is used and flagged in the JSON.")
+    parser.add_argument("--folder-hashes", default="",
+                        help="Path to pre-run canonical tree-hash JSON; recorded into the audit JSON for provenance.")
     parser.add_argument(
         "--no-sandbox",
         action="store_true",
@@ -725,8 +763,14 @@ def main() -> None:
     archive_base = Path(args.archive_dir)
     runs = ["b5", "b6", "b7", "b8", "b9", "b10", "b11", "g3", "g4"]
     runs = [r for r in runs if (archive_base / r).is_dir()]
+    if len(runs) != 9:
+        print(f"ERROR: expected all 9 run folders under {archive_base}, found {runs}", file=sys.stderr)
+        raise SystemExit(2)
     task_names = [t.strip() for t in args.tasks.split(",") if t.strip()] or None
     bench_lock = Path(args.bench_lock) if args.bench_lock else None
+    folder_hashes = None
+    if args.folder_hashes:
+        folder_hashes = json.load(open(args.folder_hashes))
 
     out_path = Path(args.out) if args.out else Path(__file__).resolve().parent.parent / "data/heldout-audit-r1.json"
     out_path.parent.mkdir(parents=True, exist_ok=True)
@@ -739,6 +783,8 @@ def main() -> None:
             repeats=args.repeats,
             bench_lock=bench_lock,
             task_names=task_names,
+            audit_seed=args.seed,
+            folder_hashes=folder_hashes,
         )
     except SandboxUnavailableError as e:
         print(f"ERROR: {e}", file=sys.stderr)
