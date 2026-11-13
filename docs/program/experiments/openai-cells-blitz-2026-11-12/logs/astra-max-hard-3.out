@@ -1,10 +1,10 @@
 Traceback (most recent call last):
-  File "/Users/kethuda/Documents/exo/weft/work/openai-blitz-2026-11-12/harness.py", line 315, in <module>
+  File "<home>/Documents/exo/weft/work/openai-blitz-2026-11-12/harness.py", line 315, in <module>
     main()
     ~~~~^^
-  File "/Users/kethuda/Documents/exo/weft/work/openai-blitz-2026-11-12/harness.py", line 272, in main
+  File "<home>/Documents/exo/weft/work/openai-blitz-2026-11-12/harness.py", line 272, in main
     resp = api_call(TARGET_NAME, SYSTEM, items)
-  File "/Users/kethuda/Documents/exo/weft/work/openai-blitz-2026-11-12/harness.py", line 234, in api_call
+  File "<home>/Documents/exo/weft/work/openai-blitz-2026-11-12/harness.py", line 234, in api_call
     with urllib.request.urlopen(req, timeout=180, context=ctx) as resp:
          ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/urllib/request.py", line 187, in urlopen
