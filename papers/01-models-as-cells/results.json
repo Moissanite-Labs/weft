@@ -1260,8 +1260,8 @@
     ]
   },
   "e4_conformance": {
-    "weight_update_vectors": 13,
-    "python_agrees": 13,
+    "weight_update_vectors": 15,
+    "python_agrees": 15,
     "tension_vectors": 8,
     "royalty_vectors": 4,
     "implementations": [

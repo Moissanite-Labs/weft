@@ -14,8 +14,13 @@ with the shared JSON conformance corpus in
 [`weft/runtime/invariants/vectors.json`](../../weft/runtime/invariants/vectors.json).
 
 All three implementations are tested directly against `vectors.json` in CI:
-Python and C11 execute all 25 cases (13 weight-update, 8 tension, 4 royalty),
-and the browser port executes all 9 weight-update cases.
+Python and C11 execute all 27 cases (15 weight-update, 8 tension, 4 royalty).
+The browser port defers `reject_pre_cast_radius_boundary`,
+`accept_huge_scale_weight_move`, `reject_locked_mask_ulp_tamper`,
+`accept_locked_mask_negzero_normalize`, and `reject_negative_cost`.
+`reject_negative_cost` is deferred pending a `site/` update of the published
+gate (see issue #168). The browser run covers the remaining weight-update
+cases, including `reject_zero_cost`.
 
 ## Shared constants (`WEFT-INVARIANTS/1.0`)
 
@@ -36,9 +41,10 @@ proceeds in strict precondition order:
 
 1. **Parameter finiteness (`non_finite_parameters`)**: if any of $b, c, R$ is
    `NaN` or `±Inf`, reject with `distance = +Inf`.
-2. **Sign preconditions (`non_positive_budget_or_cost`)**: if $b \le 0$,
-   $c \le 0$, or $R < 0$, reject with `distance = +Inf` and deficit budget
-   $b - c$.
+2. **Sign preconditions (`non_positive_budget_or_cost`)**: if $c \le 0$, reject
+   with `distance = +Inf` and remaining budget $b$ (the caller's budget is
+   unchanged). If $b \le 0$ or $R < 0$ with a positive cost, reject with
+   `distance = +Inf` and deficit budget $b - c`.
 3. **Budget sufficiency (`insufficient_metabolic_budget`)**: if $b < c$, reject
    with `distance = +Inf` and deficit budget $b - c$.
 4. **Shape and non-empty check (`shape_mismatch`)**: if lengths differ or length

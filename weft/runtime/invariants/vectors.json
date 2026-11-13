@@ -164,6 +164,50 @@
       "expected_reason": "non_positive_budget_or_cost"
     },
     {
+      "name": "reject_negative_cost",
+      "baseline": [
+        1.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "candidate": [
+        1.05,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "r_invariant": 0.5,
+      "budget": 10.0,
+      "cost": -1.0,
+      "expected_accepted": false,
+      "expected_distance": "Inf",
+      "expected_remaining_budget": 10.0,
+      "expected_reason": "non_positive_budget_or_cost"
+    },
+    {
+      "name": "reject_zero_cost",
+      "baseline": [
+        1.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "candidate": [
+        1.05,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "r_invariant": 0.5,
+      "budget": 10.0,
+      "cost": 0.0,
+      "expected_accepted": false,
+      "expected_distance": "Inf",
+      "expected_remaining_budget": 10.0,
+      "expected_reason": "non_positive_budget_or_cost"
+    },
+    {
       "name": "reject_negative_radius",
       "baseline": [
         1.0,

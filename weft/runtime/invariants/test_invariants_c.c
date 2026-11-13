@@ -87,13 +87,20 @@ static int run_differential_stream(const char *bin_path) {
             if (derr > max_abs_dist_err) {
                 max_abs_dist_err = derr;
             }
-            if (derr > 1e-9 || bud != h.expected_budget_out) {
-                fprintf(stderr, "Tolerance/budget mismatch at vec %u: derr=%.3e bud=%.9g exp_bud=%.9g\n",
-                        h.vec_id, derr, bud, h.expected_budget_out);
+            if (derr > 1e-9) {
+                fprintf(stderr, "Tolerance mismatch at vec %u: derr=%.3e\n",
+                        h.vec_id, derr);
                 free(bw); free(cw); free(mask);
                 fclose(fp);
                 return 1;
             }
+        }
+        if (bud != h.expected_budget_out) {
+            fprintf(stderr, "Budget mismatch at vec %u: bud=%.9g exp_bud=%.9g cost=%.9g ok=%d\n",
+                    h.vec_id, bud, h.expected_budget_out, h.step_cost, (int)ok);
+            free(bw); free(cw); free(mask);
+            fclose(fp);
+            return 1;
         }
         free(bw);
         free(cw);
