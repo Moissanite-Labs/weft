@@ -451,8 +451,9 @@ def verify_execution(
     checked.
 
     Returns {"status", "first_failing_step", "commitment", "reasons"}.
-    "commitment" is the recomputed commitment record, or None when the replay
-    could not run to the end. "first_failing_step" is the 1-based number of
+    "commitment" is the recomputed commitment record when the replay runs to
+    the end, including when the final graph differs. It is None when the
+    replay could not finish. "first_failing_step" is the 1-based number of
     the first step that failed, or None when the failure is in the graphs
     rather than in a step.
     """
@@ -476,7 +477,7 @@ def verify_execution(
         }
     vm.snapshot_initial_graph()
     for n, step in enumerate(steps, start=1):
-        if not isinstance(step, dict) or step.get("step") not in (None, n):
+        if not isinstance(step, dict) or step.get("step") != n:
             reasons.append(f"step {n}: numbered {step.get('step')!r}" if isinstance(step, dict) else f"step {n}: not a step record")
             first_failing_step = n
             break
@@ -501,15 +502,19 @@ def verify_execution(
             reasons.append(f"step {n}: replay gave {op!r}, record says {step.get('op')!r}")
             first_failing_step = n
             break
-    if not reasons:
-        if serialize_graph_bcp(vm) != final_bcp:
-            reasons.append("final graph does not match final_bcp")
     commitment = None
-    if not reasons:
+    if first_failing_step is None:
+        replayed_final = serialize_graph_bcp(vm)
+        if replayed_final != final_bcp:
+            reasons.append("final graph does not match final_bcp")
         commitment = _commitment_record(
             vm.capacity, initial_bcp, vm.trace_log,
-            serialize_graph_bcp(vm), vm.reductions, len(vm.live_nodes()),
+            replayed_final, vm.reductions, len(vm.live_nodes()),
         )
+        if not reasons:
+            # A finished replay with a matching final is a pass, including a
+            # zero-step identity record (replay_execution also accepts that).
+            commitment["status"] = "PASS"
     return {
         "status": "FAIL" if reasons else "PASS",
         "first_failing_step": first_failing_step,
