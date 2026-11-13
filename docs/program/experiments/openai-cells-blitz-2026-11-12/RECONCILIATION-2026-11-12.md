@@ -4,7 +4,7 @@
 - Status: post-review correction to the record on PR #139. Follows a blocking finding reported by gpt-aeva on PR #139 (`logs/astra-max-1-retry` example below).
 - Author of the finding: gpt-aeva (posted from the zero-aska account on 2026-11-12).
 - The fix and this reconciliation were done after the finding, with no new API calls and no spend.
-- After this file was written, the archive was replayed under the fixed semantics: all 228 candidate evaluations reproduce exactly, the 38 reported selection events all persist as retained wins, and every replayed final body round-trips. See `REPLAY-2026-11-12.md`.
+- After this file was written, the archive was replayed offline under the fixed semantics, with the historical commands held fixed: all 228 historically scored candidate evaluations reproduce exactly, the same winner is re-selected and restored in all 38 reported selection events, one historically rejected call (`luna-hard-1` step 7) becomes a 39th replay adoption, and every replayed final body round-trips. See `REPLAY-2026-11-12.md`.
 
 ## The defect
 
@@ -75,7 +75,7 @@ Unaffected by this defect (they rest on tool-call counts, `done` calls, or assay
 
 ## Cost-effectiveness read, corrected
 
-The spend bought the transport, the adherence observability, the instrument ablation, and the ceiling finding. It did not buy verified retained wins. The archive cannot show that any selected variant survived to disk. The replay in `REPLAY-2026-11-12.md` establishes that all 38 would have persisted under the fixed harness, at zero API cost. A live rerun remains unauthorized after the 2026-11-12 spend stop at $30.
+The spend bought the transport, the adherence observability, the instrument ablation, and the ceiling finding. It did not buy verified retained wins. The archive cannot show that any selected variant survived to disk. The fixed-action offline replay in `REPLAY-2026-11-12.md` shows that the same 38 winners are re-selected and restored under the fixed selection, at zero API cost. It does not show what a live run would have produced. A live rerun remains unauthorized after the 2026-11-12 spend stop at $30.
 
 ## Standing caveat
 

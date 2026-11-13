@@ -1,0 +1,119 @@
+{
+ "cell": "luna-hard-1",
+ "variants_calls": [
+  {
+   "step": 6,
+   "n_versions": 2,
+   "sh_writes_so_far": 0,
+   "inc_existed": true,
+   "inc_median": 51.254885128877035,
+   "candidates": [
+    {
+     "i": 0,
+     "scores": [
+      53.39869428694062,
+      53.39869428694062,
+      53.39869428694062
+     ],
+     "median": 53.39869428694062,
+     "min": 53.39869428694062,
+     "ok": true,
+     "sha256": "f61e6bf4d2e420cd9d4468433e1ad66b1c488675895f24bc7e8a60678f896fb1"
+    },
+    {
+     "i": 1,
+     "scores": [
+      null,
+      null,
+      null
+     ],
+     "median": null,
+     "min": null,
+     "ok": false,
+     "sha256": "9521070af7c324dfe3e00d5157eda5f1374ba32b8b7f929aaa2b60d8fd49117b"
+    }
+   ],
+   "replayed_outcome": "adopt",
+   "replayed_winner": 0,
+   "replayed_winner_median": 53.39869428694062,
+   "replayed_after_median": 53.39869428694062,
+   "replayed_winner_sha256": "f61e6bf4d2e420cd9d4468433e1ad66b1c488675895f24bc7e8a60678f896fb1"
+  },
+  {
+   "step": 7,
+   "n_versions": 2,
+   "sh_writes_so_far": 0,
+   "inc_existed": true,
+   "inc_median": 53.39869428694062,
+   "candidates": [
+    {
+     "i": 0,
+     "scores": [
+      56.473219328167716,
+      56.473219328167716,
+      56.473219328167716
+     ],
+     "median": 56.473219328167716,
+     "min": 56.473219328167716,
+     "ok": true,
+     "sha256": "e71ec008187caffb852f60a328b3989a2a3200408d77bbebf255d1197421b660"
+    },
+    {
+     "i": 1,
+     "scores": [
+      57.05378724557797,
+      57.05378724557797,
+      57.05378724557797
+     ],
+     "median": 57.05378724557797,
+     "min": 57.05378724557797,
+     "ok": true,
+     "sha256": "be220d403cc3065dbaaf5bc331b53ad9c8382ba43edce8cc35fa74ab13298825"
+    }
+   ],
+   "replayed_outcome": "adopt",
+   "replayed_winner": 0,
+   "replayed_winner_median": 56.473219328167716,
+   "replayed_after_median": 56.473219328167716,
+   "replayed_winner_sha256": "e71ec008187caffb852f60a328b3989a2a3200408d77bbebf255d1197421b660"
+  },
+  {
+   "step": 13,
+   "n_versions": 2,
+   "sh_writes_so_far": 0,
+   "inc_existed": true,
+   "inc_median": 53.39869428694062,
+   "candidates": [
+    {
+     "i": 0,
+     "scores": [
+      56.473219328167716,
+      56.473219328167716,
+      56.473219328167716
+     ],
+     "median": 56.473219328167716,
+     "min": 56.473219328167716,
+     "ok": true,
+     "sha256": "cfc4913d7161d68223957ed9a9afae497595f0434e11c756a43df9178a68dbf7"
+    },
+    {
+     "i": 1,
+     "scores": [
+      57.05378724557797,
+      57.05378724557797,
+      57.05378724557797
+     ],
+     "median": 57.05378724557797,
+     "min": 57.05378724557797,
+     "ok": true,
+     "sha256": "e50b7968d64919df961da4d5a934de204894ddc5d061c1c1291c007792821e0b"
+    }
+   ],
+   "replayed_outcome": "adopt",
+   "replayed_winner": 0,
+   "replayed_winner_median": 56.473219328167716,
+   "replayed_after_median": 56.473219328167716,
+   "replayed_winner_sha256": "cfc4913d7161d68223957ed9a9afae497595f0434e11c756a43df9178a68dbf7"
+  }
+ ]
+}

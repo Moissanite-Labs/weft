@@ -2,7 +2,7 @@
 
 - Date: 2026-11-12. Registered in `PREREGISTRATION.md` before any model call.
 - Status: exploratory blitz on expiring OpenAI credits. One task, 12 cells, n=4 per model. Nothing here is confirmatory and nothing should be cited as a project result.
-- Correction 2026-11-12 (post-review): the harness's `variants` selection did not write the selected winner back to disk. Every "adoption" in this file was a reported selection event, not a verified retained win. Replay under the fixed semantics: all 38 persist as retained wins. See `RECONCILIATION-2026-11-12.md` and `REPLAY-2026-11-12.md`.
+- Correction 2026-11-12 (post-review): the harness's `variants` selection did not write the selected winner back to disk. Every "adoption" in this file was a reported selection event, not a verified retained win. A fixed-action offline replay under the fixed semantics re-selects the same winner in all 38 and leaves it on disk when each call returns. It also adopts at one call the historical run rejected, for 39 replay adoptions. It does not show what a live model would have done. See `RECONCILIATION-2026-11-12.md` and `REPLAY-2026-11-12.md`.
 - Task: `compress` from the razi-cells task set. Corpus: `corpus.txt`, 313,972 bytes, sha256 `a7727d6e5fdcd02dd8c22ddaee5109cd3119eef19c00ac28526d4625ec16d0fa`.
 - Models, all through `POST /v1/responses` with native function tools: gpt-6-astra, gpt-6-sol, gpt-6-luna. 4 cells each, max 18 steps.
 
@@ -23,7 +23,7 @@
 
 Token total: 1,189,057 input, 109,649 output. At any plausible pricing for this panel this is a few dollars. The $90 was not meaningfully touched.
 
-Final bodies (the surviving candidates, not the reported selections), scored identically after the run: all 12 round-tripped byte-identically. Compressed size as a share of corpus: sol 0.9 to 1.0%, astra 1.1 to 2.6%, luna 1.1 to 2.9%. The corpus is so compressible (repetitive synthetic lines) that the fitness metric saturated near the floor. The differences between models are behavioral, not outcomes.
+Final bodies (the surviving candidates, not the reported selections), scored identically after the run: all 12 round-tripped byte-identically. Compressed size as a share of corpus: sol 0.85 to 1.06%, astra 1.1 to 2.6%, luna 1.1 to 2.9%. The corpus is so compressible (repetitive synthetic lines) that the fitness metric saturated near the floor. The differences between models are behavioral, not outcomes.
 
 ## Hypothesis verdicts
 

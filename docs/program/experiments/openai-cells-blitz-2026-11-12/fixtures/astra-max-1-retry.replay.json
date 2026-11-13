@@ -1,0 +1,77 @@
+{
+ "cell": "astra-max-1-retry",
+ "variants_calls": [
+  {
+   "step": 7,
+   "n_versions": 2,
+   "sh_writes_so_far": 0,
+   "inc_existed": true,
+   "inc_median": 93.38030142815283,
+   "candidates": [
+    {
+     "i": 0,
+     "scores": [
+      98.91964888588791,
+      98.91964888588791,
+      98.91964888588791
+     ],
+     "median": 98.91964888588791,
+     "min": 98.91964888588791,
+     "ok": true,
+     "sha256": "e6dfc8e1947e6672681b2b6564fc9a63efd33b997492a9dcb86ef2f05bb8d49d"
+    },
+    {
+     "i": 1,
+     "scores": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "median": 0.0,
+     "min": 0.0,
+     "ok": false,
+     "sha256": "88e5d9f775259762fd44b8546e1c8275aa21d5a6dd20264e9e13dd4e373f3a96"
+    }
+   ],
+   "replayed_outcome": "adopt",
+   "replayed_winner": 0,
+   "replayed_winner_median": 98.91964888588791,
+   "replayed_after_median": 98.91964888588791,
+   "replayed_winner_sha256": "e6dfc8e1947e6672681b2b6564fc9a63efd33b997492a9dcb86ef2f05bb8d49d"
+  },
+  {
+   "step": 12,
+   "n_versions": 2,
+   "sh_writes_so_far": 0,
+   "inc_existed": true,
+   "inc_median": 98.91964888588791,
+   "candidates": [
+    {
+     "i": 0,
+     "scores": [
+      99.0817652529525,
+      99.0817652529525,
+      99.0817652529525
+     ],
+     "median": 99.0817652529525,
+     "min": 99.0817652529525,
+     "ok": true,
+     "sha256": "0305c0f6160bdcda872a4304b2191cb4a3f453776f1178068e4ac0b41bc09e3d"
+    },
+    {
+     "i": 1,
+     "scores": [
+      99.08654274903495,
+      99.08654274903495,
+      99.08654274903495
+     ],
+     "median": 99.08654274903495,
+     "min": 99.08654274903495,
+     "ok": true,
+     "sha256": "dfd313f6e3d0dd89b98bde078cf9528a9b0e19e19a355e7d46ad1d576ebfc619"
+    }
+   ],
+   "replayed_outcome": "no-win"
+  }
+ ]
+}

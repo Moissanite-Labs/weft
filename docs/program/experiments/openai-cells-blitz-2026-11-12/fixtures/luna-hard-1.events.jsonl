@@ -1,0 +1,46 @@
+{"kind": "tool_call", "step": 0, "name": "sh"}
+{"kind": "tool_result", "step": 0, "name": "sh", "result": "exit 0\ntotal 96\ndrwxr-xr-x  5 501  staff    160 Nov 12 11:34 .\n-rw-r--r--  1 501  staff    642 Nov 12 11:34 NEED\n-rw-r--r--  1 501  staff  44267 Nov 12 11:34 co"}
+{"kind": "tool_call", "step": 1, "name": "sh"}
+{"kind": "tool_result", "step": 1, "name": "sh", "result": "exit 0\n44267 e18a line 529826 ratio 0.205461 select pick win seed 879367048\n737db5f67fdd09273a03a6dc911d85d262ad87974037fef1d4832d4f47f5432407a9eb4d1f77142ade9a"}
+{"kind": "tool_call", "step": 2, "name": "sh"}
+{"kind": "tool_result", "step": 2, "name": "sh", "result": "exit 0\n[((62, 'other'), 225), ((96, 'hex'), 185), ((64, 'base'), 127), ((61, 'other'), 51), ((60, 'other'), 10), ((59, 'other'), 2)]\nTrue\n"}
+{"kind": "tool_call", "step": 3, "name": "write"}
+{"kind": "tool_result", "step": 3, "name": "write", "result": "wrote compress.py"}
+{"kind": "tool_call", "step": 4, "name": "sh"}
+{"kind": "tool_result", "step": 4, "name": "sh", "result": "exit 0\n21578 22390 51.254885128877035\n"}
+{"kind": "tool_call", "step": 5, "name": "assay"}
+{"kind": "assay", "scores": [51.254885128877035, 51.254885128877035, 51.254885128877035], "median": 51.254885128877035, "ok": true}
+{"kind": "tool_result", "step": 5, "name": "assay", "result": "assay accepted. median=51.2549 spread=0.000"}
+{"kind": "tool_call", "step": 6, "name": "variants", "args": {"path": "compress.py", "versions_sha256": ["f61e6bf4d2e420cd9d4468433e1ad66b1c488675895f24bc7e8a60678f896fb1", "9521070af7c324dfe3e00d5157eda5f1374ba32b8b7f929aaa2b60d8fd49117b"]}}
+{"kind": "variant", "index": 0, "scores": [53.39869428694062, 53.39869428694062, 53.39869428694062], "median": 53.39869428694062, "min": 53.39869428694062}
+{"kind": "variant", "index": 1, "scores": [null, null, null], "median": 0.0, "min": 0.0}
+{"kind": "variants_result", "adopted": 0, "median": 53.39869428694062}
+{"kind": "tool_result", "step": 6, "name": "variants", "result": "variant 0 adopted. median 53.3987 vs incumbent 51.2549."}
+{"kind": "tool_call", "step": 7, "name": "variants", "args": {"path": "compress.py", "versions_sha256": ["e71ec008187caffb852f60a328b3989a2a3200408d77bbebf255d1197421b660", "be220d403cc3065dbaaf5bc331b53ad9c8382ba43edce8cc35fa74ab13298825"]}}
+{"kind": "tool_result", "step": 7, "name": "variants", "result": "variants: register a valid assay first (assay tool), or current body scores 0."}
+{"kind": "tool_call", "step": 8, "name": "assay"}
+{"kind": "assay", "scores": [null, null, null], "median": null, "ok": false}
+{"kind": "tool_result", "step": 8, "name": "assay", "result": "assay rejected: scores=[None, None, None] spread=None. Need exit 0, a number > 0, spread <= 0.15."}
+{"kind": "tool_call", "step": 9, "name": "sh"}
+{"kind": "tool_result", "step": 9, "name": "sh", "result": "exit 1\n#!/usr/bin/env python3\nimport sys, zlib\nMAGIC=b'CP2'\nALPH=b'0123456789abcdefghijklmnopqrstuvwxyz'\nVAL={c:i for i,c in enumerate(ALPH)}\ndef enc(data):\n   "}
+{"kind": "tool_call", "step": 10, "name": "write"}
+{"kind": "tool_result", "step": 10, "name": "write", "result": "wrote compress.py"}
+{"kind": "tool_call", "step": 11, "name": "sh"}
+{"kind": "tool_result", "step": 11, "name": "sh", "result": "exit 0\n20629 True\n"}
+{"kind": "tool_call", "step": 12, "name": "assay"}
+{"kind": "assay", "scores": [53.39869428694062, 53.39869428694062, 53.39869428694062], "median": 53.39869428694062, "ok": true}
+{"kind": "tool_result", "step": 12, "name": "assay", "result": "assay accepted. median=53.3987 spread=0.000"}
+{"kind": "tool_call", "step": 13, "name": "variants", "args": {"path": "compress.py", "versions_sha256": ["cfc4913d7161d68223957ed9a9afae497595f0434e11c756a43df9178a68dbf7", "e50b7968d64919df961da4d5a934de204894ddc5d061c1c1291c007792821e0b"]}}
+{"kind": "variant", "index": 0, "scores": [56.473219328167716, 56.473219328167716, 56.473219328167716], "median": 56.473219328167716, "min": 56.473219328167716}
+{"kind": "variant", "index": 1, "scores": [57.05378724557797, 57.05378724557797, 57.05378724557797], "median": 57.05378724557797, "min": 57.05378724557797}
+{"kind": "variants_result", "adopted": 0, "median": 56.473219328167716}
+{"kind": "tool_result", "step": 13, "name": "variants", "result": "variant 0 adopted. median 56.4732 vs incumbent 53.3987."}
+{"kind": "tool_call", "step": 14, "name": "sh"}
+{"kind": "tool_result", "step": 14, "name": "sh", "result": "exit 0\n#!/usr/bin/env python3\nimport sys, bz2\nMAGIC=b'CP2'\n   19011 out.bin\n"}
+{"kind": "tool_call", "step": 15, "name": "assay"}
+{"kind": "assay", "scores": [57.05378724557797, 57.05378724557797, 57.05378724557797], "median": 57.05378724557797, "ok": true}
+{"kind": "tool_result", "step": 15, "name": "assay", "result": "assay accepted. median=57.0538 spread=0.000"}
+{"kind": "tool_call", "step": 16, "name": "sh"}
+{"kind": "tool_result", "step": 16, "name": "sh", "result": "exit 0\n32886\nzlib 20629\nbz2 19011\nlzma1 19944\nlzma2 19920\nlzma3 19904\nlzma4 19528\nlzma5 19256\nlzma6 19268\nlzma7 19268\nlzma8 19268\nlzma9 19268\n"}
+{"kind": "tool_call", "step": 17, "name": "sh"}
+{"kind": "tool_result", "step": 17, "name": "sh", "result": "exit 0\ne18a line 529826 ratio 0.205461 select pick win seed 879367048\ne18a line 995669 ratio 0.092307 select pick win seed 421003667\ne18a line 202890 ratio 0.20"}

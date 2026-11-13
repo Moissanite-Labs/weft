@@ -9,7 +9,7 @@
 2. **A falsified flagship.** gpt-5.5: 0 reported selection events in 7 cells, done in 1 of 7. On this instrument, generation-5 frontier behaviorally does not adhere. This is the most quotable single number the program bought, and it rests on tool-call counts rather than retention.
 3. **A verified adherence hierarchy on this channel.** astra ≫ terra (4/9 cells) > luna (tool-active, wins only on hard corpus) ≈ sol ≈ 5.4 ≈ 5.5 (0). None of this follows price tier.
 4. **The instrument is load-bearing.** Ablation E19b: 8/8 assay registrations, 8/8 done, 0 reported selections without the selection tool. The reporting channel is the selection tool, which retroactively explains and limits the E18 numbers without new compute.
-5. **A ceiling finding that changes how future assays must be designed.** On saturated synthetic text, sol and astra both pin at ~62% (the stdlib method ceiling). Kept improvements saturate. Behavioral adherence is the discriminator. Future work must use non-saturating corpora or per-corpus baselines, or it measures noise.
+5. **A ceiling finding that changes how future assays must be designed.** On saturated synthetic text, sol and astra both pin at ~62% (the stdlib method ceiling). The fitness metric pins there, so reported selections carry little outcome signal. Behavioral adherence is the discriminator. Future work must use non-saturating corpora or per-corpus baselines, or it measures noise.
 6. **Five falsified hypotheses** (A3, B1, B2, B3, D1-as-registered, G1, G2, G3, F2: counted honestly, see `RESULTS-E18.md` for clause splits). Per the project's founding practice, misses published beside wins are the deliverable, not overhead.
 
 ## Value per wave
@@ -45,12 +45,12 @@
 
 - A confirmatory claim. R5-style re-derivation on the real archives, 5 original seeds under publication conditions, independent reviewer, remains undone. The E18 numbers are exploratory with excellent hygiene, not evidence for a paper claim.
 - A fingerprint. The embedding control actively argues against reading model identity from code outputs.
-- Retained wins as run. The buggy selector kept none of the 38 selections on disk. Replay under the fixed harness verified 38 of 38 would persist, with zero decision changes.
+- Retained wins as run. The buggy selector kept none of the 38 selections on disk. The fixed-action offline replay re-selects and restores the same winner in 38 of 38 and adopts once where the historical run rejected (`luna-hard-1` step 7), for 39 replay adoptions. It does not show what a live run would have produced.
 - A fix for the fibmod dispute (#116) or the Weismann bug (#118). Credits were spent on the OpenAI side only. Those findings are untouched.
 
 ## Bottom line
 
-About $30 bought the transport, one flagship falsification (gpt-5.5, by reported selections), one family ranking (astra above terra above luna, about sol, 5.4 and 5.5 for selection-tool adherence), and the retention finding: zero of 38 selections survived the old harness, all 38 would persist under the fixed one (`REPLAY-2026-11-12.md`). It also bought the attribution control and the corpus-ceiling design rule for assays.
+About $30 bought the transport, one flagship falsification (gpt-5.5, by reported selections), one family ranking (astra above terra above luna, about sol, 5.4 and 5.5 for selection-tool adherence), and the retention finding: zero of 38 selections survived the old harness, and under the fixed selection with the historical commands held fixed the same 38 winners are restored (`REPLAY-2026-11-12.md`). It also bought the attribution control and the corpus-ceiling design rule for assays.
 
 The registered hypotheses tally 8 held and 9 falsified against the reported counter. The single worst buy was the max-effort wave. The single best was the ladder.
 

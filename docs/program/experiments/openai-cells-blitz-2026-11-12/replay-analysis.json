@@ -1,35 +1,94 @@
 {
  "summary": {
   "cells": 87,
-  "paired_variants_calls": 109,
+  "join_key": "(cell, step) of the variants tool_call",
+  "historical_variants_calls": 111,
+  "replay_variants_calls": 111,
+  "matched_calls": 111,
+  "unmatched_historical_calls": 0,
+  "unmatched_replay_calls": 0,
+  "historical_outcomes": {
+   "adopt": 38,
+   "no-win": 71,
+   "rejected": 2
+  },
+  "historical_rejections": 2,
+  "historical_scored_calls": 109,
+  "replay_outcomes": {
+   "adopt": 39,
+   "no-win": 72
+  },
+  "outcome_transitions": {
+   "adopt->adopt": 38,
+   "no-win->no-win": 71,
+   "rejected->adopt": 1,
+   "rejected->no-win": 1
+  },
   "historical_adoptions": 38,
   "replay_same_winner": 38,
   "replay_different_winner": 0,
   "replay_would_not_adopt": 0,
-  "replay_total_adoptions_fixed_semantics": 38,
-  "anchor_true": 52,
-  "anchor_false": 35,
-  "anchor_none": 0,
+  "replay_adoptions": 39,
+  "replay_adoptions_from_historical_rejection": [
+   "luna-hard-1 step 7"
+  ],
+  "replay_adoptions_after_median_equals_winner_median": 39,
+  "replay_adoption_vs_next_call_incumbent": {
+   "same-median": 25,
+   "no-later-call": 12,
+   "different-median": 2
+  },
+  "replay_adoptions_not_incumbent_at_next_call": [
+   "luna-hard-1 step 7",
+   "luna-hard-5 step 7"
+  ],
+  "historical_adoptions_by_wave": {
+   "E18a": 9,
+   "E18b": 4,
+   "E18c": 8,
+   "E18e": 3,
+   "E19a": 10,
+   "blitz": 4
+  },
+  "replay_adoptions_by_wave": {
+   "E18a": 10,
+   "E18b": 4,
+   "E18c": 8,
+   "E18e": 3,
+   "E19a": 10,
+   "blitz": 4
+  },
   "candidate_evals_reproduced_exact": 228,
   "candidate_evals_drifted": 0,
   "candidate_evals_missing": 0,
-  "candidate_evals_total": 228,
+  "candidate_evals_reproduced_total": 228,
+  "candidate_evals_newly_evaluated": 4,
+  "log_attachment_problems": {},
+  "anchor_true": 52,
+  "anchor_false": 35,
+  "anchor_none": 0,
   "roundtrip_ok": 87,
   "roundtrip_total": 87,
+  "roundtrip_runner": "local-subprocess (unshare -rn)",
   "errors": []
  },
  "per_cell": [
   {
    "cell": "astra-1",
-   "paired": [
+   "pairs": [
     {
      "cell": "astra-1",
-     "step": null,
-     "hist_adopted": 0,
+     "step": 9,
+     "hist_outcome": "adopt",
      "rep_outcome": "adopt",
+     "match": "matched",
+     "hist_adopted": 0,
+     "hist_median": 98.53490120138102,
+     "hist_result": "variant 0 adopted. median 98.5349 vs incumbent 93.3816.",
      "rep_winner": 0,
+     "rep_winner_median": 98.53490120138102,
+     "rep_after_median": 98.53490120138102,
      "inc_rep": 93.38157542710816,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        98.53490120138102,
@@ -41,16 +100,23 @@
        97.44435809562636,
        97.44435809562636
       ]
-     ]
+     ],
+     "candidates": "reproduced",
+     "next_call_incumbent": "same-median"
     },
     {
      "cell": "astra-1",
-     "step": null,
-     "hist_adopted": null,
+     "step": 11,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 97.4444). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 98.53490120138102,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        98.88620641331075,
@@ -62,16 +128,22 @@
        99.07794325608653,
        99.07794325608653
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     },
     {
      "cell": "astra-1",
-     "step": null,
-     "hist_adopted": null,
+     "step": 17,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 97.4444). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 98.53490120138102,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        99.07794325608653,
@@ -83,15 +155,14 @@
        99.0798542545195,
        99.0798542545195
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 6,
-    "exact": 6,
-    "drift": 0,
-    "missing": 0
+    "exact": 6
    },
+   "problems": {},
    "anchor": false,
    "error": null,
    "sh_count": 8,
@@ -99,15 +170,20 @@
   },
   {
    "cell": "astra-2",
-   "paired": [
+   "pairs": [
     {
      "cell": "astra-2",
-     "step": null,
-     "hist_adopted": 0,
+     "step": 5,
+     "hist_outcome": "adopt",
      "rep_outcome": "adopt",
+     "match": "matched",
+     "hist_adopted": 0,
+     "hist_median": 98.87856241957881,
+     "hist_result": "variant 0 adopted. median 98.8786 vs incumbent 93.3806.",
      "rep_winner": 0,
+     "rep_winner_median": 98.87856241957881,
+     "rep_after_median": 98.87856241957881,
      "inc_rep": 93.38061992789166,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        98.87856241957881,
@@ -119,15 +195,15 @@
        98.90404239868523,
        98.90404239868523
       ]
-     ]
+     ],
+     "candidates": "reproduced",
+     "next_call_incumbent": "no-later-call"
     }
    ],
    "repro": {
-    "total": 2,
-    "exact": 2,
-    "drift": 0,
-    "missing": 0
+    "exact": 2
    },
+   "problems": {},
    "anchor": false,
    "error": null,
    "sh_count": 4,
@@ -135,15 +211,20 @@
   },
   {
    "cell": "astra-3",
-   "paired": [
+   "pairs": [
     {
      "cell": "astra-3",
-     "step": null,
-     "hist_adopted": 0,
+     "step": 6,
+     "hist_outcome": "adopt",
      "rep_outcome": "adopt",
+     "match": "matched",
+     "hist_adopted": 0,
+     "hist_median": 98.53203470373154,
+     "hist_result": "variant 0 adopted. median 98.5320 vs incumbent 93.3806.",
      "rep_winner": 0,
+     "rep_winner_median": 98.53203470373154,
+     "rep_after_median": 98.53203470373154,
      "inc_rep": 93.38061992789166,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        98.53203470373154,
@@ -155,16 +236,23 @@
        97.44276559693222,
        97.44276559693222
       ]
-     ]
+     ],
+     "candidates": "reproduced",
+     "next_call_incumbent": "same-median"
     },
     {
      "cell": "astra-3",
-     "step": null,
-     "hist_adopted": null,
+     "step": 7,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 97.4428). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 98.53203470373154,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        98.88779891200488,
@@ -176,16 +264,22 @@
        98.72886754232862,
        98.72886754232862
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     },
     {
      "cell": "astra-3",
-     "step": null,
-     "hist_adopted": null,
+     "step": 10,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 97.4428). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 98.53203470373154,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        98.88779891200488,
@@ -197,16 +291,22 @@
        98.88779891200488,
        98.88779891200488
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     },
     {
      "cell": "astra-3",
-     "step": null,
-     "hist_adopted": null,
+     "step": 15,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 97.4428). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 98.53203470373154,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        98.88779891200488,
@@ -218,15 +318,14 @@
        98.88779891200488,
        98.88779891200488
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 8,
-    "exact": 8,
-    "drift": 0,
-    "missing": 0
+    "exact": 8
    },
+   "problems": {},
    "anchor": false,
    "error": null,
    "sh_count": 8,
@@ -234,15 +333,20 @@
   },
   {
    "cell": "astra-4",
-   "paired": [
+   "pairs": [
     {
      "cell": "astra-4",
-     "step": null,
-     "hist_adopted": 0,
+     "step": 6,
+     "hist_outcome": "adopt",
      "rep_outcome": "adopt",
+     "match": "matched",
+     "hist_adopted": 0,
+     "hist_median": 98.87282942427987,
+     "hist_result": "variant 0 adopted. median 98.8728 vs incumbent 93.3806.",
      "rep_winner": 0,
+     "rep_winner_median": 98.87282942427987,
+     "rep_after_median": 98.87282942427987,
      "inc_rep": 93.38061992789166,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        98.87282942427987,
@@ -254,16 +358,23 @@
        98.94672136368848,
        98.94672136368848
       ]
-     ]
+     ],
+     "candidates": "reproduced",
+     "next_call_incumbent": "same-median"
     },
     {
      "cell": "astra-4",
-     "step": null,
-     "hist_adopted": null,
+     "step": 8,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 98.9467). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 98.87282942427987,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        99.07635075739239,
@@ -275,16 +386,22 @@
        99.06679576522748,
        99.06679576522748
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     },
     {
      "cell": "astra-4",
-     "step": null,
-     "hist_adopted": null,
+     "step": 13,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 98.9467). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 98.87282942427987,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        99.07635075739239,
@@ -296,15 +413,14 @@
        99.07284726026525,
        99.07284726026525
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 6,
-    "exact": 6,
-    "drift": 0,
-    "missing": 0
+    "exact": 6
    },
+   "problems": {},
    "anchor": false,
    "error": null,
    "sh_count": 11,
@@ -312,13 +428,9 @@
   },
   {
    "cell": "astra-abl-1",
-   "paired": [],
-   "repro": {
-    "total": 0,
-    "exact": 0,
-    "drift": 0,
-    "missing": 0
-   },
+   "pairs": [],
+   "repro": {},
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 6,
@@ -326,13 +438,9 @@
   },
   {
    "cell": "astra-abl-2",
-   "paired": [],
-   "repro": {
-    "total": 0,
-    "exact": 0,
-    "drift": 0,
-    "missing": 0
-   },
+   "pairs": [],
+   "repro": {},
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 6,
@@ -340,13 +448,9 @@
   },
   {
    "cell": "astra-abl-3",
-   "paired": [],
-   "repro": {
-    "total": 0,
-    "exact": 0,
-    "drift": 0,
-    "missing": 0
-   },
+   "pairs": [],
+   "repro": {},
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 7,
@@ -354,13 +458,9 @@
   },
   {
    "cell": "astra-abl-4",
-   "paired": [],
-   "repro": {
-    "total": 0,
-    "exact": 0,
-    "drift": 0,
-    "missing": 0
-   },
+   "pairs": [],
+   "repro": {},
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 7,
@@ -368,13 +468,9 @@
   },
   {
    "cell": "astra-abl-hard-1",
-   "paired": [],
-   "repro": {
-    "total": 0,
-    "exact": 0,
-    "drift": 0,
-    "missing": 0
-   },
+   "pairs": [],
+   "repro": {},
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 4,
@@ -382,13 +478,9 @@
   },
   {
    "cell": "astra-abl-hard-2",
-   "paired": [],
-   "repro": {
-    "total": 0,
-    "exact": 0,
-    "drift": 0,
-    "missing": 0
-   },
+   "pairs": [],
+   "repro": {},
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 6,
@@ -396,13 +488,9 @@
   },
   {
    "cell": "astra-abl-hard-3",
-   "paired": [],
-   "repro": {
-    "total": 0,
-    "exact": 0,
-    "drift": 0,
-    "missing": 0
-   },
+   "pairs": [],
+   "repro": {},
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 6,
@@ -410,13 +498,9 @@
   },
   {
    "cell": "astra-abl-hard-4",
-   "paired": [],
-   "repro": {
-    "total": 0,
-    "exact": 0,
-    "drift": 0,
-    "missing": 0
-   },
+   "pairs": [],
+   "repro": {},
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 7,
@@ -424,15 +508,20 @@
   },
   {
    "cell": "astra-hard-1",
-   "paired": [
+   "pairs": [
     {
      "cell": "astra-hard-1",
-     "step": null,
-     "hist_adopted": 0,
+     "step": 5,
+     "hist_outcome": "adopt",
      "rep_outcome": "adopt",
+     "match": "matched",
+     "hist_adopted": 0,
+     "hist_median": 61.935527593918714,
+     "hist_result": "variant 0 adopted. median 61.9355 vs incumbent 54.7903.",
      "rep_winner": 0,
+     "rep_winner_median": 61.935527593918714,
+     "rep_after_median": 61.935527593918714,
      "inc_rep": 54.79025007341812,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        61.935527593918714,
@@ -444,15 +533,15 @@
        62.08010481848781,
        62.08010481848781
       ]
-     ]
+     ],
+     "candidates": "reproduced",
+     "next_call_incumbent": "no-later-call"
     }
    ],
    "repro": {
-    "total": 2,
-    "exact": 2,
-    "drift": 0,
-    "missing": 0
+    "exact": 2
    },
+   "problems": {},
    "anchor": false,
    "error": null,
    "sh_count": 4,
@@ -460,15 +549,20 @@
   },
   {
    "cell": "astra-hard-2",
-   "paired": [
+   "pairs": [
     {
      "cell": "astra-hard-2",
-     "step": null,
-     "hist_adopted": 0,
+     "step": 5,
+     "hist_outcome": "adopt",
      "rep_outcome": "adopt",
+     "match": "matched",
+     "hist_adopted": 0,
+     "hist_median": 62.11850814376398,
+     "hist_result": "variant 0 adopted. median 62.1185 vs incumbent 54.7970.",
      "rep_winner": 0,
+     "rep_winner_median": 62.11850814376398,
+     "rep_after_median": 62.11850814376398,
      "inc_rep": 54.7970271308198,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        62.11850814376398,
@@ -480,16 +574,23 @@
        61.754806063207354,
        61.754806063207354
       ]
-     ]
+     ],
+     "candidates": "reproduced",
+     "next_call_incumbent": "same-median"
     },
     {
      "cell": "astra-hard-2",
-     "step": null,
-     "hist_adopted": null,
+     "step": 8,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 61.7548). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 62.11850814376398,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        62.11850814376398,
@@ -501,15 +602,14 @@
        62.11850814376398,
        62.11850814376398
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 4,
-    "exact": 4,
-    "drift": 0,
-    "missing": 0
+    "exact": 4
    },
+   "problems": {},
    "anchor": false,
    "error": null,
    "sh_count": 5,
@@ -517,15 +617,20 @@
   },
   {
    "cell": "astra-hard-3",
-   "paired": [
+   "pairs": [
     {
      "cell": "astra-hard-3",
-     "step": null,
-     "hist_adopted": 0,
+     "step": 7,
+     "hist_outcome": "adopt",
      "rep_outcome": "adopt",
+     "match": "matched",
+     "hist_adopted": 0,
+     "hist_median": 61.562789436826534,
+     "hist_result": "variant 0 adopted. median 61.5628 vs incumbent 54.7970.",
      "rep_winner": 0,
+     "rep_winner_median": 61.562789436826534,
+     "rep_after_median": 61.562789436826534,
      "inc_rep": 54.7970271308198,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        61.562789436826534,
@@ -537,16 +642,23 @@
        61.92875053651705,
        61.92875053651705
       ]
-     ]
+     ],
+     "candidates": "reproduced",
+     "next_call_incumbent": "same-median"
     },
     {
      "cell": "astra-hard-3",
-     "step": null,
-     "hist_adopted": null,
+     "step": 9,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 61.9288). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 61.562789436826534,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        61.93100955565094,
@@ -558,15 +670,14 @@
        62.066550703684456,
        62.066550703684456
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 4,
-    "exact": 4,
-    "drift": 0,
-    "missing": 0
+    "exact": 4
    },
+   "problems": {},
    "anchor": false,
    "error": null,
    "sh_count": 7,
@@ -574,15 +685,20 @@
   },
   {
    "cell": "astra-hard-4",
-   "paired": [
+   "pairs": [
     {
      "cell": "astra-hard-4",
-     "step": null,
-     "hist_adopted": 0,
+     "step": 6,
+     "hist_outcome": "adopt",
      "rep_outcome": "adopt",
+     "match": "matched",
+     "hist_adopted": 0,
+     "hist_median": 62.10495402896063,
+     "hist_result": "variant 0 adopted. median 62.1050 vs incumbent 54.7970.",
      "rep_winner": 0,
+     "rep_winner_median": 62.10495402896063,
+     "rep_after_median": 62.10495402896063,
      "inc_rep": 54.7970271308198,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        62.10495402896063,
@@ -594,15 +710,15 @@
        62.10495402896063,
        62.10495402896063
       ]
-     ]
+     ],
+     "candidates": "reproduced",
+     "next_call_incumbent": "no-later-call"
     }
    ],
    "repro": {
-    "total": 2,
-    "exact": 2,
-    "drift": 0,
-    "missing": 0
+    "exact": 2
    },
+   "problems": {},
    "anchor": false,
    "error": null,
    "sh_count": 4,
@@ -610,15 +726,20 @@
   },
   {
    "cell": "astra-hard-5",
-   "paired": [
+   "pairs": [
     {
      "cell": "astra-hard-5",
-     "step": null,
-     "hist_adopted": 0,
+     "step": 5,
+     "hist_outcome": "adopt",
      "rep_outcome": "adopt",
+     "match": "matched",
+     "hist_adopted": 0,
+     "hist_median": 61.61022883863827,
+     "hist_result": "variant 0 adopted. median 61.6102 vs incumbent 54.7970.",
      "rep_winner": 0,
+     "rep_winner_median": 61.61022883863827,
+     "rep_after_median": 61.61022883863827,
      "inc_rep": 54.7970271308198,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        61.61022883863827,
@@ -630,15 +751,15 @@
        61.973930919194885,
        61.973930919194885
       ]
-     ]
+     ],
+     "candidates": "reproduced",
+     "next_call_incumbent": "no-later-call"
     }
    ],
    "repro": {
-    "total": 2,
-    "exact": 2,
-    "drift": 0,
-    "missing": 0
+    "exact": 2
    },
+   "problems": {},
    "anchor": false,
    "error": null,
    "sh_count": 4,
@@ -646,15 +767,20 @@
   },
   {
    "cell": "astra-hard-6",
-   "paired": [
+   "pairs": [
     {
      "cell": "astra-hard-6",
-     "step": null,
-     "hist_adopted": 0,
+     "step": 8,
+     "hist_outcome": "adopt",
      "rep_outcome": "adopt",
+     "match": "matched",
+     "hist_adopted": 0,
+     "hist_median": 61.953599746989866,
+     "hist_result": "variant 0 adopted. median 61.9536 vs incumbent 54.7970.",
      "rep_winner": 0,
+     "rep_winner_median": 61.953599746989866,
+     "rep_after_median": 61.953599746989866,
      "inc_rep": 54.7970271308198,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        61.953599746989866,
@@ -666,16 +792,23 @@
        62.09817697155895,
        62.09817697155895
       ]
-     ]
+     ],
+     "candidates": "reproduced",
+     "next_call_incumbent": "same-median"
     },
     {
      "cell": "astra-hard-6",
-     "step": null,
-     "hist_adopted": null,
+     "step": 12,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 62.0982). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 61.953599746989866,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        62.12302618203176,
@@ -687,15 +820,14 @@
        62.1117310863623,
        62.1117310863623
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 4,
-    "exact": 4,
-    "drift": 0,
-    "missing": 0
+    "exact": 4
    },
+   "problems": {},
    "anchor": false,
    "error": null,
    "sh_count": 7,
@@ -703,15 +835,20 @@
   },
   {
    "cell": "astra-max-1",
-   "paired": [
+   "pairs": [
     {
      "cell": "astra-max-1",
-     "step": null,
-     "hist_adopted": 0,
+     "step": 8,
+     "hist_outcome": "adopt",
      "rep_outcome": "adopt",
+     "match": "matched",
+     "hist_adopted": 0,
+     "hist_median": 98.932070375702,
+     "hist_result": "variant 0 adopted. median 98.9321 vs incumbent 92.7127.",
      "rep_winner": 0,
+     "rep_winner_median": 98.932070375702,
+     "rep_after_median": 98.932070375702,
      "inc_rep": 92.712725975565,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        98.932070375702,
@@ -723,15 +860,15 @@
        98.937803371001,
        98.937803371001
       ]
-     ]
+     ],
+     "candidates": "reproduced",
+     "next_call_incumbent": "no-later-call"
     }
    ],
    "repro": {
-    "total": 2,
-    "exact": 2,
-    "drift": 0,
-    "missing": 0
+    "exact": 2
    },
+   "problems": {},
    "anchor": false,
    "error": null,
    "sh_count": 7,
@@ -739,15 +876,20 @@
   },
   {
    "cell": "astra-max-1-retry",
-   "paired": [
+   "pairs": [
     {
      "cell": "astra-max-1-retry",
-     "step": null,
-     "hist_adopted": 0,
+     "step": 7,
+     "hist_outcome": "adopt",
      "rep_outcome": "adopt",
+     "match": "matched",
+     "hist_adopted": 0,
+     "hist_median": 98.91964888588791,
+     "hist_result": "variant 0 adopted. median 98.9196 vs incumbent 93.3803.",
      "rep_winner": 0,
+     "rep_winner_median": 98.91964888588791,
+     "rep_after_median": 98.91964888588791,
      "inc_rep": 93.38030142815283,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        98.91964888588791,
@@ -759,15 +901,43 @@
        0.0,
        0.0
       ]
-     ]
+     ],
+     "candidates": "reproduced",
+     "next_call_incumbent": "same-median"
+    },
+    {
+     "cell": "astra-max-1-retry",
+     "step": 12,
+     "hist_outcome": "rejected",
+     "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "variants: register a valid assay first (assay tool), or current body scores 0.",
+     "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
+     "inc_rep": 98.91964888588791,
+     "rep_scores": [
+      [
+       99.0817652529525,
+       99.0817652529525,
+       99.0817652529525
+      ],
+      [
+       99.08654274903495,
+       99.08654274903495,
+       99.08654274903495
+      ]
+     ],
+     "candidates": "newly-evaluated"
     }
    ],
    "repro": {
-    "total": 2,
     "exact": 2,
-    "drift": 0,
-    "missing": 0
+    "newly_evaluated": 2
    },
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 9,
@@ -775,13 +945,9 @@
   },
   {
    "cell": "astra-max-2",
-   "paired": [],
-   "repro": {
-    "total": 0,
-    "exact": 0,
-    "drift": 0,
-    "missing": 0
-   },
+   "pairs": [],
+   "repro": {},
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 4,
@@ -789,15 +955,20 @@
   },
   {
    "cell": "astra-max-2-retry",
-   "paired": [
+   "pairs": [
     {
      "cell": "astra-max-2-retry",
-     "step": null,
-     "hist_adopted": 0,
+     "step": 4,
+     "hist_outcome": "adopt",
      "rep_outcome": "adopt",
+     "match": "matched",
+     "hist_adopted": 0,
+     "hist_median": 99.07635075739239,
+     "hist_result": "variant 0 adopted. median 99.0764 vs incumbent 93.3816.",
      "rep_winner": 0,
+     "rep_winner_median": 99.07635075739239,
+     "rep_after_median": 99.07635075739239,
      "inc_rep": 93.38157542710816,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        99.07635075739239,
@@ -809,16 +980,23 @@
        99.06679576522748,
        99.06679576522748
       ]
-     ]
+     ],
+     "candidates": "reproduced",
+     "next_call_incumbent": "same-median"
     },
     {
      "cell": "astra-max-2-retry",
-     "step": null,
-     "hist_adopted": null,
+     "step": 10,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 99.0668). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 99.07635075739239,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        99.08463175060196,
@@ -830,15 +1008,14 @@
        99.08749824825144,
        99.08749824825144
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 4,
-    "exact": 4,
-    "drift": 0,
-    "missing": 0
+    "exact": 4
    },
+   "problems": {},
    "anchor": false,
    "error": null,
    "sh_count": 11,
@@ -846,15 +1023,20 @@
   },
   {
    "cell": "astra-max-3",
-   "paired": [
+   "pairs": [
     {
      "cell": "astra-max-3",
-     "step": null,
-     "hist_adopted": 0,
+     "step": 9,
+     "hist_outcome": "adopt",
      "rep_outcome": "adopt",
+     "match": "matched",
+     "hist_adopted": 0,
+     "hist_median": 98.52980520555973,
+     "hist_result": "variant 0 adopted. median 98.5298 vs incumbent 93.3797.",
      "rep_winner": 0,
+     "rep_winner_median": 98.52980520555973,
+     "rep_after_median": 98.52980520555973,
      "inc_rep": 93.37966442867517,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        98.52980520555973,
@@ -866,16 +1048,23 @@
        98.88493241435542,
        98.88493241435542
       ]
-     ]
+     ],
+     "candidates": "reproduced",
+     "next_call_incumbent": "same-median"
     },
     {
      "cell": "astra-max-3",
-     "step": null,
-     "hist_adopted": null,
+     "step": 13,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 98.8849). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 98.52980520555973,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        99.07475825869822,
@@ -887,15 +1076,14 @@
        99.080809753736,
        99.080809753736
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 4,
-    "exact": 4,
-    "drift": 0,
-    "missing": 0
+    "exact": 4
    },
+   "problems": {},
    "anchor": false,
    "error": null,
    "sh_count": 8,
@@ -903,15 +1091,20 @@
   },
   {
    "cell": "astra-max-4",
-   "paired": [
+   "pairs": [
     {
      "cell": "astra-max-4",
-     "step": null,
-     "hist_adopted": 0,
+     "step": 7,
+     "hist_outcome": "adopt",
      "rep_outcome": "adopt",
+     "match": "matched",
+     "hist_adopted": 0,
+     "hist_median": 98.9279298790975,
+     "hist_result": "variant 0 adopted. median 98.9279 vs incumbent 92.7255.",
      "rep_winner": 0,
+     "rep_winner_median": 98.9279298790975,
+     "rep_after_median": 98.9279298790975,
      "inc_rep": 92.7254659651179,
-     "n_candidates_rep": 4,
      "rep_scores": [
       [
        98.9279298790975,
@@ -933,16 +1126,23 @@
        98.75562152039036,
        98.75562152039036
       ]
-     ]
+     ],
+     "candidates": "reproduced",
+     "next_call_incumbent": "same-median"
     },
     {
      "cell": "astra-max-4",
-     "step": null,
-     "hist_adopted": null,
+     "step": 8,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 98.7556). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 98.9279298790975,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        99.080809753736,
@@ -954,16 +1154,22 @@
        99.06934376313812,
        99.06934376313812
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     },
     {
      "cell": "astra-max-4",
-     "step": null,
-     "hist_adopted": null,
+     "step": 12,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 98.7556). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 98.9279298790975,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        99.06934376313812,
@@ -975,15 +1181,14 @@
        99.080809753736,
        99.080809753736
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 8,
-    "exact": 8,
-    "drift": 0,
-    "missing": 0
+    "exact": 8
    },
+   "problems": {},
    "anchor": false,
    "error": null,
    "sh_count": 10,
@@ -991,13 +1196,9 @@
   },
   {
    "cell": "astra-max-hard-1",
-   "paired": [],
-   "repro": {
-    "total": 0,
-    "exact": 0,
-    "drift": 0,
-    "missing": 0
-   },
+   "pairs": [],
+   "repro": {},
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 3,
@@ -1005,15 +1206,20 @@
   },
   {
    "cell": "astra-max-hard-1-retry",
-   "paired": [
+   "pairs": [
     {
      "cell": "astra-max-hard-1-retry",
-     "step": null,
-     "hist_adopted": 0,
+     "step": 9,
+     "hist_outcome": "adopt",
      "rep_outcome": "adopt",
+     "match": "matched",
+     "hist_adopted": 0,
+     "hist_median": 62.02814737840829,
+     "hist_result": "variant 0 adopted. median 62.0281 vs incumbent 54.7903.",
      "rep_winner": 0,
+     "rep_winner_median": 62.02814737840829,
+     "rep_after_median": 62.02814737840829,
      "inc_rep": 54.79025007341812,
-     "n_candidates_rep": 3,
      "rep_scores": [
       [
        62.02814737840829,
@@ -1030,16 +1236,23 @@
        62.13206225856733,
        62.13206225856733
       ]
-     ]
+     ],
+     "candidates": "reproduced",
+     "next_call_incumbent": "same-median"
     },
     {
      "cell": "astra-max-hard-1-retry",
-     "step": null,
-     "hist_adopted": null,
+     "step": 13,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 62.1321). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 62.02814737840829,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        62.141098335102896,
@@ -1051,15 +1264,14 @@
        62.1433573542368,
        62.1433573542368
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 5,
-    "exact": 5,
-    "drift": 0,
-    "missing": 0
+    "exact": 5
    },
+   "problems": {},
    "anchor": false,
    "error": null,
    "sh_count": 7,
@@ -1067,15 +1279,20 @@
   },
   {
    "cell": "astra-max-hard-2",
-   "paired": [
+   "pairs": [
     {
      "cell": "astra-max-hard-2",
-     "step": null,
-     "hist_adopted": 0,
+     "step": 6,
+     "hist_outcome": "adopt",
      "rep_outcome": "adopt",
+     "match": "matched",
+     "hist_adopted": 0,
+     "hist_median": 61.74576998667178,
+     "hist_result": "variant 0 adopted. median 61.7458 vs incumbent 54.7880.",
      "rep_winner": 0,
+     "rep_winner_median": 61.74576998667178,
+     "rep_after_median": 61.74576998667178,
      "inc_rep": 54.78799105428423,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        61.74576998667178,
@@ -1087,16 +1304,23 @@
        62.10947206722841,
        62.10947206722841
       ]
-     ]
+     ],
+     "candidates": "reproduced",
+     "next_call_incumbent": "same-median"
     },
     {
      "cell": "astra-max-hard-2",
-     "step": null,
-     "hist_adopted": null,
+     "step": 9,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 62.1095). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 61.74576998667178,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        62.12302618203176,
@@ -1108,15 +1332,14 @@
        62.136580296835106,
        62.136580296835106
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 4,
-    "exact": 4,
-    "drift": 0,
-    "missing": 0
+    "exact": 4
    },
+   "problems": {},
    "anchor": false,
    "error": null,
    "sh_count": 10,
@@ -1124,13 +1347,9 @@
   },
   {
    "cell": "astra-max-hard-3",
-   "paired": [],
-   "repro": {
-    "total": 0,
-    "exact": 0,
-    "drift": 0,
-    "missing": 0
-   },
+   "pairs": [],
+   "repro": {},
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 5,
@@ -1138,15 +1357,20 @@
   },
   {
    "cell": "astra-max-hard-3-retry",
-   "paired": [
+   "pairs": [
     {
      "cell": "astra-max-hard-3-retry",
-     "step": null,
-     "hist_adopted": 0,
+     "step": 7,
+     "hist_outcome": "adopt",
      "rep_outcome": "adopt",
+     "match": "matched",
+     "hist_adopted": 0,
+     "hist_median": 61.73899292927011,
+     "hist_result": "variant 0 adopted. median 61.7390 vs incumbent 54.7970.",
      "rep_winner": 0,
+     "rep_winner_median": 61.73899292927011,
+     "rep_after_median": 61.73899292927011,
      "inc_rep": 54.7970271308198,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        61.73899292927011,
@@ -1158,16 +1382,23 @@
        62.102695009826725,
        62.102695009826725
       ]
-     ]
+     ],
+     "candidates": "reproduced",
+     "next_call_incumbent": "same-median"
     },
     {
      "cell": "astra-max-hard-3-retry",
-     "step": null,
-     "hist_adopted": null,
+     "step": 10,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 62.1027). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 61.73899292927011,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        62.12302618203176,
@@ -1179,15 +1410,14 @@
        62.13432127770122,
        62.13432127770122
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 4,
-    "exact": 4,
-    "drift": 0,
-    "missing": 0
+    "exact": 4
    },
+   "problems": {},
    "anchor": false,
    "error": null,
    "sh_count": 11,
@@ -1195,15 +1425,20 @@
   },
   {
    "cell": "astra-max-hard-4",
-   "paired": [
+   "pairs": [
     {
      "cell": "astra-max-hard-4",
-     "step": null,
-     "hist_adopted": 0,
+     "step": 6,
+     "hist_outcome": "adopt",
      "rep_outcome": "adopt",
+     "match": "matched",
+     "hist_adopted": 0,
+     "hist_median": 62.09365893329116,
+     "hist_result": "variant 0 adopted. median 62.0937 vs incumbent 54.7970.",
      "rep_winner": 0,
+     "rep_winner_median": 62.09365893329116,
+     "rep_after_median": 62.09365893329116,
      "inc_rep": 54.7970271308198,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        62.09365893329116,
@@ -1215,16 +1450,23 @@
        62.11850814376398,
        62.11850814376398
       ]
-     ]
+     ],
+     "candidates": "reproduced",
+     "next_call_incumbent": "same-median"
     },
     {
      "cell": "astra-max-hard-4",
-     "step": null,
-     "hist_adopted": null,
+     "step": 10,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 62.1185). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 62.09365893329116,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        62.13206225856733,
@@ -1236,15 +1478,14 @@
        62.13206225856733,
        62.13206225856733
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 4,
-    "exact": 4,
-    "drift": 0,
-    "missing": 0
+    "exact": 4
    },
+   "problems": {},
    "anchor": false,
    "error": null,
    "sh_count": 9,
@@ -1252,15 +1493,20 @@
   },
   {
    "cell": "astra-max-hard-4-retry",
-   "paired": [
+   "pairs": [
     {
      "cell": "astra-max-hard-4-retry",
-     "step": null,
-     "hist_adopted": 0,
+     "step": 6,
+     "hist_outcome": "adopt",
      "rep_outcome": "adopt",
+     "match": "matched",
+     "hist_adopted": 0,
+     "hist_median": 61.741251948404006,
+     "hist_result": "variant 0 adopted. median 61.7413 vs incumbent 54.7903.",
      "rep_winner": 0,
+     "rep_winner_median": 61.741251948404006,
+     "rep_after_median": 61.741251948404006,
      "inc_rep": 54.79025007341812,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        61.741251948404006,
@@ -1272,16 +1518,23 @@
        62.10721304809452,
        62.10721304809452
       ]
-     ]
+     ],
+     "candidates": "reproduced",
+     "next_call_incumbent": "same-median"
     },
     {
      "cell": "astra-max-hard-4-retry",
-     "step": null,
-     "hist_adopted": null,
+     "step": 9,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 62.1072). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 61.741251948404006,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        62.12754422029955,
@@ -1293,15 +1546,14 @@
        62.13206225856733,
        62.13206225856733
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 4,
-    "exact": 4,
-    "drift": 0,
-    "missing": 0
+    "exact": 4
    },
+   "problems": {},
    "anchor": false,
    "error": null,
    "sh_count": 9,
@@ -1309,15 +1561,20 @@
   },
   {
    "cell": "astra-r-1",
-   "paired": [
+   "pairs": [
     {
      "cell": "astra-r-1",
-     "step": null,
-     "hist_adopted": 0,
+     "step": 6,
+     "hist_outcome": "adopt",
      "rep_outcome": "adopt",
+     "match": "matched",
+     "hist_adopted": 0,
+     "hist_median": 98.87856241957881,
+     "hist_result": "variant 0 adopted. median 98.8786 vs incumbent 93.3816.",
      "rep_winner": 0,
+     "rep_winner_median": 98.87856241957881,
+     "rep_after_median": 98.87856241957881,
      "inc_rep": 93.38157542710816,
-     "n_candidates_rep": 4,
      "rep_scores": [
       [
        98.87856241957881,
@@ -1339,16 +1596,23 @@
        98.89512440599799,
        98.89512440599799
       ]
-     ]
+     ],
+     "candidates": "reproduced",
+     "next_call_incumbent": "same-median"
     },
     {
      "cell": "astra-r-1",
-     "step": null,
-     "hist_adopted": null,
+     "step": 10,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 98.8951). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 98.87856241957881,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        99.04450078350936,
@@ -1360,15 +1624,14 @@
        98.9763418393997,
        98.9763418393997
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 6,
-    "exact": 6,
-    "drift": 0,
-    "missing": 0
+    "exact": 6
    },
+   "problems": {},
    "anchor": false,
    "error": null,
    "sh_count": 6,
@@ -1376,15 +1639,20 @@
   },
   {
    "cell": "astra-r-2",
-   "paired": [
+   "pairs": [
     {
      "cell": "astra-r-2",
-     "step": null,
-     "hist_adopted": 0,
+     "step": 10,
+     "hist_outcome": "adopt",
      "rep_outcome": "adopt",
+     "match": "matched",
+     "hist_adopted": 0,
+     "hist_median": 98.5326717032092,
+     "hist_result": "variant 0 adopted. median 98.5327 vs incumbent 93.3816.",
      "rep_winner": 0,
+     "rep_winner_median": 98.5326717032092,
+     "rep_after_median": 98.5326717032092,
      "inc_rep": 93.38157542710816,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        98.5326717032092,
@@ -1396,16 +1664,23 @@
        97.44276559693222,
        97.44276559693222
       ]
-     ]
+     ],
+     "candidates": "reproduced",
+     "next_call_incumbent": "same-median"
     },
     {
      "cell": "astra-r-2",
-     "step": null,
-     "hist_adopted": null,
+     "step": 11,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 97.4428). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 98.5326717032092,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        98.82951345979897,
@@ -1417,16 +1692,22 @@
        98.72313454702967,
        98.72313454702967
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     },
     {
      "cell": "astra-r-2",
-     "step": null,
-     "hist_adopted": null,
+     "step": 14,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 97.4428). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 98.5326717032092,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        98.5326717032092,
@@ -1438,15 +1719,14 @@
        98.5326717032092,
        98.5326717032092
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 6,
-    "exact": 6,
-    "drift": 0,
-    "missing": 0
+    "exact": 6
    },
+   "problems": {},
    "anchor": false,
    "error": null,
    "sh_count": 8,
@@ -1454,15 +1734,20 @@
   },
   {
    "cell": "astra-r-3",
-   "paired": [
+   "pairs": [
     {
      "cell": "astra-r-3",
-     "step": null,
-     "hist_adopted": 0,
+     "step": 5,
+     "hist_outcome": "adopt",
      "rep_outcome": "adopt",
+     "match": "matched",
+     "hist_adopted": 0,
+     "hist_median": 98.8827029161836,
+     "hist_result": "variant 0 adopted. median 98.8827 vs incumbent 93.3806.",
      "rep_winner": 0,
+     "rep_winner_median": 98.8827029161836,
+     "rep_after_median": 98.8827029161836,
      "inc_rep": 93.38061992789166,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        98.8827029161836,
@@ -1474,15 +1759,15 @@
        98.93334437465762,
        98.93334437465762
       ]
-     ]
+     ],
+     "candidates": "reproduced",
+     "next_call_incumbent": "no-later-call"
     }
    ],
    "repro": {
-    "total": 2,
-    "exact": 2,
-    "drift": 0,
-    "missing": 0
+    "exact": 2
    },
+   "problems": {},
    "anchor": false,
    "error": null,
    "sh_count": 3,
@@ -1490,15 +1775,20 @@
   },
   {
    "cell": "astra-r-4",
-   "paired": [
+   "pairs": [
     {
      "cell": "astra-r-4",
-     "step": null,
-     "hist_adopted": 0,
+     "step": 5,
+     "hist_outcome": "adopt",
      "rep_outcome": "adopt",
+     "match": "matched",
+     "hist_adopted": 0,
+     "hist_median": 98.53490120138102,
+     "hist_result": "variant 0 adopted. median 98.5349 vs incumbent 93.3816.",
      "rep_winner": 0,
+     "rep_winner_median": 98.53490120138102,
+     "rep_after_median": 98.53490120138102,
      "inc_rep": 93.38157542710816,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        98.53490120138102,
@@ -1510,16 +1800,23 @@
        97.44403959588753,
        97.44403959588753
       ]
-     ]
+     ],
+     "candidates": "reproduced",
+     "next_call_incumbent": "same-median"
     },
     {
      "cell": "astra-r-4",
-     "step": null,
-     "hist_adopted": null,
+     "step": 6,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 97.4440). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 98.53490120138102,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        98.88779891200488,
@@ -1531,16 +1828,22 @@
        98.88875441122138,
        98.88875441122138
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     },
     {
      "cell": "astra-r-4",
-     "step": null,
-     "hist_adopted": null,
+     "step": 9,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 97.4440). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 98.53490120138102,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        98.88779891200488,
@@ -1552,16 +1855,22 @@
        98.74192603162065,
        98.74192603162065
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     },
     {
      "cell": "astra-r-4",
-     "step": null,
-     "hist_adopted": null,
+     "step": 11,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 97.4440). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 98.53490120138102,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        98.53967869746347,
@@ -1573,15 +1882,14 @@
        98.13518402914909,
        98.13518402914909
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 8,
-    "exact": 8,
-    "drift": 0,
-    "missing": 0
+    "exact": 8
    },
+   "problems": {},
    "anchor": false,
    "error": null,
    "sh_count": 6,
@@ -1589,15 +1897,20 @@
   },
   {
    "cell": "astra-r-5",
-   "paired": [
+   "pairs": [
     {
      "cell": "astra-r-5",
-     "step": null,
-     "hist_adopted": 0,
+     "step": 5,
+     "hist_outcome": "adopt",
      "rep_outcome": "adopt",
+     "match": "matched",
+     "hist_adopted": 0,
+     "hist_median": 98.80435198043138,
+     "hist_result": "variant 0 adopted. median 98.8044 vs incumbent 93.3816.",
      "rep_winner": 0,
+     "rep_winner_median": 98.80435198043138,
+     "rep_after_median": 98.80435198043138,
      "inc_rep": 93.38157542710816,
-     "n_candidates_rep": 3,
      "rep_scores": [
       [
        98.80435198043138,
@@ -1614,16 +1927,23 @@
        98.77282050628719,
        98.77282050628719
       ]
-     ]
+     ],
+     "candidates": "reproduced",
+     "next_call_incumbent": "same-median"
     },
     {
      "cell": "astra-r-5",
-     "step": null,
-     "hist_adopted": null,
+     "step": 8,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 98.7728). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 98.80435198043138,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        99.00309581746143,
@@ -1635,16 +1955,22 @@
        99.07794325608653,
        99.07794325608653
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     },
     {
      "cell": "astra-r-5",
-     "step": null,
-     "hist_adopted": null,
+     "step": 14,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 98.7728). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 98.80435198043138,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        99.06647726548864,
@@ -1656,15 +1982,14 @@
        99.07794325608653,
        99.07794325608653
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 7,
-    "exact": 7,
-    "drift": 0,
-    "missing": 0
+    "exact": 7
    },
+   "problems": {},
    "anchor": false,
    "error": null,
    "sh_count": 7,
@@ -1672,15 +1997,20 @@
   },
   {
    "cell": "astra-r-6",
-   "paired": [
+   "pairs": [
     {
      "cell": "astra-r-6",
-     "step": null,
-     "hist_adopted": 0,
+     "step": 9,
+     "hist_outcome": "adopt",
      "rep_outcome": "adopt",
+     "match": "matched",
+     "hist_adopted": 0,
+     "hist_median": 98.80435198043138,
+     "hist_result": "variant 0 adopted. median 98.8044 vs incumbent 93.3816.",
      "rep_winner": 0,
+     "rep_winner_median": 98.80435198043138,
+     "rep_after_median": 98.80435198043138,
      "inc_rep": 93.38157542710816,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        98.80435198043138,
@@ -1692,16 +2022,23 @@
        98.77282050628719,
        98.77282050628719
       ]
-     ]
+     ],
+     "candidates": "reproduced",
+     "next_call_incumbent": "same-median"
     },
     {
      "cell": "astra-r-6",
-     "step": null,
-     "hist_adopted": null,
+     "step": 11,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 98.7728). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 98.80435198043138,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        98.98717083051991,
@@ -1713,15 +2050,14 @@
        99.00373281693909,
        99.00373281693909
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 4,
-    "exact": 4,
-    "drift": 0,
-    "missing": 0
+    "exact": 4
    },
+   "problems": {},
    "anchor": false,
    "error": null,
    "sh_count": 9,
@@ -1729,15 +2065,20 @@
   },
   {
    "cell": "astra-r-7",
-   "paired": [
+   "pairs": [
     {
      "cell": "astra-r-7",
-     "step": null,
-     "hist_adopted": 0,
+     "step": 6,
+     "hist_outcome": "adopt",
      "rep_outcome": "adopt",
+     "match": "matched",
+     "hist_adopted": 0,
+     "hist_median": 98.7740945052425,
+     "hist_result": "variant 0 adopted. median 98.7741 vs incumbent 92.7127.",
      "rep_winner": 0,
+     "rep_winner_median": 98.7740945052425,
+     "rep_after_median": 98.7740945052425,
      "inc_rep": 92.71272597556471,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        98.7740945052425,
@@ -1749,15 +2090,15 @@
        98.8056259793867,
        98.8056259793867
       ]
-     ]
+     ],
+     "candidates": "reproduced",
+     "next_call_incumbent": "no-later-call"
     }
    ],
    "repro": {
-    "total": 2,
-    "exact": 2,
-    "drift": 0,
-    "missing": 0
+    "exact": 2
    },
+   "problems": {},
    "anchor": false,
    "error": null,
    "sh_count": 5,
@@ -1765,15 +2106,20 @@
   },
   {
    "cell": "astra-r-8",
-   "paired": [
+   "pairs": [
     {
      "cell": "astra-r-8",
-     "step": null,
-     "hist_adopted": 0,
+     "step": 5,
+     "hist_outcome": "adopt",
      "rep_outcome": "adopt",
+     "match": "matched",
+     "hist_adopted": 0,
+     "hist_median": 98.89544290573681,
+     "hist_result": "variant 0 adopted. median 98.8954 vs incumbent 93.3816.",
      "rep_winner": 0,
+     "rep_winner_median": 98.89544290573681,
+     "rep_after_median": 98.89544290573681,
      "inc_rep": 93.38157542710816,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        98.89544290573681,
@@ -1785,15 +2131,15 @@
        98.9690163454066,
        98.9690163454066
       ]
-     ]
+     ],
+     "candidates": "reproduced",
+     "next_call_incumbent": "no-later-call"
     }
    ],
    "repro": {
-    "total": 2,
-    "exact": 2,
-    "drift": 0,
-    "missing": 0
+    "exact": 2
    },
+   "problems": {},
    "anchor": false,
    "error": null,
    "sh_count": 4,
@@ -1801,15 +2147,20 @@
   },
   {
    "cell": "gpt_54-l-1",
-   "paired": [
+   "pairs": [
     {
      "cell": "gpt_54-l-1",
-     "step": null,
-     "hist_adopted": null,
+     "step": 7,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 93.3771). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 93.37711643076453,
-     "n_candidates_rep": 3,
      "rep_scores": [
       [
        93.37711643076453,
@@ -1826,15 +2177,14 @@
        93.37711643076453,
        93.37711643076453
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 3,
-    "exact": 3,
-    "drift": 0,
-    "missing": 0
+    "exact": 3
    },
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 4,
@@ -1842,15 +2192,20 @@
   },
   {
    "cell": "gpt_54-l-2",
-   "paired": [
+   "pairs": [
     {
      "cell": "gpt_54-l-2",
-     "step": null,
-     "hist_adopted": null,
+     "step": 8,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 93.3774). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 93.37743493050336,
-     "n_candidates_rep": 3,
      "rep_scores": [
       [
        93.37743493050336,
@@ -1867,15 +2222,14 @@
        93.37743493050336,
        93.37743493050336
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 3,
-    "exact": 3,
-    "drift": 0,
-    "missing": 0
+    "exact": 3
    },
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 5,
@@ -1883,15 +2237,20 @@
   },
   {
    "cell": "gpt_54-l-3",
-   "paired": [
+   "pairs": [
     {
      "cell": "gpt_54-l-3",
-     "step": null,
-     "hist_adopted": null,
+     "step": 6,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 1.0000). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 1.0,
-     "n_candidates_rep": 3,
      "rep_scores": [
       [
        1.0,
@@ -1908,15 +2267,14 @@
        1.0,
        1.0
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 3,
-    "exact": 3,
-    "drift": 0,
-    "missing": 0
+    "exact": 3
    },
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 3,
@@ -1924,13 +2282,9 @@
   },
   {
    "cell": "gpt_54_mini-l-1",
-   "paired": [],
-   "repro": {
-    "total": 0,
-    "exact": 0,
-    "drift": 0,
-    "missing": 0
-   },
+   "pairs": [],
+   "repro": {},
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 5,
@@ -1938,13 +2292,9 @@
   },
   {
    "cell": "gpt_54_mini-l-2",
-   "paired": [],
-   "repro": {
-    "total": 0,
-    "exact": 0,
-    "drift": 0,
-    "missing": 0
-   },
+   "pairs": [],
+   "repro": {},
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 4,
@@ -1952,13 +2302,9 @@
   },
   {
    "cell": "gpt_54_mini-l-3",
-   "paired": [],
-   "repro": {
-    "total": 0,
-    "exact": 0,
-    "drift": 0,
-    "missing": 0
-   },
+   "pairs": [],
+   "repro": {},
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 2,
@@ -1966,15 +2312,20 @@
   },
   {
    "cell": "gpt_55-l-1",
-   "paired": [
+   "pairs": [
     {
      "cell": "gpt_55-l-1",
-     "step": null,
-     "hist_adopted": null,
+     "step": 10,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 99.0076). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 99.00755481380506,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        99.1461022001962,
@@ -1986,16 +2337,22 @@
        99.0671142649663,
        99.0671142649663
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     },
     {
      "cell": "gpt_55-l-1",
-     "step": null,
-     "hist_adopted": null,
+     "step": 14,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 99.0076). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 99.00755481380506,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        99.1461022001962,
@@ -2007,15 +2364,14 @@
        88.73339023862,
        88.73339023862
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 4,
-    "exact": 4,
-    "drift": 0,
-    "missing": 0
+    "exact": 4
    },
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 10,
@@ -2023,15 +2379,20 @@
   },
   {
    "cell": "gpt_55-l-2",
-   "paired": [
+   "pairs": [
     {
      "cell": "gpt_55-l-2",
-     "step": null,
-     "hist_adopted": null,
+     "step": 11,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 99.0069). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 99.0069178143274,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        99.04704878142,
@@ -2043,15 +2404,14 @@
        99.13527320907598,
        99.13527320907598
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 2,
-    "exact": 2,
-    "drift": 0,
-    "missing": 0
+    "exact": 2
    },
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 11,
@@ -2059,13 +2419,9 @@
   },
   {
    "cell": "gpt_55-l-3",
-   "paired": [],
-   "repro": {
-    "total": 0,
-    "exact": 0,
-    "drift": 0,
-    "missing": 0
-   },
+   "pairs": [],
+   "repro": {},
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 12,
@@ -2073,13 +2429,9 @@
   },
   {
    "cell": "gpt_55-r-1",
-   "paired": [],
-   "repro": {
-    "total": 0,
-    "exact": 0,
-    "drift": 0,
-    "missing": 0
-   },
+   "pairs": [],
+   "repro": {},
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 11,
@@ -2087,15 +2439,20 @@
   },
   {
    "cell": "gpt_55-r-2",
-   "paired": [
+   "pairs": [
     {
      "cell": "gpt_55-r-2",
-     "step": null,
-     "hist_adopted": null,
+     "step": 7,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 99.9978). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 99.99777050182819,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        100.0,
@@ -2107,15 +2464,14 @@
        100.0,
        100.0
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 2,
-    "exact": 2,
-    "drift": 0,
-    "missing": 0
+    "exact": 2
    },
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 6,
@@ -2123,13 +2479,9 @@
   },
   {
    "cell": "gpt_55-r-3",
-   "paired": [],
-   "repro": {
-    "total": 0,
-    "exact": 0,
-    "drift": 0,
-    "missing": 0
-   },
+   "pairs": [],
+   "repro": {},
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 12,
@@ -2137,13 +2489,9 @@
   },
   {
    "cell": "gpt_55-r-4",
-   "paired": [],
-   "repro": {
-    "total": 0,
-    "exact": 0,
-    "drift": 0,
-    "missing": 0
-   },
+   "pairs": [],
+   "repro": {},
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 13,
@@ -2151,15 +2499,20 @@
   },
   {
    "cell": "gpt_61_terra-l-1",
-   "paired": [
+   "pairs": [
     {
      "cell": "gpt_61_terra-l-1",
-     "step": null,
-     "hist_adopted": null,
+     "step": 7,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 98.9486). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 98.94863236212146,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        99.04227128533755,
@@ -2171,16 +2524,22 @@
        99.0069178143274,
        99.0069178143274
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     },
     {
      "cell": "gpt_61_terra-l-1",
-     "step": null,
-     "hist_adopted": null,
+     "step": 11,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 98.9486). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 98.94863236212146,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        99.08558724981845,
@@ -2192,15 +2551,14 @@
        99.08431325086313,
        99.08431325086313
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 4,
-    "exact": 4,
-    "drift": 0,
-    "missing": 0
+    "exact": 4
    },
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 9,
@@ -2208,15 +2566,20 @@
   },
   {
    "cell": "gpt_61_terra-l-2",
-   "paired": [
+   "pairs": [
     {
      "cell": "gpt_61_terra-l-2",
-     "step": null,
-     "hist_adopted": 0,
+     "step": 13,
+     "hist_outcome": "adopt",
      "rep_outcome": "adopt",
+     "match": "matched",
+     "hist_adopted": 0,
+     "hist_median": 98.99672582268482,
+     "hist_result": "variant 0 adopted. median 98.9967 vs incumbent 92.7127.",
      "rep_winner": 0,
+     "rep_winner_median": 98.99672582268482,
+     "rep_after_median": 98.99672582268482,
      "inc_rep": 92.71272597556471,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        98.99672582268482,
@@ -2228,15 +2591,15 @@
        99.0438637840317,
        99.0438637840317
       ]
-     ]
+     ],
+     "candidates": "reproduced",
+     "next_call_incumbent": "no-later-call"
     }
    ],
    "repro": {
-    "total": 2,
-    "exact": 2,
-    "drift": 0,
-    "missing": 0
+    "exact": 2
    },
+   "problems": {},
    "anchor": false,
    "error": null,
    "sh_count": 10,
@@ -2244,15 +2607,20 @@
   },
   {
    "cell": "gpt_61_terra-l-3",
-   "paired": [
+   "pairs": [
     {
      "cell": "gpt_61_terra-l-3",
-     "step": null,
-     "hist_adopted": null,
+     "step": 13,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 98.7410). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 98.74097053240416,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        98.9817563349598,
@@ -2264,15 +2632,14 @@
        99.02252430153007,
        99.02252430153007
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 2,
-    "exact": 2,
-    "drift": 0,
-    "missing": 0
+    "exact": 2
    },
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 9,
@@ -2280,15 +2647,20 @@
   },
   {
    "cell": "gpt_61_terra-r-1",
-   "paired": [
+   "pairs": [
     {
      "cell": "gpt_61_terra-r-1",
-     "step": null,
-     "hist_adopted": null,
+     "step": 10,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 99.0767). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 99.07666925713121,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        99.07858025556419,
@@ -2300,15 +2672,14 @@
        99.0817652529525,
        99.0817652529525
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 2,
-    "exact": 2,
-    "drift": 0,
-    "missing": 0
+    "exact": 2
    },
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 10,
@@ -2316,15 +2687,20 @@
   },
   {
    "cell": "gpt_61_terra-r-2",
-   "paired": [
+   "pairs": [
     {
      "cell": "gpt_61_terra-r-2",
-     "step": null,
-     "hist_adopted": 0,
+     "step": 8,
+     "hist_outcome": "adopt",
      "rep_outcome": "adopt",
+     "match": "matched",
+     "hist_adopted": 0,
+     "hist_median": 98.86550393028678,
+     "hist_result": "variant 0 adopted. median 98.8655 vs incumbent 93.3816.",
      "rep_winner": 0,
+     "rep_winner_median": 98.86550393028678,
+     "rep_after_median": 98.86550393028678,
      "inc_rep": 93.38157542710816,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        98.86550393028678,
@@ -2336,16 +2712,23 @@
        98.89894640286396,
        98.89894640286396
       ]
-     ]
+     ],
+     "candidates": "reproduced",
+     "next_call_incumbent": "same-median"
     },
     {
      "cell": "gpt_61_terra-r-2",
-     "step": null,
-     "hist_adopted": null,
+     "step": 13,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 98.8989). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 98.86550393028678,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        98.94098836838954,
@@ -2357,15 +2740,14 @@
        98.95500235689806,
        98.95500235689806
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 4,
-    "exact": 4,
-    "drift": 0,
-    "missing": 0
+    "exact": 4
    },
+   "problems": {},
    "anchor": false,
    "error": null,
    "sh_count": 10,
@@ -2373,15 +2755,20 @@
   },
   {
    "cell": "gpt_61_terra-r-3",
-   "paired": [
+   "pairs": [
     {
      "cell": "gpt_61_terra-r-3",
-     "step": null,
-     "hist_adopted": 0,
+     "step": 14,
+     "hist_outcome": "adopt",
      "rep_outcome": "adopt",
+     "match": "matched",
+     "hist_adopted": 0,
+     "hist_median": 98.9722013427949,
+     "hist_result": "variant 0 adopted. median 98.9722 vs incumbent 92.7127.",
      "rep_winner": 0,
+     "rep_winner_median": 98.9722013427949,
+     "rep_after_median": 98.9722013427949,
      "inc_rep": 92.71272597556471,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        98.9722013427949,
@@ -2393,15 +2780,15 @@
        98.99481482425185,
        98.99481482425185
       ]
-     ]
+     ],
+     "candidates": "reproduced",
+     "next_call_incumbent": "no-later-call"
     }
    ],
    "repro": {
-    "total": 2,
-    "exact": 2,
-    "drift": 0,
-    "missing": 0
+    "exact": 2
    },
+   "problems": {},
    "anchor": false,
    "error": null,
    "sh_count": 9,
@@ -2409,13 +2796,9 @@
   },
   {
    "cell": "gpt_61_terra-r-4",
-   "paired": [],
-   "repro": {
-    "total": 0,
-    "exact": 0,
-    "drift": 0,
-    "missing": 0
-   },
+   "pairs": [],
+   "repro": {},
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 10,
@@ -2423,15 +2806,20 @@
   },
   {
    "cell": "gpt_61_terra-r-5",
-   "paired": [
+   "pairs": [
     {
      "cell": "gpt_61_terra-r-5",
-     "step": null,
-     "hist_adopted": 0,
+     "step": 10,
+     "hist_outcome": "adopt",
      "rep_outcome": "adopt",
+     "match": "matched",
+     "hist_adopted": 0,
+     "hist_median": 98.96137235167467,
+     "hist_result": "variant 0 adopted. median 98.9614 vs incumbent 93.3816.",
      "rep_winner": 0,
+     "rep_winner_median": 98.96137235167467,
+     "rep_after_median": 98.96137235167467,
      "inc_rep": 93.38157542710816,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        98.96137235167467,
@@ -2443,16 +2831,23 @@
        98.95022486081561,
        98.95022486081561
       ]
-     ]
+     ],
+     "candidates": "reproduced",
+     "next_call_incumbent": "same-median"
     },
     {
      "cell": "gpt_61_terra-r-5",
-     "step": null,
-     "hist_adopted": null,
+     "step": 12,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 98.9502). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 98.96137235167467,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        99.02379830048538,
@@ -2464,15 +2859,14 @@
        99.00755481380506,
        99.00755481380506
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 4,
-    "exact": 4,
-    "drift": 0,
-    "missing": 0
+    "exact": 4
    },
+   "problems": {},
    "anchor": false,
    "error": null,
    "sh_count": 11,
@@ -2480,13 +2874,9 @@
   },
   {
    "cell": "gpt_61_terra-r-6",
-   "paired": [],
-   "repro": {
-    "total": 0,
-    "exact": 0,
-    "drift": 0,
-    "missing": 0
-   },
+   "pairs": [],
+   "repro": {},
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 10,
@@ -2494,15 +2884,20 @@
   },
   {
    "cell": "gpt_6_astra-l-1",
-   "paired": [
+   "pairs": [
     {
      "cell": "gpt_6_astra-l-1",
-     "step": null,
-     "hist_adopted": 0,
+     "step": 7,
+     "hist_outcome": "adopt",
      "rep_outcome": "adopt",
+     "match": "matched",
+     "hist_adopted": 0,
+     "hist_median": 98.5399971972023,
+     "hist_result": "variant 0 adopted. median 98.5400 vs incumbent 93.3816.",
      "rep_winner": 0,
+     "rep_winner_median": 98.5399971972023,
+     "rep_after_median": 98.5399971972023,
      "inc_rep": 93.38157542710816,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        98.5399971972023,
@@ -2514,16 +2909,23 @@
        98.76931700916005,
        98.76931700916005
       ]
-     ]
+     ],
+     "candidates": "reproduced",
+     "next_call_incumbent": "same-median"
     },
     {
      "cell": "gpt_6_astra-l-1",
-     "step": null,
-     "hist_adopted": null,
+     "step": 9,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 98.7693). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 98.5399971972023,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        99.06615876574982,
@@ -2535,15 +2937,14 @@
        98.8836584154001,
        98.8836584154001
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 4,
-    "exact": 4,
-    "drift": 0,
-    "missing": 0
+    "exact": 4
    },
+   "problems": {},
    "anchor": false,
    "error": null,
    "sh_count": 7,
@@ -2551,15 +2952,20 @@
   },
   {
    "cell": "gpt_6_astra-l-2",
-   "paired": [
+   "pairs": [
     {
      "cell": "gpt_6_astra-l-2",
-     "step": null,
-     "hist_adopted": 0,
+     "step": 6,
+     "hist_outcome": "adopt",
      "rep_outcome": "adopt",
+     "match": "matched",
+     "hist_adopted": 0,
+     "hist_median": 98.85371943995005,
+     "hist_result": "variant 0 adopted. median 98.8537 vs incumbent 93.3816.",
      "rep_winner": 0,
+     "rep_winner_median": 98.85371943995005,
+     "rep_after_median": 98.85371943995005,
      "inc_rep": 93.38157542710816,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        98.85371943995005,
@@ -2571,15 +2977,15 @@
        98.89894640286396,
        98.89894640286396
       ]
-     ]
+     ],
+     "candidates": "reproduced",
+     "next_call_incumbent": "no-later-call"
     }
    ],
    "repro": {
-    "total": 2,
-    "exact": 2,
-    "drift": 0,
-    "missing": 0
+    "exact": 2
    },
+   "problems": {},
    "anchor": false,
    "error": null,
    "sh_count": 5,
@@ -2587,15 +2993,20 @@
   },
   {
    "cell": "gpt_6_astra-l-3",
-   "paired": [
+   "pairs": [
     {
      "cell": "gpt_6_astra-l-3",
-     "step": null,
-     "hist_adopted": 0,
+     "step": 5,
+     "hist_outcome": "adopt",
      "rep_outcome": "adopt",
+     "match": "matched",
+     "hist_adopted": 0,
+     "hist_median": 98.71549055329774,
+     "hist_result": "variant 0 adopted. median 98.7155 vs incumbent 93.3816.",
      "rep_winner": 0,
+     "rep_winner_median": 98.71549055329774,
+     "rep_after_median": 98.71549055329774,
      "inc_rep": 93.38157542710816,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        98.71549055329774,
@@ -2607,16 +3018,23 @@
        98.48489674238468,
        98.48489674238468
       ]
-     ]
+     ],
+     "candidates": "reproduced",
+     "next_call_incumbent": "same-median"
     },
     {
      "cell": "gpt_6_astra-l-3",
-     "step": null,
-     "hist_adopted": null,
+     "step": 7,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 98.4849). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 98.71549055329774,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        98.88238441644478,
@@ -2628,16 +3046,22 @@
        98.80721847808086,
        98.80721847808086
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     },
     {
      "cell": "gpt_6_astra-l-3",
-     "step": null,
-     "hist_adopted": null,
+     "step": 10,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 98.4849). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 98.71549055329774,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        98.71549055329774,
@@ -2649,15 +3073,14 @@
        98.71549055329774,
        98.71549055329774
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 6,
-    "exact": 6,
-    "drift": 0,
-    "missing": 0
+    "exact": 6
    },
+   "problems": {},
    "anchor": false,
    "error": null,
    "sh_count": 6,
@@ -2665,15 +3088,20 @@
   },
   {
    "cell": "gpt_6_sol-l-1",
-   "paired": [
+   "pairs": [
     {
      "cell": "gpt_6_sol-l-1",
-     "step": null,
-     "hist_adopted": null,
+     "step": 11,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 99.0483). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 99.04832278037532,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        99.07507675843705,
@@ -2685,15 +3113,14 @@
        99.0680697641828,
        99.0680697641828
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 2,
-    "exact": 2,
-    "drift": 0,
-    "missing": 0
+    "exact": 2
    },
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 12,
@@ -2701,15 +3128,20 @@
   },
   {
    "cell": "gpt_6_sol-l-2",
-   "paired": [
+   "pairs": [
     {
      "cell": "gpt_6_sol-l-2",
-     "step": null,
-     "hist_adopted": null,
+     "step": 8,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 99.0560). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 99.05596677410725,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        98.90436089842406,
@@ -2721,15 +3153,14 @@
        98.910093893723,
        98.910093893723
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 2,
-    "exact": 2,
-    "drift": 0,
-    "missing": 0
+    "exact": 2
    },
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 7,
@@ -2737,15 +3168,20 @@
   },
   {
    "cell": "gpt_6_sol-l-3",
-   "paired": [
+   "pairs": [
     {
      "cell": "gpt_6_sol-l-3",
-     "step": null,
-     "hist_adopted": null,
+     "step": 8,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 98.8958). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 98.89576140547564,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        99.04513778298701,
@@ -2757,15 +3193,14 @@
        99.04641178194234,
        99.04641178194234
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 2,
-    "exact": 2,
-    "drift": 0,
-    "missing": 0
+    "exact": 2
    },
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 6,
@@ -2773,15 +3208,20 @@
   },
   {
    "cell": "luna-1",
-   "paired": [
+   "pairs": [
     {
      "cell": "luna-1",
-     "step": null,
-     "hist_adopted": null,
+     "step": 15,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 98.4470). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 98.44699527346388,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        98.72536404520147,
@@ -2793,15 +3233,14 @@
        98.77600550367549,
        98.77600550367549
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 2,
-    "exact": 2,
-    "drift": 0,
-    "missing": 0
+    "exact": 2
    },
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 12,
@@ -2809,13 +3248,9 @@
   },
   {
    "cell": "luna-2",
-   "paired": [],
-   "repro": {
-    "total": 0,
-    "exact": 0,
-    "drift": 0,
-    "missing": 0
-   },
+   "pairs": [],
+   "repro": {},
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 13,
@@ -2823,15 +3258,20 @@
   },
   {
    "cell": "luna-3",
-   "paired": [
+   "pairs": [
     {
      "cell": "luna-3",
-     "step": null,
-     "hist_adopted": null,
+     "step": 16,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 98.8916). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 98.89162090887086,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        88.73243473940352,
@@ -2843,16 +3283,22 @@
        88.73243473940352,
        88.73243473940352
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     },
     {
      "cell": "luna-3",
-     "step": null,
-     "hist_adopted": null,
+     "step": 17,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 98.8916). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 98.89162090887086,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        98.60369714496834,
@@ -2864,15 +3310,14 @@
        98.26099142598703,
        98.26099142598703
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 4,
-    "exact": 4,
-    "drift": 0,
-    "missing": 0
+    "exact": 4
    },
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 11,
@@ -2880,13 +3325,9 @@
   },
   {
    "cell": "luna-4",
-   "paired": [],
-   "repro": {
-    "total": 0,
-    "exact": 0,
-    "drift": 0,
-    "missing": 0
-   },
+   "pairs": [],
+   "repro": {},
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 14,
@@ -2894,15 +3335,20 @@
   },
   {
    "cell": "luna-hard-1",
-   "paired": [
+   "pairs": [
     {
      "cell": "luna-hard-1",
-     "step": null,
-     "hist_adopted": 0,
+     "step": 6,
+     "hist_outcome": "adopt",
      "rep_outcome": "adopt",
+     "match": "matched",
+     "hist_adopted": 0,
+     "hist_median": 53.39869428694062,
+     "hist_result": "variant 0 adopted. median 53.3987 vs incumbent 51.2549.",
      "rep_winner": 0,
+     "rep_winner_median": 53.39869428694062,
+     "rep_after_median": 53.39869428694062,
      "inc_rep": 51.254885128877035,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        53.39869428694062,
@@ -2914,16 +3360,23 @@
        null,
        null
       ]
-     ]
+     ],
+     "candidates": "reproduced",
+     "next_call_incumbent": "same-median"
     },
     {
      "cell": "luna-hard-1",
-     "step": null,
-     "hist_adopted": 0,
+     "step": 7,
+     "hist_outcome": "rejected",
      "rep_outcome": "adopt",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "variants: register a valid assay first (assay tool), or current body scores 0.",
      "rep_winner": 0,
+     "rep_winner_median": 56.473219328167716,
+     "rep_after_median": 56.473219328167716,
      "inc_rep": 53.39869428694062,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        56.473219328167716,
@@ -2935,15 +3388,44 @@
        57.05378724557797,
        57.05378724557797
       ]
-     ]
+     ],
+     "candidates": "newly-evaluated",
+     "next_call_incumbent": "different-median"
+    },
+    {
+     "cell": "luna-hard-1",
+     "step": 13,
+     "hist_outcome": "adopt",
+     "rep_outcome": "adopt",
+     "match": "matched",
+     "hist_adopted": 0,
+     "hist_median": 56.473219328167716,
+     "hist_result": "variant 0 adopted. median 56.4732 vs incumbent 53.3987.",
+     "rep_winner": 0,
+     "rep_winner_median": 56.473219328167716,
+     "rep_after_median": 56.473219328167716,
+     "inc_rep": 53.39869428694062,
+     "rep_scores": [
+      [
+       56.473219328167716,
+       56.473219328167716,
+       56.473219328167716
+      ],
+      [
+       57.05378724557797,
+       57.05378724557797,
+       57.05378724557797
+      ]
+     ],
+     "candidates": "reproduced",
+     "next_call_incumbent": "no-later-call"
     }
    ],
    "repro": {
-    "total": 4,
     "exact": 4,
-    "drift": 0,
-    "missing": 0
+    "newly_evaluated": 2
    },
+   "problems": {},
    "anchor": false,
    "error": null,
    "sh_count": 9,
@@ -2951,15 +3433,20 @@
   },
   {
    "cell": "luna-hard-2",
-   "paired": [
+   "pairs": [
     {
      "cell": "luna-hard-2",
-     "step": null,
-     "hist_adopted": null,
+     "step": 12,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 58.8136). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 58.81356315087989,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        58.935550184110056,
@@ -2971,15 +3458,14 @@
        58.935550184110056,
        58.935550184110056
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 2,
-    "exact": 2,
-    "drift": 0,
-    "missing": 0
+    "exact": 2
    },
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 13,
@@ -2987,15 +3473,20 @@
   },
   {
    "cell": "luna-hard-3",
-   "paired": [
+   "pairs": [
     {
      "cell": "luna-hard-3",
-     "step": null,
-     "hist_adopted": null,
+     "step": 6,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 52.8181). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 52.81812636953035,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        52.92204124968938,
@@ -3007,15 +3498,14 @@
        null,
        null
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 2,
-    "exact": 2,
-    "drift": 0,
-    "missing": 0
+    "exact": 2
    },
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 4,
@@ -3023,15 +3513,20 @@
   },
   {
    "cell": "luna-hard-4",
-   "paired": [
+   "pairs": [
     {
      "cell": "luna-hard-4",
-     "step": null,
-     "hist_adopted": null,
+     "step": 13,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 54.3023). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 54.30230194049743,
-     "n_candidates_rep": 3,
      "rep_scores": [
       [
        54.96193552759392,
@@ -3048,15 +3543,14 @@
        54.84446653263153,
        54.84446653263153
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 3,
-    "exact": 3,
-    "drift": 0,
-    "missing": 0
+    "exact": 3
    },
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 9,
@@ -3064,15 +3558,20 @@
   },
   {
    "cell": "luna-hard-5",
-   "paired": [
+   "pairs": [
     {
      "cell": "luna-hard-5",
-     "step": null,
-     "hist_adopted": 0,
+     "step": 7,
+     "hist_outcome": "adopt",
      "rep_outcome": "adopt",
+     "match": "matched",
+     "hist_adopted": 0,
+     "hist_median": 52.81134931212868,
+     "hist_result": "variant 0 adopted. median 52.8113 vs incumbent 51.2707.",
      "rep_winner": 0,
+     "rep_winner_median": 52.81134931212868,
+     "rep_after_median": 52.81134931212868,
      "inc_rep": 51.270698262814285,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        52.81134931212868,
@@ -3084,16 +3583,23 @@
        52.91300517315381,
        52.91300517315381
       ]
-     ]
+     ],
+     "candidates": "reproduced",
+     "next_call_incumbent": "different-median"
     },
     {
      "cell": "luna-hard-5",
-     "step": null,
-     "hist_adopted": null,
+     "step": 12,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 58.3572). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 58.35724128583368,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        58.35724128583368,
@@ -3105,15 +3611,14 @@
        58.47245126166219,
        58.47245126166219
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 4,
-    "exact": 4,
-    "drift": 0,
-    "missing": 0
+    "exact": 4
    },
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 9,
@@ -3121,15 +3626,20 @@
   },
   {
    "cell": "luna-hard-6",
-   "paired": [
+   "pairs": [
     {
      "cell": "luna-hard-6",
-     "step": null,
-     "hist_adopted": null,
+     "step": 10,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 60.7541). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 60.75406058689317,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        60.75406058689317,
@@ -3141,15 +3651,14 @@
        60.7450245103576,
        60.7450245103576
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 2,
-    "exact": 2,
-    "drift": 0,
-    "missing": 0
+    "exact": 2
    },
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 7,
@@ -3157,15 +3666,20 @@
   },
   {
    "cell": "sol-1",
-   "paired": [
+   "pairs": [
     {
      "cell": "sol-1",
-     "step": null,
-     "hist_adopted": null,
+     "step": 12,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 98.9432). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 98.94321786656135,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        98.98334883365396,
@@ -3177,15 +3691,14 @@
        98.9827118341763,
        98.9827118341763
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 2,
-    "exact": 2,
-    "drift": 0,
-    "missing": 0
+    "exact": 2
    },
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 10,
@@ -3193,13 +3706,9 @@
   },
   {
    "cell": "sol-2",
-   "paired": [],
-   "repro": {
-    "total": 0,
-    "exact": 0,
-    "drift": 0,
-    "missing": 0
-   },
+   "pairs": [],
+   "repro": {},
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 11,
@@ -3207,15 +3716,20 @@
   },
   {
    "cell": "sol-3",
-   "paired": [
+   "pairs": [
     {
      "cell": "sol-3",
-     "step": null,
-     "hist_adopted": null,
+     "step": 13,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 99.0439). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 99.0438637840317,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        99.06775126444396,
@@ -3227,15 +3741,14 @@
        99.1050157338871,
        99.1050157338871
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 2,
-    "exact": 2,
-    "drift": 0,
-    "missing": 0
+    "exact": 2
    },
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 11,
@@ -3243,15 +3756,20 @@
   },
   {
    "cell": "sol-4",
-   "paired": [
+   "pairs": [
     {
      "cell": "sol-4",
-     "step": null,
-     "hist_adopted": null,
+     "step": 13,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 98.7174). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 98.71740155173073,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        99.04768578089767,
@@ -3263,15 +3781,14 @@
        98.90595339711822,
        98.90595339711822
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 2,
-    "exact": 2,
-    "drift": 0,
-    "missing": 0
+    "exact": 2
    },
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 14,
@@ -3279,15 +3796,20 @@
   },
   {
    "cell": "sol-hard-1",
-   "paired": [
+   "pairs": [
     {
      "cell": "sol-hard-1",
-     "step": null,
-     "hist_adopted": null,
+     "step": 13,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 62.0214). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 62.02137032100662,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        62.102695009826725,
@@ -3299,15 +3821,14 @@
        62.09139991415727,
        62.09139991415727
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 2,
-    "exact": 2,
-    "drift": 0,
-    "missing": 0
+    "exact": 2
    },
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 13,
@@ -3315,15 +3836,20 @@
   },
   {
    "cell": "sol-hard-2",
-   "paired": [
+   "pairs": [
     {
      "cell": "sol-hard-2",
-     "step": null,
-     "hist_adopted": null,
+     "step": 7,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 61.0116). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 61.01158876815687,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        62.11850814376398,
@@ -3335,16 +3861,22 @@
        54.79476811168591,
        54.79476811168591
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     },
     {
      "cell": "sol-hard-2",
-     "step": null,
-     "hist_adopted": null,
+     "step": 10,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 61.0116). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 61.01158876815687,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        62.11850814376398,
@@ -3356,16 +3888,22 @@
        54.79476811168591,
        54.79476811168591
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     },
     {
      "cell": "sol-hard-2",
-     "step": null,
-     "hist_adopted": null,
+     "step": 14,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 61.0116). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 61.01158876815687,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        62.11850814376398,
@@ -3377,15 +3915,14 @@
        54.79476811168591,
        54.79476811168591
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 6,
-    "exact": 6,
-    "drift": 0,
-    "missing": 0
+    "exact": 6
    },
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 9,
@@ -3393,15 +3930,20 @@
   },
   {
    "cell": "sol-hard-3",
-   "paired": [
+   "pairs": [
     {
      "cell": "sol-hard-3",
-     "step": null,
-     "hist_adopted": null,
+     "step": 12,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 59.9702). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 59.970180947432624,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        61.02514288296022,
@@ -3413,16 +3955,22 @@
        60.98899857681794,
        60.98899857681794
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     },
     {
      "cell": "sol-hard-3",
-     "step": null,
-     "hist_adopted": null,
+     "step": 15,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 59.9702). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 59.970180947432624,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        61.02514288296022,
@@ -3434,16 +3982,22 @@
        60.98899857681794,
        60.98899857681794
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     },
     {
      "cell": "sol-hard-3",
-     "step": null,
-     "hist_adopted": null,
+     "step": 17,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 59.9702). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 59.970180947432624,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        61.02514288296022,
@@ -3455,15 +4009,14 @@
        60.98899857681794,
        60.98899857681794
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 6,
-    "exact": 6,
-    "drift": 0,
-    "missing": 0
+    "exact": 6
    },
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 10,
@@ -3471,15 +4024,20 @@
   },
   {
    "cell": "sol-hard-4",
-   "paired": [
+   "pairs": [
     {
      "cell": "sol-hard-4",
-     "step": null,
-     "hist_adopted": null,
+     "step": 8,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 60.9958). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 60.995775634219626,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        61.64637314478054,
@@ -3491,16 +4049,22 @@
        61.64637314478054,
        61.64637314478054
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     },
     {
      "cell": "sol-hard-4",
-     "step": null,
-     "hist_adopted": null,
+     "step": 10,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 60.9958). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 60.995775634219626,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        61.64637314478054,
@@ -3512,15 +4076,14 @@
        61.64637314478054,
        61.64637314478054
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 4,
-    "exact": 4,
-    "drift": 0,
-    "missing": 0
+    "exact": 4
    },
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 8,
@@ -3528,15 +4091,20 @@
   },
   {
    "cell": "sol-hard-5",
-   "paired": [
+   "pairs": [
     {
      "cell": "sol-hard-5",
-     "step": null,
-     "hist_adopted": null,
+     "step": 6,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 61.0274). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 61.027401902094105,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        61.677999412655026,
@@ -3548,16 +4116,22 @@
        61.65766824045,
        61.65766824045
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     },
     {
      "cell": "sol-hard-5",
-     "step": null,
-     "hist_adopted": null,
+     "step": 8,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 61.0274). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 61.027401902094105,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        61.677999412655026,
@@ -3569,15 +4143,14 @@
        61.677999412655026,
        61.677999412655026
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 4,
-    "exact": 4,
-    "drift": 0,
-    "missing": 0
+    "exact": 4
    },
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 8,
@@ -3585,15 +4158,20 @@
   },
   {
    "cell": "sol-hard-6",
-   "paired": [
+   "pairs": [
     {
      "cell": "sol-hard-6",
-     "step": null,
-     "hist_adopted": null,
+     "step": 12,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 61.0342). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 61.03417895949579,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        61.684776470056704,
@@ -3605,16 +4183,22 @@
        61.03417895949579,
        61.03417895949579
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     },
     {
      "cell": "sol-hard-6",
-     "step": null,
-     "hist_adopted": null,
+     "step": 15,
+     "hist_outcome": "no-win",
      "rep_outcome": "no-win",
+     "match": "matched",
+     "hist_adopted": null,
+     "hist_median": null,
+     "hist_result": "no variant beat the incumbent (median 61.0342). Body unchanged.",
      "rep_winner": null,
+     "rep_winner_median": null,
+     "rep_after_median": null,
      "inc_rep": 61.03417895949579,
-     "n_candidates_rep": 2,
      "rep_scores": [
       [
        61.684776470056704,
@@ -3626,15 +4210,14 @@
        61.03417895949579,
        61.03417895949579
       ]
-     ]
+     ],
+     "candidates": "reproduced"
     }
    ],
    "repro": {
-    "total": 4,
-    "exact": 4,
-    "drift": 0,
-    "missing": 0
+    "exact": 4
    },
+   "problems": {},
    "anchor": true,
    "error": null,
    "sh_count": 11,

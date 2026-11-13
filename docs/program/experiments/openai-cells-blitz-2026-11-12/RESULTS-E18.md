@@ -4,7 +4,7 @@
 - Status: exploratory. Costs below are list-price upper bounds and are wrong for cached input (the project history prefix is replayed and billed at a tenth). The owner's balance check after the E18a–E18c waves showed about $2 actually spent on the key, an order of magnitude below the bound. Output tokens are billed at full price regardless.
 - Correction 2026-11-12 (post-review): the harness's `variants` selection did not write the selected winner back to disk.
 - Every "adoption" here was a reported selection event, not a verified retained win. Zero of 38 reported events across the battery had the winner on disk at adoption time under the old harness.
-- Replay under the fixed semantics: all 38 would have persisted, with zero decision changes. See `RECONCILIATION-2026-11-12.md` and `REPLAY-2026-11-12.md`. Verdicts below are marked where they rest on the selection counter.
+- Fixed-action offline replay under the fixed semantics: the same winner is re-selected in all 38 and is on disk when each call returns. Two historically rejected calls change category (one adoption, `luna-hard-1` step 7, and one evaluated no-win), for 39 replay adoptions. See `RECONCILIATION-2026-11-12.md` and `REPLAY-2026-11-12.md`. Verdicts below are marked where they rest on the selection counter.
 - Owner directive being executed: at least $30 of the expiring credits spent on valuable experiments, and the repo updated after each wave.
 
 ## Ledger (list-price upper bound)
