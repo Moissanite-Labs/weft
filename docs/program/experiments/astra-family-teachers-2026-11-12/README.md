@@ -69,3 +69,7 @@ The 22 archived API responses include calibration. Estimated API cost is $6.2913
 ## Completed archive
 
 Read RESULTS-BRIEF.md for the four-study findings and API-USAGE.json for the per-response token ledger. Phase-specific reports are phase2_factorial/RESULTS.md, phase3_conditional/RESULTS.md and phase4_fidelity/RESULTS.md. CROSS-STUDY.md compares the peer NC1 archive with these experiments.
+
+## Next experiment
+
+Proposed future work should optimize the weaker conditional direction with an explicit retention margin. Compare teacher-guided hidden-feature edits against a deterministic constrained optimizer under matched validation opportunities, using new families and arena seeds. Preserve the current misses and keep these held-out sets out of further tuning.
