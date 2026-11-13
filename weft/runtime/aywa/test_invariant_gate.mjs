@@ -17,6 +17,7 @@ const BROWSER_DEFERRED = new Set([
   "accept_huge_scale_weight_move",
   "reject_locked_mask_ulp_tamper",
   "accept_locked_mask_negzero_normalize",
+  "reject_negative_cost",
 ]);
 
 for (const v of vectors.weight_update_vectors) {
