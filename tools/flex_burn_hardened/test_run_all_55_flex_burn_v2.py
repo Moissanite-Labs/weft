@@ -5,10 +5,12 @@ from __future__ import annotations
 import importlib.util
 import io
 import json
+import math
 import os
 import sys
 import tempfile
 import unittest
+import unittest.mock
 import urllib.error
 import urllib.request
 from pathlib import Path
@@ -529,6 +531,148 @@ class ProofR2MoneySafetyTests(unittest.TestCase):
                 ok, reserved, _reason = _sixteen_25(reloaded)
                 self.assertFalse(ok, msg=f"{name}: reload accepted the $16.25 reserve")
                 self.assertEqual(reserved, 0.0)
+
+
+class ProofR3LedgerSafetyTests(unittest.TestCase):
+    """R3 scenarios from review 5886618309: reject bad amounts, close a torn ledger."""
+
+    def _sixteen_25(self, mod, ledger):
+        return ledger.try_reserve(
+            "weft_111", "gpt-6-astra", "flex", 1_000_000, 100_000
+        )
+
+    def test_negative_output_tokens_keeps_hold_and_refuses_16_25(self):
+        """A 200 with output_tokens -1000000 must not lower spent, and must block a $16.25 reserve."""
+        mod = load_mod()
+
+        def neg_out(_payload, _headers, _timeout):
+            body = {
+                "id": "resp_neg_out",
+                "service_tier": "flex",
+                "usage": {
+                    "input_tokens": 128,
+                    "input_tokens_details": {"cached_tokens": 0},
+                    "output_tokens": -1_000_000,
+                    "output_tokens_details": {"reasoning_tokens": 0},
+                },
+            }
+            return 200, json.dumps(body).encode("utf-8")
+
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "master_api_ledger.jsonl"
+            ledger = _ledger(mod, 16.25, path)
+            proxy = mod.SharedLedgerProxyServer(ledger=ledger, upstream_fn=neg_out)
+            port = proxy.start()
+            try:
+                status, _body = _post_json(
+                    f"http://127.0.0.1:{port}/t/weft_111/v1/responses",
+                    {
+                        "model": "gpt-6-astra",
+                        "service_tier": "flex",
+                        "input": "hi",
+                        "max_output_tokens": 100,
+                    },
+                    getattr(proxy, "proxy_token", None),
+                )
+            finally:
+                proxy.stop()
+            self.assertEqual(status, 200)
+            self.assertTrue(math.isfinite(ledger.spent_usd))
+            self.assertGreaterEqual(ledger.spent_usd, 0.0)
+            self.assertGreater(ledger.spent_usd + ledger.reserved_in_flight_usd, 0.0)
+            ok, reserved, _reason = self._sixteen_25(mod, ledger)
+            self.assertFalse(ok)
+            self.assertEqual(reserved, 0.0)
+            reloaded = _ledger(mod, 16.25, path)
+            self.assertTrue(math.isfinite(reloaded.spent_usd))
+            self.assertGreaterEqual(reloaded.spent_usd, 0.0)
+            ok2, reserved2, _reason2 = self._sixteen_25(mod, reloaded)
+            self.assertFalse(ok2)
+            self.assertEqual(reserved2, 0.0)
+
+    def test_commit_unresolved_hold_rejects_nan_and_negative(self):
+        mod = load_mod()
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "ledger.jsonl"
+            ledger = _ledger(mod, 16.25, path)
+            prior = ledger.spent_usd
+            ledger.commit_unresolved_hold("weft_111", float("nan"), reason="probe_nan")
+            self.assertEqual(ledger.spent_usd, prior)
+            self.assertTrue(math.isfinite(ledger.spent_usd))
+            ledger.commit_unresolved_hold("weft_111", -25.0, reason="probe_neg")
+            self.assertEqual(ledger.spent_usd, prior)
+            self.assertGreaterEqual(ledger.spent_usd, 0.0)
+            if path.is_file():
+                raw = path.read_text(encoding="utf-8")
+                self.assertNotIn("NaN", raw)
+                for line in raw.splitlines():
+                    if not line.strip():
+                        continue
+                    entry = json.loads(line)
+                    for key, val in entry.items():
+                        if isinstance(val, (int, float)):
+                            self.assertTrue(math.isfinite(float(val)), msg=f"{key}={val}")
+                            if "usd" in key or key.endswith("_usd"):
+                                self.assertGreaterEqual(float(val), 0.0, msg=f"{key}={val}")
+
+    def test_truncated_ledger_line_closes_cap(self):
+        """A torn last line must close the cap so a $16.25 reserve is refused after reload."""
+        mod = load_mod()
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "ledger.jsonl"
+            ledger = _ledger(mod, 16.25, path)
+            ok, reserved, _ = self._sixteen_25(mod, ledger)
+            self.assertTrue(ok)
+            self.assertAlmostEqual(reserved, 16.25, places=6)
+            ledger.commit_unresolved_hold("weft_111", reserved, reason="probe_hold")
+            data = path.read_bytes()
+            self.assertGreater(len(data), 40)
+            path.write_bytes(data[:40])
+            reloaded = _ledger(mod, 16.25, path)
+            ok2, reserved2, _reason2 = self._sixteen_25(mod, reloaded)
+            self.assertFalse(ok2)
+            self.assertEqual(reserved2, 0.0)
+
+    def test_ledger_append_error_returns_502_and_keeps_hold(self):
+        mod = load_mod()
+
+        def boom(_payload, _headers, _timeout):
+            raise TimeoutError("upstream timeout")
+
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "ledger.jsonl"
+            ledger = _ledger(mod, 16.25, path)
+            proxy = mod.SharedLedgerProxyServer(ledger=ledger, upstream_fn=boom)
+            real_open = Path.open
+
+            def wrapped(self, *args, **kwargs):
+                mode = args[0] if args else kwargs.get("mode", "r")
+                if Path(self) == path and "a" in str(mode):
+                    raise OSError("disk full")
+                return real_open(self, *args, **kwargs)
+
+            port = proxy.start()
+            try:
+                with unittest.mock.patch.object(Path, "open", wrapped):
+                    status, _body = _post_json(
+                        f"http://127.0.0.1:{port}/t/weft_111/v1/responses",
+                        {
+                            "model": "gpt-6-luna",
+                            "service_tier": "flex",
+                            "input": "hi",
+                            "max_output_tokens": 64,
+                        },
+                        getattr(proxy, "proxy_token", None),
+                    )
+            finally:
+                proxy.stop()
+            self.assertEqual(status, 502)
+            self.assertGreater(ledger.spent_usd + ledger.reserved_in_flight_usd, 0.0)
+            self.assertTrue(math.isfinite(ledger.spent_usd))
+            self.assertGreaterEqual(ledger.spent_usd, 0.0)
+            ok, reserved, _reason = self._sixteen_25(mod, ledger)
+            self.assertFalse(ok)
+            self.assertEqual(reserved, 0.0)
 
 
 if __name__ == "__main__":
