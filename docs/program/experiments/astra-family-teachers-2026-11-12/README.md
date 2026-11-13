@@ -37,7 +37,9 @@ Large generated files are kept out of the tree: the phase results files, the sou
 python restore_generated.py
 ```
 
-The script copies each file out of commit d85940c0d078b54f40f4742b33c286c521164567, the original archive head kept on branch `record/astra-teachers-prereg-history-20261112`, fetching that branch when needed, and checks every sha256. Without it, replay stops with a missing-file error. Unit tests do not need these files. Regenerating them from seeds is not equivalent: trained source cells depend on the floating-point platform, and on Linux x86_64 with NumPy 2.5.4 the regenerated experiments differ from the archived macOS arm64 files.
+The script copies each file out of commit d85940c0d078b54f40f4742b33c286c521164567, the original archive head kept on branch `record/astra-teachers-prereg-history-20261112`, fetching that branch when needed, and checks every sha256. Without it, replay stops with a missing-file error. Unit tests do not need these files.
+
+Regenerating them from seeds is not equivalent: trained source cells depend on the floating-point platform, and on Linux x86_64 with NumPy 2.5.4 the regenerated experiments differ from the archived macOS arm64 files.
 
 After restoring, the archive includes `data/results.json` and `data/manifest.json`. Numeric family replay verifies the recorded artifact manifest and the computation modules. It does not prove original API transport identity.
 
@@ -85,9 +87,11 @@ Proposed future work should optimize the weaker conditional direction with an ex
 
 ## Review status and registration limits
 
-Phase one was reviewed in review 5884649320 on PR #146, which recomputed its headline numbers. Phases two, three and four each need their own review of their responses and replays. Their results here have not been independently reviewed.
+Phase one was reviewed in review 5884649320 on PR #146, which recomputed its headline numbers. Separate in-session agent assessments and code audits are retained in phase2_factorial/ASSESSMENT.md, phase3_conditional/ASSESSMENT.md and phase4_fidelity/INDEPENDENT-REVIEW.md. Phases two through four still await independent repository peer review of their responses and replays.
 
-Phase-one round 1 prompts were committed before any family response. The phase-one round 2 and round 3 prompts, and the phase-two round 2 prompts, were committed in the same commits as their responses. They depend on earlier feedback, and each harness rebuilds them and rejects a mismatch, but they were not committed before their own calls. PROTOCOL.md records this as Deviation D2, the scramble seed correction as D1 and the phase-three packet limits as D3.
+Phase-one round 1 prompts were committed before any family response. The phase-one round 2 and round 3 prompts, and the phase-two round 2 prompts, were committed in the same commits as their responses. They depend on earlier feedback, and each harness rebuilds them and rejects a mismatch, but they were not committed before their own calls.
+
+PROTOCOL.md records this as Deviation D2, the scramble seed correction as D1 and the phase-three packet limits as D3.
 
 The archived phase-one, phase-two and phase-three replays matched on the reference macOS arm64 machine. On Linux x86_64 with the same NumPy version they do not reproduce: phases one and two finish with different results, and phase three stops at its request-binding check because the floating-point training diagnostics in its requests differ. Calibration replay and phase-four replay match there.
 

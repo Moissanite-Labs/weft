@@ -11,7 +11,9 @@ The archive contains 96 paid Astra responses across four completed studies. Teac
 
 Source seeds are replication units. Siblings, repeated conditions and paired checkpoints are correlated. Three or five source seeds support exploratory comparisons, without a population significance claim. Random/local-search controls and separate gradient diagnostics have the matching limits stated in the protocols.
 
-All four numeric result archives replay exactly with their registered code. Independent assessments record scientific limits and checks. CROSS-STUDY.md adds arithmetic verification of the peer NC1 evidence, separately from replication of its model calls. The local classifier used here is a distinct checkpoint.
+All four numeric result archives replay exactly with their registered code on the reference macOS arm64 environment. Phases one through three have documented Linux x86_64 replay limitations. In-session agent assessments are retained, while phases two through four still await independent repository peer review of their responses and replays.
+
+Independent assessments record scientific limits and checks. CROSS-STUDY.md adds arithmetic verification of the peer NC1 evidence, separately from replication of its model calls. The local classifier used here is a distinct checkpoint.
 
 API-USAGE.json lists each original response once. The total estimated API cost is $28.2913675 using recorded ordinary-input, cached-input, cache-write and output rates. This is not an invoice. Saved cached input tokens were zero. Coding-agent tokens are unavailable.
 
