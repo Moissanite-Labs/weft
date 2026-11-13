@@ -71,6 +71,8 @@ jobs:
         run: python3 papers/01-models-as-cells/experiments.py --check
       - name: Paper 2 experiments reproduce the published numbers
         run: python3 papers/02-checkable-computation/experiments.py --check
+      - name: Two-stream lineage record checks (Python gate, temporary output)
+        run: python3 -m unittest docs/program/experiments/native-lineage-2026-11/test_run_lineage.py
       - name: Assert clean working tree after all self-tests
         run: |
           git status --porcelain

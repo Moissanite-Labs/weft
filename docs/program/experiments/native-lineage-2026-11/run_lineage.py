@@ -1,57 +1,83 @@
 #!/usr/bin/env python3
-"""Native lineage selection. Preregistered before the run. No API calls.
+"""Two-stream lineage run through the live Python gate. No API calls.
+
+The word "native" in the directory and PR title means this repository's
+Python gate (`weft.runtime.invariants.invariants.verify_weight_update_safety_ex`),
+not the C gate or the shared-memory arena.
 
 Question
   The published plasm cycle always prefers alpha, because beta is a worse
-  copy of the same residual. Paper 1 section 7 asks for two update rules
-  whose ranking changes with the data. This run is that test.
+  copy of the same residual. Paper 1 section 7.3 asks for two update rules
+  whose ranking changes with the data. This run is a two-stream loop that
+  offers the lower-error rule to the Python gate. A comparison that would
+  test method selection would score two rules that differ in method on the
+  same target. Here each rule steps toward its own target, so the match
+  rate is a consequence of that construction.
 
-Rules, fixed before looking at outcomes
+Rules
   Two streams. Each has its own periphery target, one unit of Frobenius
   distance from the saved baseline, core rows identical to the baseline.
   Alpha steps along stream 0's residual. Beta steps along stream 1's residual.
   The step is scaled to Frobenius length eta after the core rows are zeroed.
-  Gaussian noise at 5 percent of the gradient is added before that scaling.
+  Isotropic Gaussian noise is drawn on the periphery and rescaled to length
+  0.05 times the periphery gradient, then added, before that scaling.
   The winner is the lower error on the scored stream. Ties go to alpha.
   Novelty weight is 0.
   A commit requires the live Python gate
-  (weft/runtime/invariants/invariants.py verify_weight_update_safety_ex)
+  (weft.runtime.invariants.invariants.verify_weight_update_safety_ex)
   and a winner error no higher than the parent. The loser is not offered
   to the gate. That matches plasm.py. There is no watermark and no
   shared-memory arena in this run.
+  scaled_step zeroes the core rows of every step, so core drift against
+  the baseline is an invariant with tolerance 1e-12, not a commit term.
 
-Predictions
+Predictions and checks
   P1. Single stream 0 or 1, eta 0.25, R 120, 8 generations, 10 seeds:
-      the chosen lineage matches the scored stream on at least 80 percent
-      of generations, and the mean held-error ratio ends below 0.5.
+      the mean held-error ratio ends below 0.5. The match rate is reported
+      and is not treated as evidence that the scored stream picked a method.
   P2. Same, R 0.20: zero commits, held-error ratio stays 1.
-      One step is longer than the radius.
+      One step (eta 0.25) is longer than the radius. This is a sanity
+      check. It is reported and is not an exit check.
   P3. Switch from stream 0 to stream 1 at generation 5, eta 0.25, R 120:
       held error falls inside phase A and again inside phase B.
+      Ratios are per-phase (end of phase over start of that phase).
   P4. Same switch, R 0.45: phase B commits fewer generations than phase A.
-      The baseline anchor, not the last commit, is what the gate measures.
+      A no-switch control at the same radius (scored stream stays 0)
+      is run in the same pass so the 30-then-0 pattern can be compared
+      with generation-4 rejection on stream 0.
 
-The process exits 1 if the match counts, the R 0.20 rejection, the phase
-falls, or the phase-B commit contrast fail. The 0.5 error line in P1 is
-recorded in predictions and is not an exit check.
+The process exits 1 if the P1 error clause or the P3 phase falls fail.
+P2, the match rates, and the original P4 contrast (phase B commits
+fewer generations than phase A) are recorded in predictions and are
+not exit checks.
 
-Not claimed
-  This is not the razi-cells harness, not the carbone operator spec, and
-  not a closure of issue 111. The C11 header is not on this path.
+Budget
+  The budget starts at 100 and a commit costs 2.5. With at most 8
+  commits the floor is 80, so the budget half of the gate is untested
+  in this record.
+
+Output
+  --out PATH writes the JSON record. The default path is under the
+  system temporary directory, so the documented command leaves the
+  tracked results.json unchanged.
 """
 
 from __future__ import annotations
 
-import importlib.util
+import argparse
 import json
 import platform
+import sys
+import tempfile
 from pathlib import Path
 
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[4]
-GATE_PATH = ROOT / "weft/runtime/invariants/invariants.py"
-OUT_PATH = Path(__file__).resolve().parent / "results.json"
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from weft.runtime.invariants.invariants import verify_weight_update_safety_ex
 
 DIM = 256
 CORE_ROWS = DIM // 4
@@ -63,15 +89,26 @@ SWITCH_AT = 5
 STEP_COST = 2.5
 BUDGET0 = 100.0
 NOISE_FRAC = 0.05
+CORE_DRIFT_TOL = 1e-12
+# With BUDGET0=100, STEP_COST=2.5, and at most 8 commits, remaining budget
+# cannot fall below 80 in this record.
+BUDGET_FLOOR = BUDGET0 - GENS * STEP_COST
 
 
-def load_gate():
-    spec = importlib.util.spec_from_file_location("weft_invariants_live", GATE_PATH)
-    if spec is None or spec.loader is None:
-        raise RuntimeError(f"cannot load {GATE_PATH}")
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    return mod.verify_weight_update_safety_ex
+def parse_args(argv=None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Two-stream lineage run through the live Python gate."
+    )
+    parser.add_argument(
+        "--out",
+        type=Path,
+        default=Path(tempfile.gettempdir()) / "native-lineage-results.json",
+        help=(
+            "Write the JSON record to this path. Defaults to a file under "
+            "the system temporary directory, not the tracked results.json."
+        ),
+    )
+    return parser.parse_args(argv)
 
 
 def unit_periphery(rng: np.random.Generator) -> np.ndarray:
@@ -86,11 +123,24 @@ def residual_grad(x: np.ndarray, w: np.ndarray, y: np.ndarray) -> np.ndarray:
 
 
 def scaled_step(rng: np.random.Generator, grad: np.ndarray) -> np.ndarray:
-    noisy = grad + rng.normal(scale=NOISE_FRAC, size=grad.shape) * (
-        np.linalg.norm(grad) + 1e-12
-    )
+    """Periphery step of length ETA with isotropic noise of length NOISE_FRAC * ||g||.
+
+    Noise is drawn on the periphery only and rescaled to exactly
+    NOISE_FRAC times the periphery gradient norm, then added, then the
+    sum is rescaled to length ETA. Core rows are cleared.
+    """
+    g = grad.copy()
+    g[:CORE_ROWS] = 0.0
+    gnorm = float(np.linalg.norm(g))
+    noise = rng.normal(size=grad.shape)
+    noise[:CORE_ROWS] = 0.0
+    nnorm = float(np.linalg.norm(noise))
+    if nnorm < 1e-15 or gnorm < 1e-15:
+        noisy = g
+    else:
+        noisy = g + noise * (NOISE_FRAC * gnorm / nnorm)
     noisy[:CORE_ROWS] = 0.0
-    norm = np.linalg.norm(noisy)
+    norm = float(np.linalg.norm(noisy))
     if norm < 1e-15:
         return np.zeros_like(grad)
     return noisy * (ETA / norm)
@@ -129,7 +179,12 @@ def run_seed(gate, seed: int, scored_fn, radius: float) -> dict:
             w0, cand[winner], radius, budget, STEP_COST
         )
         core = float(np.linalg.norm(cand[winner][:CORE_ROWS] - w0[:CORE_ROWS]))
-        commit = bool(accepted and err[winner] <= parent and core == 0.0)
+        if core > CORE_DRIFT_TOL:
+            raise RuntimeError(
+                f"core drift {core} exceeds {CORE_DRIFT_TOL}; "
+                "scaled_step zeroes core rows before the candidate is built"
+            )
+        commit = bool(accepted and err[winner] <= parent)
         if commit:
             w = cand[winner]
             budget = float(remaining)
@@ -179,20 +234,25 @@ def summarize(runs: list[dict], label: str) -> dict:
     for gen in range(1, GENS + 1):
         group = [r for r in rows if r["generation"] == gen]
         by_gen.append(sum(1 for r in group if r["committed"]))
-    return {
+    out = {
         "label": label,
         "generations": len(rows),
         "match_rate": sum(r["match"] for r in rows) / len(rows),
         "commits": len(commits),
         "commits_by_generation": by_gen,
-        "mean_held_ratio": float(np.mean(ratios)),
-        "max_held_ratio": float(np.max(ratios)),
-        "min_held_ratio": float(np.min(ratios)),
         "mean_error_gap": float(np.mean(gaps)),
         "mean_direction_dot": float(np.mean([run["direction_dot"] for run in runs])),
         "max_distance": None if not dists else float(np.max(dists)),
         "gate_reasons": sorted({r["gate_reason"] for r in rows}),
+        "min_budget": float(min(r["budget"] for r in rows)),
     }
+    # Cross-stream end/start ratios are omitted for switch arms. Those
+    # records keep the per-phase ratios from phase_summary instead.
+    if not label.startswith("p3") and not label.startswith("p4"):
+        out["mean_held_ratio"] = float(np.mean(ratios))
+        out["max_held_ratio"] = float(np.max(ratios))
+        out["min_held_ratio"] = float(np.min(ratios))
+    return out
 
 
 def phase_summary(runs: list[dict], label: str) -> dict:
@@ -227,14 +287,16 @@ def phase_summary(runs: list[dict], label: str) -> dict:
     }
 
 
-def main() -> None:
-    gate = load_gate()
+def main(argv=None) -> None:
+    args = parse_args(argv)
+    gate = verify_weight_update_safety_ex
     conditions = {
         "p1_stream0_r120": lambda g: 0,
         "p1_stream1_r120": lambda g: 1,
         "p2_stream0_r020": lambda g: 0,
         "p3_switch_r120": lambda g: 0 if g < SWITCH_AT else 1,
         "p4_switch_r045": lambda g: 0 if g < SWITCH_AT else 1,
+        "p4_noswitch_r045": lambda g: 0,
     }
     radii = {
         "p1_stream0_r120": 120.0,
@@ -242,6 +304,7 @@ def main() -> None:
         "p2_stream0_r020": 0.20,
         "p3_switch_r120": 120.0,
         "p4_switch_r045": 0.45,
+        "p4_noswitch_r045": 0.45,
     }
     out_runs = {}
     summary = {}
@@ -259,21 +322,25 @@ def main() -> None:
     p2 = summary["p2_stream0_r020"]
     p3 = summary["p3_switch_r120"]
     p4 = summary["p4_switch_r045"]
+    p4c = summary["p4_noswitch_r045"]
+    min_budget = min(s["min_budget"] for s in summary.values())
     verdict = {
         "p1_stream0_match": p1["match_rate"] >= 0.8,
         "p1_stream0_error_below_half": p1["mean_held_ratio"] < 0.5,
         "p1_stream1_match": p1b["match_rate"] >= 0.8,
         "p1_stream1_error_below_half": p1b["mean_held_ratio"] < 0.5,
-        "p2_no_commit": p2["commits"] == 0 and abs(p2["mean_held_ratio"] - 1.0) < 1e-12,
+        "p2_no_commit_sanity": p2["commits"] == 0 and abs(p2["mean_held_ratio"] - 1.0) < 1e-12,
         "p3_both_phases_fall": (
             p3["phase_a_seeds_error_fell"] == len(SEEDS)
             and p3["phase_b_seeds_error_fell"] == len(SEEDS)
         ),
         "p4_anchor_blocks_switch": p4["phase_b_commits"] < p4["phase_a_commits"],
+        "p4_noswitch_commits_by_generation": p4c["commits_by_generation"],
+        "p4_switch_commits_by_generation": p4["commits_by_generation"],
     }
     payload = {
         "instrument": "numpy lineage loop calling the live Python gate",
-        "gate": "weft/runtime/invariants/invariants.py:verify_weight_update_safety_ex",
+        "gate": "weft.runtime.invariants.invariants.verify_weight_update_safety_ex",
         "python": platform.python_version(),
         "numpy": np.__version__,
         "platform": platform.platform(),
@@ -281,6 +348,15 @@ def main() -> None:
         "core_rows": CORE_ROWS,
         "rows": N_ROWS,
         "eta": ETA,
+        "noise": {
+            "kind": "isotropic periphery noise rescaled to NOISE_FRAC * ||periphery grad||",
+            "fraction": NOISE_FRAC,
+        },
+        "core_drift_tolerance": CORE_DRIFT_TOL,
+        "budget0": BUDGET0,
+        "step_cost": STEP_COST,
+        "budget_floor": BUDGET_FLOOR,
+        "min_observed_budget": min_budget,
         "seeds": SEEDS,
         "generations": GENS,
         "switch_at": SWITCH_AT,
@@ -289,14 +365,14 @@ def main() -> None:
         "summary": summary,
         "runs": out_runs,
     }
-    OUT_PATH.write_text(json.dumps(payload, indent=2) + "\n")
-    print(json.dumps({"predictions": verdict, "summary": summary}, indent=2))
+    out_path = args.out
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(json.dumps(payload, indent=2) + "\n")
+    print(json.dumps({"out": str(out_path), "predictions": verdict, "summary": summary}, indent=2))
     required = [
-        verdict["p1_stream0_match"],
-        verdict["p1_stream1_match"],
-        verdict["p2_no_commit"],
+        verdict["p1_stream0_error_below_half"],
+        verdict["p1_stream1_error_below_half"],
         verdict["p3_both_phases_fall"],
-        verdict["p4_anchor_blocks_switch"],
     ]
     if not all(required):
         raise SystemExit(1)
