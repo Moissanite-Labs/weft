@@ -460,6 +460,13 @@ class MasterSharedBudgetLedger:
             return False, 0.0, str(exc)
         with self._lock:
             t_stats = self.tracks.setdefault(track_id, TrackUsageStats())
+            if self.spent_usd >= self.master_cap_usd - 1e-12:
+                t_stats.calls_rejected_cap += 1
+                reason = (
+                    f"Master shared cap (${self.master_cap_usd:.2f}) reached: "
+                    f"spent=${self.spent_usd:.4f}, reserved=${self.reserved_in_flight_usd:.4f}."
+                )
+                return False, 0.0, reason
             projected = self.spent_usd + self.reserved_in_flight_usd + worst_usd
             if projected > self.master_cap_usd + 1e-12:
                 t_stats.calls_rejected_cap += 1
@@ -508,10 +515,7 @@ class MasterSharedBudgetLedger:
         )
         charged_usd = actual_usd
         charged_std = std_usd
-        if actual_usd > reserved_usd + 1e-12:
-            charged_usd = reserved_usd
-            if actual_usd > 0:
-                charged_std = std_usd * (reserved_usd / actual_usd)
+        overrun_usd = max(0.0, actual_usd - reserved_usd)
         with self._lock:
             self._seq += 1
             seq_no = self._seq
@@ -540,16 +544,62 @@ class MasterSharedBudgetLedger:
                 "cached_tokens": cached_tokens,
                 "output_tokens": output_tokens,
                 "reasoning_tokens": reasoning_tokens,
+                "event": "settled",
                 "call_cost_usd": round(charged_usd, 6),
                 "standard_equiv_usd": round(charged_std, 6),
                 "computed_call_cost_usd": round(actual_usd, 6),
+                "reserved_usd": round(reserved_usd, 6),
+                "overrun_usd": round(overrun_usd, 6),
+                "over_cap_usd": round(max(0.0, self.spent_usd - self.master_cap_usd), 6),
                 "master_cumulative_spent_usd": round(self.spent_usd, 6),
-                "master_remaining_usd": round(max(0.0, self.master_cap_usd - self.spent_usd), 6),
+                "master_remaining_usd": round(self.master_cap_usd - self.spent_usd, 6),
                 "latency_s": round(latency_s, 3),
             }
+            self.ledger_log_path.parent.mkdir(parents=True, exist_ok=True)
             with self.ledger_log_path.open("a", encoding="utf-8") as fh:
                 fh.write(json.dumps(entry, ensure_ascii=True) + "\n")
+            if overrun_usd > 1e-12 or self.spent_usd > self.master_cap_usd + 1e-12:
+                print(
+                    f"[master] Ledger overrun: computed=${actual_usd:.6f} reserved=${reserved_usd:.6f} "
+                    f"spent=${self.spent_usd:.6f} cap=${self.master_cap_usd:.2f} "
+                    f"over_cap=${max(0.0, self.spent_usd - self.master_cap_usd):.6f}",
+                    file=sys.stderr,
+                )
         return charged_usd
+
+    def commit_unresolved_hold(
+        self, track_id: str, reserved_usd: float, reason: str
+    ) -> None:
+        """Move an unresolved reservation into spent and append it to the ledger file."""
+        with self._lock:
+            self._seq += 1
+            seq_no = self._seq
+            self.reserved_in_flight_usd = max(0.0, self.reserved_in_flight_usd - reserved_usd)
+            self.spent_usd += reserved_usd
+            t_stats = self.tracks.setdefault(track_id, TrackUsageStats())
+            t_stats.reserved_in_flight_usd = max(0.0, t_stats.reserved_in_flight_usd - reserved_usd)
+            t_stats.spent_usd += reserved_usd
+            entry = {
+                "seq": seq_no,
+                "utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+                "event": "unresolved_hold",
+                "reason": reason,
+                "track": track_id,
+                "call_cost_usd": round(reserved_usd, 6),
+                "reserved_usd": round(reserved_usd, 6),
+                "computed_call_cost_usd": round(reserved_usd, 6),
+                "over_cap_usd": round(max(0.0, self.spent_usd - self.master_cap_usd), 6),
+                "master_cumulative_spent_usd": round(self.spent_usd, 6),
+                "master_remaining_usd": round(self.master_cap_usd - self.spent_usd, 6),
+            }
+            self.ledger_log_path.parent.mkdir(parents=True, exist_ok=True)
+            with self.ledger_log_path.open("a", encoding="utf-8") as fh:
+                fh.write(json.dumps(entry, ensure_ascii=True) + "\n")
+            print(
+                f"[master] Unresolved hold persisted: reason={reason} "
+                f"held=${reserved_usd:.6f} spent=${self.spent_usd:.6f} cap=${self.master_cap_usd:.2f}",
+                file=sys.stderr,
+            )
 
     def remaining_unreserved_usd(self) -> float:
         with self._lock:
@@ -566,7 +616,8 @@ class MasterSharedBudgetLedger:
                 "spent_usd": round(self.spent_usd, 6),
                 "standard_tier_equivalent_usd": round(self.standard_equiv_usd, 6),
                 "flex_and_cache_savings_usd": round(max(0.0, self.standard_equiv_usd - self.spent_usd), 6),
-                "remaining_usd": round(max(0.0, self.master_cap_usd - self.spent_usd), 6),
+                "remaining_usd": round(self.master_cap_usd - self.spent_usd, 6),
+                "over_cap_usd": round(max(0.0, self.spent_usd - self.master_cap_usd), 6),
                 "total_calls_completed": sum(t.calls_completed for t in self.tracks.values()),
                 "total_calls_rejected_cap": sum(t.calls_rejected_cap for t in self.tracks.values()),
                 "total_input_tokens": tot_in,
@@ -755,7 +806,10 @@ class SharedLedgerProxyServer:
                         outer.upstream_timeout_s,
                     )
                 except Exception as net_exc:
-                    # Keep the reservation: a transport error may still have been billed upstream.
+                    # Persist the hold: a transport error may still have been billed upstream.
+                    outer.ledger.commit_unresolved_hold(
+                        track_id, reserved_usd, reason="upstream_network_error"
+                    )
                     err_bytes = json.dumps(
                         {"error": {"type": "upstream_network_error", "message": str(net_exc)}}
                     ).encode("utf-8")
@@ -801,8 +855,10 @@ class SharedLedgerProxyServer:
                             cache_write_12h_tokens=write_12,
                         )
                     except Exception:
-                        # Keep the reservation: a 200 with unparsable usage may still have been billed.
-                        pass
+                        # Persist the hold: a 200 with unparsable usage may still have been billed.
+                        outer.ledger.commit_unresolved_hold(
+                            track_id, reserved_usd, reason="unparsable_200"
+                        )
                 else:
                     retryable = status_code in (408, 409, 429, 500, 502, 503, 504)
                     outer.ledger.release_without_spend(track_id, reserved_usd, retryable=retryable)
