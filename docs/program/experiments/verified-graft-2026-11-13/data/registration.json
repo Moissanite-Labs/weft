@@ -2,7 +2,7 @@
   "config_sha256": "f016dbd3a5fd548d9a43b1807243137d7fe51b90e399de5e92d6a240330eeae2",
   "code_sha256": {
     "graft.py": "7710046787b9cb56d265901ef6f3166b54a942e4869bb2a936339c98d2329eea",
-    "run_graft.py": "376741dada6adbbedcb7dd27c5cf7a3b5f3ebf36a7810d65f1c538c675854291",
+    "run_graft.py": "cc460929cebf06ca387b6f746fba95621a0bed439c8b164840315593929b826f",
     "Core.lean": "187d7c3b5da68000eb1802102f7649c0161e3022a37eb5b820fcd54ac5a2faaf",
     "proof_gate.py": "64faacf833796663c716e3c788186ab2eaefc63781907fb5dfe88120fc5a79ba",
     "prepare_teacher.py": "4a9690f5f0a13e5673d728a220ad56d1c65a020c935759b4cae3ed3b4f0925c5",

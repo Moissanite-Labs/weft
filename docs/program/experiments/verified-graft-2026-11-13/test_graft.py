@@ -44,7 +44,7 @@ class GraftTests(unittest.TestCase):
  def test_bound_transport_and_wrong_terminal_are_not_anonymous_actions(self):
   import json
   from prepare_teacher import envelope
-  from oauth_teacher import request_record
+  from oauth_teacher import request_record,SYSTEM
   from run_teacher import bind
   with tempfile.TemporaryDirectory() as tmp:
    out=Path(tmp);r.prepare(out);exp=g.instance(211);visible=g.packet(exp,'compatible');parent=r.parent_deployment(visible)
@@ -54,10 +54,14 @@ class GraftTests(unittest.TestCase):
    actions=[{'mode':'abstain','delta':copy.deepcopy(g.ZERO)} for _ in range(4)]
    request=request_record(original);record={**request,'status':'parsed','parsed_batch':{'candidates':actions},'output_text':json.dumps({'candidates':actions})}
    r.write(transport/'record.json',record)
-   r.write(transport/'wire.json',[{'model':'gpt-6-astra','store':False,'input':[{'role':'user','content':[{'type':'input_text','text':json.dumps(original,sort_keys=True,separators=(',',':'))}]}]}])
+   r.write(transport/'wire.json',[{'model':'gpt-6-astra','store':False,'instructions':SYSTEM,'input':[{'role':'user','content':[{'type':'input_text','text':json.dumps(original,sort_keys=True,separators=(',',':'))}]}]}])
    r.write(transport/'terminal-events.json',[{'type':'response.completed','status':'completed','model':'gpt-6-astra'}])
    package=r.read(bind(out,211,'compatible',1,prompt,transport))
    self.assertTrue(r.validate_transport(out,package,exp,'compatible',1,parent,None))
+   r.write(transport/'terminal-events.json',[{'type':'response.output_text.delta','delta':'wrong text'},{'type':'response.completed','status':'completed','model':'gpt-6-astra'}])
+   bad_stream=r.read(bind(out,211,'compatible',1,prompt,transport))
+   with self.assertRaises(ValueError):r.validate_transport(out,bad_stream,exp,'compatible',1,parent,None)
+   r.write(transport/'terminal-events.json',[{'type':'response.completed','status':'completed','model':'gpt-6-astra'}])
    changed=copy.deepcopy(package);changed['binding']['seed']=337
    with self.assertRaises(ValueError):r.validate_transport(out,changed,exp,'compatible',1,parent,None)
    r.write(transport/'terminal-events.json',[{'type':'response.completed','status':'completed','model':'wrong-model'}])

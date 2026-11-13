@@ -9,6 +9,6 @@ test_saturated_nonzero_graft_cannot_satisfy_preservation (test_graft.GraftTests.
 test_teacher_response_schema_no_invented_or_extra_children (test_graft.GraftTests.test_teacher_response_schema_no_invented_or_extra_children) ... ok
 
 ----------------------------------------------------------------------
-Ran 9 tests in 0.029s
+Ran 9 tests in 0.036s
 
 OK

@@ -190,8 +190,12 @@ def offline_run(out):
  write(out/'offline/results.json',report);manifest(out,'offline');return report
 
 def manifest(out,cohort):
- hashes={str(path.relative_to(out)):sha(path) for path in sorted(out.rglob('*')) if path.is_file() and path.name not in ('manifest-offline.json','manifest-teacher.json') and path.suffix in ('.json','.lean')}
- write(out/f'manifest-{cohort}.json',{'code_sha256':code_pins(),'artifact_sha256':hashes})
+ shared=[out/'protocol.json',out/'registration.json']
+ directories=['instances','packets',cohort]+(['diagnostics'] if cohort=='offline' else ['teacher-transport','teacher-requests','prepared'])
+ paths=shared+[path for directory in directories for path in (out/directory).rglob('*') if path.is_file()]
+ if cohort=='teacher' and (out/'teacher-call-ledger.json').exists():paths.append(out/'teacher-call-ledger.json')
+ hashes={str(path.relative_to(out)):sha(path) for path in sorted(set(paths)) if path.suffix in ('.json','.lean','.jsonl')}
+ write(out/f'manifest-{cohort}.json',{'cohort':cohort,'code_sha256':code_pins(),'artifact_sha256':hashes})
 
 def extract_candidates(value):
  if type(value) is dict and 'response' in value:
@@ -233,14 +237,20 @@ def validate_transport(out,package,exp,case,number,parent,previous):
  if not terminal or terminal.get('type')!='response.completed' or terminal.get('status')!='completed' or terminal.get('model')!='gpt-6-astra':raise ValueError('Teacher did not complete with the registered model')
  if type(wire) is not list or len(wire)!=1:raise ValueError('Exactly one observed wire request required')
  body=wire[0]
- if body.get('model')!='gpt-6-astra' or body.get('store') is not False or body.get('tools'):raise ValueError('Observed model, store or tools mismatch')
+ if body.get('model')!='gpt-6-astra' or body.get('store') is not False or body.get('tools') or body.get('previous_response_id'):raise ValueError('Observed model, store, tools or history mismatch')
+ from oauth_teacher import SYSTEM
+ if body.get('instructions')!=SYSTEM:raise ValueError('Observed system instructions changed')
+ if type(body.get('input')) is not list or len(body['input'])!=1 or body['input'][0].get('role')!='user' or type(body['input'][0].get('content')) is not list or len(body['input'][0]['content'])!=1 or body['input'][0]['content'][0].get('type')!='input_text':raise ValueError('Exactly one observed user input text required')
  try:text=body['input'][0]['content'][0]['text']
  except (TypeError,KeyError,IndexError) as exc:raise ValueError('Observed wire input schema') from exc
- if json.loads(text)!=expected:raise ValueError('Observed wire input differs from registered envelope')
+ canonical_envelope=json.dumps(expected,sort_keys=True,separators=(',',':'),allow_nan=False)
+ if text!=canonical_envelope:raise ValueError('Observed wire input differs from registered envelope')
  request=record.get('request',{});messages=request.get('messages',[])
  if request.get('model')!='gpt-6-astra' or request.get('tools')!=[] or len(messages)!=2 or messages[1].get('role')!='user' or json.loads(messages[1].get('content','null'))!=expected:raise ValueError('Worker response request binding mismatch')
  canonical_request=json.dumps(request,sort_keys=True,separators=(',',':')).encode()
  if record.get('request_sha256')!=hashlib.sha256(canonical_request).hexdigest():raise ValueError('Worker request digest mismatch')
+ deltas=[event['delta'] for event in events if event.get('type')=='response.output_text.delta' and type(event.get('delta')) is str]
+ if deltas and ''.join(deltas)!=record.get('output_text'):raise ValueError('Saved stream text differs from parsed response text')
  parsed=json.loads(record.get('output_text','null'))
  actions=extract_candidates(parsed)
  if record.get('parsed_batch')!=parsed or package.get('candidates')!=actions:raise ValueError('Candidate batch differs from actual returned text')
