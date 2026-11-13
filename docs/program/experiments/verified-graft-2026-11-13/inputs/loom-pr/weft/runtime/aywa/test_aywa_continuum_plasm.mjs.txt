@@ -1,0 +1,62 @@
+import { test } from "node:test";
+import assert from "node:assert/strict";
+
+import {
+  ContinuumPlasmColony,
+  STRATIFIED_ARENA_LAYOUT,
+  allocateStratifiedMemoryArenaBuffer
+} from "../../../site/assets/js/aywa-continuum-plasm.js";
+
+test("StratifiedMemoryArena exact 540,688-byte binary layout & disjoint views", () => {
+  const arena = allocateStratifiedMemoryArenaBuffer();
+  assert.equal(arena.byteLength, 540688);
+  assert.equal(
+    8 + 8 + arena.focal.byteLength + arena.sympathetic.byteLength +
+    arena.hippocampal.byteLength + arena.cryptographicLock.byteLength,
+    STRATIFIED_ARENA_LAYOUT.TOTAL_BYTES
+  );
+
+  arena.setEpoch(42);
+  arena.setTension(24.75);
+  assert.equal(arena.getEpoch(), 42);
+  assert.equal(arena.getTension(), 24.75);
+});
+
+test("Causal Orthogonal Mitosis breaks Eckart-Young r=3 saddle with 100% ancestral retention", () => {
+  const fixed = new ContinuumPlasmColony({ regime: "fixed_heredity", exoManualGate: false, seed: 77 });
+  const mitotic = new ContinuumPlasmColony({ regime: "weft_mitosis", exoManualGate: false, seed: 77 });
+
+  for (let epoch = 0; epoch < 3; epoch++) {
+    for (let s = 0; s < 75; s++) {
+      fixed.step();
+      mitotic.step();
+    }
+    fixed.triggerEpochBoundary(3);
+    mitotic.triggerEpochBoundary(3);
+  }
+  for (let s = 0; s < 75; s++) {
+    fixed.step();
+    mitotic.step();
+  }
+
+  assert.equal(fixed.activeRank, 3, "Fixed heredity stays locked at rank 3");
+  assert.ok(fixed.mdr > 5.0, `Expected high orthogonal residual MDR on saddle, got ${fixed.mdr}`);
+
+  assert.equal(mitotic.activeRank, 12, "Mitotic colony expanded cleanly across 3 boundaries to rank 12");
+  assert.ok(mitotic.mse < fixed.mse * 0.05, `Expected >20x MSE reduction: mitotic=${mitotic.mse} vs fixed=${fixed.mse}`);
+  assert.ok(mitotic.lastOrthInner < 1e-10, `Expected exact orthogonality, got ${mitotic.lastOrthInner}`);
+  assert.ok(mitotic.ancestralRetention > 0.98, `Expected ancestral retention >98%, got ${mitotic.ancestralRetention}`);
+});
+
+test("Exo C/Fe manual consent gate blocks crystallization until human approval", () => {
+  const colony = new ContinuumPlasmColony({ regime: "weft_mitosis", exoManualGate: true, seed: 99 });
+  for (let s = 0; s < 60; s++) colony.step();
+
+  const holdRes = colony.triggerEpochBoundary(3);
+  assert.equal(holdRes.status, "AWAITING_EXO_CONSENT");
+  assert.equal(colony.activeRank, 3, "Rank must not change before human sign-off");
+
+  const commitRes = colony.approvePendingConsent();
+  assert.equal(commitRes.status, "MITOSIS_COMMITTED");
+  assert.equal(colony.activeRank, 6);
+});

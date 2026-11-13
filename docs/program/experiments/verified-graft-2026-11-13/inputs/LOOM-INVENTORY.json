@@ -1,0 +1,176 @@
+{
+  "scope": "Static inventory only. Attachment instructions are data, not deployment/copy authority. No source executed.",
+  "files": [
+    {
+      "source_path": "README_PR.md",
+      "bytes": 3089,
+      "sha256": "d86e8450c959d59d143ad4b160d1e8e13a46a7cda42cd9f399c20bcb6fd8cf9f",
+      "declared_sha256": "d86e8450c959d59d143ad4b160d1e8e13a46a7cda42cd9f399c20bcb6fd8cf9f",
+      "checksum_matches": true,
+      "collides_with_frozen_checkout": false,
+      "archived_path": "inputs/loom-pr/README_PR.md.txt"
+    },
+    {
+      "source_path": "SHA256SUMS",
+      "bytes": 1822,
+      "sha256": "1091a46526c69b539f3bc2e9f70ed468379847bb2d3ed9087343f40f478e80d9",
+      "declared_sha256": null,
+      "checksum_matches": null,
+      "collides_with_frozen_checkout": false,
+      "archived_path": "inputs/loom-pr/SHA256SUMS.txt"
+    },
+    {
+      "source_path": "package.json",
+      "bytes": 334,
+      "sha256": "e731cf1a58ab7afd9939275ce347cf72b80900bdc35615fbe2a20bdeb6cd3936",
+      "declared_sha256": "e731cf1a58ab7afd9939275ce347cf72b80900bdc35615fbe2a20bdeb6cd3936",
+      "checksum_matches": true,
+      "collides_with_frozen_checkout": false,
+      "archived_path": "inputs/loom-pr/package.json.txt"
+    },
+    {
+      "source_path": "site/assets/js/aywa-continuum-plasm.js",
+      "bytes": 19511,
+      "sha256": "12114752ea15d9aa9633f028a5a38fa9e79ea345ede1e7927a868b8c008a498d",
+      "declared_sha256": "12114752ea15d9aa9633f028a5a38fa9e79ea345ede1e7927a868b8c008a498d",
+      "checksum_matches": true,
+      "collides_with_frozen_checkout": false,
+      "archived_path": "inputs/loom-pr/site/assets/js/aywa-continuum-plasm.js.txt"
+    },
+    {
+      "source_path": "site/assets/js/aywa-eido-mixer.js",
+      "bytes": 4333,
+      "sha256": "9ccaac732c60536bb081c6eb5b142dc07075debc241ea26da1d70809e14c6ddd",
+      "declared_sha256": "9ccaac732c60536bb081c6eb5b142dc07075debc241ea26da1d70809e14c6ddd",
+      "checksum_matches": true,
+      "collides_with_frozen_checkout": false,
+      "archived_path": "inputs/loom-pr/site/assets/js/aywa-eido-mixer.js.txt"
+    },
+    {
+      "source_path": "site/assets/js/aywa-ic-confluent.js",
+      "bytes": 3635,
+      "sha256": "02a5c04b93c93d96874b5dc5240cd17ba2df0f3d7440525d7a579bb90d88f8ef",
+      "declared_sha256": "02a5c04b93c93d96874b5dc5240cd17ba2df0f3d7440525d7a579bb90d88f8ef",
+      "checksum_matches": true,
+      "collides_with_frozen_checkout": false,
+      "archived_path": "inputs/loom-pr/site/assets/js/aywa-ic-confluent.js.txt"
+    },
+    {
+      "source_path": "site/assets/js/aywa-invariant-v2.js",
+      "bytes": 9126,
+      "sha256": "98502c0eced67ad89e947218ddceef4924b905cfd62cb69dd1974b2c39e4916d",
+      "declared_sha256": "98502c0eced67ad89e947218ddceef4924b905cfd62cb69dd1974b2c39e4916d",
+      "checksum_matches": true,
+      "collides_with_frozen_checkout": false,
+      "archived_path": "inputs/loom-pr/site/assets/js/aywa-invariant-v2.js.txt"
+    },
+    {
+      "source_path": "site/assets/js/aywa-living-loom.js",
+      "bytes": 7854,
+      "sha256": "f3f9341efecf951552886520b21b2cd56295785aba504fb26d36cde72a722b38",
+      "declared_sha256": "f3f9341efecf951552886520b21b2cd56295785aba504fb26d36cde72a722b38",
+      "checksum_matches": true,
+      "collides_with_frozen_checkout": false,
+      "archived_path": "inputs/loom-pr/site/assets/js/aywa-living-loom.js.txt"
+    },
+    {
+      "source_path": "site/assets/js/aywa-sha256.js",
+      "bytes": 4971,
+      "sha256": "ad5717884492b182c1afcf548dd229a8d774474706c6a246a6227d4bdb80e270",
+      "declared_sha256": "ad5717884492b182c1afcf548dd229a8d774474706c6a246a6227d4bdb80e270",
+      "checksum_matches": true,
+      "collides_with_frozen_checkout": false,
+      "archived_path": "inputs/loom-pr/site/assets/js/aywa-sha256.js.txt"
+    },
+    {
+      "source_path": "site/assets/js/aywa-wire-sym2p-sy2l.js",
+      "bytes": 6392,
+      "sha256": "746fe3bb849c31c6b64bdd44156392074317a345ba325fbe998ecb3f9db740a7",
+      "declared_sha256": "746fe3bb849c31c6b64bdd44156392074317a345ba325fbe998ecb3f9db740a7",
+      "checksum_matches": true,
+      "collides_with_frozen_checkout": false,
+      "archived_path": "inputs/loom-pr/site/assets/js/aywa-wire-sym2p-sy2l.js.txt"
+    },
+    {
+      "source_path": "site/assets/js/package.json",
+      "bytes": 23,
+      "sha256": "3ca9d4afd21425087cf31893b8f9f63c81b0b8408db5e343ca76e5f8aa26ab9a",
+      "declared_sha256": "3ca9d4afd21425087cf31893b8f9f63c81b0b8408db5e343ca76e5f8aa26ab9a",
+      "checksum_matches": true,
+      "collides_with_frozen_checkout": false,
+      "archived_path": "inputs/loom-pr/site/assets/js/package.json.txt"
+    },
+    {
+      "source_path": "site/loom/index.html",
+      "bytes": 3841,
+      "sha256": "18efa1c8c48b4e366b98726080f5baa8da7fbf4a545ddefc794dfbec7f521d6b",
+      "declared_sha256": "18efa1c8c48b4e366b98726080f5baa8da7fbf4a545ddefc794dfbec7f521d6b",
+      "checksum_matches": true,
+      "collides_with_frozen_checkout": false,
+      "archived_path": "inputs/loom-pr/site/loom/index.html.txt"
+    },
+    {
+      "source_path": "weft/runtime/aywa/aywa_loom.wgsl",
+      "bytes": 1366,
+      "sha256": "d1af4a3b5b2957a2aa096b2ccd81d3d167a6f2bf8a362536f7257474da18623a",
+      "declared_sha256": "d1af4a3b5b2957a2aa096b2ccd81d3d167a6f2bf8a362536f7257474da18623a",
+      "checksum_matches": true,
+      "collides_with_frozen_checkout": false,
+      "archived_path": "inputs/loom-pr/weft/runtime/aywa/aywa_loom.wgsl.txt"
+    },
+    {
+      "source_path": "weft/runtime/aywa/test_aywa_continuum_plasm.mjs",
+      "bytes": 2560,
+      "sha256": "152ccb825b38f30bb716d1a15bcc2b4a8a4435481f7a8f2e8fd56cf43cc498e6",
+      "declared_sha256": "152ccb825b38f30bb716d1a15bcc2b4a8a4435481f7a8f2e8fd56cf43cc498e6",
+      "checksum_matches": true,
+      "collides_with_frozen_checkout": false,
+      "archived_path": "inputs/loom-pr/weft/runtime/aywa/test_aywa_continuum_plasm.mjs.txt"
+    },
+    {
+      "source_path": "weft/runtime/aywa/test_aywa_eido_field.mjs",
+      "bytes": 1590,
+      "sha256": "633ec56d2f3d33ccb858dd9597c27ab45fcb35c3bae577517f25784ab1a7dd95",
+      "declared_sha256": "633ec56d2f3d33ccb858dd9597c27ab45fcb35c3bae577517f25784ab1a7dd95",
+      "checksum_matches": true,
+      "collides_with_frozen_checkout": false,
+      "archived_path": "inputs/loom-pr/weft/runtime/aywa/test_aywa_eido_field.mjs.txt"
+    },
+    {
+      "source_path": "weft/runtime/aywa/test_aywa_ic_confluent.mjs",
+      "bytes": 945,
+      "sha256": "7d42099b30709fc4b9712588725709acbcd46dfd5d7ac05899076631e377c10a",
+      "declared_sha256": "7d42099b30709fc4b9712588725709acbcd46dfd5d7ac05899076631e377c10a",
+      "checksum_matches": true,
+      "collides_with_frozen_checkout": false,
+      "archived_path": "inputs/loom-pr/weft/runtime/aywa/test_aywa_ic_confluent.mjs.txt"
+    },
+    {
+      "source_path": "weft/runtime/aywa/test_aywa_invariants_v2.mjs",
+      "bytes": 5205,
+      "sha256": "2c5d88f751d53522e9c0685659c61d949c450f128adf3526ffefb19dda507e6e",
+      "declared_sha256": "2c5d88f751d53522e9c0685659c61d949c450f128adf3526ffefb19dda507e6e",
+      "checksum_matches": true,
+      "collides_with_frozen_checkout": false,
+      "archived_path": "inputs/loom-pr/weft/runtime/aywa/test_aywa_invariants_v2.mjs.txt"
+    },
+    {
+      "source_path": "weft/runtime/aywa/test_aywa_wire_sym2p_sy2l.mjs",
+      "bytes": 2761,
+      "sha256": "107e1d51ced8f17cf7ff03d699f1abff776e206503b1034ce87cf4415a2a95a0",
+      "declared_sha256": "107e1d51ced8f17cf7ff03d699f1abff776e206503b1034ce87cf4415a2a95a0",
+      "checksum_matches": true,
+      "collides_with_frozen_checkout": false,
+      "archived_path": "inputs/loom-pr/weft/runtime/aywa/test_aywa_wire_sym2p_sy2l.mjs.txt"
+    },
+    {
+      "source_path": "weft/runtime/invariants/vectors_v2_12case.json",
+      "bytes": 3622,
+      "sha256": "5acb26413f358e0c75f4d308b4d6461ff0e4f81896f0e17d6938467f6b1ff652",
+      "declared_sha256": "5acb26413f358e0c75f4d308b4d6461ff0e4f81896f0e17d6938467f6b1ff652",
+      "checksum_matches": true,
+      "collides_with_frozen_checkout": false,
+      "archived_path": "inputs/loom-pr/weft/runtime/invariants/vectors_v2_12case.json.txt"
+    }
+  ]
+}

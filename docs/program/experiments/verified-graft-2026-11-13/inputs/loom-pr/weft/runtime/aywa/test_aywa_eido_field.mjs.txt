@@ -1,0 +1,42 @@
+import { test } from "node:test";
+import assert from "node:assert/strict";
+
+import {
+  TELEMETRY_PROVENANCE,
+  barycentricFromPoint,
+  circularHueMeanTurns,
+  classifyTelemetrySource,
+  mixAestheticPresets
+} from "../../../site/assets/js/aywa-eido-mixer.js";
+
+test("w3ft.org circular hue wraparound test: red 0.95 + red 0.05 -> 0.00 red (NOT 0.50 cyan)", () => {
+  const h = circularHueMeanTurns([0.95, 0.05], [0.5, 0.5]);
+  assert.ok(h < 1e-9 || Math.abs(h - 1.0) < 1e-9, `Expected 0.0 (red), got ${h}`);
+});
+
+test("Barycentric simplex projection sums strictly to 1.0 inside & outside triangle", () => {
+  const v1 = { x: 100, y: 10 };
+  const v2 = { x: 10, y: 190 };
+  const v3 = { x: 190, y: 190 };
+
+  const wTop = barycentricFromPoint(100, 10, v1, v2, v3);
+  assert.ok(Math.abs(wTop[0] - 1.0) < 1e-9);
+
+  const wOut = barycentricFromPoint(-500, 900, v1, v2, v3);
+  const sum = wOut[0] + wOut[1] + wOut[2];
+  assert.ok(Math.abs(sum - 1.0) < 1e-12);
+  assert.ok(wOut.every(x => x >= 0.0));
+
+  const mixed = mixAestheticPresets([0.5, 0.15, 0.35]);
+  assert.ok(mixed.radiusPx >= 2.0 && mixed.radiusPx <= 22.0);
+});
+
+test("Issue #45 honest telemetry source classifier", () => {
+  assert.equal(classifyTelemetrySource({ staticFixture: true }), TELEMETRY_PROVENANCE.FIXTURE);
+  assert.equal(classifyTelemetrySource({ liveExecuted: true }), TELEMETRY_PROVENANCE.MEASURED);
+  assert.equal(
+    classifyTelemetrySource({ liveExecuted: true, derivedFromExactFormula: true }),
+    TELEMETRY_PROVENANCE.DERIVED
+  );
+  assert.equal(classifyTelemetrySource({}), TELEMETRY_PROVENANCE.UNAVAILABLE);
+});

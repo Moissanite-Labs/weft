@@ -1,0 +1,277 @@
+/**
+ * aywa-invariant-v2.js — Browser & Node ES module port of WEFT-INVARIANTS/2.0.
+ * Preserves backward-compatible exports (`frobeniusNorm`, `verifyWeightUpdateSafety`)
+ * used by `site/assets/js/site.js`, while extending coverage to all 12 shared
+ * conformance classes, IEEE-754 Zeno sub-ULP protection, N=65,536 scaled Neumaier
+ * binary64 consensus, bitwise locked_mask invariance, and Pythagorean mitosis.
+ * License: Apache-2.0
+ */
+
+import { f32BitsNormalizedZero, nextafterNegInfF32, toF32 } from "./aywa-sha256.js";
+
+export const WEFT_CONSTANTS = Object.freeze({
+  R_INVARIANT: 120.0,
+  TENSION_MAX: 85.0,
+  HOMEOSTATIC_TENSION_MIN: 15.0,
+  HOMEOSTATIC_TENSION_MAX: 35.0,
+  MDR_TRIGGER: 2.5,
+  ORTH_TOL: 1e-5,
+  ROYALTY_UPSTREAM_BPS: 1500,
+  ROYALTY_WEAVER_BPS: 8500
+});
+
+export const WEFT_STATUS = Object.freeze({
+  WEFT_OK: "WEFT_OK",
+  WEFT_ERR_NULL_PTR: "WEFT_ERR_NULL_PTR",
+  WEFT_ERR_NONFINITE_INPUT: "WEFT_ERR_NONFINITE_INPUT",
+  WEFT_ERR_INVALID_COST: "WEFT_ERR_INVALID_COST",
+  WEFT_ERR_BUDGET_EXHAUSTED: "WEFT_ERR_BUDGET_EXHAUSTED",
+  WEFT_ERR_FROZEN_CORE_MUTATED: "WEFT_ERR_FROZEN_CORE_MUTATED",
+  WEFT_ERR_RADIUS_EXCEEDED: "WEFT_ERR_RADIUS_EXCEEDED",
+  WEFT_ERR_TENSION_EXCISION: "WEFT_ERR_TENSION_EXCISION",
+  WEFT_ERR_SUBSPACE_OVERLAP: "WEFT_ERR_SUBSPACE_OVERLAP",
+  WEFT_ERR_INVALID_ROYALTY: "WEFT_ERR_INVALID_ROYALTY"
+});
+
+/**
+ * Laplace-scaled Neumaier compensated binary64 Frobenius distance matching `weft_v2_invariants.h`.
+ */
+export function compensatedFrobeniusDistance(baselineW, candidateW, lockedMask = null) {
+  if (!baselineW || !candidateW || baselineW.length !== candidateW.length) {
+    return { ok: false, distance: NaN, code: WEFT_STATUS.WEFT_ERR_NULL_PTR };
+  }
+  let scale = 0.0;
+  let ssq = 1.0;
+  let comp = 0.0;
+
+  for (let i = 0; i < baselineW.length; i++) {
+    const b = toF32(baselineW[i]);
+    const c = toF32(candidateW[i]);
+    if (!Number.isFinite(b) || !Number.isFinite(c)) {
+      return { ok: false, distance: NaN, code: WEFT_STATUS.WEFT_ERR_NONFINITE_INPUT };
+    }
+    if (lockedMask && lockedMask[i] !== 0) {
+      if (f32BitsNormalizedZero(b) !== f32BitsNormalizedZero(c)) {
+        return { ok: false, distance: NaN, code: WEFT_STATUS.WEFT_ERR_FROZEN_CORE_MUTATED };
+      }
+      continue;
+    }
+    const absDiff = Math.abs(c - b);
+    if (absDiff === 0.0) continue;
+
+    if (scale < absDiff) {
+      const ratio = scale / absDiff;
+      const ratioSq = ratio * ratio;
+      ssq = 1.0 + ssq * ratioSq;
+      comp = comp * ratioSq;
+      scale = absDiff;
+    } else {
+      const ratio = absDiff / scale;
+      const term = ratio * ratio;
+      const t = ssq + term;
+      comp += Math.abs(ssq) >= term ? ((ssq - t) + term) : ((term - t) + ssq);
+      ssq = t;
+    }
+  }
+
+  const distance = scale === 0.0 ? 0.0 : scale * Math.sqrt(Math.max(0.0, ssq + comp));
+  if (!Number.isFinite(distance)) {
+    return { ok: false, distance: NaN, code: WEFT_STATUS.WEFT_ERR_NONFINITE_INPUT };
+  }
+  return { ok: true, distance, code: WEFT_STATUS.WEFT_OK };
+}
+
+/**
+ * Backward-compatible Frobenius norm helper (`||W||_F`).
+ */
+export function frobeniusNorm(vec) {
+  const zeros = new Float32Array(vec.length);
+  const res = compensatedFrobeniusDistance(zeros, vec, null);
+  return res.ok ? res.distance : NaN;
+}
+
+/**
+ * Demonstrates the historical pre-repair weak norm-size check (`| ||W'|| - ||W0|| | <= R`)
+ * documented on w3ft.org ("Press Flip signs to see why that fails").
+ */
+export function verifyWeakNormSizeCheck(baselineW, candidateW, rInvariant = WEFT_CONSTANTS.R_INVARIANT) {
+  const n0 = frobeniusNorm(baselineW);
+  const n1 = frobeniusNorm(candidateW);
+  const sizeDelta = Math.abs(n1 - n0);
+  return { ok: sizeDelta <= rInvariant, sizeDelta };
+}
+
+/**
+ * Hardened WEFT-INVARIANTS/2.0 weight-update safety gate with ULP-monotone `nextafterNegInfF32` deduction.
+ */
+export function verifyWeightUpdateSafety(
+  baselineW,
+  candidateW,
+  rInvariant = WEFT_CONSTANTS.R_INVARIANT,
+  metabolicBudget = 10.0,
+  stepCost = 1.0,
+  lockedMask = null
+) {
+  const b32 = toF32(metabolicBudget);
+  const c32 = toF32(stepCost);
+  const r64 = Number(rInvariant);
+
+  if (!Number.isFinite(b32) || !Number.isFinite(c32) || !Number.isFinite(r64) || r64 < 0.0) {
+    return { ok: false, code: WEFT_STATUS.WEFT_ERR_NONFINITE_INPUT, distance: NaN, nextBudget: b32 };
+  }
+  if (!(c32 > 0.0)) {
+    return { ok: false, code: WEFT_STATUS.WEFT_ERR_INVALID_COST, distance: NaN, nextBudget: b32 };
+  }
+  if (b32 < c32) {
+    return { ok: false, code: WEFT_STATUS.WEFT_ERR_BUDGET_EXHAUSTED, distance: NaN, nextBudget: b32 };
+  }
+
+  const normRes = compensatedFrobeniusDistance(baselineW, candidateW, lockedMask);
+  if (!normRes.ok) {
+    return { ok: false, code: normRes.code, distance: NaN, nextBudget: b32 };
+  }
+  if (!(normRes.distance <= r64)) {
+    return {
+      ok: false,
+      code: WEFT_STATUS.WEFT_ERR_RADIUS_EXCEEDED,
+      distance: normRes.distance,
+      nextBudget: b32
+    };
+  }
+
+  const exactRem = b32 - c32;
+  let nextB = toF32(exactRem);
+  if (nextB >= b32) {
+    nextB = nextafterNegInfF32(b32);
+  }
+  if (nextB < 0.0 || !Number.isFinite(nextB)) {
+    return {
+      ok: false,
+      code: WEFT_STATUS.WEFT_ERR_BUDGET_EXHAUSTED,
+      distance: normRes.distance,
+      nextBudget: b32
+    };
+  }
+  return { ok: true, code: WEFT_STATUS.WEFT_OK, distance: normRes.distance, nextBudget: nextB };
+}
+
+/**
+ * Tension homeostasis & pre-write poisoning excision gate (Vectors T07-T09 + MDR plateau classifier).
+ */
+export function verifyTensionGate(
+  tension,
+  {
+    maxTension = WEFT_CONSTANTS.TENSION_MAX,
+    homeostaticMin = WEFT_CONSTANTS.HOMEOSTATIC_TENSION_MIN,
+    homeostaticMax = WEFT_CONSTANTS.HOMEOSTATIC_TENSION_MAX,
+    heldoutError = 0.0,
+    errorFloor = 1e-4,
+    gradParallelNorm = 1.0,
+    gradOrthNorm = 0.0,
+    mdrThreshold = WEFT_CONSTANTS.MDR_TRIGGER
+  } = {}
+) {
+  if (!Number.isFinite(tension) || tension < 0.0 || !Number.isFinite(maxTension) || maxTension <= 0.0) {
+    return {
+      ok: false,
+      code: WEFT_STATUS.WEFT_ERR_NONFINITE_INPUT,
+      homeostatic: false,
+      excised: true,
+      triggerMitosis: false,
+      mdr: NaN,
+      regime: "NONE"
+    };
+  }
+  const excised = tension > maxTension;
+  const homeostatic = tension >= homeostaticMin && tension <= homeostaticMax;
+  if (excised) {
+    return {
+      ok: false,
+      code: WEFT_STATUS.WEFT_ERR_TENSION_EXCISION,
+      homeostatic: false,
+      excised: true,
+      triggerMitosis: false,
+      mdr: 0.0,
+      regime: "EXCISED"
+    };
+  }
+  const mdr = gradOrthNorm / (gradParallelNorm + 1e-12);
+  let regime = "ACTIVE_DESCENT";
+  let triggerMitosis = false;
+  if (heldoutError <= errorFloor) {
+    regime = "TASK_CEILING";
+  } else if (gradParallelNorm <= 1e-2 && mdr >= mdrThreshold) {
+    regime = "CAPACITY_LIMIT";
+    triggerMitosis = true;
+  } else if (gradParallelNorm <= 1e-2) {
+    regime = "OPTIMIZER_STUCK";
+  }
+  return {
+    ok: true,
+    code: WEFT_STATUS.WEFT_OK,
+    homeostatic,
+    excised: false,
+    triggerMitosis,
+    mdr,
+    regime
+  };
+}
+
+/**
+ * Royalty / Attribution Basis-Point Conservation Gate (Vectors R10-R12; Horizon III).
+ */
+export function verifyRoyaltySplit(
+  totalUnits,
+  upstreamBps = WEFT_CONSTANTS.ROYALTY_UPSTREAM_BPS,
+  weaverBps = WEFT_CONSTANTS.ROYALTY_WEAVER_BPS
+) {
+  if (
+    !Number.isInteger(totalUnits) ||
+    totalUnits < 0 ||
+    !Number.isInteger(upstreamBps) ||
+    !Number.isInteger(weaverBps) ||
+    upstreamBps < 0 ||
+    weaverBps < 0 ||
+    upstreamBps + weaverBps !== 10000
+  ) {
+    return { ok: false, code: WEFT_STATUS.WEFT_ERR_INVALID_ROYALTY, upstream: 0, weaver: 0 };
+  }
+  const upstream = Math.floor((totalUnits * upstreamBps) / 10000);
+  const weaver = totalUnits - upstream; // Exact conservation: upstream + weaver === totalUnits
+  return { ok: true, code: WEFT_STATUS.WEFT_OK, upstream, weaver };
+}
+
+/**
+ * Pythagorean Orthogonal Mitosis Envelope Check (`|<Delta_p, Delta_c>_F| <= epsOrth * ||p|| * ||c||`).
+ */
+export function verifyPythagoreanMitosis(
+  deltaParent,
+  deltaChild,
+  rMax = WEFT_CONSTANTS.R_INVARIANT,
+  epsOrth = WEFT_CONSTANTS.ORTH_TOL
+) {
+  if (!deltaParent || !deltaChild || deltaParent.length !== deltaChild.length) {
+    return { ok: false, code: WEFT_STATUS.WEFT_ERR_NULL_PTR };
+  }
+  let dot = 0.0, npSq = 0.0, ncSq = 0.0;
+  for (let i = 0; i < deltaParent.length; i++) {
+    const p = Number(deltaParent[i]);
+    const c = Number(deltaChild[i]);
+    if (!Number.isFinite(p) || !Number.isFinite(c)) {
+      return { ok: false, code: WEFT_STATUS.WEFT_ERR_NONFINITE_INPUT };
+    }
+    dot += p * c;
+    npSq += p * p;
+    ncSq += c * c;
+  }
+  const denom = Math.sqrt(npSq * ncSq);
+  const cosineOverlap = denom > 0.0 ? Math.abs(dot) / denom : 0.0;
+  const combinedNorm = Math.sqrt(Math.max(0.0, npSq + ncSq + 2.0 * dot));
+  if (cosineOverlap > epsOrth) {
+    return { ok: false, code: WEFT_STATUS.WEFT_ERR_SUBSPACE_OVERLAP, cosineOverlap, combinedNorm };
+  }
+  if (combinedNorm > rMax) {
+    return { ok: false, code: WEFT_STATUS.WEFT_ERR_RADIUS_EXCEEDED, cosineOverlap, combinedNorm };
+  }
+  return { ok: true, code: WEFT_STATUS.WEFT_OK, cosineOverlap, combinedNorm };
+}

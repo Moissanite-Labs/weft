@@ -1,0 +1,10 @@
+test_cached_selection_is_validated_before_skipping_or_calling (test_run_teacher.CoordinatorTests.test_cached_selection_is_validated_before_skipping_or_calling) ... ok
+test_prompt_tamper_stops_resume (test_run_teacher.CoordinatorTests.test_prompt_tamper_stops_resume) ... ok
+test_reserves_before_process (test_run_teacher.CoordinatorTests.test_reserves_before_process) ... ok
+test_started_opportunity_not_retried (test_run_teacher.CoordinatorTests.test_started_opportunity_not_retried) ... ok
+test_wrong_terminal_retains_provenance_without_candidates (test_run_teacher.CoordinatorTests.test_wrong_terminal_retains_provenance_without_candidates) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.019s
+
+OK

@@ -1,0 +1,548 @@
+/**
+ * aywa-continuum-plasm.js — C1 ContinuumPlasm (`540,688` B StratifiedMemoryArena)
+ * + Causal Orthogonal Spectral Mitosis + Exo C/Fe Consent State Machine.
+ * License: Apache-2.0
+ */
+
+import { toF32 } from "./aywa-sha256.js";
+import { verifyWeightUpdateSafety, WEFT_CONSTANTS } from "./aywa-invariant-v2.js";
+
+export const STRATIFIED_ARENA_LAYOUT = Object.freeze({
+  TOTAL_BYTES: 540688,
+  EPOCH_OFFSET: 0,
+  EPOCH_BYTES: 8,
+  TENSION_OFFSET: 8,
+  TENSION_BYTES: 8,
+  FOCAL_OFFSET: 16,
+  FOCAL_FLOATS: 65536,
+  FOCAL_BYTES: 262144,
+  SYMPATHETIC_OFFSET: 262160,
+  SYMPATHETIC_FLOATS: 1024,
+  SYMPATHETIC_BYTES: 4096,
+  HIPPOCAMPAL_OFFSET: 266256,
+  HIPPOCAMPAL_FLOATS: 65536,
+  HIPPOCAMPAL_BYTES: 262144,
+  LOCK_OFFSET: 528400,
+  LOCK_BYTES: 12288
+});
+
+export function allocateStratifiedMemoryArenaBuffer() {
+  const buffer = new ArrayBuffer(STRATIFIED_ARENA_LAYOUT.TOTAL_BYTES);
+  const headerView = new DataView(buffer, 0, 16);
+  const focal = new Float32Array(buffer, STRATIFIED_ARENA_LAYOUT.FOCAL_OFFSET, STRATIFIED_ARENA_LAYOUT.FOCAL_FLOATS);
+  const sympathetic = new Float32Array(buffer, STRATIFIED_ARENA_LAYOUT.SYMPATHETIC_OFFSET, STRATIFIED_ARENA_LAYOUT.SYMPATHETIC_FLOATS);
+  const hippocampal = new Float32Array(buffer, STRATIFIED_ARENA_LAYOUT.HIPPOCAMPAL_OFFSET, STRATIFIED_ARENA_LAYOUT.HIPPOCAMPAL_FLOATS);
+  const cryptographicLock = new Uint8Array(buffer, STRATIFIED_ARENA_LAYOUT.LOCK_OFFSET, STRATIFIED_ARENA_LAYOUT.LOCK_BYTES);
+  return {
+    buffer,
+    byteLength: buffer.byteLength,
+    getEpoch: () => Number(headerView.getBigUint64(0, true)),
+    setEpoch: (e) => headerView.setBigUint64(0, BigInt(e), true),
+    getTension: () => headerView.getFloat64(8, true),
+    setTension: (t) => headerView.setFloat64(8, Number(t), true),
+    focal,
+    sympathetic,
+    hippocampal,
+    cryptographicLock
+  };
+}
+
+export function makeDeterministicRng(seed = 20261112) {
+  let a = seed >>> 0;
+  return function nextUniform() {
+    a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function randNormal(rng) {
+  const u1 = Math.max(1e-12, rng());
+  const u2 = rng();
+  return Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2.0 * Math.PI * u2);
+}
+
+export function gramSchmidtColumns(cols, dim) {
+  const basis = [];
+  for (let c = 0; c < cols.length; c++) {
+    const v = Float64Array.from(cols[c]);
+    for (let j = 0; j < basis.length; j++) {
+      let dot = 0.0;
+      for (let i = 0; i < dim; i++) dot += basis[j][i] * v[i];
+      for (let i = 0; i < dim; i++) v[i] -= dot * basis[j][i];
+    }
+    let norm = 0.0;
+    for (let i = 0; i < dim; i++) norm += v[i] * v[i];
+    norm = Math.sqrt(norm);
+    if (norm > 1e-10) {
+      for (let i = 0; i < dim; i++) v[i] /= norm;
+      basis.push(v);
+    }
+  }
+  return basis;
+}
+
+function matMul(A, rA, cA, B, cB) {
+  const C = new Float64Array(rA * cB);
+  for (let i = 0; i < rA; i++) {
+    for (let k = 0; k < cA; k++) {
+      const aik = A[i * cA + k];
+      if (aik === 0.0) continue;
+      for (let j = 0; j < cB; j++) C[i * cB + j] += aik * B[k * cB + j];
+    }
+  }
+  return C;
+}
+
+function matTranspose(A, rows, cols) {
+  const AT = new Float64Array(cols * rows);
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < cols; j++) AT[j * rows + i] = A[i * cols + j];
+  }
+  return AT;
+}
+
+function frobNorm64(A) {
+  let s = 0.0;
+  for (let i = 0; i < A.length; i++) s += A[i] * A[i];
+  return Math.sqrt(s);
+}
+
+function frobInner64(A, B) {
+  let s = 0.0;
+  for (let i = 0; i < A.length; i++) s += A[i] * B[i];
+  return s;
+}
+
+export function projectOrthogonalComplement(M, dim, uCols, vCols) {
+  const res = Float64Array.from(M);
+  for (let k = 0; k < uCols.length; k++) {
+    const u = uCols[k];
+    const utRes = new Float64Array(dim);
+    for (let i = 0; i < dim; i++) {
+      for (let j = 0; j < dim; j++) utRes[j] += u[i] * res[i * dim + j];
+    }
+    for (let i = 0; i < dim; i++) {
+      for (let j = 0; j < dim; j++) res[i * dim + j] -= u[i] * utRes[j];
+    }
+  }
+  for (let k = 0; k < vCols.length; k++) {
+    const v = vCols[k];
+    const resV = new Float64Array(dim);
+    for (let i = 0; i < dim; i++) {
+      for (let j = 0; j < dim; j++) resV[i] += res[i * dim + j] * v[j];
+    }
+    for (let i = 0; i < dim; i++) {
+      for (let j = 0; j < dim; j++) res[i * dim + j] -= resV[i] * v[j];
+    }
+  }
+  return res;
+}
+
+export function topKSVDDeflated(M, dim, kCount, rng) {
+  const work = Float64Array.from(M);
+  const uOut = [], sOut = [], vOut = [];
+  for (let m = 0; m < kCount; m++) {
+    const v = new Float64Array(dim);
+    for (let i = 0; i < dim; i++) v[i] = randNormal(rng);
+    let vn = Math.sqrt(v.reduce((acc, x) => acc + x * x, 0.0)) || 1.0;
+    for (let i = 0; i < dim; i++) v[i] /= vn;
+
+    const u = new Float64Array(dim);
+    let sigma = 0.0;
+    for (let it = 0; it < 30; it++) {
+      u.fill(0.0);
+      for (let i = 0; i < dim; i++) {
+        for (let j = 0; j < dim; j++) u[i] += work[i * dim + j] * v[j];
+      }
+      const un = Math.sqrt(u.reduce((acc, x) => acc + x * x, 0.0));
+      if (un < 1e-12) { sigma = 0.0; break; }
+      for (let i = 0; i < dim; i++) u[i] /= un;
+
+      v.fill(0.0);
+      for (let j = 0; j < dim; j++) {
+        for (let i = 0; i < dim; i++) v[j] += work[i * dim + j] * u[i];
+      }
+      sigma = Math.sqrt(v.reduce((acc, x) => acc + x * x, 0.0));
+      if (sigma < 1e-12) break;
+      for (let j = 0; j < dim; j++) v[j] /= sigma;
+    }
+    if (sigma > 1e-9) {
+      uOut.push(Float64Array.from(u));
+      vOut.push(Float64Array.from(v));
+      sOut.push(sigma);
+      for (let i = 0; i < dim; i++) {
+        for (let j = 0; j < dim; j++) work[i * dim + j] -= sigma * u[i] * v[j];
+      }
+    }
+  }
+  return { u: uOut, s: sOut, v: vOut };
+}
+
+export class ContinuumPlasmColony {
+  constructor({
+    dim = 16,
+    targetRank = 12,
+    initialRank = 3,
+    regime = "weft_mitosis",
+    exoManualGate = false,
+    seed = 20261112
+  } = {}) {
+    this.dim = dim;
+    this.targetRank = targetRank;
+    this.initialRank = initialRank;
+    this.regime = regime;
+    this.exoManualGate = exoManualGate;
+    this.seed = seed;
+    this.arena = allocateStratifiedMemoryArenaBuffer();
+    this.reset();
+  }
+
+  reset() {
+    const D = this.dim;
+    const rng = makeDeterministicRng(this.seed);
+    this.rng = rng;
+
+    const rawU = [], rawV = [];
+    this.sStar = new Float64Array(this.targetRank);
+    for (let k = 0; k < this.targetRank; k++) {
+      const cu = new Float64Array(D), cv = new Float64Array(D);
+      for (let i = 0; i < D; i++) { cu[i] = randNormal(rng); cv[i] = randNormal(rng); }
+      rawU.push(cu);
+      rawV.push(cv);
+      this.sStar[k] = 5.2 * Math.pow(0.84, k);
+    }
+    this.uStar = gramSchmidtColumns(rawU, D);
+    this.vStar = gramSchmidtColumns(rawV, D);
+
+    this.wTarget = new Float64Array(D * D);
+    for (let k = 0; k < this.targetRank; k++) {
+      const sk = this.sStar[k], uk = this.uStar[k], vk = this.vStar[k];
+      for (let i = 0; i < D; i++) {
+        for (let j = 0; j < D; j++) this.wTarget[i * D + j] += sk * uk[i] * vk[j];
+      }
+    }
+
+    this.wBaselineF32 = new Float32Array(D * D);
+    this.wLocked = new Float64Array(D * D);
+    this.wHippo = new Float64Array(D * D);
+    this.sSymp = new Float64Array(D * D);
+    this.uLockedCols = [];
+    this.vLockedCols = [];
+    this.lockedRank = 0;
+    this.childRank = this.initialRank;
+    this.activeRank = this.initialRank;
+    this.epochIdx = 0;
+    this.stepInEpoch = 0;
+    this.totalSteps = 0;
+    this.budgetF32 = toF32(100.0);
+    this.tension = 21.0;
+    this.excisions = 0;
+    this.tryFires = 0;
+    this.pendingConsent = null;
+    this.lastOrthInner = 0.0;
+    this.modeCapture = new Float64Array(this.targetRank);
+
+    this.B = new Float64Array(D * this.childRank);
+    this.A = new Float64Array(this.childRank * D);
+    for (let i = 0; i < this.B.length; i++) this.B[i] = randNormal(rng) * 0.14;
+    for (let i = 0; i < this.A.length; i++) this.A[i] = randNormal(rng) * 0.14;
+
+    this.arena.setEpoch(0);
+    this.arena.setTension(this.tension);
+    this.arena.focal.fill(0);
+    this.arena.sympathetic.fill(0);
+    this.arena.hippocampal.fill(0);
+    this.arena.cryptographicLock.fill(0);
+
+    return this.recomputeMetrics();
+  }
+
+  effectiveWeights() {
+    const D = this.dim;
+    const BA = matMul(this.B, D, this.childRank, this.A, D);
+    const W = new Float64Array(D * D);
+    for (let i = 0; i < D * D; i++) W[i] = this.wLocked[i] + 0.25 * this.wHippo[i] + BA[i];
+    return { W, BA };
+  }
+
+  recomputeMetrics() {
+    const D = this.dim;
+    const { W, BA } = this.effectiveWeights();
+    let sqErr = 0.0;
+    const gradFull = new Float64Array(D * D);
+    for (let i = 0; i < D * D; i++) {
+      const diff = W[i] - this.wTarget[i];
+      sqErr += diff * diff;
+      gradFull[i] = diff;
+      this.arena.focal[i] = toF32(BA[i]);
+      this.arena.hippocampal[i] = toF32(this.wHippo[i]);
+    }
+    this.mse = sqErr / (D * D);
+
+    const svdAct = topKSVDDeflated(BA, D, this.childRank, makeDeterministicRng(991 + this.totalSteps));
+    const uAll = gramSchmidtColumns(this.uLockedCols.concat(svdAct.u), D);
+    const vAll = gramSchmidtColumns(this.vLockedCols.concat(svdAct.v), D);
+
+    const gOrth = projectOrthogonalComplement(gradFull, D, uAll, vAll);
+    const gPar = new Float64Array(D * D);
+    for (let i = 0; i < D * D; i++) gPar[i] = gradFull[i] - gOrth[i];
+
+    this.gradOrthNorm = frobNorm64(gOrth);
+    this.gradParNorm = frobNorm64(gPar);
+    this.mdr = this.gradOrthNorm / (this.gradParNorm + 1e-9);
+    this.frobLocked = frobNorm64(this.wLocked);
+    this.frobPlastic = frobNorm64(BA);
+    this.frobTotal = frobNorm64(W);
+    this.lastOrthInner = Math.abs(frobInner64(this.wLocked, BA));
+
+    for (let k = 0; k < this.targetRank; k++) {
+      const uk = this.uStar[k], vk = this.vStar[k];
+      let proj = 0.0;
+      for (let i = 0; i < D; i++) {
+        for (let j = 0; j < D; j++) proj += uk[i] * W[i * D + j] * vk[j];
+      }
+      this.modeCapture[k] = Math.max(0.0, Math.min(1.08, proj / this.sStar[k]));
+    }
+
+    if (this.lockedRank === 0) {
+      this.ancestralRetention = 1.0;
+    } else {
+      let ancErrSq = 0.0, ancRefSq = 0.0;
+      for (let k = 0; k < this.lockedRank; k++) {
+        const sk = this.sStar[k];
+        const cap = this.modeCapture[k] * sk;
+        ancErrSq += (cap - sk) * (cap - sk);
+        ancRefSq += sk * sk;
+      }
+      this.ancestralRetention = Math.max(0.0, 1.0 - ancErrSq / (ancRefSq + 1e-12));
+    }
+
+    return {
+      mse: this.mse,
+      mdr: this.mdr,
+      activeRank: this.activeRank,
+      lockedRank: this.lockedRank,
+      ancestralRetention: this.ancestralRetention,
+      lastOrthInner: this.lastOrthInner,
+      budgetF32: this.budgetF32,
+      tension: this.tension
+    };
+  }
+
+  step() {
+    if (this.pendingConsent || this.budgetF32 <= 0.001) return this.recomputeMetrics();
+    const D = this.dim;
+    const { W } = this.effectiveWeights();
+    const gradFull = new Float64Array(D * D);
+    for (let i = 0; i < D * D; i++) gradFull[i] = W[i] - this.wTarget[i];
+
+    const gradProj = this.uLockedCols.length > 0
+      ? projectOrthogonalComplement(gradFull, D, this.uLockedCols, this.vLockedCols)
+      : gradFull;
+
+    const AT = matTranspose(this.A, this.childRank, D);
+    const BT = matTranspose(this.B, D, this.childRank);
+    const gradB = matMul(gradProj, D, D, AT, this.childRank);
+    const gradA = matMul(BT, this.childRank, D, gradProj, D);
+
+    if (this.uLockedCols.length > 0) {
+      for (const u of this.uLockedCols) {
+        for (let c = 0; c < this.childRank; c++) {
+          let dot = 0.0;
+          for (let i = 0; i < D; i++) dot += u[i] * gradB[i * this.childRank + c];
+          for (let i = 0; i < D; i++) gradB[i * this.childRank + c] -= dot * u[i];
+        }
+      }
+      for (const v of this.vLockedCols) {
+        for (let c = 0; c < this.childRank; c++) {
+          let dot = 0.0;
+          for (let j = 0; j < D; j++) dot += gradA[c * D + j] * v[j];
+          for (let j = 0; j < D; j++) gradA[c * D + j] -= dot * v[j];
+        }
+      }
+    }
+
+    const gNorm = Math.sqrt(frobNorm64(gradB) ** 2 + frobNorm64(gradA) ** 2);
+    const lr1 = 0.085 / (1.0 + 0.08 * gNorm);
+    const lr2 = 0.145 / (1.0 + 0.08 * gNorm);
+
+    const cB1 = Float64Array.from(this.B, (v, i) => v - lr1 * gradB[i]);
+    const cA1 = Float64Array.from(this.A, (v, i) => v - lr1 * gradA[i]);
+    const cB2 = Float64Array.from(this.B, (v, i) => v - lr2 * gradB[i]);
+    const cA2 = Float64Array.from(this.A, (v, i) => v - lr2 * gradA[i]);
+
+    const ba1 = matMul(cB1, D, this.childRank, cA1, D);
+    const ba2 = matMul(cB2, D, this.childRank, cA2, D);
+    let e1 = 0.0, e2 = 0.0;
+    for (let i = 0; i < D * D; i++) {
+      const d1 = this.wLocked[i] + 0.25 * this.wHippo[i] + ba1[i] - this.wTarget[i];
+      const d2 = this.wLocked[i] + 0.25 * this.wHippo[i] + ba2[i] - this.wTarget[i];
+      e1 += d1 * d1;
+      e2 += d2 * d2;
+    }
+    const pick2 = e2 < e1;
+    const chosenB = Float64Array.from(pick2 ? cB2 : cB1);
+    const chosenA = Float64Array.from(pick2 ? cA2 : cA1);
+
+    // Re-project plastic factors strictly orthogonal to locked ancestral subspaces (prevents FP64 drift)
+    if (this.uLockedCols.length > 0) {
+      for (const u of this.uLockedCols) {
+        for (let c = 0; c < this.childRank; c++) {
+          let dot = 0.0;
+          for (let i = 0; i < D; i++) dot += u[i] * chosenB[i * this.childRank + c];
+          for (let i = 0; i < D; i++) chosenB[i * this.childRank + c] -= dot * u[i];
+        }
+      }
+      for (const v of this.vLockedCols) {
+        for (let c = 0; c < this.childRank; c++) {
+          let dot = 0.0;
+          for (let j = 0; j < D; j++) dot += chosenA[c * D + j] * v[j];
+          for (let j = 0; j < D; j++) chosenA[c * D + j] -= dot * v[j];
+        }
+      }
+    }
+    const chosenBA = matMul(chosenB, D, this.childRank, chosenA, D);
+
+    const candF32 = new Float32Array(D * D);
+    for (let i = 0; i < D * D; i++) candF32[i] = toF32(this.wLocked[i] + 0.25 * this.wHippo[i] + chosenBA[i]);
+
+    const gate = verifyWeightUpdateSafety(
+      this.wBaselineF32,
+      candF32,
+      WEFT_CONSTANTS.R_INVARIANT,
+      this.budgetF32,
+      gNorm < 0.05 ? 0.008 : 0.035,
+      null
+    );
+    this.tension = Math.min(82.0, 17.5 + 3.2 * gNorm);
+    this.arena.setTension(this.tension);
+
+    if (gate.ok) {
+      this.B = chosenB;
+      this.A = chosenA;
+      this.budgetF32 = gate.nextBudget;
+      if (this.totalSteps % 2 === 0) {
+        for (let i = 0; i < D * D; i++) {
+          this.sSymp[i] = 0.86 * this.sSymp[i] + 0.14 * gradProj[i];
+          if (i < this.arena.sympathetic.length) this.arena.sympathetic[i] = toF32(this.sSymp[i]);
+        }
+      }
+      if (this.totalSteps % 8 === 0) {
+        for (let i = 0; i < D * D; i++) this.wHippo[i] = 0.96 * this.wHippo[i] - 0.18 * this.sSymp[i];
+        if (this.uLockedCols.length > 0) {
+          this.wHippo = projectOrthogonalComplement(this.wHippo, D, this.uLockedCols, this.vLockedCols);
+        }
+      }
+    } else {
+      this.excisions++;
+    }
+
+    this.stepInEpoch++;
+    this.totalSteps++;
+    return this.recomputeMetrics();
+  }
+
+  triggerEpochBoundary(deltaRank = 3) {
+    if (this.pendingConsent) return { status: "AWAITING_EXO_CONSENT", proposal: this.pendingConsent };
+    if (this.regime !== "weft_mitosis" || this.activeRank >= this.targetRank) {
+      this.epochIdx++;
+      this.stepInEpoch = 0;
+      this.arena.setEpoch(this.epochIdx);
+      return { status: "FIXED_EPOCH_ADVANCE", activeRank: this.activeRank, mdr: this.mdr };
+    }
+
+    const D = this.dim;
+    const { BA } = this.effectiveWeights();
+
+    const rawParent = new Float64Array(D * D);
+    for (let i = 0; i < D * D; i++) rawParent[i] = 0.25 * this.wHippo[i] + BA[i];
+    const projParent = this.uLockedCols.length > 0
+      ? projectOrthogonalComplement(rawParent, D, this.uLockedCols, this.vLockedCols)
+      : rawParent;
+
+    const svdAct = topKSVDDeflated(projParent, D, this.childRank, makeDeterministicRng(700 + this.totalSteps));
+    // Reconstruct exact rank-childRank crystallized delta so col(wLocked) === span(uNewLocked) identically
+    const crystallizedDelta = new Float64Array(D * D);
+    for (let m = 0; m < svdAct.s.length; m++) {
+      const sm = svdAct.s[m], um = svdAct.u[m], vm = svdAct.v[m];
+      for (let i = 0; i < D; i++) {
+        for (let j = 0; j < D; j++) crystallizedDelta[i * D + j] += sm * um[i] * vm[j];
+      }
+    }
+
+    const uNewLocked = gramSchmidtColumns(this.uLockedCols.concat(svdAct.u), D);
+    const vNewLocked = gramSchmidtColumns(this.vLockedCols.concat(svdAct.v), D);
+
+    const gradAfterLock = new Float64Array(D * D);
+    for (let i = 0; i < D * D; i++) {
+      gradAfterLock[i] = (this.wLocked[i] + crystallizedDelta[i]) - this.wTarget[i];
+    }
+
+    const negGradOrth = projectOrthogonalComplement(
+      Float64Array.from(gradAfterLock, x => -x),
+      D,
+      uNewLocked,
+      vNewLocked
+    );
+    const addR = Math.min(deltaRank, this.targetRank - uNewLocked.length);
+    const svdChild = topKSVDDeflated(negGradOrth, D, addR, makeDeterministicRng(1900 + this.totalSteps));
+    const uChild = gramSchmidtColumns(uNewLocked.concat(svdChild.u), D).slice(uNewLocked.length);
+    const vChild = gramSchmidtColumns(vNewLocked.concat(svdChild.v), D).slice(vNewLocked.length);
+    const actualAdd = Math.min(uChild.length, vChild.length);
+
+    const newB = new Float64Array(D * actualAdd);
+    const newA = new Float64Array(actualAdd * D);
+    for (let c = 0; c < actualAdd; c++) {
+      const warm = Math.sqrt(Math.max(0.04, 0.28 * (svdChild.s[c] || 0.2)));
+      for (let i = 0; i < D; i++) newB[i * actualAdd + c] = uChild[c][i] * warm;
+      for (let j = 0; j < D; j++) newA[c * D + j] = warm * vChild[c][j];
+    }
+
+    const childMat = matMul(newB, D, actualAdd, newA, D);
+    const totalLockedAfter = new Float64Array(D * D);
+    for (let i = 0; i < D * D; i++) totalLockedAfter[i] = this.wLocked[i] + crystallizedDelta[i];
+    const orthInner = Math.abs(frobInner64(totalLockedAfter, childMat));
+    const proposal = { crystallizedDelta, uNewLocked, vNewLocked, deltaR: actualAdd, newB, newA, orthInner };
+
+    if (this.exoManualGate) {
+      this.pendingConsent = proposal;
+      return { status: "AWAITING_EXO_CONSENT", proposal };
+    }
+    return this.approvePendingConsent(proposal);
+  }
+
+  approvePendingConsent(explicitProposal = null) {
+    const prop = explicitProposal || this.pendingConsent;
+    if (!prop) return { status: "NO_PENDING_PROPOSAL" };
+    const D = this.dim;
+    for (let i = 0; i < D * D; i++) this.wLocked[i] += prop.crystallizedDelta[i];
+    this.uLockedCols = prop.uNewLocked;
+    this.vLockedCols = prop.vNewLocked;
+    this.lockedRank = this.uLockedCols.length;
+    this.wHippo.fill(0);
+    this.sSymp.fill(0);
+    this.childRank = prop.deltaR;
+    this.B = prop.newB;
+    this.A = prop.newA;
+    this.activeRank = this.lockedRank + this.childRank;
+    this.epochIdx++;
+    this.stepInEpoch = 0;
+    this.pendingConsent = null;
+
+    const lockByteCount = Math.min(
+      this.arena.cryptographicLock.length,
+      Math.round((this.lockedRank / this.targetRank) * this.arena.cryptographicLock.length)
+    );
+    this.arena.cryptographicLock.fill(1, 0, lockByteCount);
+    this.arena.setEpoch(this.epochIdx);
+    this.recomputeMetrics();
+    return {
+      status: "MITOSIS_COMMITTED",
+      activeRank: this.activeRank,
+      lockedRank: this.lockedRank,
+      orthInner: this.lastOrthInner
+    };
+  }
+}

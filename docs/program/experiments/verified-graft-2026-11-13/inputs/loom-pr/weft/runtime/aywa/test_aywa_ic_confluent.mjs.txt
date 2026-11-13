@@ -1,0 +1,25 @@
+import { test } from "node:test";
+import assert from "node:assert/strict";
+
+import {
+  createCombinatorCascadeNet,
+  reduceToNormalForm,
+  verifyRandomizedConfluence
+} from "../../../site/assets/js/aywa-ic-confluent.js";
+
+test("Lafont (γ, δ, ε) strong confluence across 50 random reduction schedules", () => {
+  const res = verifyRandomizedConfluence(8, 5, 50, 20261112);
+  assert.equal(res.confluent, true);
+  assert.equal(res.uniqueHashes, 1);
+  assert.equal(res.schedulesTested, 50);
+});
+
+test("Mixture-of-Depths ε-erasure monotonically reduces interaction quanta", () => {
+  const dense = reduceToNormalForm(createCombinatorCascadeNet(8, 8));
+  const half = reduceToNormalForm(createCombinatorCascadeNet(8, 4));
+  const sparse = reduceToNormalForm(createCombinatorCascadeNet(8, 2));
+
+  assert.ok(sparse.quantaSpent < half.quantaSpent);
+  assert.ok(half.quantaSpent < dense.quantaSpent);
+  assert.ok(sparse.savingsPctVsDense > 45.0);
+});

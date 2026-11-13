@@ -1,0 +1,198 @@
+/**
+ * aywa-living-loom.js — Modular ES Browser Controller for w3ft.org `/loom/`.
+ * Connects `ContinuumPlasmColony`, `WEFT-INVARIANTS/2.0`, `Lafont IC`, `ABIOS/SY2L`,
+ * and `Eido Simplex` with automatic WebGPU detection + high-DPI Canvas2D rendering.
+ * License: Apache-2.0
+ */
+
+import { ContinuumPlasmColony } from "./aywa-continuum-plasm.js";
+import { verifyWeightUpdateSafety, verifyWeakNormSizeCheck } from "./aywa-invariant-v2.js";
+import { createCombinatorCascadeNet, verifyRandomizedConfluence } from "./aywa-ic-confluent.js";
+import {
+  encodeSym2pTelemetry,
+  encodeSy2lFrame64,
+  packCellRecords,
+  verifySym2pLine
+} from "./aywa-wire-sym2p-sy2l.js";
+import { classifyTelemetrySource, mountSimplexPad } from "./aywa-eido-mixer.js";
+import { toF32 } from "./aywa-sha256.js";
+
+export function mountAywaLivingLoom(rootDoc = document) {
+  const colony = new ContinuumPlasmColony({
+    dim: 16,
+    targetRank: 12,
+    initialRank: 3,
+    regime: "weft_mitosis",
+    exoManualGate: true,
+    seed: 20261112
+  });
+
+  let running = true;
+  let steadyWeave = false;
+  let phase = 0;
+
+  const provenance = classifyTelemetrySource({ liveExecuted: true });
+  const provEl = rootDoc.getElementById("loomProvenance");
+  if (provEl) provEl.textContent = `TELEMETRY: ${provenance.toUpperCase()} · LIVE`;
+
+  const canvas = rootDoc.getElementById("aywaLoomCanvas");
+  const gpuBadge = rootDoc.getElementById("loomBackendBadge");
+  if (gpuBadge) {
+    gpuBadge.textContent = (typeof navigator !== "undefined" && "gpu" in navigator)
+      ? "WebGPU Capable + Canvas2D Loom"
+      : "Canvas2D Loom";
+  }
+
+  function renderFrame() {
+    if (!canvas) return;
+    const rect = canvas.parentElement.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    if (canvas.width !== Math.round(rect.width * dpr) || canvas.height !== Math.round(rect.height * dpr)) {
+      canvas.width = Math.round(rect.width * dpr);
+      canvas.height = Math.round(rect.height * dpr);
+    }
+    const ctx = canvas.getContext("2d");
+    ctx.save();
+    ctx.scale(dpr, dpr);
+    const W = rect.width, H = rect.height;
+    ctx.clearRect(0, 0, W, H);
+
+    const cells = [];
+    for (let k = 0; k < colony.targetRank; k++) {
+      cells.push({
+        xNorm: k / (colony.targetRank - 1),
+        capture: colony.modeCapture[k],
+        stratum: k < colony.lockedRank ? 2 : (k < colony.activeRank ? 1 : 0),
+        tension: colony.tension
+      });
+    }
+    const packed = packCellRecords(cells);
+    const padX = 38, topY = 26, botY = H - 30;
+    const spanW = Math.max(100, W - padX * 2);
+
+    for (let k = 0; k < colony.targetRank; k++) {
+      const x = padX + packed[k * 4] * spanW;
+      const cap = packed[k * 4 + 1];
+      const st = packed[k * 4 + 2];
+      const barMax = (botY - topY) * (colony.sStar[k] / colony.sStar[0]);
+      ctx.strokeStyle = st === 2 ? "#e0b252" : (st === 1 ? "#38bdf8" : "rgba(148,163,184,0.28)");
+      ctx.lineWidth = st === 2 ? 2.2 : 1.4;
+      ctx.beginPath(); ctx.moveTo(x, topY); ctx.lineTo(x, botY); ctx.stroke();
+      ctx.fillStyle = st === 2 ? "#e0b252" : "#38bdf8";
+      ctx.globalAlpha = st === 0 ? 0.2 : 0.82;
+      ctx.fillRect(x - 5, botY - barMax * Math.min(1, cap), 10, barMax * Math.min(1, cap));
+      ctx.globalAlpha = 1.0;
+    }
+
+    for (let r = 0; r < colony.activeRank; r++) {
+      const y0 = topY + 14 + (r / (colony.targetRank - 1)) * (botY - topY - 28);
+      ctx.beginPath();
+      for (let px = padX - 12; px <= W - padX + 12; px += 5) {
+        const y = y0 + Math.sin(px * 0.045 + (steadyWeave ? r : phase * 0.08 + r)) * (steadyWeave ? 2 : 5);
+        if (px === padX - 12) ctx.moveTo(px, y); else ctx.lineTo(px, y);
+      }
+      ctx.strokeStyle = r < colony.lockedRank ? "#e0b252" : "#38bdf8";
+      ctx.lineWidth = 1.8;
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function updateReadouts() {
+    const set = (id, v) => { const el = rootDoc.getElementById(id); if (el) el.textContent = v; };
+    set("kpiMse", colony.mse.toExponential(3));
+    set("kpiRank", `${colony.activeRank} / ${colony.targetRank}`);
+    set("kpiMdr", colony.mdr.toFixed(2));
+    set("kpiBudget", colony.budgetF32.toFixed(5));
+    set("kpiRetention", `${(colony.ancestralRetention * 100).toFixed(2)}%`);
+
+    const wireLine = encodeSym2pTelemetry({
+      seq: colony.totalSteps,
+      fields: [
+        ["epoch", colony.epochIdx],
+        ["rank", colony.activeRank],
+        ["mse", colony.mse.toFixed(5)],
+        ["mdr", colony.mdr.toFixed(2)],
+        ["tension", colony.tension.toFixed(2)]
+      ]
+    });
+    const wireEl = rootDoc.getElementById("wireLineOut");
+    if (wireEl && !wireEl.dataset.tampered) {
+      wireEl.value = wireLine;
+      const v = verifySym2pLine(wireLine);
+      set("wireStatus", v.ok ? `VERIFIED · ${v.byteLength}B` : v.errorCode);
+    }
+
+    const sy2l = encodeSy2lFrame64({
+      seq: colony.totalSteps,
+      tension: colony.tension,
+      features: [{ id: 101, value: colony.mdr }, { id: 108, value: colony.frobTotal }]
+    });
+    set("sy2lByteCheck", `${sy2l.byteLength} B exact`);
+  }
+
+  rootDoc.getElementById("btnStep")?.addEventListener("click", () => {
+    colony.step(); updateReadouts(); renderFrame();
+  });
+  rootDoc.getElementById("btnMitosis")?.addEventListener("click", () => {
+    const res = colony.triggerEpochBoundary(3);
+    if (res.status === "AWAITING_EXO_CONSENT") colony.approvePendingConsent();
+    updateReadouts(); renderFrame();
+  });
+  rootDoc.getElementById("btnSteady")?.addEventListener("click", () => {
+    steadyWeave = !steadyWeave; renderFrame();
+  });
+  rootDoc.getElementById("btnZenoProbe")?.addEventListener("click", () => {
+    let b = toF32(100.0);
+    for (let i = 0; i < 1000; i++) {
+      b = verifyWeightUpdateSafety(new Float32Array([0]), new Float32Array([1]), 120, b, 3e-6).nextBudget;
+    }
+    const zEl = rootDoc.getElementById("probeOut");
+    if (zEl) zEl.textContent = `1,000x sub-ULP steps: 100.0f -> ${b.toFixed(6)}f (strictly monotone)`;
+  });
+  rootDoc.getElementById("btnFlipProbe")?.addEventListener("click", () => {
+    const w0 = new Float32Array([45, -45, 45, -45]);
+    const w1 = new Float32Array([-45, 45, -45, 45]);
+    const weak = verifyWeakNormSizeCheck(w0, w1, 120.0);
+    const strong = verifyWeightUpdateSafety(w0, w1, 120.0, 10.0, 1.0);
+    const zEl = rootDoc.getElementById("probeOut");
+    if (zEl) zEl.textContent = `Weak ok=${weak.ok} (Δsize=${weak.sizeDelta}) | v2 ok=${strong.ok} (${strong.code})`;
+  });
+  rootDoc.getElementById("btnIcVerify")?.addEventListener("click", () => {
+    const c = verifyRandomizedConfluence(8, 5, 20);
+    const net = createCombinatorCascadeNet(8, 5);
+    const icEl = rootDoc.getElementById("icOut");
+    if (icEl) icEl.textContent = `Confluent=${c.confluent} (${c.schedulesTested} orders -> ${c.normalFormSha256.slice(0, 12)}…, ${c.invariantQuanta}/${net.baselineDenseQuanta} quanta)`;
+  });
+
+  const padSvg = rootDoc.getElementById("simplexSvg");
+  if (padSvg) {
+    mountSimplexPad(
+      padSvg,
+      [{ x: 100, y: 15 }, { x: 20, y: 155 }, { x: 180, y: 155 }],
+      (mixed) => {
+        rootDoc.documentElement.style.setProperty("--loom-radius", `${mixed.radiusPx.toFixed(1)}px`);
+        rootDoc.documentElement.style.setProperty("--loom-hue", `${mixed.hueDeg.toFixed(0)}`);
+      }
+    );
+  }
+
+  let tick = 0;
+  function loop() {
+    tick++;
+    if (!steadyWeave) phase++;
+    if (running && tick % 6 === 0) {
+      colony.step();
+      if (colony.stepInEpoch >= 55 && colony.activeRank < colony.targetRank) {
+        const r = colony.triggerEpochBoundary(3);
+        if (r.status === "AWAITING_EXO_CONSENT") colony.approvePendingConsent();
+      }
+      updateReadouts();
+    }
+    renderFrame();
+    window.requestAnimationFrame(loop);
+  }
+  updateReadouts();
+  window.requestAnimationFrame(loop);
+  return { colony, pause: () => { running = false; } };
+}

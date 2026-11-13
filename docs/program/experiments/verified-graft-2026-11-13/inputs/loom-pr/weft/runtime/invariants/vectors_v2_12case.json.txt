@@ -1,0 +1,173 @@
+{
+  "schema": "WEFT-INVARIANTS/2.0",
+  "backward_compatible_with": "WEFT-INVARIANTS/1.0",
+  "constants": {
+    "R_INVARIANT": 120.0,
+    "TENSION_MAX": 85.0,
+    "HOMEOSTATIC_TENSION_MIN": 15.0,
+    "HOMEOSTATIC_TENSION_MAX": 35.0,
+    "MDR_TRIGGER": 2.5,
+    "ORTH_TOL": 1e-05,
+    "ROYALTY_UPSTREAM_BPS": 1500,
+    "ROYALTY_WEAVER_BPS": 8500
+  },
+  "weight_update_vectors": [
+    {
+      "id": "W01_valid_small_step",
+      "baseline": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "candidate": [
+        3.0,
+        4.0,
+        0.0,
+        0.0
+      ],
+      "r_invariant": 120.0,
+      "budget": 10.0,
+      "cost": 1.5,
+      "expected_ok": true,
+      "expected_code": "WEFT_OK",
+      "expected_distance": 5.0
+    },
+    {
+      "id": "W02_exact_boundary_r120",
+      "baseline": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "candidate": [
+        60.0,
+        60.0,
+        60.0,
+        60.0
+      ],
+      "r_invariant": 120.0,
+      "budget": 10.0,
+      "cost": 2.0,
+      "expected_ok": true,
+      "expected_code": "WEFT_OK",
+      "expected_distance": 120.0
+    },
+    {
+      "id": "W03_flip_signs_radius_exceeded",
+      "baseline": [
+        45.0,
+        -45.0,
+        45.0,
+        -45.0
+      ],
+      "candidate": [
+        -45.0,
+        45.0,
+        -45.0,
+        45.0
+      ],
+      "r_invariant": 120.0,
+      "budget": 10.0,
+      "cost": 1.0,
+      "expected_ok": false,
+      "expected_code": "WEFT_ERR_RADIUS_EXCEEDED",
+      "expected_distance": 180.0
+    },
+    {
+      "id": "W04_zero_step_cost_rejected",
+      "baseline": [
+        1.0,
+        1.0
+      ],
+      "candidate": [
+        1.5,
+        1.5
+      ],
+      "r_invariant": 120.0,
+      "budget": 10.0,
+      "cost": 0.0,
+      "expected_ok": false,
+      "expected_code": "WEFT_ERR_INVALID_COST"
+    },
+    {
+      "id": "W05_insufficient_budget_rejected",
+      "baseline": [
+        1.0,
+        1.0
+      ],
+      "candidate": [
+        1.5,
+        1.5
+      ],
+      "r_invariant": 120.0,
+      "budget": 0.5,
+      "cost": 1.0,
+      "expected_ok": false,
+      "expected_code": "WEFT_ERR_BUDGET_EXHAUSTED"
+    },
+    {
+      "id": "W06_nonfinite_nan_candidate_rejected",
+      "baseline": [
+        1.0,
+        2.0
+      ],
+      "candidate": [
+        "NaN",
+        2.0
+      ],
+      "r_invariant": 120.0,
+      "budget": 10.0,
+      "cost": 1.0,
+      "expected_ok": false,
+      "expected_code": "WEFT_ERR_NONFINITE_INPUT"
+    }
+  ],
+  "tension_vectors": [
+    {
+      "id": "T07_homeostatic_band",
+      "tension": 22.5,
+      "expected_homeostatic": true,
+      "expected_excised": false,
+      "expected_code": "WEFT_OK"
+    },
+    {
+      "id": "T08_elevated_unexcised",
+      "tension": 64.0,
+      "expected_homeostatic": false,
+      "expected_excised": false,
+      "expected_code": "WEFT_OK"
+    },
+    {
+      "id": "T09_poison_spike_excised",
+      "tension": 92.4,
+      "expected_homeostatic": false,
+      "expected_excised": true,
+      "expected_code": "WEFT_ERR_TENSION_EXCISION"
+    }
+  ],
+  "royalty_attribution_vectors": [
+    {
+      "id": "R10_exact_10000_units",
+      "total_units": 10000,
+      "expected_upstream": 1500,
+      "expected_weaver": 8500,
+      "expected_ok": true
+    },
+    {
+      "id": "R11_odd_remainder_conserved_to_weaver",
+      "total_units": 101,
+      "expected_upstream": 15,
+      "expected_weaver": 86,
+      "expected_ok": true
+    },
+    {
+      "id": "R12_negative_units_rejected",
+      "total_units": -50,
+      "expected_upstream": 0,
+      "expected_weaver": 0,
+      "expected_ok": false
+    }
+  ]
+}

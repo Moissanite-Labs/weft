@@ -1,0 +1,407 @@
+
+window.getCssVar = window.getCssVar || function(name, fallback) {
+  try {
+    var v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    return v || fallback || '';
+  } catch (e) { return fallback || ''; }
+};
+
+
+(function() {
+  if (window.__lumiCanvasGuard) return;
+  window.__lumiCanvasGuard = true;
+  var MAX_PX = 4096, MIN_FONT_PX = 12;
+  try {
+    var CP = HTMLCanvasElement.prototype;
+    var BOX = {width: 'clientWidth', height: 'clientHeight'}, D = {};
+    Object.keys(BOX).forEach(function(p) {
+      D[p] = Object.getOwnPropertyDescriptor(CP, p);
+    });
+    var tracking = function(el, p) {
+      var box = el[BOX[p]];
+      return !el.style[p] && box > 0 && box === D[p].get.call(el) &&
+          box === el['__lumiLast' + p];
+    };
+    var MAX = {width: 'maxWidth', height: 'maxHeight'};
+    var PAD = {width: ['paddingLeft', 'paddingRight'],
+               height: ['paddingTop', 'paddingBottom']};
+    var avail = function(el, p) {
+      var pe = el.parentElement;
+      if (!pe) return 0;
+      var cs = getComputedStyle(pe);
+      return pe[BOX[p]] - parseFloat(cs[PAD[p][0]]) -
+          parseFloat(cs[PAD[p][1]]);
+    };
+    Object.keys(BOX).forEach(function(p) {
+      var d = D[p];
+      if (!d || !d.set || !d.get) return;
+      Object.defineProperty(CP, p, {
+        configurable: true, enumerable: d.enumerable, get: d.get,
+        set: function(v) {
+          var n = +v, box = this[BOX[p]];
+          if (n > MAX_PX) n = MAX_PX;
+          if (n > box && tracking(this, p)) {
+            var el = this, pins = {};
+            Object.keys(BOX).forEach(function(q) {
+              if (tracking(el, q)) pins[q] = avail(el, q) ||
+                  el['__lumiBox' + q];
+            });
+            Object.keys(pins).forEach(function(q) {
+              el.style[q] = '100%';
+              el.style[MAX[q]] = pins[q] + 'px';
+            });
+            n = box;
+          }
+          this['__lumiBox' + p] = box;
+          this['__lumiLast' + p] = n;
+          d.set.call(this, isNaN(n) ? v : n);
+        }
+      });
+    });
+  } catch (e) {}
+  try {
+    var XP = CanvasRenderingContext2D.prototype;
+    var px = /(\d*\.?\d+)px/;
+    var floorFont = function(ctx) {
+      var f = ctx.font, m = px.exec(f);
+      if (m && +m[1] >= 4 && +m[1] < MIN_FONT_PX) ctx.font = f.replace(px, MIN_FONT_PX + 'px');
+    };
+    ['fillText', 'strokeText', 'measureText'].forEach(function(k) {
+      var o = XP[k];
+      if (typeof o !== 'function') return;
+      XP[k] = function() { floorFont(this); return o.apply(this, arguments); };
+    });
+  } catch (e) {}
+})();
+
+
+(function() {
+  function syncBody() {
+    var dt = document.documentElement.getAttribute('data-theme');
+    if (document.body && (dt === 'dark' || dt === 'light')) {
+      document.body.classList.toggle('dark-mode', dt === 'dark');
+    }
+  }
+  function applyTheme(theme) {
+    if (theme !== 'dark' && theme !== 'light') return;
+    document.documentElement.setAttribute('data-theme', theme);
+    syncBody();
+  }
+  if (typeof MutationObserver === 'function') {
+    new MutationObserver(syncBody).observe(document.documentElement, {
+      attributes: true, attributeFilter: ['data-theme']
+    });
+  }
+  if (typeof document.addEventListener === 'function') {
+    document.addEventListener('DOMContentLoaded', syncBody);
+  }
+  try {
+    var mq = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+    if (mq) {
+      if (!document.documentElement.hasAttribute('data-theme')) {
+        applyTheme(mq.matches ? 'dark' : 'light');
+      } else {
+        syncBody();
+      }
+      if (mq.addEventListener) {
+        mq.addEventListener('change', function(e) {
+          applyTheme(e.matches ? 'dark' : 'light');
+        });
+      }
+    }
+  } catch (e) {}
+  window.addEventListener('message', function(e) {
+    if (e.data && (e.data.type === 'set-theme' || e.data.type === 'APPLY_THEME') && e.data.theme) {
+      applyTheme(e.data.theme);
+    }
+  });
+})();
+
+
+    (function () {
+      function getCssVar(name, fallback) {
+        return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
+      }
+
+      function syncSlider(el) {
+        const min = parseFloat(el.min);
+        const max = parseFloat(el.max);
+        const val = parseFloat(el.value);
+        el.style.setProperty('--progress', (((val - min) / (max - min)) * 100).toFixed(1) + '%');
+      }
+
+      const cv = document.getElementById('e12-cv');
+      const ctx = cv.getContext('2d');
+      const inShift = document.getElementById('in-shift');
+      const valShift = document.getElementById('val-shift');
+      const valKeep = document.getElementById('val-keep');
+      const valTran = document.getElementById('val-tran');
+      const valNull = document.getElementById('val-null');
+      const btnPerm = document.getElementById('btn-perm');
+      const modeBtns = document.querySelectorAll('.lumi-segmented-btn');
+
+      let mode = 'nullgate';
+      let permSeed = 1;
+      let t = 0;
+
+      function updateReadouts() {
+        const sh = parseFloat(inShift.value);
+        valShift.textContent = sh.toFixed(1) + '×';
+        const interp = (sh - 1.0) / 1.4;
+        if (mode === 'nullgate') {
+          const keepScore = (86.59 - interp * (86.59 - 56.73)).toFixed(2);
+          valKeep.textContent = '+' + keepScore + ' (0.00 drop)';
+          valTran.textContent = '+39.32 (+123.85 gain)';
+          valNull.textContent = '0.0000 (10/12 pass)';
+        } else if (mode === 'ungated') {
+          const keepScore = (-20.75 - interp * 67.13).toFixed(2);
+          const drop = (107.34 + interp * 37.27).toFixed(1);
+          valKeep.textContent = keepScore + ' (-' + drop + ' drop)';
+          valTran.textContent = '-46.57 (m=1 collision)';
+          valNull.textContent = '1.3086 (0/12 pass)';
+        } else {
+          const keepScore = (84.01 - interp * 31.65).toFixed(2);
+          valKeep.textContent = '+' + keepScore + ' (-4.37 drop)';
+          valTran.textContent = '-85.69 (perm scrambled)';
+          valNull.textContent = '0.1376 (0/12 pass)';
+        }
+      }
+
+      function draw() {
+        const dpr = window.devicePixelRatio || 1;
+        const rect = cv.getBoundingClientRect();
+        const w = Math.max(300, Math.floor(rect.width));
+        const h = Math.max(220, Math.floor(rect.height));
+        if (cv.width !== w * dpr || cv.height !== h * dpr) {
+          cv.width = w * dpr;
+          cv.height = h * dpr;
+        }
+        ctx.save();
+        ctx.scale(dpr, dpr);
+        ctx.clearRect(0, 0, w, h);
+
+        t += 0.028;
+        const sh = parseFloat(inShift.value);
+        const ink = getCssVar('--on-surface', '#111111');
+        const muted = getCssVar('--on-surface-variant', '#666666');
+        const primary = getCssVar('--primary', '#3186ff');
+        const chart3 = getCssVar('--chart-3', '#228a49');
+        const chart8 = getCssVar('--chart-8', '#997112');
+        const errorCol = getCssVar('--error', '#de2d29');
+        const strokeDef = getCssVar('--stroke-default', '#d4d4d8');
+
+        const col = w / 3;
+        ctx.font = '12px "Google Sans Code", monospace';
+        ctx.fillStyle = muted;
+        ctx.fillText('1. AUX-PORT SUP SPLICE', 10, 16);
+        ctx.fillText('2. SUBSPACE GATE (Q_keep)', col + 10, 16);
+        ctx.fillText('3. SHIFTED CILIARY OUTPUT', col * 2 + 10, 16);
+
+        // Panel 1: Host Clade (green) + SUP(5) Splice + Donor 8-node Plasmid (blue)
+        const c1x = col * 0.5;
+        const c1y = h * 0.56;
+        const rHost = 34;
+        for (let i = 0; i < 6; i++) {
+          const a = (i / 6) * Math.PI * 2 + 0.3;
+          const nx = c1x - 36 + Math.cos(a) * rHost;
+          const ny = c1y + Math.sin(a) * rHost;
+          ctx.strokeStyle = chart3;
+          ctx.globalAlpha = 0.45;
+          ctx.beginPath();
+          ctx.moveTo(c1x - 36, c1y);
+          ctx.lineTo(nx, ny);
+          ctx.stroke();
+          ctx.globalAlpha = 1.0;
+          ctx.fillStyle = chart3;
+          ctx.beginPath();
+          ctx.arc(nx, ny, 5.5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        const rPlas = 34;
+        for (let j = 0; j < 8; j++) {
+          const a = (j / 8) * Math.PI * 2 - 0.2;
+          const px = c1x + 42 + Math.cos(a) * rPlas;
+          const py = c1y + Math.sin(a) * rPlas;
+          ctx.strokeStyle = mode === 'raw' ? chart8 : primary;
+          ctx.globalAlpha = 0.45;
+          ctx.beginPath();
+          ctx.moveTo(c1x + 42, c1y);
+          ctx.lineTo(px, py);
+          ctx.stroke();
+          ctx.globalAlpha = 1.0;
+          ctx.fillStyle = mode === 'raw' ? chart8 : primary;
+          ctx.beginPath();
+          ctx.arc(px, py, 5.0, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // SUP(5) splice bridge node
+        ctx.strokeStyle = ink;
+        ctx.setLineDash([3, 3]);
+        ctx.lineWidth = 1.4;
+        ctx.beginPath();
+        ctx.moveTo(c1x - 36, c1y);
+        ctx.lineTo(c1x + 3, c1y - 26);
+        ctx.lineTo(c1x + 42, c1y);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = ink;
+        ctx.beginPath();
+        ctx.arc(c1x + 3, c1y - 26, 8, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = muted;
+        ctx.fillText('SUP(5)', c1x - 16, c1y - 40);
+
+        // Panel 2: Orthogonal Subspace Decomposition Diagram
+        const ox = col * 1.5;
+        const oy = h * 0.62;
+        const axLen = Math.min(col * 0.38, 76);
+
+        // Horizontal axis = span(Q_keep), Vertical axis = ker(J_keep)
+        ctx.strokeStyle = strokeDef;
+        ctx.lineWidth = 1.3;
+        ctx.beginPath();
+        ctx.moveTo(ox - axLen, oy);
+        ctx.lineTo(ox + axLen, oy);
+        ctx.moveTo(ox, oy + 36);
+        ctx.lineTo(ox, oy - axLen - 10);
+        ctx.stroke();
+
+        ctx.fillStyle = chart3;
+        ctx.fillText('span(Q_keep)', ox + 12, oy + 16);
+        ctx.fillStyle = primary;
+        ctx.fillText('ker(J_keep)', ox + 8, oy - axLen);
+
+        // Host vector along span(Q_keep)
+        ctx.strokeStyle = chart3;
+        ctx.lineWidth = 2.6;
+        ctx.beginPath();
+        ctx.moveTo(ox, oy);
+        ctx.lineTo(ox + axLen * 0.78, oy);
+        ctx.stroke();
+
+        // Raw incoming plasmid vector (has m=1 overlap onto span(Q_keep)!)
+        const rawVx = ox - axLen * 0.58 * (sh / 2.0);
+        const rawVy = oy - axLen * 0.82;
+        ctx.strokeStyle = mode === 'ungated' ? errorCol : muted;
+        ctx.globalAlpha = mode === 'nullgate' ? 0.35 : 0.95;
+        ctx.setLineDash(mode === 'nullgate' ? [3, 3] : []);
+        ctx.lineWidth = 2.0;
+        ctx.beginPath();
+        ctx.moveTo(ox, oy);
+        ctx.lineTo(rawVx, rawVy);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.globalAlpha = 1.0;
+
+        if (mode === 'nullgate') {
+          // Exact orthogonal projection onto vertical axis ker(J_keep)!
+          ctx.strokeStyle = primary;
+          ctx.lineWidth = 2.8;
+          ctx.beginPath();
+          ctx.moveTo(ox, oy);
+          ctx.lineTo(ox, rawVy);
+          ctx.stroke();
+
+          ctx.strokeStyle = muted;
+          ctx.setLineDash([2, 3]);
+          ctx.lineWidth = 1.1;
+          ctx.beginPath();
+          ctx.moveTo(rawVx, rawVy);
+          ctx.lineTo(ox, rawVy);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        }
+
+        // Panel 3: Dual-Skill Shifted Waveform Comparison
+        const wx0 = col * 2 + 14;
+        const ww = col - 24;
+        const wyKeep = h * 0.39;
+        const wyTran = h * 0.76;
+        const ampPx = 22;
+
+        // Target wake wave (dashed) vs actual post-graft wake wave
+        ctx.strokeStyle = muted;
+        ctx.setLineDash([2, 3]);
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        for (let k = 0; k <= 60; k++) {
+          const u = k / 60;
+          const th = u * Math.PI * 2;
+          const yTarg = Math.cos(2 * th - t);
+          const px = wx0 + u * ww;
+          const py = wyKeep - yTarg * ampPx;
+          if (k === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+        }
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        ctx.strokeStyle = mode === 'ungated' ? errorCol : chart3;
+        ctx.lineWidth = 2.2;
+        ctx.beginPath();
+        for (let k = 0; k <= 60; k++) {
+          const u = k / 60;
+          const th = u * Math.PI * 2;
+          let yAct = Math.cos(2 * th - t);
+          if (mode === 'ungated') {
+            yAct = 0.35 * yAct - 0.85 * (sh / 2.0) * Math.cos(th + t * 0.7);
+          } else if (mode === 'raw') {
+            yAct = 0.82 * yAct + 0.22 * Math.sin(th * 7 + permSeed);
+          }
+          const px = wx0 + u * ww;
+          const py = wyKeep - Math.max(-1.3, Math.min(1.3, yAct)) * ampPx;
+          if (k === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+        }
+        ctx.stroke();
+
+        // Bottom wave: Transferred Skill (m=3 chemotaxis)
+        ctx.strokeStyle = mode === 'nullgate' ? primary : (mode === 'ungated' ? chart8 : muted);
+        ctx.lineWidth = 2.2;
+        ctx.beginPath();
+        for (let k = 0; k <= 60; k++) {
+          const u = k / 60;
+          const th = u * Math.PI * 2;
+          let yTr = 0;
+          if (mode === 'nullgate') {
+            yTr = 0.86 * Math.cos(3 * th - t * 1.2);
+          } else if (mode === 'ungated') {
+            yTr = 0.55 * Math.cos(3 * th - t * 1.2) - 0.65 * Math.sin(th - t);
+          } else {
+            yTr = 0.35 * Math.sin(th * 11.0 + permSeed * 2.1 + t);
+          }
+          const px = wx0 + u * ww;
+          const py = wyTran - Math.max(-1.2, Math.min(1.2, yTr)) * ampPx;
+          if (k === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+        }
+        ctx.stroke();
+
+        ctx.restore();
+        requestAnimationFrame(draw);
+      }
+
+      inShift.addEventListener('input', function () {
+        syncSlider(inShift);
+        updateReadouts();
+      });
+
+      btnPerm.addEventListener('click', function () {
+        permSeed += 1;
+        updateReadouts();
+      });
+
+      modeBtns.forEach(function (b) {
+        b.addEventListener('click', function () {
+          modeBtns.forEach(function (x) { x.classList.remove('is-active'); });
+          b.classList.add('is-active');
+          mode = b.getAttribute('data-mode');
+          updateReadouts();
+        });
+      });
+
+      syncSlider(inShift);
+      updateReadouts();
+      requestAnimationFrame(draw);
+    })();
+  
+/*luminous-slider-normalizer*/(function(){function f(r){if(!r||r.type!=='range')return;var mn=parseFloat(r.min||'0'),mx=parseFloat(r.max||'100'),v=parseFloat(r.value);if(isNaN(v))v=(mn+mx)/2;var p=mx>mn?((v-mn)/(mx-mn))*100:50;r.style.setProperty('--progress',p+'%');r.style.removeProperty('--slider-fill');}function all(){document.querySelectorAll('input[type="range"], .lumi-slider').forEach(f);}document.addEventListener('input',function(e){f(e.target);});document.addEventListener('change',function(e){f(e.target);});window.addEventListener('message',function(e){var d=e&&e.data;if(d&&(d.type==='SUPPLEMENTAL_DATA_UPDATE'||d.type==='RESTORE_STATE')){all();setTimeout(all,0);setTimeout(all,50);}});if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){all();setTimeout(all,0);});else{all();setTimeout(all,0);}})();

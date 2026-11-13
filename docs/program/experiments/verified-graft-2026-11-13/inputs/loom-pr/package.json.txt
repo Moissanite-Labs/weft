@@ -1,0 +1,11 @@
+{
+  "name": "weft-aywa-loom-pr-bundle",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "license": "Apache-2.0",
+  "description": "Modular ES-module Aywa Living Loom + 12-vector WEFT-INVARIANTS/2.0 + node:test suite for Moissanite-Labs/weft",
+  "scripts": {
+    "test": "node --test weft/runtime/aywa/test_*.mjs"
+  }
+}

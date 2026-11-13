@@ -1,0 +1,44 @@
+[
+  {
+    "type": "response.completed",
+    "id": "resp_09a276a2fa9e8dbf016af686fceba487d2a0b0c50d24e298ff",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 89,
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "output_tokens": 146,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 235,
+      "attribution": {
+        "items": {
+          "msg_09a276a2fa9e8dbf016af686fcecc487d2ae6c13b07620d098": {
+            "input_tokens": 37,
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "output_tokens": 0
+          },
+          "msg_09a276a2fa9e8dbf016af686fe485487d2aa173a95c083d46d": {
+            "input_tokens": 2,
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "output_tokens": 146
+          }
+        },
+        "request_fields": {
+          "instructions": {
+            "input_tokens": 50,
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "output_tokens": 0
+          }
+        }
+      }
+    }
+  }
+]

@@ -1,0 +1,21 @@
+{
+  "role": "Root verification observations; raw independent gate test logs are recorded separately",
+  "checks": [
+    {
+      "command": "python3 -m unittest -v test_graft",
+      "tests": 8,
+      "seconds": 0.01,
+      "exit_code": 0
+    },
+    {
+      "command": "python3 -m unittest -v test_proof_gate",
+      "tests": 7,
+      "seconds": 19.852,
+      "exit_code": 0
+    }
+  ],
+  "transport_smoke": {
+    "attempt01": "Hermes bootstrap re-executed script after output directory creation; FileExistsError before any recorded wire request. Request artifact retained.",
+    "attempt02": "Completed gpt-6-astra response through explicit ChatGPT subscription provider; exact wire and observable response artifacts retained."
+  }
+}

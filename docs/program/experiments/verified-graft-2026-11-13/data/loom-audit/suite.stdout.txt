@@ -1,0 +1,106 @@
+TAP version 13
+# Subtest: StratifiedMemoryArena exact 540,688-byte binary layout & disjoint views
+ok 1 - StratifiedMemoryArena exact 540,688-byte binary layout & disjoint views
+  ---
+  duration_ms: 0.470208
+  type: 'test'
+  ...
+# Subtest: Causal Orthogonal Mitosis breaks Eckart-Young r=3 saddle with 100% ancestral retention
+ok 2 - Causal Orthogonal Mitosis breaks Eckart-Young r=3 saddle with 100% ancestral retention
+  ---
+  duration_ms: 299.641167
+  type: 'test'
+  ...
+# Subtest: Exo C/Fe manual consent gate blocks crystallization until human approval
+ok 3 - Exo C/Fe manual consent gate blocks crystallization until human approval
+  ---
+  duration_ms: 30.613542
+  type: 'test'
+  ...
+# Subtest: w3ft.org circular hue wraparound test: red 0.95 + red 0.05 -> 0.00 red (NOT 0.50 cyan)
+ok 4 - w3ft.org circular hue wraparound test: red 0.95 + red 0.05 -> 0.00 red (NOT 0.50 cyan)
+  ---
+  duration_ms: 0.430583
+  type: 'test'
+  ...
+# Subtest: Barycentric simplex projection sums strictly to 1.0 inside & outside triangle
+ok 5 - Barycentric simplex projection sums strictly to 1.0 inside & outside triangle
+  ---
+  duration_ms: 0.172333
+  type: 'test'
+  ...
+# Subtest: Issue \#45 honest telemetry source classifier
+ok 6 - Issue \#45 honest telemetry source classifier
+  ---
+  duration_ms: 0.367167
+  type: 'test'
+  ...
+# Subtest: Lafont (γ, δ, ε) strong confluence across 50 random reduction schedules
+ok 7 - Lafont (γ, δ, ε) strong confluence across 50 random reduction schedules
+  ---
+  duration_ms: 23.067
+  type: 'test'
+  ...
+# Subtest: Mixture-of-Depths ε-erasure monotonically reduces interaction quanta
+ok 8 - Mixture-of-Depths ε-erasure monotonically reduces interaction quanta
+  ---
+  duration_ms: 0.48975
+  type: 'test'
+  ...
+# Subtest: 12-case shared conformance corpus (6 weight + 3 tension + 3 royalty)
+ok 9 - 12-case shared conformance corpus (6 weight + 3 tension + 3 royalty)
+  ---
+  duration_ms: 3.76125
+  type: 'test'
+  ...
+# Subtest: Flip-signs bug: weak norm-size check passes while WEFT-INVARIANTS/2.0 rejects
+ok 10 - Flip-signs bug: weak norm-size check passes while WEFT-INVARIANTS/2.0 rejects
+  ---
+  duration_ms: 0.119125
+  type: 'test'
+  ...
+# Subtest: IEEE-754 Zeno sub-ULP free-step exploit blocked across 100,000 steps
+ok 11 - IEEE-754 Zeno sub-ULP free-step exploit blocked across 100,000 steps
+  ---
+  duration_ms: 36.594625
+  type: 'test'
+  ...
+# Subtest: Bitwise locked_mask normalizes +0.0f/-0.0f and rejects 1-ULP core mutation
+ok 12 - Bitwise locked_mask normalizes +0.0f/-0.0f and rejects 1-ULP core mutation
+  ---
+  duration_ms: 0.425
+  type: 'test'
+  ...
+# Subtest: N=65,536 StratifiedMemoryArena boundary precision & Pythagorean mitosis
+ok 13 - N=65,536 StratifiedMemoryArena boundary precision & Pythagorean mitosis
+  ---
+  duration_ms: 6.12775
+  type: 'test'
+  ...
+# Subtest: RFC 6234 SHA-256 standard vectors & w3ft.org telemetry line verification
+ok 14 - RFC 6234 SHA-256 standard vectors & w3ft.org telemetry line verification
+  ---
+  duration_ms: 2.693917
+  type: 'test'
+  ...
+# Subtest: 64-byte SY2L JumpReLU binary frame round-trip & corruption rejection
+ok 15 - 64-byte SY2L JumpReLU binary frame round-trip & corruption rejection
+  ---
+  duration_ms: 0.541042
+  type: 'test'
+  ...
+# Subtest: packCellRecords produces 16-byte (4x float32) aligned GPU buffer
+ok 16 - packCellRecords produces 16-byte (4x float32) aligned GPU buffer
+  ---
+  duration_ms: 0.172125
+  type: 'test'
+  ...
+1..16
+# tests 16
+# suites 0
+# pass 16
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 425.873334

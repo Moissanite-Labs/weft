@@ -1,0 +1,82 @@
+import { test } from "node:test";
+import assert from "node:assert/strict";
+
+import { sha256Hex } from "../../../site/assets/js/aywa-sha256.js";
+import {
+  LAYERS,
+  LOCUS_LAYERS,
+  decodeSy2lFrame64,
+  encodeSy2lFrame64,
+  encodeSym2pTelemetry,
+  labelMetrics,
+  layerHue,
+  packCellRecords,
+  verifySym2pLine
+} from "../../../site/assets/js/aywa-wire-sym2p-sy2l.js";
+
+test("RFC 6234 SHA-256 standard vectors & w3ft.org telemetry line verification", () => {
+  assert.equal(
+    sha256Hex("abc"),
+    "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+  );
+  // Exact fixture line published on https://www.w3ft.org/
+  const w3ftFixture =
+    ":01:03:0001[s-exp (active_nodes 19) (tension 0.2053) (gini 0.2167)]" +
+    "7095b5038539e979d2ace6df91a9458ddff99d42681fc2e638291c84608debe0";
+  const vFixture = verifySym2pLine(w3ftFixture);
+  assert.equal(vFixture.ok, true, "Must verify exact w3ft.org published SHA-256 packet!");
+  assert.equal(vFixture.fields.active_nodes, 19);
+  assert.equal(vFixture.byteLength, 131);
+
+  const liveLine = encodeSym2pTelemetry({
+    role: 1,
+    actionState: 3,
+    seq: 42,
+    fields: [["epoch", 2], ["rank", 9], ["mdr", 3.14]]
+  });
+  assert.equal(verifySym2pLine(liveLine).ok, true);
+
+  // Single-character tamper rejection
+  const tampered = liveLine.replace("(rank 9)", "(rank 8)");
+  const vTamper = verifySym2pLine(tampered);
+  assert.equal(vTamper.ok, false);
+  assert.equal(vTamper.errorCode, "E_SHA256_MISMATCH");
+});
+
+test("64-byte SY2L JumpReLU binary frame round-trip & corruption rejection", () => {
+  const frame = encodeSy2lFrame64({
+    seq: 512,
+    tension: 23.5,
+    features: [
+      { id: 104, value: 3.25 },
+      { id: 519, value: 0.875 }
+    ]
+  });
+  assert.equal(frame.byteLength, 64);
+
+  const dec = decodeSy2lFrame64(frame);
+  assert.equal(dec.ok, true);
+  assert.equal(dec.seq, 512);
+  assert.equal(dec.features.length, 2);
+  assert.equal(dec.features[0].id, 104);
+  assert.ok(Math.abs(dec.features[0].value - 3.25) < 0.01);
+
+  const corrupted = new Uint8Array(frame);
+  corrupted[12] ^= 0x01;
+  assert.equal(decodeSy2lFrame64(corrupted).ok, false);
+});
+
+test("packCellRecords produces 16-byte (4x float32) aligned GPU buffer", () => {
+  const buf = packCellRecords([
+    { xNorm: 0.0, capture: 0.95, stratum: 2, tension: 21.25 },
+    { xNorm: 1.0, capture: 0.40, stratum: 1, tension: 42.50 }
+  ]);
+  assert.equal(buf instanceof Float32Array, true);
+  assert.equal(buf.length, 8);
+  assert.equal(buf[2], 2);
+  assert.ok(Math.abs(buf[7] - 0.5) < 1e-6);
+  assert.equal(LAYERS.length, 7);
+  assert.equal(LOCUS_LAYERS.AbiosWire, "C6");
+  assert.ok(layerHue("C1") >= 0.0 && layerHue("C1") < 1.0);
+  assert.equal(labelMetrics(["weft", "aywa"].join(String.fromCharCode(10))).lines, 2);
+});
