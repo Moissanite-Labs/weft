@@ -143,7 +143,7 @@ def main():
         sys.exit(f"cell {cell} exists; refusing to overwrite")
     cell.mkdir(parents=True)
     (cell / "NEED").write_text("[0,0,0,0,0,0,0,0]")
-    (cell / "x.bin").write_bytes((ROOT.parent / "openai-blitz-2026-11-12" / "corpus_hard.txt").read_bytes())
+    (cell / "x.bin").write_bytes((ROOT / "corpus_hard.txt").read_bytes())
     logf = open(LOGS / f"{CELL_TAG}.jsonl", "a")
 
     def log(kind, obj):
@@ -158,7 +158,7 @@ def main():
     def matrix_out():
         return fmt_matrix(state)
 
-    corpus = (ROOT.parent / "openai-blitz-2026-11-12" / "corpus_hard.txt").read_bytes()
+    corpus = (ROOT / "corpus_hard.txt").read_bytes()
 
     def materialize_score(fam, p, t, s):
         src = template(fam, p, t, s)

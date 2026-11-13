@@ -40,7 +40,7 @@ if cell.exists():
     sys.exit(f"cell {cell} exists; refusing to overwrite")
 cell.mkdir(parents=True)
 (cell / "NEED").write_text(harness_nl.SYSTEM)
-(cell / "x.bin").write_bytes((ROOT.parent / "openai-blitz-2026-11-12" / "corpus_hard.txt").read_bytes())
+(cell / "x.bin").write_bytes((ROOT / "corpus_hard.txt").read_bytes())
 for name, content in harness_nl.CHANNEL["files"].items():
     if content:
         (cell / name).write_text(content)

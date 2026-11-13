@@ -18,23 +18,33 @@ import time
 import urllib.request
 import urllib.error
 import ssl
-import certifi
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from cellutil import inside, sandbox_run, parse_score, run_assay, python_leaks, OUT_CAP, SPREAD_MAX, WIN_MARGIN, ASSAY_RUNS
+from cellutil import inside, sandbox_run, parse_score, run_assay, python_leaks, OUT_CAP, SPREAD_MAX, WIN_MARGIN, ASSAY_RUNS, CORPUS
 from profiles import PROFILES, tools_common
 from lint import assert_clean
 
 STRICT = os.environ.get("NOL_STRICT") == "1"
 if STRICT:
-    import sys as _sys
-    _sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "zero-lexicon-cells-2026-11-12"))
+    # Fail closed: strict mode was requested, so a missing or broken checker
+    # stops the run instead of silently turning strict mode off. The checker
+    # is vendored next to this file (strict_tools.py).
     try:
         from strict_tools import strict_body
     except Exception as _e:
-        print(f"strict mode disabled: {_e}", file=_sys.stderr)
-        STRICT = False
+        sys.exit(f"NOL_STRICT=1 but strict_tools could not be imported: {_e}")
+
+
+def strict_reject(log, where: str, content: str) -> bool:
+    """True if strict mode is on and the body fails strict_body. Logs the reason."""
+    if not STRICT:
+        return False
+    verdict = strict_body(content)
+    if verdict["ok"]:
+        return False
+    log("strict_reject", {"path": where, "reason": verdict["reason"], "bad": verdict["bad"][:8]})
+    return True
 
 ROOT = Path(__file__).resolve().parent
 CELLS = ROOT / "cells"
@@ -79,6 +89,9 @@ def do_variants(cell: Path, log, path: str, versions: list[str]) -> str:
         return RESULTS["reg_assay_first"]
     best_i, best_med, best_min = None, inc_med, None
     for i, v in enumerate(versions):
+        if strict_reject(log, f"{p.name}#v{i}", v):
+            log("variant", {"i": i, "scores": None, "ok": False, "strict_reject": True})
+            continue
         p.write_text(v)
         r = run_assay(cell)
         if r is None or not r["ok"]:
@@ -100,13 +113,28 @@ def do_variants(cell: Path, log, path: str, versions: list[str]) -> str:
     p.write_text(versions[best_i])
     after = run_assay(cell)
     winner_hash = hashlib.sha256(versions[best_i].encode()).hexdigest()
-    log("variants_result", {"adopted": best_i, "median": best_med,
+    # The post-restore assay decides adoption: the winner must pass the gate
+    # again and must not fall to or below the incumbent median. Otherwise the
+    # incumbent is restored and the call does not count as a win.
+    after_ok = bool(after and after["ok"])
+    verified = after_ok and after["median"] is not None and after["median"] > inc_med
+    if not verified:
+        if inc is not None:
+            p.write_text(inc)
+        elif p.exists():
+            p.unlink()
+    log("variants_result", {"adopted": best_i if verified else None,
+                            "candidate": best_i,
+                            "median": best_med,
                             "content_sha256": winner_hash,
                             "incumbent_sha256": inc_hash,
                             "before_median": inc_med,
                             "after_scores": after["scores"] if after else None,
                             "after_median": after["median"] if after else None,
-                            "after_ok": bool(after and after["ok"])})
+                            "after_ok": after_ok,
+                            "verification_failed": not verified})
+    if not verified:
+        return RESULTS["variants_unverified"]
     return RESULTS["variants_ok"].format(**{"Δ*": best_med, "Δ₀": inc_med})
 
 
@@ -129,11 +157,8 @@ def tool_dispatch(cell: Path, log, name: str, args: dict) -> str:
             return RESULTS["no_path"]
         p.parent.mkdir(parents=True, exist_ok=True)
         content = str(args.get("x", ""))
-        if STRICT and p.name == "f.py":
-            verdict = strict_body(content)
-            if not verdict["ok"]:
-                log("strict_reject", {"path": p.name, "reason": verdict["reason"], "bad": verdict["bad"][:8]})
-                return "!strict"
+        if p.suffix == ".py" and strict_reject(log, p.name, content):
+            return "!strict"
         p.write_text(content)
         leaks = python_leaks(content) if p.name in ("f.py", "spec.py") else {"comment_hits": 0, "docstring_hits": 0}
         log("write", {"path": p.name,
@@ -159,6 +184,7 @@ def api_call(model: str, instructions: str, input_items: list):
     req = urllib.request.Request(API, data=data,
                                  headers={"content-type": "application/json",
                                           "authorization": f"Bearer {KEY}"})
+    import certifi
     ctx = ssl.create_default_context(cafile=certifi.where())
     timeout = int(os.environ.get("NOL_HTTP_TIMEOUT", "180"))
     for attempt in range(5):
@@ -221,7 +247,7 @@ def main():
         sys.exit(f"cell {cell} exists; refusing to overwrite")
     cell.mkdir(parents=True)
     (cell / "NEED").write_text(SYSTEM)
-    corpus = Path(os.environ.get("NOL_CORPUS", str(ROOT.parent / "openai-blitz-2026-11-12" / "corpus_hard.txt")))
+    corpus = Path(os.environ.get("NOL_CORPUS", str(CORPUS)))
     (cell / "x.bin").write_bytes(corpus.read_bytes())
     for name, content in CHANNEL["files"].items():
         if content:

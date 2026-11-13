@@ -45,6 +45,7 @@ tool=1 · ids: s w v a d"""
 E1_RESULTS = {
     "variants_ok": "✓ Δ*={Δ*:.4f} Δ₀={Δ₀:.4f}",
     "variants_no": "∅",
+    "variants_unverified": "∅ Δ*⊥",
     "assay_ok": "Δ={Δ:.4f} ok=1 σ={σ:.3f}",
     "assay_no": "∅ σ>0.15",
     "write_ok": "✓",

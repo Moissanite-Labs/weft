@@ -1,12 +1,12 @@
 Traceback (most recent call last):
-  File "/Users/kethuda/Documents/exo/weft/work/openai-no-language-2026-11-12/harness_nl.py", line 283, in <module>
+  File "<home>/Documents/exo/weft/work/openai-no-language-2026-11-12/harness_nl.py", line 283, in <module>
     main()
     ~~~~^^
-  File "/Users/kethuda/Documents/exo/weft/work/openai-no-language-2026-11-12/harness_nl.py", line 267, in main
+  File "<home>/Documents/exo/weft/work/openai-no-language-2026-11-12/harness_nl.py", line 267, in main
     result = tool_dispatch(cell, log, name, args)
-  File "/Users/kethuda/Documents/exo/weft/work/openai-no-language-2026-11-12/harness_nl.py", line 130, in tool_dispatch
+  File "<home>/Documents/exo/weft/work/openai-no-language-2026-11-12/harness_nl.py", line 130, in tool_dispatch
     return do_assay(cell, log, str(args.get("c", "")))
-  File "/Users/kethuda/Documents/exo/weft/work/openai-no-language-2026-11-12/harness_nl.py", line 106, in do_assay
+  File "<home>/Documents/exo/weft/work/openai-no-language-2026-11-12/harness_nl.py", line 106, in do_assay
     log("assay", {"command": command, **{k: v for k, v in r.items()}})
                                                           ^^^^^^^
 AttributeError: 'NoneType' object has no attribute 'items'

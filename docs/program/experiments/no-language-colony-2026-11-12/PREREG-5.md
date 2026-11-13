@@ -57,6 +57,8 @@ Revised Stage 2, tighter than the original registration to honor the owner's no-
 
 The E3 channel failed uniformly (all 9 cells passed literal strings like `"mk"` or `"f.py"` as the assay command instead of a shell command printing a scalar). Diagnosis: the spec's measure contract was underspecified by one clause.
 
+[Correction added after review, 2026-11-12; the registered text above is left as written: six E3 cells ran in Stage 2, not nine, and their failures were not all literal strings. Sol's `python3 f.py` scored [0, 0, 0], astra and luna also submitted Python source, and luna-2 submitted `exec(open('f.py').read())`. See `RESULTS-NL-STAGE2.md`.]
+
 Revision: one added math clause, `mk ≝ cmd ⇢ Δ : stdout ⊇ {Δ ∈ [0,100]} · Δ=0 ⇒ ∅`, stating that the assay command must print exactly one number Δ in the unit of the fitness scale. No other E3 content changed.
 
 H-NL-M (repair works): after the one-clause fix, at least 2 of 6 E3 cells register a valid stable assay at first attempt. Exploratory, 6 cells (astra x2, sol x2, luna x2), ~$2. If 0 of 6 register, the channel's failure is not the missing clause and the E3 result stands as published. No further revision attempts without new preregistration.
@@ -80,13 +82,16 @@ Stop rule: if all three cells fail to produce interpretable actions by step 8, s
 
 ## Stage 3 outcomes (2026-11-12)
 
-E3 repair clause added to the channel and 6 cells launched (astra, luna, sol, x2):
-- H-NL-M HELD: all six registered at least one stable assay. As-shipped E3 failure was the missing `cmd ⇢ Δ` contract, not capability.
-- Wins: zero across all six cells. Consistent with prior observation. Wins are rare outside astra's code channel.
-- luna-2 recorded a constant `echo 42` assay as ok. The stability gate accepts any scalar. Disclosed as instrument limitation.
+Corrected after review (reviews 5884540193 and 5884687366); details in `RESULTS-NL.md`.
 
-E4d (embedding decoder) ran with 3 cells, one per model, 15 steps:
-- H-NL-N FALSIFIED. No action ever decoded above the 0.10 threshold. All cells stuck in exposition mode.
+E3 repair clause added to the channel and 6 cells launched (astra, luna, sol, x2):
+- H-NL-M HELD on the registered count: 5 of 6 cells registered at least one stable assay (sol-2 did not), and 4 of 6 registered on the first attempt, above the bar of 2 of 6. The gate checks stability only; the [0, 100] single-number clause is in the prompt, and `run_assay` does not check it. Whether the missing clause, rather than capability, caused the Stage 2 failure is not established by this gate.
+- Wins: zero across all six cells.
+- Accepted constants and out-of-range values: sol-1 `python3 -c 'print(10)'` (10.0), luna-2 `echo 42` (42.0), and luna-2's first accepted assay scored 257.0. Disclosed as an instrument limitation.
+
+E4d (embedding decoder) ran with 3 cells, one per model, 15 turns each:
+- All 45 turns decoded to `help` above the 0.10 threshold (similarity 0.2132 to 0.4234), and each ran the help branch. No turn decoded to assay, write or variants. This is fixed-threshold help routing.
+- H-NL-N FALSIFIED: no cell reached assay registration. The stop rule did not fire, since `help` is an interpretable action.
 - H-NL-O FALSIFIED: zero round-trips.
 - H-NL-P: indistinguishable null (n=1 per model, all identical).
-- Verdict: E4d closed. Do not rerun without restructuring the codebook and the threshold by new prereg.
+- Verdict: E4d closed as built. Do not rerun without restructuring the codebook and the threshold by new prereg.

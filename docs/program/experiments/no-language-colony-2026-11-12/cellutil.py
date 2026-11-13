@@ -19,6 +19,9 @@ ASSAY_RUNS = 3
 SPREAD_MAX = 0.15
 WIN_MARGIN = 1.03
 
+CORPUS = Path(__file__).resolve().parent / "corpus_hard.txt"
+CORPUS_SHA256 = "00abb98851008a506a270c84646431194f943e80f16d17da3d1b2e5242a9ef76"
+
 NUM_RE = re.compile(r"-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?")
 
 
