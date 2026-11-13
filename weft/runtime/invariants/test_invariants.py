@@ -149,6 +149,18 @@ class TestWeftInvariants(unittest.TestCase):
             self.assertEqual(r_run.returncode, 0, f"C vector test failed: {r_run.stderr}")
             self.assertIn(f"total={expected_total}", r_run.stdout)
 
+            parity_src = here / "test_invariants_state_parity_c.c"
+            parity_bin = Path(tmp) / "test_invariants_state_parity_c"
+            r_parity_cc = subprocess.run(
+                [cc, "-O3", "-std=c11", "-Wall", "-Wextra", "-Werror", str(parity_src), "-lm", "-o", str(parity_bin)],
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(r_parity_cc.returncode, 0, f"state-parity C compile failed: {r_parity_cc.stderr}")
+            r_parity = subprocess.run([str(parity_bin)], capture_output=True, text=True)
+            self.assertEqual(r_parity.returncode, 0, f"state-parity C test failed: {r_parity.stderr}\n{r_parity.stdout}")
+            self.assertIn("negative-cost minting blocked", r_parity.stdout)
+
             # Mutation check: prove the compiled C runner reads the JSON file dynamically.
             tampered = json.loads(vectors_path.read_text(encoding="utf-8"))
             tampered["royalty_vectors"][0]["expected_weaver_wei"] = 999
@@ -191,7 +203,9 @@ class TestWeftInvariants(unittest.TestCase):
     ) -> tuple[bool, float, float]:
         if not bw or not (math.isfinite(bud_f32) and math.isfinite(cost_f32) and math.isfinite(r_inv_f32)):
             return False, math.inf, bud_f32
-        if bud_f32 <= 0.0 or cost_f32 <= 0.0 or r_inv_f32 < 0.0 or bud_f32 < cost_f32:
+        if cost_f32 <= 0.0:
+            return False, math.inf, bud_f32
+        if bud_f32 <= 0.0 or r_inv_f32 < 0.0 or bud_f32 < cost_f32:
             return False, math.inf, cls._f32(bud_f32 - cost_f32)
 
         scale = 0.0
@@ -270,6 +284,9 @@ class TestWeftInvariants(unittest.TestCase):
                     r_inv = cls._f32(rng.choice([2.0, 15.0, 120.0]))
                     bud = cls._f32(rng.uniform(0.1, 200.0))
                     cost = cls._f32(rng.choice([0.05, 1.0, 25.0]))
+                    if vid == 48:
+                        # At least one non-positive cost in the 256-vector stream.
+                        cost = cls._f32(-1.0)
                     if vid % 4 == 0:
                         has_mask = 1
                         mask = [1 if rng.random() < 0.3 else 0 for _ in range(n)]
