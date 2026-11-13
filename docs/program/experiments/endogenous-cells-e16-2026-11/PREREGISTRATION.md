@@ -1,7 +1,7 @@
 # Preregistration: Experiment E16 — Endogenous Recurrent Markov-Blanket Cells Without External Target Supervision
 
 Date: 2026-11-11
-Status: Preregistered and committed prior to running `run_e16.py` or collecting benchmark data.
+Status: Preregistered and committed prior to running `run_e16.py` or collecting benchmark data. The sections through "Preregistered Predictions" are the original text. Execution deviations and later runner amendments are listed under "Amendments" at the end and are not part of the preregistration.
 Interfaces exercised: C1 (`weft/runtime/plasm`), C2 (`weft/runtime/invariants`), I1 (`weft/runtime/telemetry/frame64`).
 Runner: `docs/program/experiments/endogenous-cells-e16-2026-11/run_e16.py`
 
@@ -52,3 +52,31 @@ Experiment E16 tests whether cells built strictly from single weight matrices `W
 5. **P5 (Post-shock adaptation and strict C1/C2/I1 conformance)**:
    - `P5a`: Following the generation-20 receptor inversion shock (`generations 20..39`), `full_endogenous` (Baldwinian germline) achieves higher post-shock recovery energy (`gen 30..39` minus `gen 20..22`) than `lamarckian_soma`.
    - `P5b`: Across all `80` colony runs, `max_core_drift == 0.0`, `min_watermark_cosine >= 0.999999`, `max_committed_distance <= 12.0` (`C2` gate enforced on every weight commit), and `100%` of emitted `I1` `frame64` telemetry packets pass byte-level `unpack_frame64` validation.
+
+## Amendments (made after data collection, not preregistered)
+
+Dated 2026-11-12, after reviews of head `048db94d`. The original preregistration text above is unchanged.
+
+### Execution deviations in the 2026-11-11 M1 record
+
+These are the protocol differences that generated `results.json`. They were present in `run_e16.py` at `048db94d`.
+
+1. Low-tension cooling is `* 0.88` with clamps `[0.015, 0.30]`. This document says `* 0.90` and does not mention the clamps.
+2. The M1 P5b check was `max_committed_distance <= R_BALL + 1e-5`. This document says `<= 12.0`. The observed maximum was `12.00000286`, on `blind_drift`. `torch.linalg.matrix_norm` in the audit and `torch.linalg.norm` in the gate (`invariants.py:86`) disagree at that ulp, so a literal `<= 12.0` check on the audit would fail.
+3. Commit `864e7fd` (2026-11-11 09:38:19 -0600) holds only this file. `run_e16.py` arrived in `048db94d` four minutes later, so the executable thresholds were not frozen in the preregistration commit.
+4. This document names `pack_frame64` and `unpack_frame64`, which are not in the module. The runner uses `encode_frame_64b_bytes` and `decode_frame_64b_bytes`.
+5. The tension cite `plasm.py:329` is stale. The open-loop assignment is `plasm.py:433`, `tension = 20.0 + drift * 2.5`.
+6. The same motivation paragraph lists E15 and `native-lineage-2026-11` as repository experiments. Both remain open pull requests (`#134`, `#131`).
+7. The second microstep is defined here as `h_i(t) = tanh(W_i^T (0.5 * z_i(t) + 0.5 * u_i))`. The runner keeps `z` and overwrites only slots `17:32` with `u_hid[:, 2:17]` (`run_e16.py` at the two-microstep block; originally lines 211-214 in `048db94d`).
+8. The probe echo is defined here with the valence probed at `t-1`. The runner rebuilds `signed_field` at the current patch positions and multiplies that field into the echo.
+9. The M1 runner projected each somatic bout onto the `R = 12` ball and assigned `W` directly. `verify_weight_update_safety_ex` ran at reproduction only. This document says the gate is enforced on every weight commit.
+
+### Runner amendments on 2026-11-12
+
+These changes are in the current `run_e16.py`. They do not rewrite the M1 file.
+
+1. The runner pins one CPU thread (`OMP_NUM_THREADS`, `MKL_NUM_THREADS`, `OPENBLAS_NUM_THREADS`, `NUMEXPR_NUM_THREADS`, `torch.set_num_threads(1)`) and calls `torch.use_deterministic_algorithms(True)`.
+2. Every somatic candidate is projected with the same flattened Frobenius norm the gate uses, then passed through `verify_weight_update_safety_ex`. A rejecting gate leaves `W` and the unused budget unchanged. A unit test covers a far-out candidate and a zero-budget candidate. The P5b distance check is now `<= 12.0`.
+3. Each generation packs an I1 frame through `pack_uniform_frame_64b` and counts a packet only when the decoded floats equal the packed float32 values. Energy CV, mean energy, toxin, sigma, and polarity stay beside the frame.
+4. Signal amplitude is averaged over live cells. The half-colony comment was corrected: every cell proposes a somatic candidate each bout.
+5. `WEFT_E16_RESULTS` may point the output path away from the committed M1 `results.json`.

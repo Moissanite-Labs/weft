@@ -5,7 +5,7 @@ Experiment E16 Runner: Endogenous Recurrent Markov-Blanket Cells
 Tests ground-up sensorimotor survival, recurrent memory + active epistemic probing,
 corollary-discharge reafference cancellation, metabolically paid signaling,
 endogenous visceral tension (closing the #75 unreachable <15 band), and Baldwinian
-germline vs. Lamarckian soma inheritance — with ZERO external Y* target oracle
+germline vs. Lamarckian soma inheritance, with ZERO external Y* target oracle
 and ZERO harness-held symbolic belief variables.
 
 Writes `results.json` in this directory and exits 0 if all C1/C2/I1 invariants hold.
@@ -14,13 +14,14 @@ Writes `results.json` in this directory and exits 0 if all C1/C2/I1 invariants h
 from __future__ import annotations
 
 import json
-import math
+import os
 import platform
+import struct
 import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Tuple
 
 import numpy as np
 import torch
@@ -64,6 +65,56 @@ ARMS = [
     "lamarckian_soma",
 ]
 
+SOMATIC_STEP_COST = 0.5
+REPRO_STEP_COST = 0.5
+RUNTIME_THREADS = 1
+
+
+def configure_runtime(n_threads: int = RUNTIME_THREADS) -> None:
+    """Pin CPU thread counts and require deterministic PyTorch algorithms."""
+    for key in (
+        "OMP_NUM_THREADS",
+        "MKL_NUM_THREADS",
+        "OPENBLAS_NUM_THREADS",
+        "NUMEXPR_NUM_THREADS",
+    ):
+        os.environ[key] = str(n_threads)
+    torch.set_num_threads(n_threads)
+    try:
+        torch.set_num_interop_threads(max(1, n_threads))
+    except RuntimeError:
+        pass
+    torch.use_deterministic_algorithms(True)
+
+
+def commit_weight_update(
+    baseline: torch.Tensor,
+    current: torch.Tensor,
+    candidate: torch.Tensor,
+    budget: float,
+    cost: float,
+    core_watermark: torch.Tensor,
+) -> Tuple[torch.Tensor, float, bool, float, str]:
+    """Commit a candidate only when verify_weight_update_safety_ex accepts it.
+
+    Frozen core rows are restored on the candidate before the gate runs.
+    A rejecting gate returns the current weights and the unused budget,
+    so W is unchanged.
+    """
+    cand = candidate.clone()
+    cand[:CORE_ROWS, :] = core_watermark[:CORE_ROWS, :]
+    ok, dist, rem, reason = verify_weight_update_safety_ex(
+        baseline, cand, R_BALL, float(budget), float(cost)
+    )
+    if ok:
+        return cand, float(rem), True, float(dist), reason
+    return current.clone(), float(budget), False, float(dist), reason
+
+
+def frobenius_batch(delta: torch.Tensor) -> torch.Tensor:
+    """Per-cell Frobenius norms using the same flattening as the C2 gate."""
+    return torch.linalg.norm(delta.reshape(delta.shape[0], -1), dim=1)
+
 
 def probe_host() -> Dict[str, Any]:
     chip = "unknown"
@@ -75,6 +126,16 @@ def probe_host() -> Dict[str, Any]:
                 break
         except Exception:
             pass
+    if chip == "unknown":
+        try:
+            for line in Path("/proc/cpuinfo").read_text(encoding="utf-8").splitlines():
+                if line.lower().startswith("model name"):
+                    chip = line.split(":", 1)[1].strip()
+                    break
+        except Exception:
+            pass
+    if chip == "unknown":
+        chip = platform.processor() or "unknown"
     return {
         "chip": chip,
         "system": platform.system(),
@@ -121,6 +182,8 @@ def run_single_colony(seed: int, arm: str) -> Dict[str, Any]:
     tension_high_count = 0
     excisions_total = 0
     gate_commits = 0
+    somatic_gate_accepts = 0
+    somatic_gate_rejects = 0
     frame64_valid_count = 0
 
     total_nutrient_ingested = 0.0
@@ -160,8 +223,8 @@ def run_single_colony(seed: int, arm: str) -> Dict[str, Any]:
         stigmergy_bins = torch.zeros(16, dtype=torch.float32)
 
         for bout in range(BOUTS_PER_GEN):
-            # Online somatic A/B candidate generation: half colony tests candidate mutation
-            # evaluated purely by visceral energy delta over this bout (zero external Y*).
+            # Online somatic candidate generation: every cell proposes a mutation
+            # each bout, evaluated by visceral energy delta (zero external Y*).
             w_parent_bout = W.clone()
             e_before_bout = energy.clone()
 
@@ -169,10 +232,28 @@ def run_single_colony(seed: int, arm: str) -> Dict[str, Any]:
             v_m = torch.randn(N_CELLS, 4, DIM, generator=g_rng, dtype=torch.float32)
             raw_step = torch.bmm(u_m, v_m) * (sigma.view(N_CELLS, 1, 1) * 0.25)
             w_cand = W + plasticity_mask * raw_step
-            dist_cand = torch.linalg.matrix_norm(w_cand - W0, ord="fro", dim=(1, 2))
+            dist_cand = frobenius_batch(w_cand - W0)
             proj = torch.clamp(R_BALL / (dist_cand + 1e-8), max=1.0).view(N_CELLS, 1, 1)
-            W = W0 + (w_cand - W0) * proj
-            W[:, :CORE_ROWS, :] = w_wm[:CORE_ROWS, :].unsqueeze(0)
+            w_proj = W0 + (w_cand - W0) * proj
+            w_next = W.clone()
+            for i in range(N_CELLS):
+                committed, rem, ok, dist, _ = commit_weight_update(
+                    W0[i],
+                    W[i],
+                    w_proj[i],
+                    float(germline_budget[i].item()),
+                    SOMATIC_STEP_COST,
+                    w_wm,
+                )
+                w_next[i] = committed
+                if ok:
+                    germline_budget[i] = rem
+                    gate_commits += 1
+                    somatic_gate_accepts += 1
+                    max_committed_dist = max(max_committed_dist, dist)
+                else:
+                    somatic_gate_rejects += 1
+            W = w_next
 
             for _tick in range(TICKS_PER_BOUT):
                 # Slowly drift patches so static memorization of coordinates fails
@@ -258,7 +339,9 @@ def run_single_colony(seed: int, arm: str) -> Dict[str, Any]:
                 total_toxin_ingested += float((alive * tox_hit).sum().item())
                 total_patch_hits += int(((alive > 0) & (signed_field > 0.35)).sum().item())
                 total_cell_ticks += int(alive.sum().item())
-                signal_amp_accum.append(float(a_sig_amp.mean().item()))
+                alive_count = float(alive.sum().item())
+                if alive_count > 0.0:
+                    signal_amp_accum.append(float((a_sig_amp * alive).sum().item() / alive_count))
 
                 active_emit = (alive > 0) & (a_sig_amp > 0.25) & (conc > 0.25)
                 if bool(active_emit.any().item()):
@@ -304,22 +387,24 @@ def run_single_colony(seed: int, arm: str) -> Dict[str, Any]:
         mean_e = float(energy.mean().item())
         gen_energies.append(mean_e)
 
-        # Pack and verify I1 64-byte telemetry frame
+        # Pack an I1 64-byte frame through pack_uniform_frame_64b and compare
+        # decoded floats to the values that were packed. Experiment metrics stay
+        # beside the frame rather than in I1 slots 3-7.
         elapsed_rel = round(float(time.perf_counter() - t_start), 4)
-        frame_vals = [
-            float((energy > 0).sum().item()),
-            float(tensions.mean().item()),
-            elapsed_rel,
-            float(energy.std().item() / (mean_e + 1e-6)),
-            mean_e,
-            float(toxin.mean().item()),
-            float(sigma.mean().item()),
-            float(polarity),
-            0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-        ]
+        frame_vals = pack_uniform_frame_64b(
+            active_nodes=float((energy > 0).sum().item()),
+            org_tension=float(tensions.mean().item()),
+            system_time=elapsed_rel,
+            gini_index=compute_gini(energy.tolist()),
+            barycentric={},
+            velocities=[],
+        )
+        # Experiment metrics (energy CV, mean energy, mean toxin, mean sigma,
+        # polarity) stay beside the I1 frame and are not written into slots 3-7.
         packed = encode_frame_64b_bytes(frame_vals)
         unpacked = decode_frame_64b_bytes(packed)
-        if len(packed) == 64 and len(unpacked) == 16:
+        packed_as_f32 = list(struct.unpack("<16f", struct.pack("<16f", *frame_vals)))
+        if len(packed) == 64 and unpacked == packed_as_f32:
             frame64_valid_count += 1
 
         # Inter-generational reproduction with spatial viscosity and C2 gate
@@ -328,14 +413,19 @@ def run_single_colony(seed: int, arm: str) -> Dict[str, Any]:
             v_d = torch.randn(N_CELLS, 4, DIM, generator=g_rng, dtype=torch.float32)
             cand_all = W + plasticity_mask * (torch.bmm(u_d, v_d) * 0.03)
             for i in range(N_CELLS):
-                ok, dist, rem, _ = verify_weight_update_safety_ex(
-                    W0[i], cand_all[i], R_BALL, float(germline_budget[i].item()), 0.5
+                committed, rem, ok, dist, _ = commit_weight_update(
+                    W0[i],
+                    W[i],
+                    cand_all[i],
+                    float(germline_budget[i].item()),
+                    REPRO_STEP_COST,
+                    w_wm,
                 )
                 if ok:
-                    W[i] = cand_all[i]
-                    W[i, :CORE_ROWS, :] = w_wm[:CORE_ROWS, :]
+                    W[i] = committed
                     germline_budget[i] = rem
                     gate_commits += 1
+                    max_committed_dist = max(max_committed_dist, dist)
         else:
             # Top 25% energy cells serve as spatial germline/soma parents
             k_top = N_CELLS // 4
@@ -347,7 +437,6 @@ def run_single_colony(seed: int, arm: str) -> Dict[str, Any]:
             next_pos = pos.clone()
 
             # Rank bottom 50% (plus dead/excised cells) for replacement
-            _, replace_order = torch.argsort(energy), None
             replace_indices = torch.argsort(energy)[: N_CELLS // 2]
 
             for idx_t in replace_indices:
@@ -370,14 +459,20 @@ def run_single_colony(seed: int, arm: str) -> Dict[str, Any]:
                 cand_child[:CORE_ROWS, :] = w_wm[:CORE_ROWS, :]
 
                 # Baseline W0 of lineage shifts with parent's frozen watermarked W0; verify against W0[parent]
-                ok, dist, rem, _ = verify_weight_update_safety_ex(
-                    W0[parent], cand_child, R_BALL, float(germline_budget[child].item()), 0.5
+                committed, rem, ok, dist, _ = commit_weight_update(
+                    W0[parent],
+                    next_W[child],
+                    cand_child,
+                    float(germline_budget[child].item()),
+                    REPRO_STEP_COST,
+                    w_wm,
                 )
                 if ok:
                     W0[child] = W0[parent].clone()
-                    next_Wgerm[child] = cand_child
-                    next_W[child] = cand_child.clone()
+                    next_Wgerm[child] = committed
+                    next_W[child] = committed.clone()
                     germline_budget[child] = rem
+                    max_committed_dist = max(max_committed_dist, dist)
                     # Viscous spatial budding near parent
                     bud_jitter = float(torch.randn(1, generator=g_rng).item()) * 0.03
                     next_pos[child] = float((pos[parent].item() + bud_jitter) % 1.0)
@@ -399,9 +494,7 @@ def run_single_colony(seed: int, arm: str) -> Dict[str, Any]:
         cos_sims = torch.nn.functional.cosine_similarity(resps, target_id.unsqueeze(0), dim=1)
         min_wm_cosine = min(min_wm_cosine, float(cos_sims.min().item()))
 
-        m_dist = float(
-            torch.max(torch.linalg.matrix_norm(W - W0, ord="fro", dim=(1, 2))).item()
-        )
+        m_dist = float(torch.max(frobenius_batch(W - W0)).item())
         max_committed_dist = max(max_committed_dist, m_dist)
 
     selectivity = (total_nutrient_ingested - total_toxin_ingested) / (
@@ -432,13 +525,15 @@ def run_single_colony(seed: int, arm: str) -> Dict[str, Any]:
         "nutrient_ingested": round(total_nutrient_ingested, 4),
         "toxin_ingested": round(total_toxin_ingested, 4),
         "patch_residence_rate": float(patch_residence),
-        "mean_signal_amplitude": float(np.mean(signal_amp_accum)),
+        "mean_signal_amplitude": float(np.mean(signal_amp_accum) if signal_amp_accum else 0.0),
         "abs_signal_valence_corr": sig_corr,
         "tension_low_lt15": tension_low_count,
         "tension_homeo_15_35": tension_homeo_count,
         "tension_high_gt35": tension_high_count,
         "excisions_total": excisions_total,
         "gate_commits": gate_commits,
+        "somatic_gate_accepts": somatic_gate_accepts,
+        "somatic_gate_rejects": somatic_gate_rejects,
         "frame64_valid_packets": frame64_valid_count,
         "max_core_drift": max_core_drift,
         "min_watermark_cosine": min_wm_cosine,
@@ -463,6 +558,9 @@ def summarize_arm(runs: List[Dict[str, Any]]) -> Dict[str, Any]:
     out["tension_homeo_15_35_total"] = int(sum(r["tension_homeo_15_35"] for r in runs))
     out["tension_high_gt35_total"] = int(sum(r["tension_high_gt35"] for r in runs))
     out["excisions_total"] = int(sum(r["excisions_total"] for r in runs))
+    out["gate_commits_total"] = int(sum(r["gate_commits"] for r in runs))
+    out["somatic_gate_accepts_total"] = int(sum(r["somatic_gate_accepts"] for r in runs))
+    out["somatic_gate_rejects_total"] = int(sum(r["somatic_gate_rejects"] for r in runs))
     out["frame64_valid_packets_total"] = int(sum(r["frame64_valid_packets"] for r in runs))
     out["max_core_drift"] = float(max(r["max_core_drift"] for r in runs))
     out["min_watermark_cosine"] = float(min(r["min_watermark_cosine"] for r in runs))
@@ -471,7 +569,10 @@ def summarize_arm(runs: List[Dict[str, Any]]) -> Dict[str, Any]:
 
 
 def main() -> int:
+    configure_runtime()
     host = probe_host()
+    host["torch_num_threads"] = int(torch.get_num_threads())
+    host["deterministic_algorithms"] = True
     t0 = time.perf_counter()
     raw: Dict[str, List[Dict[str, Any]]] = {a: [] for a in ARMS}
 
@@ -522,7 +623,7 @@ def main() -> int:
     p5b = all(
         s["max_core_drift"] == 0.0
         and s["min_watermark_cosine"] >= 0.999999
-        and s["max_committed_distance"] <= R_BALL + 1e-5
+        and s["max_committed_distance"] <= R_BALL
         and s["frame64_valid_packets_total"] == len(SEEDS) * GENERATIONS
         for s in summary.values()
     )
@@ -602,6 +703,9 @@ def main() -> int:
             "ticks_per_bout": TICKS_PER_BOUT,
             "shock_generation": SHOCK_GEN,
             "arms": ARMS,
+            "torch_num_threads": RUNTIME_THREADS,
+            "deterministic_algorithms": True,
+            "somatic_commits_use_c2_gate": True,
         },
         "predictions": predictions,
         "summary": summary,
@@ -609,7 +713,8 @@ def main() -> int:
         "runs": raw,
     }
 
-    out_path = HERE / "results.json"
+    env_out = os.environ.get("WEFT_E16_RESULTS")
+    out_path = Path(env_out) if env_out else HERE / "results.json"
     out_path.write_text(json.dumps(out, indent=2) + "\n", encoding="utf-8")
 
     print("\n=== E16 Prediction Verdicts ===")

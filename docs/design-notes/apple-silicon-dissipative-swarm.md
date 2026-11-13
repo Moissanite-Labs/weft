@@ -147,16 +147,16 @@ Combining PR #118's three causal laws (`Law 2a`, `Law 2b`, `Law 2c`) with `E14`'
 
 ---
 
-## 5. Concrete Roadmap: From `E14` and `L2` to the Composed Organism (`E15` and `E16`)
+## 5. Concrete Roadmap: From `E14` and `L2` to the Composed Organism (`E15`, `E16`, and `E17`)
 
-Every step below builds directly on committed files in `Moissanite-Labs/weft` so any seat can pick up the next stage without re-deriving prior work:
+Every step below builds directly on committed files in `Moissanite-Labs/weft` so any seat can pick up the next stage without re-deriving prior work. Experiment E16 is the endogenous recurrent Markov-blanket cell record in `docs/program/experiments/endogenous-cells-e16-2026-11/`. The Hybrid Organelle Loom, previously listed in this table as E16, is staged as E17 so this section has a single E16.
 
 | Stage | Target Files | What It Tests | Acceptance Criteria |
 |---|---|---|---|
 | **1. `E14` (Done, 3 of 5 held, see section 6)** | `weft/runtime/mac/swarm_loom.py`, `docs/program/experiments/apple-silicon-swarm-2026-11/` | Vectorized `[N, D, D]` MPS swarm, `hgt_beta` vs `paper1_blind`, competitive niche foraging across $M=8$ tiles | `H-S1` (`>=5x` MPS speedup), `H-S2` (`hgt_beta > 50%` win share vs `<5%` blind, `>=3x` error drop), `H-S3` (`8/8` niches, entropy `>=2.5` bits), `H-S4` (`0%` coasting), `H-S5` (`0` C2/watermark violations) |
 | **2. `L2` (PR #118, ready to run)** | `docs/program/experiments/razi-cells-laws-2026-11/code/cells/{metab,lineage}.py`, `run/run_l2.sh` | Agent-layer Weismann soma (`--weismann`), Chemostat flux (`--chemostat`), Gap-pay (`--gap-pay`), Soma+Spore (`--spore`) | `L2-a` (`0` overdrafts), `L2-b` (`<20%` soma coasting vs `93%` in `L1`), `L2-c` (spore basin jump), `L2-e` (`O1` reach `>= h + 0.10`), `L2-f` (`>=6/12` post-gen-0 germline replacements) |
 | **3. `E15` (Convergence: Dissipative Chemostat Swarm. Mode built, graded tiles not yet)** | `weft/runtime/mac/swarm_loom.py` (`mode="dissipative_chemostat"`) | Adds PR #118's per-tile Chemostat Flux $B_m(t) + \Phi_m$, Gap-Potentiated Payouts, and Weismann Soma Dissipation directly into the 512-cell MPS tensor swarm on graded-difficulty tiles (easy to extreme curvature) | On skewed-difficulty niches where uniform foraging leaves the hardest tiles under-solved, `dissipative_chemostat` reallocates spores to the hardest tiles and reduces worst-tile error by `>=2x` over `hgt_foraging` |
-| **4. `E16` (Hybrid Organelle Loom)** | `weft/runtime/mac/organelle_loom.py` + `weft/runtime/ic/ic_vm.py` | Couples each cell's MPS routing/adapter head `[N, D, r]` to a composable DAG of `C3` / bytecode organelles executed on the 8 P-cores and scored by deterministic step counts (`ITRS`) | Zero `.bench.lock`, 100% bit-reproducible fitness, horizontal transfer of discrete organelles between spore lineages, and multi-stage task compounding |
+| **4. `E17` (Hybrid Organelle Loom)** | `weft/runtime/mac/organelle_loom.py` + `weft/runtime/ic/ic_vm.py` | Couples each cell's MPS routing/adapter head `[N, D, r]` to a composable DAG of `C3` / bytecode organelles executed on the 8 P-cores and scored by deterministic step counts (`ITRS`) | Zero `.bench.lock`, 100% bit-reproducible fitness, horizontal transfer of discrete organelles between spore lineages, and multi-stage task compounding |
 
 ---
 
