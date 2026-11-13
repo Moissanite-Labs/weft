@@ -1,0 +1,24 @@
+{
+ "fc1.weight": {
+  "shape": [
+   16,
+   4
+  ]
+ },
+ "fc1.bias": {
+  "shape": [
+   16
+  ]
+ },
+ "fc2.weight": {
+  "shape": [
+   2,
+   16
+  ]
+ },
+ "fc2.bias": {
+  "shape": [
+   2
+  ]
+ }
+}
