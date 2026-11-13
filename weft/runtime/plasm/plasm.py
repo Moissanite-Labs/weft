@@ -23,6 +23,18 @@ models-as-cells engineering contract (#6):
      and unlinking `SharedMemory` so Python 3.13+ never raises `BufferError`.
   6. Homeostatic feedback (#6): regulates mutation scale `sigma` from measured
      cellular tension to remain within the `[15.0, 35.0]` homeostatic band.
+  7. Report contract (#51): every report carries the effective configuration that
+     actually executed, separates proposed-candidate from committed-state metrics,
+     returns an explicit result for zero generations, and uses reproducible
+     generators seeded from the effective seed phrase.
+  8. Ownership lifecycle (#51): `create=True` refuses to unlink an existing
+     same-name segment; attachers never unlink the owner's arena; only the
+     creating process may unlink its own segment, or an explicit administrative
+     `force_unlink` call when the owner is known dead.
+
+Tensor reads copy into independent CPU/MPS tensors; the mapped views are CPU
+buffers, there is no CPU/GPU zero-copy claim, and nothing here is a sandbox
+or a process-isolation boundary (#51).
 """
 
 from __future__ import annotations
@@ -88,6 +100,21 @@ ARENA_BYTE_SIZE = ctypes.sizeof(StratifiedMemoryArena)
 
 
 def select_compute_device() -> torch.device:
+    """Select the execution device.
+
+    Defaults to MPS when available, otherwise CPU. `WEFT_DEVICE=cpu|mps`
+    overrides the probe so CPU and MPS results can be recorded separately (#51).
+    """
+    override = os.environ.get("WEFT_DEVICE")
+    if override is not None:
+        o = override.strip().lower()
+        if o == "cpu":
+            return torch.device("cpu")
+        if o == "mps":
+            if not (hasattr(torch.backends, "mps") and torch.backends.mps.is_available()):
+                raise ValueError("WEFT_DEVICE=mps but MPS is not available on this host")
+            return torch.device("mps")
+        raise ValueError(f"WEFT_DEVICE must be 'cpu' or 'mps', got {override!r}")
     if hasattr(torch.backends, "mps") and torch.backends.mps.is_available():
         return torch.device("mps")
     return torch.device("cpu")
@@ -103,14 +130,18 @@ class StratifiedAppleSiliconPlasm:
         self.name = check_shm_name(name)
         self.size = ARENA_BYTE_SIZE
         self._closed = False
+        self.owner = bool(create)
         if create:
             try:
-                stale = shared_memory.SharedMemory(name=self.name, create=False)
-                stale.close()
-                stale.unlink()
-            except FileNotFoundError:
-                pass
-            self.shm = shared_memory.SharedMemory(name=self.name, create=True, size=self.size)
+                self.shm = shared_memory.SharedMemory(name=self.name, create=True, size=self.size)
+            except FileExistsError as exc:
+                # Never destroy or adopt a segment owned by another provider (#51).
+                raise FileExistsError(
+                    f"shared memory segment {self.name!r} already exists; refusing to "
+                    f"unlink or overwrite it. If the previous owner died, remove it with "
+                    f"StratifiedAppleSiliconPlasm.force_unlink({self.name!r}) after confirming "
+                    f"the owner is dead, or use a fresh shm_name."
+                ) from exc
         else:
             self.shm = shared_memory.SharedMemory(name=self.name, create=False)
 
@@ -169,12 +200,45 @@ class StratifiedAppleSiliconPlasm:
         self.c_view = None
         gc.collect()
 
-    def close(self, unlink: bool = True) -> None:
+    @classmethod
+    def force_unlink(cls, name: str) -> None:
+        """Administrative one-shot removal of a stale arena segment (#51).
+
+        Use only when the owning process is known dead; never called internally.
+        Raises FileNotFoundError if the segment does not exist.
+        """
+        name = check_shm_name(name)
+        shm = shared_memory.SharedMemory(name=name, create=False)
+        shm.close()
+        shm.unlink()
+
+    def close(self, unlink: Optional[bool] = None) -> None:
+        """Close the mapping and optionally unlink the segment.
+
+        Ownership semantics (#51):
+          - attachers (`create=False`) never unlink the owner's segment;
+          - explicit `unlink=True` from an attacher raises PermissionError;
+          - `unlink=None` unlinks only if this process created the segment;
+          - owners may pass `unlink=False` to leave the segment for readers.
+        """
         if self._closed:
             return
+        if unlink is None:
+            do_unlink = self.owner
+        else:
+            do_unlink = bool(unlink)
+        if do_unlink and not self.owner:
+            self.release_views()
+            self.shm.close()
+            self._closed = True
+            raise PermissionError(
+                f"process attached to segment {self.name!r} may not unlink it; "
+                f"only the creating process or StratifiedAppleSiliconPlasm.force_unlink "
+                f"may remove it"
+            )
         self.release_views()
         self.shm.close()
-        if unlink:
+        if do_unlink:
             try:
                 self.shm.unlink()
             except FileNotFoundError:
@@ -185,7 +249,7 @@ class StratifiedAppleSiliconPlasm:
         return self
 
     def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
-        self.close(unlink=True)
+        self.close(unlink=None)
 
 
 def compute_plasticity_mask(
@@ -324,6 +388,9 @@ def run_weft_plasm_cycle(
     seed_phrase: Optional[str] = None,
     shm_name: Optional[str] = None,
     cycles: Optional[int] = None,
+    r_invariant: Optional[float] = None,
+    initial_budget: Optional[float] = None,
+    perturbation_seed: Optional[int] = None,
 ) -> Dict[str, Any]:
     if cycles is not None:
         generations = int(cycles)
@@ -331,8 +398,66 @@ def run_weft_plasm_cycle(
     Execute an end-to-end mitotic cycle over the POSIX shared-memory substrate,
     enforcing the C2 invariant gate, core-freezing plasticity mask, target-directed
     A/B convergence, and watermark retention verification.
+
+    Report contract (#51): the returned dict always carries `effective_config`
+    (the parameters that actually executed, never unforwarded CLI echoes),
+    `backend`, `iterations_requested` and `iterations_executed`. Zero generations
+    returns an explicit `status: "NOOP"` document with no metrics claimed, rather
+    than raising. Generations ≥ 1 report both the proposed candidate's and the
+    held (committed-state) final error.
     """
+    iterations_requested = int(generations)
     device = select_compute_device()
+    effective_seed_phrase = seed_phrase if seed_phrase is not None else os.environ.get("WEFT_SEED", DEFAULT_SEED_PHRASE)
+    eff_budget = 100.0 if initial_budget is None else float(initial_budget)
+    eff_r_invariant = R_INVARIANT if r_invariant is None else float(r_invariant)
+    dim = 256
+    core_rows = dim // 4
+    noise_seed = int(perturbation_seed) if perturbation_seed is not None else int.from_bytes(
+        hashlib.sha256(effective_seed_phrase.encode("utf-8")).digest()[:8], "big"
+    ) % (2**63)
+
+    def base_report() -> Dict[str, Any]:
+        return {
+            "backend": str(device),
+            "iterations_requested": iterations_requested,
+            "iterations_executed": 0,
+            "effective_config": {
+                "dim": dim,
+                "core_rows": core_rows,
+                "generations": 0,
+                "seed_phrase": effective_seed_phrase,
+                "x_in_seed": 20261107,
+                "ideal_delta_scale": 0.015,
+                "r_invariant": eff_r_invariant,
+                "initial_metabolic_budget": eff_budget,
+                "alpha_novelty": 0.05,
+                "lr": 0.35,
+                "sigma_initial": 0.015,
+                "noise_seed": noise_seed,
+                "device": str(device),
+            },
+        }
+
+    if iterations_requested <= 0:
+        # Explicit result for zero iterations: no arena touched, no metrics claimed (#51).
+        report = base_report()
+        report.update(
+            {
+                "status": "NOOP",
+                "zero_iteration_noop": True,
+                "arena_bytes": ARENA_BYTE_SIZE,
+                "generations": [],
+                "committed_generations": 0,
+                "proposed_candidate_final_error": None,
+                "committed_state_final_error": None,
+                "initial_target_error": None,
+                "final_target_error": None,
+                "elapsed_ms": 0.0,
+                "final_weights_sha256": None,
+            }
+        )
+        return report
     # Short per-process default: SHM_NAME plus a 7-digit Linux PID would exceed
     # the 30-byte macOS limit.
     arena_name = shm_name or f"weft_plasm_{os.getpid()}"
@@ -340,12 +465,10 @@ def run_weft_plasm_cycle(
     try:
         plasm.seed_arena()
         w_core, symp, hippo = plasm.read_tensors_to_device(device)
-        dim = w_core.shape[0]
-        core_rows = dim // 4
 
         # Embed provenance watermark in the frozen core subspace `[0 : core_rows]`
         w_core, trigger_vec, target_id, initial_wm = embed_weight_watermark(
-            w_core, seed_phrase=seed_phrase, core_rows=core_rows
+            w_core, seed_phrase=effective_seed_phrase, core_rows=core_rows
         )
         w_baseline = w_core.detach().clone()
 
@@ -360,12 +483,13 @@ def run_weft_plasm_cycle(
         target_out = torch.matmul(x_in, w_ideal).detach()
 
         hippo_summary = hippo[:, :dim].mean(dim=0, keepdim=True)  # (1, dim)
-        metabolic_budget = 100.0
-        r_invariant = R_INVARIANT
+        metabolic_budget = eff_budget
+        r_invariant = eff_r_invariant
         sigma = 0.015
         lr = 0.35
         alpha_novelty = 0.05
-
+        noise_gen = torch.Generator(device="cpu")
+        noise_gen.manual_seed(noise_seed)
         history: List[Dict[str, Any]] = []
         t0 = time.perf_counter()
 
@@ -375,10 +499,12 @@ def run_weft_plasm_cycle(
                 parent_out = torch.matmul(x_in, w_core)
                 parent_err = float(torch.linalg.norm(parent_out - target_out).item())
 
-                # Compute periphery residual direction + stochastic A/B perturbations
+                # Compute periphery residual direction + stochastic A/B perturbations.
+                # A/B noise comes from a generator seeded by the effective seed
+                # phrase so the same seed/config/backend replays identically (#51).
                 residual_grad = torch.matmul(x_in.t(), (target_out - parent_out)) / float(x_in.shape[0])
-                noise_a = torch.randn_like(w_core) * sigma
-                noise_b = torch.randn_like(w_core) * sigma
+                noise_a = (torch.randn(w_core.shape, generator=noise_gen, dtype=torch.float32, device="cpu") * sigma).to(device)
+                noise_b = (torch.randn(w_core.shape, generator=noise_gen, dtype=torch.float32, device="cpu") * sigma).to(device)
 
                 delta_a = mask * (0.85 * residual_grad + 0.15 * noise_a)
                 delta_b = mask * (0.50 * residual_grad - 0.50 * noise_b)
@@ -470,9 +596,30 @@ def run_weft_plasm_cycle(
         elapsed_ms = (time.perf_counter() - t0) * 1000.0
         final_hash = hashlib.sha256(w_core.detach().to("cpu").numpy().tobytes()).hexdigest()
         all_ok = all(g["invariant_safe"] and g["watermark_retained"] and g["core_row_drift"] == 0.0 for g in history) and (history[-1]["held_target_error"] < history[0]["parent_target_error"])
+        proposed_candidate_final_error = history[-1]["winner_target_error"]
+        committed_state_final_error = history[-1]["held_target_error"]
         return {
             "status": "PASS" if all_ok else "FAIL",
             "device": str(device),
+            "backend": str(device),
+            "iterations_requested": iterations_requested,
+            "iterations_executed": len(history),
+            "zero_iteration_noop": False,
+            "effective_config": {
+                "dim": dim,
+                "core_rows": core_rows,
+                "generations": len(history),
+                "seed_phrase": effective_seed_phrase,
+                "x_in_seed": 20261107,
+                "ideal_delta_scale": 0.015,
+                "r_invariant": eff_r_invariant,
+                "initial_metabolic_budget": eff_budget,
+                "alpha_novelty": 0.05,
+                "lr": 0.35,
+                "sigma_initial": 0.015,
+                "noise_seed": noise_seed,
+                "device": str(device),
+            },
             "arena_bytes": ARENA_BYTE_SIZE,
             "core_rows_frozen": core_rows,
             "initial_watermark_alignment": round(initial_wm, 4),
@@ -481,7 +628,9 @@ def run_weft_plasm_cycle(
             "initial_target_error": history[0]["parent_target_error"],
             # Error of the held weights, not of the last candidate: a rejected
             # candidate never reaches the cell (#63).
-            "final_target_error": history[-1]["held_target_error"],
+            "final_target_error": committed_state_final_error,
+            "proposed_candidate_final_error": proposed_candidate_final_error,
+            "committed_state_final_error": committed_state_final_error,
             "committed_generations": sum(1 for g in history if g["committed"]),
             "elapsed_ms": round(elapsed_ms, 2),
             "final_weights_sha256": f"0x{final_hash}",
