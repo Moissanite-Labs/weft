@@ -1,0 +1,49 @@
+{
+  "experiment": "E14_Soko_to_Weft_Colony_Optimization_Bridge",
+  "n_seeds": 12,
+  "bridge_1_canonical_gauge_96fact_to_1": {
+    "raw_scrambled_weight_cosine_mean": 0.01218,
+    "canonicalized_weight_cosine_mean": 1.0,
+    "max_functional_output_diff": 6.217248937900877e-15,
+    "exact_permutation_recovery_seeds": "12/12"
+  },
+  "bridge_2_dinic_unit_capacity_flow_and_min_cut_mitosis": {
+    "mean_layer2_slot_deficit_detected_by_min_cut": 13.0,
+    "source_and_sink_minimal_cut_certificates_verified": "12/12"
+  },
+  "bridge_3_checked_prefix_nogoods_and_window_lns": {
+    "mean_poisoned_supersets_pruned_of_16": 15.0,
+    "pre_lns_shifted_6skill_r2_mean": 0.8657,
+    "post_lns_shifted_6skill_r2_mean": 0.8665
+  },
+  "bridge_4_exact_rational_fraction_certificates_verified": "12/12",
+  "colony_6skill_assembly_regimes": {
+    "R1_hall_stacking_independent": {
+      "all6_shifted_r2_mean": 0.2149,
+      "all6_shifted_r2_std": 0.0208,
+      "joint_6skill_passes": "0/12",
+      "joint_pass_count": 0
+    },
+    "R2_dinic_disjoint_no_mitosis_cap40": {
+      "all6_shifted_r2_mean": 0.4372,
+      "all6_shifted_r2_std": 0.0177,
+      "joint_6skill_passes": "0/12",
+      "joint_pass_count": 0
+    },
+    "R3_ungated_pool_no_prefix_nogoods": {
+      "all6_shifted_r2_mean": 0.4505,
+      "all6_shifted_r2_std": 0.0745,
+      "joint_6skill_passes": "0/12",
+      "joint_pass_count": 0
+    },
+    "R4_soko_weft_full_assembler": {
+      "all6_shifted_r2_mean": 0.8665,
+      "all6_shifted_r2_std": 0.007,
+      "joint_6skill_passes": "12/12",
+      "joint_pass_count": 12,
+      "pre_window_lns_r2_mean": 0.8657
+    }
+  },
+  "two_sided_sign_test_p_R4_vs_baselines": 0.0004883,
+  "wall_seconds": 44.02
+}
