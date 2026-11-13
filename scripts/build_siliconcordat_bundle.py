@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -70,13 +71,37 @@ def site_tree_at(rev: str) -> str:
     ).strip()
 
 
+ALLOW_UNREACHABLE_PIN_ENV = "SILICONCORDAT_ALLOW_UNREACHABLE_PIN"
+
+
+def unreachable_pin(pinned: str, what: str) -> None:
+    """Fail when the pinned weft commit cannot be fetched.
+
+    Falling back to HEAD used to make the pin a silent no-op: a pin to a
+    branch commit dropped by a squash or rebase merge stopped pinning
+    anything (#121 review). Set SILICONCORDAT_ALLOW_UNREACHABLE_PIN=1 to
+    build offline from HEAD anyway; the build says so loudly.
+    """
+    if os.environ.get(ALLOW_UNREACHABLE_PIN_ENV) == "1":
+        print(
+            f"warning: pinned weft commit {pinned[:12]} unreachable; {what} "
+            f"because {ALLOW_UNREACHABLE_PIN_ENV}=1. Do not deploy this build.",
+            file=sys.stderr,
+        )
+        return
+    print(
+        f"error: pinned weft commit {pinned} is unreachable. Pin a commit on "
+        f"main (sources-manifest.json weft.sha), or set "
+        f"{ALLOW_UNREACHABLE_PIN_ENV}=1 for an offline local build.",
+        file=sys.stderr,
+    )
+    sys.exit(1)
+
+
 def assert_weft_pin(manifest: dict) -> None:
     pinned = manifest["weft"]["sha"]
     if not ensure_commit(pinned):
-        print(
-            f"note: pinned weft commit {pinned[:12]} unreachable; using HEAD",
-            file=sys.stderr,
-        )
+        unreachable_pin(pinned, "using HEAD")
         return
     try:
         head_site = site_tree_at("HEAD")

@@ -185,13 +185,33 @@ def site_tree_at(rev: str) -> str:
     ).strip()
 
 
+ALLOW_UNREACHABLE_PIN_ENV = "SILICONCORDAT_ALLOW_UNREACHABLE_PIN"
+
+
+def unreachable_pin(pinned: str, what: str) -> None:
+    """Fail when the pinned weft commit cannot be fetched (see the same
+    function in build_siliconcordat_bundle.py). The /weft mirror must come
+    from the pinned tree; silently using HEAD made the pin a no-op."""
+    if os.environ.get(ALLOW_UNREACHABLE_PIN_ENV) == "1":
+        print(
+            f"warning: pinned commit {pinned[:12]} unreachable; {what} "
+            f"because {ALLOW_UNREACHABLE_PIN_ENV}=1. Do not deploy this build.",
+            file=sys.stderr,
+        )
+        return
+    print(
+        f"error: pinned commit {pinned} is unreachable. Pin a commit on main "
+        f"(siliconcordat-cut/sources-manifest.json weft.sha), or set "
+        f"{ALLOW_UNREACHABLE_PIN_ENV}=1 for an offline local build.",
+        file=sys.stderr,
+    )
+    sys.exit(1)
+
+
 def log_weft_pin(manifest: dict) -> None:
     pinned = manifest["weft"]["sha"]
     if not ensure_commit(pinned):
-        print(
-            f"note: pinned commit {pinned[:12]} unreachable; using HEAD for /weft pin check",
-            file=sys.stderr,
-        )
+        unreachable_pin(pinned, "using HEAD for the /weft pin check")
         return
     head_site = site_tree_at("HEAD")
     pin_site = site_tree_at(pinned)
@@ -332,10 +352,7 @@ def export_pinned_site(pinned_sha: str) -> Path:
 def site_source_tree(manifest: dict) -> Path:
     pinned = manifest["weft"]["sha"]
     if not ensure_commit(pinned):
-        print(
-            f"note: pinned commit {pinned[:12]} unreachable; using local SITE tree for /weft",
-            file=sys.stderr,
-        )
+        unreachable_pin(pinned, "using the local site/ tree for /weft")
         return SITE
     head_site = site_tree_at("HEAD")
     pin_site = site_tree_at(pinned)

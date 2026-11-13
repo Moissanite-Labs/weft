@@ -139,5 +139,54 @@ class DistIntegrationTest(unittest.TestCase):
         self.assertIn(f'from "./condense.js?v={self.version}"', papers)
 
 
+SPEC_MAIN = importlib.util.spec_from_file_location(
+    "build_siliconcordat_bundle",
+    ROOT / "scripts" / "build_siliconcordat_bundle.py",
+)
+assert SPEC_MAIN and SPEC_MAIN.loader
+build_main = importlib.util.module_from_spec(SPEC_MAIN)
+sys.modules[SPEC_MAIN.name] = build_main
+SPEC_MAIN.loader.exec_module(build_main)
+
+UNREACHABLE = "0" * 40
+
+
+class UnreachablePinTest(unittest.TestCase):
+    """An unfetchable weft pin fails the build instead of silently using HEAD (#121 review)."""
+
+    def _env(self, allow):
+        env = {k: v for k, v in os.environ.items() if k != "SILICONCORDAT_ALLOW_UNREACHABLE_PIN"}
+        if allow:
+            env["SILICONCORDAT_ALLOW_UNREACHABLE_PIN"] = "1"
+        return mock.patch.dict(os.environ, env, clear=True)
+
+    def test_main_bundle_fails_on_unreachable_pin(self):
+        with self._env(False), mock.patch.object(build_main, "ensure_commit", return_value=False):
+            with self.assertRaises(SystemExit) as cm:
+                build_main.assert_weft_pin({"weft": {"sha": UNREACHABLE}})
+        self.assertEqual(cm.exception.code, 1)
+
+    def test_main_bundle_opt_out_builds_from_head(self):
+        with self._env(True), mock.patch.object(build_main, "ensure_commit", return_value=False):
+            self.assertIsNone(build_main.assert_weft_pin({"weft": {"sha": UNREACHABLE}}))
+
+    def test_cut_bundle_fails_on_unreachable_pin(self):
+        with self._env(False), mock.patch.object(build, "ensure_commit", return_value=False):
+            for fn in (build.log_weft_pin, build.site_source_tree):
+                with self.assertRaises(SystemExit) as cm:
+                    fn({"weft": {"sha": UNREACHABLE}})
+                self.assertEqual(cm.exception.code, 1, fn.__name__)
+
+    def test_cut_bundle_opt_out_uses_local_site(self):
+        with self._env(True), mock.patch.object(build, "ensure_commit", return_value=False):
+            self.assertIsNone(build.log_weft_pin({"weft": {"sha": UNREACHABLE}}))
+            self.assertEqual(build.site_source_tree({"weft": {"sha": UNREACHABLE}}), build.SITE)
+
+    def test_reachable_pin_on_main_still_passes(self):
+        manifest = __import__("json").loads((ROOT / "siliconcordat" / "sources-manifest.json").read_text())
+        with self._env(False):
+            self.assertIsNone(build_main.assert_weft_pin(manifest))
+
+
 if __name__ == "__main__":
     unittest.main()
