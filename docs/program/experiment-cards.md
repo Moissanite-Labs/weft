@@ -1,6 +1,6 @@
 # Weft experiment cards
 
-Status: proposed, unexecuted protocols for [issue #49](https://github.com/Moissanite-Labs/weft/issues/49), derived from the complete-corpus audit at `a721b12579caba4e04dc31b16731cc2657079207`. These cards make the vision testable without choosing one implementation lineage by age. They complement the [build program](build-program.md), [convergence plan](convergence-plan.md), [variant register](variants.md), [use-now guide](use-now.md), and [reading evidence](audit/notes-threads_design.md).
+Status: proposed, unexecuted protocols for [issue #49](https://github.com/Moissanite-Labs/weft/issues/49), derived from the complete-corpus audit at `a721b12579caba4e04dc31b16731cc2657079207`. These cards make the vision testable without choosing one implementation lineage by age. They complement the [build program](build-program.md), [convergence plan](convergence-plan.md), [variant register](variants.md), [use-now guide](use-now.md), and [reading evidence](https://github.com/Moissanite-Labs/weft-loom/blob/main/audit/notes-threads_design.md).
 
 The owner's target is a reported M1 MacBook with 64 GB unified memory and Chrome. Actual chip, OS build, Chrome and native backend versions remain to be recorded. Linux CPU or software-rendered Chromium results are separate evidence. Resource ceilings below are proposed bounds for initial experiments, not measured requirements, performance promises or assertions that OS/browser quotas already enforce them. Stop or reduce a workload when the host reports memory pressure, the adapter is lost, allocation fails, or responsiveness materially degrades. Log the stop as a result. Do not silently expand a ceiling.
 
@@ -8,7 +8,7 @@ The owner's target is a reported M1 MacBook with 64 GB unified memory and Chrome
 
 Before each experiment, record its question, condition order, primary outcome, acceptable regression bound, seeds/input fixtures, dependency versions, exact commit and stopping budget. Set the meaningful quality threshold before observing outcomes; a latency improvement alone does not satisfy a usefulness claim. If a threshold cannot yet be justified, label the run exploratory and use it to design the next test.
 
-Retain configuration, code/model/asset hashes, environment, commands, raw machine-readable measurements, failures, stdout/stderr, representative screenshots where relevant, and a concise result/decision note with alternatives and limits. Store approved experiment artifacts in proposed `docs/program/experiments/<card-id>/<run-id>/`; large artifacts may use an in-repo manifest referring to private retained storage after its location is established. Do not create an implied component tree until its issue identifies the path. Each run's manifest distinguishes measured, derived, fixture and unavailable values. An absent result is not a pass. Preserve negative results and the exact next question.
+Retain configuration, code/model/asset hashes, environment, commands, raw machine-readable measurements, failures, stdout/stderr, representative screenshots where relevant, and a concise result/decision note with alternatives and limits. Store approved experiment artifacts in proposed `https://github.com/Moissanite-Labs/weft-loom/blob/main/experiments/<card-id>/<run-id>/`; large artifacts may use an in-repo manifest referring to private retained storage after its location is established. Do not create an implied component tree until its issue identifies the path. Each run's manifest distinguishes measured, derived, fixture and unavailable values. An absent result is not a pass. Preserve negative results and the exact next question.
 
 For personal studies, retain consent and task-level observations in an appropriately private record; the shared repository receives aggregate results and redacted fixtures, not passwords, tokens, device identifiers or unrelated personal content. This follows the corpus's own privacy/consent aims and makes results reusable.
 
@@ -32,7 +32,7 @@ These tracks are not a compulsory staircase. E01, E03 and E04 can create useful 
 
 ## E01 — Does procedural rendering improve the useful surface while preserving semantics?
 
-**Source intent:** [design thread](https://github.com/Moissanite-Labs/weft-corpus/blob/main/weft/browser-sources/thread2-design-main-6C083A.md), turns 2–3,21–24,37–39; procedural shape/state mapping, repository visualization, noise and glyphs. [Browser audit](audit/notes-browser.md) records current implementation evidence; [PR46](https://github.com/Moissanite-Labs/weft/pull/46) addresses a subset of telemetry refresh behavior.
+**Source intent:** [design thread](https://github.com/Moissanite-Labs/weft-corpus/blob/main/weft/browser-sources/thread2-design-main-6C083A.md), turns 2–3,21–24,37–39; procedural shape/state mapping, repository visualization, noise and glyphs. [Browser audit](https://github.com/Moissanite-Labs/weft-loom/blob/main/audit/notes-browser.md) records current implementation evidence; [PR46](https://github.com/Moissanite-Labs/weft/pull/46) addresses a subset of telemetry refresh behavior.
 
 **Question and usefulness:** Can the field communicate repository state and support navigation as clearly as a straightforward accessible list while offering the intended mathematical visual expression?
 
@@ -128,7 +128,7 @@ These tracks are not a compulsory staircase. E01, E03 and E04 can create useful 
 
 ## E07 — Do novelty and decay improve adaptation without erasing useful behavior?
 
-**Source intent:** [splicers genesis](https://github.com/Moissanite-Labs/weft-corpus/blob/main/weft/browser-sources/thread1-splicers-genesis-90133B.md), turns 19,21–23,26–28; [runtime audit](audit/notes-runtime.md) distinguishes actual C1 behavior from the variants.
+**Source intent:** [splicers genesis](https://github.com/Moissanite-Labs/weft-corpus/blob/main/weft/browser-sources/thread1-splicers-genesis-90133B.md), turns 19,21–23,26–28; [runtime audit](https://github.com/Moissanite-Labs/weft-loom/blob/main/audit/notes-runtime.md) distinguishes actual C1 behavior from the variants.
 
 **Question and usefulness:** Can constrained exploration and intelligent forgetting improve task-switch adaptation while retaining quality, diversity and reproducibility?
 
@@ -144,7 +144,7 @@ These tracks are not a compulsory staircase. E01, E03 and E04 can create useful 
 
 ## E08 — Can a living user's chosen preferences be predicted with useful abstention?
 
-**Source intent:** [design thread](https://github.com/Moissanite-Labs/weft-corpus/blob/main/weft/browser-sources/thread2-design-main-6C083A.md), turns 5,12,30–35; [imprint](https://github.com/Moissanite-Labs/weft-corpus/blob/main/weft/imprint.md) and [top-level audit](audit/notes-top_corpus.md); [PROGRAM.md](charter.md) separates a testamentary policy, a testable preference model and unsupported claims of survival.
+**Source intent:** [design thread](https://github.com/Moissanite-Labs/weft-corpus/blob/main/weft/browser-sources/thread2-design-main-6C083A.md), turns 5,12,30–35; [imprint](https://github.com/Moissanite-Labs/weft-corpus/blob/main/weft/imprint.md) and [top-level audit](https://github.com/Moissanite-Labs/weft-loom/blob/main/audit/notes-top_corpus.md); [PROGRAM.md](charter.md) separates a testamentary policy, a testable preference model and unsupported claims of survival.
 
 **Question and usefulness:** Can a voluntary, correctable preference model reduce repeated settings work while respecting explicit instructions and changes of mind?
 
@@ -172,7 +172,7 @@ These tracks are not a compulsory staircase. E01, E03 and E04 can create useful 
 
 ## E10 — Which mathematical claim survives contact with the actual numeric and graph semantics?
 
-**Source intent:** [prove](https://github.com/Moissanite-Labs/weft-corpus/blob/main/weft/prove.md), [langdoc](https://github.com/Moissanite-Labs/weft-corpus/blob/main/weft/langdoc.md), [provocol](https://github.com/Moissanite-Labs/weft-corpus/blob/main/weft/provocol.md), [runtime audit](audit/notes-runtime.md); current repair issues [#42](https://github.com/Moissanite-Labs/weft/issues/42) and [#43](https://github.com/Moissanite-Labs/weft/issues/43).
+**Source intent:** [prove](https://github.com/Moissanite-Labs/weft-corpus/blob/main/weft/prove.md), [langdoc](https://github.com/Moissanite-Labs/weft-corpus/blob/main/weft/langdoc.md), [provocol](https://github.com/Moissanite-Labs/weft-corpus/blob/main/weft/provocol.md), [runtime audit](https://github.com/Moissanite-Labs/weft-loom/blob/main/audit/notes-runtime.md); current repair issues [#42](https://github.com/Moissanite-Labs/weft/issues/42) and [#43](https://github.com/Moissanite-Labs/weft/issues/43).
 
 **Question and usefulness:** Can a narrowly stated invariant or graph rewrite property be proved in a formal model and connected to the executable implementation by explicit conformance evidence?
 
@@ -186,7 +186,7 @@ These tracks are not a compulsory staircase. E01, E03 and E04 can create useful 
 
 ## E11 — Can an OS embodiment enforce a smaller, testable capability boundary?
 
-**Source intent:** [splicers genesis](https://github.com/Moissanite-Labs/weft-corpus/blob/main/weft/browser-sources/thread1-splicers-genesis-90133B.md), turn 25; [README](https://github.com/Moissanite-Labs/weft-corpus/blob/main/weft/README.md):398–533 (x86 boot/APIC), [more](https://github.com/Moissanite-Labs/weft-corpus/blob/main/weft/more.md):6–57, [mac](https://github.com/Moissanite-Labs/weft-corpus/blob/main/weft/mac.md):7–64 and [almalga](https://github.com/Moissanite-Labs/weft-corpus/blob/main/weft/almalga.md):883–926 (mixed-ISA defects), alongside [mugetsu](https://github.com/Moissanite-Labs/weft-corpus/blob/main/weft/mugetsu.md), [soc](https://github.com/Moissanite-Labs/weft-corpus/blob/main/weft/soc.md) and [top-level audit](audit/notes-top_corpus.md). This is track 4, not a prerequisite for useful Chrome/native tools.
+**Source intent:** [splicers genesis](https://github.com/Moissanite-Labs/weft-corpus/blob/main/weft/browser-sources/thread1-splicers-genesis-90133B.md), turn 25; [README](https://github.com/Moissanite-Labs/weft-corpus/blob/main/weft/README.md):398–533 (x86 boot/APIC), [more](https://github.com/Moissanite-Labs/weft-corpus/blob/main/weft/more.md):6–57, [mac](https://github.com/Moissanite-Labs/weft-corpus/blob/main/weft/mac.md):7–64 and [almalga](https://github.com/Moissanite-Labs/weft-corpus/blob/main/weft/almalga.md):883–926 (mixed-ISA defects), alongside [mugetsu](https://github.com/Moissanite-Labs/weft-corpus/blob/main/weft/mugetsu.md), [soc](https://github.com/Moissanite-Labs/weft-corpus/blob/main/weft/soc.md) and [top-level audit](https://github.com/Moissanite-Labs/weft-loom/blob/main/audit/notes-top_corpus.md). This is track 4, not a prerequisite for useful Chrome/native tools.
 
 **Question and usefulness:** Does a minimal emulated kernel improve isolation, bounded scheduling and recoverability for one cell workload compared with an existing-OS sandbox?
 
@@ -200,7 +200,7 @@ These tracks are not a compulsory staircase. E01, E03 and E04 can create useful 
 
 ## E12 — Does a hardware comparator or Terrafab loop beat an equal-work baseline?
 
-**Source intent:** [terrafab](https://github.com/Moissanite-Labs/weft-corpus/blob/main/weft/terrafab.md), especially 86–87 and 161–187; [terrafab-calc](https://github.com/Moissanite-Labs/weft-corpus/blob/main/weft/terrafab-calc.md), [soc](https://github.com/Moissanite-Labs/weft-corpus/blob/main/weft/soc.md) and [top-level audit](audit/notes-top_corpus.md). Author asks for measurable gains and a closed manufacturing/energy/compute loop. These are two related but distinct experiments.
+**Source intent:** [terrafab](https://github.com/Moissanite-Labs/weft-corpus/blob/main/weft/terrafab.md), especially 86–87 and 161–187; [terrafab-calc](https://github.com/Moissanite-Labs/weft-corpus/blob/main/weft/terrafab-calc.md), [soc](https://github.com/Moissanite-Labs/weft-corpus/blob/main/weft/soc.md) and [top-level audit](https://github.com/Moissanite-Labs/weft-loom/blob/main/audit/notes-top_corpus.md). Author asks for measurable gains and a closed manufacturing/energy/compute loop. These are two related but distinct experiments.
 
 **Question A:** can one finite-precision invariant comparator or graph-reduction tile meet its exact software contract with a plausible area/timing/energy tradeoff? **Baseline:** optimized CPU implementation on the same inputs. **Manipulated variable:** comparator datapath/precision or tile rule implementation. **Fixed factors:** task, input corpus, accepted semantics and work performed. **Measurements:** functional parity, overflow/rounding behavior, simulated cycles, synthesis area/timing if a selected target is available; label energy estimates by model and uncertainty. **Falsifier:** disagreement at any required boundary, or advantage disappearing when baseline work is equal. Injected sleeps are not a valid CPU comparator.
 
@@ -210,7 +210,7 @@ These tracks are not a compulsory staircase. E01, E03 and E04 can create useful 
 
 ## E13 — Do executable permissions match the proposed constitution, and what remains social?
 
-**Source intent:** [splicers genesis](https://github.com/Moissanite-Labs/weft-corpus/blob/main/weft/browser-sources/thread1-splicers-genesis-90133B.md), turn 7; [govern](https://github.com/Moissanite-Labs/weft-corpus/blob/main/weft/govern.md), [constitution-versus-contract note](../design-notes/constitution-vs-contract.md), [runtime audit](audit/notes-runtime.md) and [#44](https://github.com/Moissanite-Labs/weft/issues/44). This card separates ledger mechanics, authority policy and institutional legitimacy.
+**Source intent:** [splicers genesis](https://github.com/Moissanite-Labs/weft-corpus/blob/main/weft/browser-sources/thread1-splicers-genesis-90133B.md), turn 7; [govern](https://github.com/Moissanite-Labs/weft-corpus/blob/main/weft/govern.md), [constitution-versus-contract note](../design-notes/constitution-vs-contract.md), [runtime audit](https://github.com/Moissanite-Labs/weft-loom/blob/main/audit/notes-runtime.md) and [#44](https://github.com/Moissanite-Labs/weft/issues/44). This card separates ledger mechanics, authority policy and institutional legitimacy.
 
 **Question and usefulness:** Can a chosen local policy enforce consent, delegation, revocation, independent approval, appeal and reproducible accounting for the exact actions it governs?
 

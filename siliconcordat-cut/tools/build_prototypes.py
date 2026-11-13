@@ -726,7 +726,7 @@ def notes_page():
         ]),
         ("open", "05 / 07", "What is open", [
             "Fifty-two directions are open across eight branches — the laws of the cell, the choice of model, what is inherited, signals beyond text, proof, growing a model, the colony as an organism, and the instrument itself. The map is on the lab site; "
-            + f'the <a href="https://github.com/Moissanite-Labs/weft/tree/main/docs/program/experiments/razi-cells-laws-2026-11">laws record (E11 to L1){EXT}</a> and the <a href="https://github.com/Moissanite-Labs/weft/tree/main/docs/program/experiments/E07/razi-cells-2026-11">E07 record{EXT}</a> are in the public repository.',
+            + f'the <a href="https://github.com/Moissanite-Labs/weft-loom/tree/main/experiments/razi-cells-laws-2026-11">laws record (E11 to L1){EXT}</a> and the <a href="https://github.com/Moissanite-Labs/weft-loom/tree/main/experiments/E07/razi-cells-2026-11">E07 record{EXT}</a> are in the public repository.',
             "Nothing here is finished, and this lab does not behave as though it were. A future robotics role is an aspiration, not a capability. Weft is an open research program, not a product.",
         ]),
         ("limit", "06 / 07", "The honest limit", [

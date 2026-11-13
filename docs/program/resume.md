@@ -1,6 +1,6 @@
 # Resume the Weft build program
 
-Start with [build-program.md](build-program.md), then [work-log.md](work-log.md), [experiment-cards.md](experiment-cards.md) and [audit/README.md](audit/README.md). These files, issue49 and linked PRs retain the task state independently of chat compression.
+Start with [build-program.md](build-program.md), then [work-log.md](work-log.md), [experiment-cards.md](experiment-cards.md) and [audit/README.md](https://github.com/Moissanite-Labs/weft-loom/blob/main/audit/README.md). These files, issue49 and linked PRs retain the task state independently of chat compression.
 
 ## Establish the current state
 
@@ -9,8 +9,8 @@ git status --short
 git log -5 --oneline
 git fetch origin
 git diff --stat a721b12579caba4e04dc31b16731cc2657079207..origin/main
-python scripts/corpus_audit.py check
-python -m unittest discover -s scripts -p test_corpus_audit.py
+python scripts/corpus_audit.py check --repo /path/to/weft  # from the weft-loom checkout (MIGRATION.md)
+python -m unittest discover -s scripts -p test_corpus_audit.py      # same checkout
 ```
 
 Preserve the annotated tag `audit/source-2026-11-08-a721b12` when cleaning branches; it keeps the source reachable even if PR48 is squash-merged.
