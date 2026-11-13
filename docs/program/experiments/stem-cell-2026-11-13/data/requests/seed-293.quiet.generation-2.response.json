@@ -1,0 +1,47 @@
+{
+  "attempt": 7,
+  "request_file": "seed-293.quiet.generation-2.json",
+  "request_sha256": "2b75ba7acd20afa25cd445a8e4cde4cf1c2639aa9de080ba4c604672974d4c0d",
+  "reservation_usd": 0.552675,
+  "cumulative_reserved_usd": 3.7513250000000005,
+  "http_status": 200,
+  "response": {
+    "id": "resp_0221109e8e072203016af67cd8ddbc87d1bed36475effca0c4",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 1538,
+      "input_tokens_details": {
+        "cache_write_tokens": 1535,
+        "cached_tokens": 0
+      },
+      "output_tokens": 392,
+      "output_tokens_details": {
+        "reasoning_tokens": 199
+      },
+      "total_tokens": 1930
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794538712,
+    "service_tier": "default",
+    "output": [
+      {
+        "id": "msg_0221109e8e072203016af67ce1dc1c87d1bb22af80e5e09bae",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"hypothesis\":\"High action costs favor selective corrections. Test directional tolerance shifts and urgency-only action, retaining unit step limits.\",\"children\":[{\"label\":\"downward tolerance shift\",\"genome\":{\"gain_num\":1,\"gain_den\":1,\"deadband\":1,\"bias\":-1,\"cap_low\":1,\"cap_high\":1}},{\"label\":\"upward tolerance shift\",\"genome\":{\"gain_num\":1,\"gain_den\":1,\"deadband\":1,\"bias\":1,\"cap_low\":1,\"cap_high\":1}},{\"label\":\"urgent only quiet\",\"genome\":{\"gain_num\":1,\"gain_den\":1,\"deadband\":1,\"bias\":0,\"cap_low\":0,\"cap_high\":1}},{\"label\":\"urgent only precise\",\"genome\":{\"gain_num\":1,\"gain_den\":1,\"deadband\":0,\"bias\":0,\"cap_low\":0,\"cap_high\":1}}]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  },
+  "elapsed_seconds": 11.624010874889791
+}

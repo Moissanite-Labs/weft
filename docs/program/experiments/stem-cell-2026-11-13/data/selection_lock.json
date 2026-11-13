@@ -1,0 +1,13 @@
+{
+  "config_sha256": "9bd0c2a5ecf05f39c7610ccf9a94b1e13d85fea993d340deb53665ef9a827e1d",
+  "selection_sha256": {
+    "seed-171.quiet.generation-1.json": "f0f9dcbd5da9936dd04f3d7483cef4f4c2fbad5e7d8709130e439abe18185943",
+    "seed-171.quiet.generation-2.json": "aeac28a461cd78b73752a5077640ec11c639dd67f60a8a9d643c39da59d95b10",
+    "seed-171.urgent.generation-1.json": "e3a91d1ea0b401759b1852a171221f4315c5d03b97fe53be4e917dd3c26e7b9e",
+    "seed-171.urgent.generation-2.json": "5012ef61ed95bbd697ba272424fd10137f14c06a5706ac90440140a4167536c1",
+    "seed-293.quiet.generation-1.json": "acca383a719fe3573c5176245471d59ab5d71f869ba17e6ed8d1b5ea3f2792fa",
+    "seed-293.quiet.generation-2.json": "71d90aa434c7eac6ab16e3a41f32ffedcd0d50ee9fd55e41e7e0da1c6852da65",
+    "seed-293.urgent.generation-1.json": "07ed844fe2d7b102be4e4ebf2ab7d5fc7e3aa524bc6f68240007873db8a82d68",
+    "seed-293.urgent.generation-2.json": "7344125b6ad6b93f8c8de3bf92f57c16c0b386bfc9f187eea1b6719dbdfb2ce2"
+  }
+}

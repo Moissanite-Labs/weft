@@ -1,0 +1,29 @@
+{
+  "registration_commit": "f2a72fdc0fa8b859df6ccc98e41d0420e86cddbf",
+  "reporting_correction": {
+    "file": "analyze_results.py",
+    "registered_sha256": "6e262859a6d8470344eeeab88e3cf58ea19974964292074c30c05dbc082b9570",
+    "published_sha256": "7ae4ee7ab3e2b4f5267f6a0b77fbc6b6cf3c1133a26aef73fb32d2a6abb1efc7",
+    "reason": "Handle returned cache_write_tokens explicitly in descriptive API rate estimation. No controller selection or episode/configuration changes."
+  },
+  "stdout_normalizations": [
+    {
+      "path": "data/validation/finish.stdout.txt",
+      "original_sha256": "596d6ebcfdc2cce95ef114a3306003dc2ee5948f26f0e316fff4a85891c7b51b",
+      "published_sha256": "fd100c1b43d1f731a1b4559259395f7f884f2d4bd580e6e28f15c820c3e18e00",
+      "operation": "Only machine-specific experiment-root prefixes removed from operator stdout paths. Numeric outputs and request identifiers unchanged. Original retained privately outside git."
+    },
+    {
+      "path": "data/validation/g1-advance-first.stdout.txt",
+      "original_sha256": "ab97452cbced556925de14936a72923d534ea3c52b35acead142dfeb2e88f468",
+      "published_sha256": "ff135ddc6e705b1d8423816fb2c485a126440888356d2c4dfefbacb0e4b60864",
+      "operation": "Only machine-specific experiment-root prefixes removed from operator stdout paths. Numeric outputs and request identifiers unchanged. Original retained privately outside git."
+    }
+  ],
+  "scanner_false_positives": {
+    "record": "data/validation/secret-scan-false-positives.json",
+    "ignore_file": ".gitleaksignore",
+    "scope": "Exactly four initial-commit fingerprints for source-SHA metadata. No broad rule/path/regex exclusions or history rewrite."
+  },
+  "excluded_local_operator_list": "data/prepared-request-paths.txt contains local absolute paths. The portable registered counterpart is retained; no mathematical input, proof or response was removed."
+}

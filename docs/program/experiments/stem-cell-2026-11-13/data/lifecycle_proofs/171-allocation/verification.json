@@ -1,0 +1,127 @@
+{
+  "accepted": true,
+  "kernel_checked": true,
+  "axioms": [],
+  "theorem": "StemLifecycle.certificate",
+  "toolchain": "leanprover/lean4:v4.35.0",
+  "request": {
+    "kind": "allocation",
+    "root_genome": {
+      "gain_num": 1,
+      "gain_den": 1,
+      "deadband": 0,
+      "bias": 0,
+      "cap_low": 2,
+      "cap_high": 2
+    },
+    "selected": [
+      {
+        "gain_num": 1,
+        "gain_den": 1,
+        "deadband": 1,
+        "bias": 1,
+        "cap_low": 1,
+        "cap_high": 1
+      },
+      {
+        "gain_num": 1,
+        "gain_den": 1,
+        "deadband": 0,
+        "bias": 0,
+        "cap_low": 2,
+        "cap_high": 2
+      }
+    ],
+    "benefits": [
+      297,
+      0
+    ],
+    "cells": [
+      {
+        "cell_id": "root-stem",
+        "branch": "stem",
+        "genome": {
+          "gain_num": 1,
+          "gain_den": 1,
+          "deadband": 0,
+          "bias": 0,
+          "cap_low": 2,
+          "cap_high": 2
+        },
+        "immutable_reserve": true
+      },
+      {
+        "cell_id": "quiet-copy-0",
+        "branch": "quiet",
+        "genome": {
+          "gain_num": 1,
+          "gain_den": 1,
+          "deadband": 1,
+          "bias": 1,
+          "cap_low": 1,
+          "cap_high": 1
+        },
+        "immutable_reserve": false
+      },
+      {
+        "cell_id": "quiet-copy-1",
+        "branch": "quiet",
+        "genome": {
+          "gain_num": 1,
+          "gain_den": 1,
+          "deadband": 1,
+          "bias": 1,
+          "cap_low": 1,
+          "cap_high": 1
+        },
+        "immutable_reserve": false
+      },
+      {
+        "cell_id": "quiet-copy-2",
+        "branch": "quiet",
+        "genome": {
+          "gain_num": 1,
+          "gain_den": 1,
+          "deadband": 1,
+          "bias": 1,
+          "cap_low": 1,
+          "cap_high": 1
+        },
+        "immutable_reserve": false
+      }
+    ]
+  },
+  "request_sha256": "29ac41e2d3e1543c9773209b919f46a1e5a4c54ab2950f61d221b72b6277d301",
+  "proof_sha256": "3fd59ed95e72d411bb6b6dfebbf3e813930de8ccc5a60c213a5fed42eef8137b",
+  "spec_sha256": "abc1cde4b14fd63d2ffa6a55f01b91001828a2e0456ce488ad6b4e0d3b2ccd89",
+  "verifier_sha256": "175783104cfa1bdcc40b22496ae103ee55a23066a0c0128b0d8126a971a80918",
+  "compilerlogs": [
+    {
+      "command": [
+        "--version"
+      ],
+      "returncode": 0,
+      "stdout": "Lean (version 4.35.0, arm64-apple-darwin24.6.0, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "-o",
+        "Core.olean",
+        "Core.lean"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "Certificate.lean"
+      ],
+      "returncode": 0,
+      "stdout": "StemLifecycle.certificate :\n  declaredRoot = { gainNum := 1, gainDen := 1, bias := 0, deadband := 0, capLow := 2, capHigh := 2 } \u2227\n    actualBranches = expectedBranches \u2227\n      actualPolicies = expectedPolicies \u2227 actualPolicies.length \u2264 4 \u2227 actualPolicies.head? = some declaredRoot\n'StemLifecycle.certificate' does not depend on any axioms\n",
+      "stderr": ""
+    }
+  ],
+  "scope": "Exact concrete stable-min selection or bounded clone allocation over supplied data; prior score/eligibility provenance and runtime binding remain host responsibilities."
+}

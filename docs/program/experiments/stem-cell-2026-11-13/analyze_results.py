@@ -18,12 +18,13 @@ def analyze(root):
                                 "teacher_genome": matched["teacher_final"]["genome"]})
     selections = [json.loads(p.read_text()) for p in sorted((root / "selections").glob("*.json"))]
     responses = [json.loads(p.read_text()) for p in sorted((root / "requests").glob("*.response.json"))]
-    usage = {"input_tokens": 0, "output_tokens": 0, "cached_input_tokens": 0, "reasoning_output_tokens": 0}
+    usage = {"input_tokens": 0, "output_tokens": 0, "cached_input_tokens": 0, "cache_write_tokens": 0, "reasoning_output_tokens": 0}
     for record in responses:
         item = record.get("response", {}).get("usage") or {}
         usage["input_tokens"] += item.get("input_tokens", 0)
         usage["output_tokens"] += item.get("output_tokens", 0)
         usage["cached_input_tokens"] += (item.get("input_tokens_details") or {}).get("cached_tokens", 0)
+        usage["cache_write_tokens"] += (item.get("input_tokens_details") or {}).get("cache_write_tokens", 0)
         usage["reasoning_output_tokens"] += (item.get("output_tokens_details") or {}).get("reasoning_tokens", 0)
     proof_dirs = [root / name for name in ("proofs", "control_proofs", "lifecycle_proofs", "heldout_proofs", "colony_proofs", "allocation_proofs")]
     proofs = []
@@ -42,6 +43,12 @@ def analyze(root):
         "selection_history": [{"seed": r["seed"], "branch": r["branch"], "generation": r["generation"], "selected_index": r["selected_index"], "parent_cost": r["unchanged_parent"]["validation"]["total_cost"], "selected_cost": r["selected_validation"]["total_cost"], "genome": r["selected_genome"]} for r in selections],
         "colonies": [{"seed": c["seed"], "copy_counts": c["allocation"]["copy_counts"], "total_cells": len(c["allocation"]["cells"]), "root_preserved": c["allocation"]["cells"][0]["genome"] == results["config"]["root_stem"]} for c in results["colonies"]],
         "api_responses": len(responses), "usage": usage,
+        "api_rate_estimate": {
+            "usd": ((usage["input_tokens"] - usage["cached_input_tokens"] - usage["cache_write_tokens"]) * 10 + usage["cached_input_tokens"] * 1 + usage["cache_write_tokens"] * 12.5 + usage["output_tokens"] * 50) / 1_000_000,
+            "source": "https://developers.openai.com/api/docs/models/gpt-6-astra",
+            "rates_per_million": {"uncached_input": 10, "cache_read": 1, "default_cache_write": 12.5, "output_including_reasoning": 50},
+            "scope": "Estimate from returned token usage and standard short-context/default-cache rates, not an invoice; excludes Codex/subagent work.",
+        },
         "proof_records": len(proofs), "accepted_proofs": sum(p.get("accepted") is True for p in proofs),
         "proofs_with_empty_axioms": sum(p.get("axioms") == [] for p in proofs),
     }

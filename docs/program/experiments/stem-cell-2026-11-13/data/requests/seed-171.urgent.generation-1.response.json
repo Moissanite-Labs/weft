@@ -1,0 +1,47 @@
+{
+  "attempt": 2,
+  "request_file": "seed-171.urgent.generation-1.json",
+  "request_sha256": "312c4d95145f10adb37bd39e5b6bbbd5a09b826ceae3bbfde93259279e12b22a",
+  "reservation_usd": 0.52295,
+  "cumulative_reserved_usd": 1.045875,
+  "http_status": 200,
+  "response": {
+    "id": "resp_0a18b1944628c5e7016af67c363a8887d1ac72eb8f0aba780f",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 1221,
+      "input_tokens_details": {
+        "cache_write_tokens": 1218,
+        "cached_tokens": 0
+      },
+      "output_tokens": 627,
+      "output_tokens_details": {
+        "reasoning_tokens": 425
+      },
+      "total_tokens": 1848
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794538550,
+    "service_tier": "default",
+    "output": [
+      {
+        "id": "msg_0a18b1944628c5e7016af67c44d75087d1a6faed16c1c0196c",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"hypothesis\":\"The parent efficiently corrects unit errors. Explore reduced nonurgent effort, fractional gain, and directional biases while preserving urgent capacity; validation should reject regressions.\",\"children\":[{\"label\":\"nonurgent_cap_one\",\"genome\":{\"gain_num\":1,\"gain_den\":1,\"deadband\":0,\"bias\":0,\"cap_low\":1,\"cap_high\":2}},{\"label\":\"fractional_gain\",\"genome\":{\"gain_num\":3,\"gain_den\":4,\"deadband\":0,\"bias\":0,\"cap_low\":2,\"cap_high\":2}},{\"label\":\"downward_bias\",\"genome\":{\"gain_num\":1,\"gain_den\":1,\"deadband\":0,\"bias\":-1,\"cap_low\":2,\"cap_high\":2}},{\"label\":\"upward_bias\",\"genome\":{\"gain_num\":1,\"gain_den\":1,\"deadband\":0,\"bias\":1,\"cap_low\":2,\"cap_high\":2}}]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  },
+  "elapsed_seconds": 16.905558709055185
+}

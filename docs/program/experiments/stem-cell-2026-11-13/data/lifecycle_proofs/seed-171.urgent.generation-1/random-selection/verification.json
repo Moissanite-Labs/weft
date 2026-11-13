@@ -1,0 +1,100 @@
+{
+  "accepted": true,
+  "kernel_checked": true,
+  "axioms": [],
+  "theorem": "StemLifecycle.certificate",
+  "toolchain": "leanprover/lean4:v4.35.0",
+  "request": {
+    "kind": "selection",
+    "genomes": [
+      {
+        "gain_num": 1,
+        "gain_den": 1,
+        "deadband": 0,
+        "bias": 0,
+        "cap_low": 2,
+        "cap_high": 2
+      },
+      {
+        "gain_num": 3,
+        "gain_den": 4,
+        "deadband": 0,
+        "bias": 1,
+        "cap_low": 0,
+        "cap_high": 0
+      },
+      {
+        "gain_num": 3,
+        "gain_den": 3,
+        "deadband": 0,
+        "bias": -1,
+        "cap_low": 2,
+        "cap_high": 1
+      },
+      {
+        "gain_num": 1,
+        "gain_den": 1,
+        "deadband": 2,
+        "bias": -2,
+        "cap_low": 2,
+        "cap_high": 2
+      },
+      {
+        "gain_num": 2,
+        "gain_den": 1,
+        "deadband": 3,
+        "bias": -1,
+        "cap_low": 0,
+        "cap_high": 0
+      }
+    ],
+    "costs": [
+      498,
+      1992,
+      1214,
+      1036,
+      1992
+    ],
+    "eligible": [
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "winner_index": 0
+  },
+  "request_sha256": "fabd9d718b9b65b3de4521b943b1b9481c4ba0b8eec0cbeb0c804e07776a0f8f",
+  "proof_sha256": "b631fa9f55c4561f4d883dc2fc2043f4002a21d642f4ad47d60537f8cf0e7f99",
+  "spec_sha256": "abc1cde4b14fd63d2ffa6a55f01b91001828a2e0456ce488ad6b4e0d3b2ccd89",
+  "verifier_sha256": "175783104cfa1bdcc40b22496ae103ee55a23066a0c0128b0d8126a971a80918",
+  "compilerlogs": [
+    {
+      "command": [
+        "--version"
+      ],
+      "returncode": 0,
+      "stdout": "Lean (version 4.35.0, arm64-apple-darwin24.6.0, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "-o",
+        "Core.olean",
+        "Core.lean"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "Certificate.lean"
+      ],
+      "returncode": 0,
+      "stdout": "StemLifecycle.certificate :\n  policies.length \u2264 5 \u2227\n    (List.drop winner policies).head? = some chosen \u2227\n      (List.drop winner eligible).head? = some true \u2227\n        (List.drop winner costs).head? = some 498 \u2227\n          ((List.drop 0 eligible).head? = some true \u2192 498 < 498 \u2228 498 = 498 \u2227 winner \u2264 0) \u2227\n            ((List.drop 1 eligible).head? = some true \u2192 498 < 1992 \u2228 498 = 1992 \u2227 winner \u2264 1) \u2227\n              ((List.drop 2 eligible).head? = some true \u2192 498 < 1214 \u2228 498 = 1214 \u2227 winner \u2264 2) \u2227\n                ((List.drop 3 eligible).head? = some true \u2192 498 < 1036 \u2228 498 = 1036 \u2227 winner \u2264 3) \u2227\n                  ((List.drop 4 eligible).head? = some true \u2192 498 < 1992 \u2228 498 = 1992 \u2227 winner \u2264 4)\n'StemLifecycle.certificate' does not depend on any axioms\n",
+      "stderr": ""
+    }
+  ],
+  "scope": "Exact concrete stable-min selection or bounded clone allocation over supplied data; prior score/eligibility provenance and runtime binding remain host responsibilities."
+}
