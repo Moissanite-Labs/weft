@@ -1,0 +1,75 @@
+# Experiment run log
+
+All four studies are complete. Earlier checkpoints retain their original timing. Earlier checkpoints below retain their original timing and claim boundaries.
+
+| Checkpoint | Record |
+| --- | --- |
+| 1fa0cfa | Initial protocol and source evidence committed before teacher calls |
+| ab90c53 | Amendment A, harness, calibration registration, source data and prepared requests pushed before successful teacher responses |
+| Transport failure | An initial HTTPS request failed TLS certificate verification before any successful model response. The normalized failure is archived under data/transport_failures. The client then used certifi's certificate bundle. |
+| Calibration | One completed Astra response, followed by local evaluation against registered held-out observations |
+
+Calibration results from `data/calibration/result.json`:
+
+| Measure | IID, 2,048 observations | Shifted, 2,048 observations |
+| --- | --- | --- |
+| Inverse-ground-truth accuracy | 100% | 99.853515625% |
+| Inversion of source predictions | 100% | 100% |
+| Agreement with row-swap oracle classes | 100% | 100% |
+| Frozen first layer unchanged | true | true |
+
+The response negated both output logits. It did not duplicate the analytic row-swap oracle's numerical logits, and exact logit equality was not required. This is a successful simple inversion edit under the registered limits. Family transfer and broader weight understanding remain separate questions.
+
+The reference environment is Python 3.14.6, NumPy 2.5.4 and certifi 2026.10.23. The registration checkpoint passed 19 offline unit tests. Calibration replay recomputes the archived result without a key. See README.md for portable commands.
+
+API response token accounting is captured in response artifacts. Coding-agent tokens are unavailable. The captured response contains observable message text and accounting, excluding internal reasoning items. Credentials are not recorded.
+
+## First family proposals
+
+All nine first-round responses and candidate evaluations are archived. Every proposal was valid. The saved validation decisions are:
+
+| Arm | Valid proposals | Accepted by validation gates |
+| --- | --- | --- |
+| weights_behavior | 3/3 | 3/3 |
+| behavior_only | 3/3 | 2/3 |
+| scrambled_weights | 3/3 | 2/3 |
+
+These are validation decisions, with family held-out outcomes still sealed. Later weight-visible and behavior-only rounds remain in progress. A preliminary statement that the first two scrambled proposals were rejected was corrected after the second was scored. The archived second scrambled proposal was accepted.
+
+## Completed first study
+
+All 21 family proposals were valid. Nineteen passed validation gates and two were rejected. One final arm selected the unchanged cell. The weight-visible arm reduced IID active-context error by 19.107%, 21.860% and 20.768%. Two source seeds passed the combined improvement and retention criterion. All three missed retention on shifted observations.
+
+Behavior-only passed the primary criterion on zero of three seeds. Scrambled weights passed on one of three, seed 43. Truthful hidden activations accompanied numerical weights, so these results cannot isolate their respective contributions. Follow-up experiments test this confound.
+
+Family and calibration replay matched exactly on the recorded macOS arm64 / Python 3.14.6 run after completion, and the API worker stopped. On Linux x86_64 the family replay does not reproduce, while calibration replay matches, as recorded in README.md. The archive contains 22 responses including calibration, with estimated API cost $6.2913975 at the recorded rates. This is not an invoice. The separate TLS failure remains archived even though the analysis response-file suffix does not count it in its failure total.
+
+## Completed factorial follow-up
+
+All 40 factorial proposals were valid. Thirty-four passed validation gates and six were rejected. Final gate selection kept the unchanged source in two arm/family cases. Mean IID active-error reductions across five source seeds were 20.10% for weights only, 18.06% for hidden activations only and 19.50% for both. With neither, mean error increased by 0.118%.
+
+Each information-bearing arm met the combined IID improvement and retention criterion on only one of five seeds. None did so under the shifted distribution. These are target-error gains with weak preservation, without evidence of robust success. The conditional follow-up is recorded below.
+
+The factorial replay matched exactly on the recorded macOS arm64 / Python 3.14.6 run. On Linux x86_64 it does not reproduce, as recorded in README.md. Its 40 response artifacts have an estimated API cost of $5.230925 at the recorded rates, separate from the first-study estimate and without an invoice claim.
+
+## Completed numerical fidelity probes
+
+All 22 paid probes returned valid answers and exact replay completed on the recorded macOS arm64 / Python 3.14.6 run. That phase-four replay also matches on Linux x86_64, as recorded in README.md. Sparse planted-row readout was correct on 12/12 probes, mechanical row edits on 6/6 and planted equivalence judgments on 2/2. The two numerical threshold rules agreed with their paired classifier on 99.8046875% and 99.90234375% of 2,048 fresh inputs. No binary threshold-inference pass criterion was registered.
+
+These are sparse readout, arithmetic editing and approximate numerical inference results. They do not establish dense-weight precision or broader policy improvement. The local classifier is separate from the original checkpoint in the peer archive linked from phase4_fidelity/RESULTS.md.
+
+## Completed conditional follow-up and final capture
+
+All 12 conditional teacher responses completed. No source seed met the primary criterion on both final distributions. Selected successful candidates used ordinary ridge fitting, rather than manual direct surgery. Conditional errors and shared-arena collision counts improved partially. Of 48 evaluated candidates, 47 used ridge fitting.
+
+The single manual candidate was informed by an earlier fitted patch and was rejected. This does not establish a general manual-versus-fitting comparison. These gains do not establish general weight reading or robust satisfaction of the complete objective.
+
+Final conditional replay matched exactly on the recorded macOS arm64 / Python 3.14.6 run, with results hash edc94c5c0b51bdb4b17bc8796f48abc5372cf6408433189de508f82d7de26c69. On Linux x86_64 it does not reproduce: it stops at its request-binding check, as recorded in README.md. An initial analysis command used an incorrect argument and failed before report rendering. Correcting that command did not change experimental outcomes.
+
+All workers stopped after 96 paid responses: 22 first-study responses including calibration, 40 factorial, 12 conditional and 22 fidelity probes. API-USAGE.json counts each original response once. Estimated API cost is $28.2913675 at the recorded rates, without an invoice claim. Cached input tokens were zero in the saved usage. Coding-agent tokens remain unavailable.
+
+## Additional unpaid geometry diagnostic
+
+A separate local geometry diagnostic used fresh synthetic models and no paid calls. Seven tests passed. Exact replay matched on the recorded macOS arm64 / Python 3.14.6 run. On Linux x86_64 with Python 3.13.5 and NumPy 2.5.4, `python3 geometry.py replay --out data` raises ValueError: Replay mismatch artifacts.json (323 numeric diffs, max abs 2.6650903706126883e-13). It distinguishes exact permutation equivariance and fixed-feature anchor preservation from local Jacobian constraints, finite nonlinear drift and unconstrained shifted behavior. This is mathematical feasibility evidence, rather than learned skill transfer.
+
+PEER-SYNTHESIS-REVIEW.md evaluates the synthesis in issue #149 against pinned repository evidence and related work. E11-PROPOSAL.md describes a future matched transfer study, including recipient-local fitting, feasibility rejection and scoped preservation certificates. The four paid studies and their 96-response accounting remain unchanged.

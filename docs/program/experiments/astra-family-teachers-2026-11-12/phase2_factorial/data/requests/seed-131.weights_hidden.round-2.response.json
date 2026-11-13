@@ -1,0 +1,44 @@
+{
+  "request_file": "seed-131.weights_hidden.round-2.json",
+  "request_sha256": "18de63993ce23aedc80c1299cbf985a4f76f0c48a66679a1cad0bda3bc5bfb0c",
+  "response": {
+    "id": "resp_06d7994111e06c96016af662a0878c87d19764af15e172c056",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 9281,
+      "input_tokens_details": {
+        "cache_write_tokens": 9278,
+        "cached_tokens": 0
+      },
+      "output_tokens": 331,
+      "output_tokens_details": {
+        "reasoning_tokens": 154
+      },
+      "total_tokens": 9612
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794532000,
+    "output": [
+      {
+        "id": "msg_06d7994111e06c96016af662a6e48487d1b32672baf0563ad4",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"hypothesis\":\"Increase the validated movement-only avoidance patch by 16%, with every delta measured from the original cell. This should further reduce active movement error while keeping low-urgency drift below its budget: quadratic scaling of the observed drift predicts approximately 0.000482, though this is not a validation result. Keeping hidden parameters and the hazard head unchanged preserves hazard predictions exactly.\",\"edits\":[{\"tensor\":\"w2\",\"index\":[0,1],\"delta\":-0.02668},{\"tensor\":\"w2\",\"index\":[0,2],\"delta\":-0.087},{\"tensor\":\"b2\",\"index\":[0],\"delta\":0.07076},{\"tensor\":\"w2\",\"index\":[1,7],\"delta\":-0.07772},{\"tensor\":\"b2\",\"index\":[1],\"delta\":-0.04524}]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  },
+  "elapsed_seconds": 9.995188749860972,
+  "estimated_usd": 0.132555,
+  "estimate_kind": "reported tokens"
+}

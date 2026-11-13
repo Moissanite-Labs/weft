@@ -1,0 +1,44 @@
+{
+  "request_file": "B-classifier-zerorow.json",
+  "request_sha256": "d1917226946a76e12b9e9c54a7f7e461e19fd03ff4247611d3df5a40111c7cae",
+  "response": {
+    "id": "resp_04e588543d3e36c7016af6631e51fc87d18fcebea9691e4001",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 1165,
+      "input_tokens_details": {
+        "cache_write_tokens": 1162,
+        "cached_tokens": 0
+      },
+      "output_tokens": 16,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1181
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794532126,
+    "output": [
+      {
+        "id": "msg_04e588543d3e36c7016af6631f9f5c87d1aeb5497978db73dd",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"edited_row\":[0,0,0,0]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  },
+  "elapsed_seconds": 1.7515017080586404,
+  "estimated_usd": 0.015355,
+  "estimate_kind": "reported tokens"
+}

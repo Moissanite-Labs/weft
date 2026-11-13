@@ -1,0 +1,41 @@
+{
+  "request_file": "seed-29.weights_behavior.round-3.json",
+  "elapsed_seconds": 8.788716458948329,
+  "response": {
+    "id": "resp_033e32a3d01d6939016af65ef5a85c87d181e278813f47eea4",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 26872,
+      "input_tokens_details": {
+        "cache_write_tokens": 26869,
+        "cached_tokens": 0
+      },
+      "output_tokens": 294,
+      "output_tokens_details": {
+        "reasoning_tokens": 116
+      },
+      "total_tokens": 27166
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794531061,
+    "output": [
+      {
+        "id": "msg_033e32a3d01d6939016af65efb391487d195c2f0eb20174c5d",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"hypothesis\":\"Increase the last accepted avoidance edits by 2.4%, with all deltas relative to the original source. Prior validation suggests low-urgency drift will remain just below 0.0005 (approximately 0.000498), while active movement improves slightly and hazard changes remain small. This conservatively strengthens avoidance without implementing exact urgency or sensor gating; preservation remains a prediction, not a validated result.\",\"edits\":[{\"tensor\":\"w1\",\"index\":[4,2],\"delta\":0.02924544},{\"tensor\":\"w1\",\"index\":[4,4],\"delta\":0.015747544615384616},{\"tensor\":\"w1\",\"index\":[9,3],\"delta\":0.05727232},{\"tensor\":\"w1\",\"index\":[9,5],\"delta\":0.03083894153846154}]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  }
+}

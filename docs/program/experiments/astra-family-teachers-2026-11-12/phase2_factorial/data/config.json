@@ -1,0 +1,31 @@
+{
+  "rounds": 2,
+  "rounds_by_arm": {
+    "weights_hidden": 2,
+    "weights_only": 2,
+    "hidden_only": 2,
+    "neither": 2
+  },
+  "examples": 48,
+  "transcript_significant_digits": 8,
+  "source_seeds": [
+    71,
+    89,
+    107,
+    131,
+    163
+  ],
+  "random_draws": 32,
+  "rollout_seeds": [
+    1701,
+    1702,
+    1703
+  ],
+  "hazard_relative_tolerance": 0.02,
+  "hazard_absolute_tolerance": 0.0002,
+  "low_urgency_drift_mse_budget": 0.0005,
+  "target_min_improvement": 1e-08,
+  "selection_metric": "movement_mse",
+  "teacher_model": "gpt-6-astra",
+  "random_distribution": "posthoc, never selected"
+}

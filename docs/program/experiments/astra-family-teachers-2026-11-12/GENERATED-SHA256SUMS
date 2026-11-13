@@ -1,0 +1,41 @@
+# Generated artifacts kept out of the tree. Format: sha256  bytes  path (relative to this directory).
+# Restore and verify with: python restore_generated.py (copies exact bytes from the archive commit below)
+# Originals: git show d85940c0d078b54f40f4742b33c286c521164567:docs/program/experiments/astra-family-teachers-2026-11-12/<path>
+# That commit is the head of branch record/astra-teachers-prereg-history-20261112.
+4f02fc2545b7198b47dee683474005b98cc34485e9e47b29b463c677e7c0fda1  9233396  data/results.json
+9e52b3b239d97091a48694dec56f62e02a21abe32bfe1208a5e18fed7f936522  580838  data/calibration/experiment.json
+80b05d026aedf2712cf3035b07e68a6031b0004ecd1a2a57ccb8b0dafd4bec28  1103810  data/experiments/seed-17.json
+bc57f762efff464d2c9919d1e4514df6b5cedf79dabafca5c98bdb7fea6c947f  1103683  data/experiments/seed-29.json
+a8eeec966241e872fa8b668c4f67e255cf1fb1a28b601c3101edbb33758beb41  1103520  data/experiments/seed-43.json
+0047a27d3431a9bcc2095543145f9035d6ab45f768bc0f3dded44cbf29b6c1f4  20227204  phase2_factorial/data/results.json
+96f91d5c4fb11a02f0ab89826992e2c128404a32cd76840195f47a3b7dbc7f46  1103118  phase2_factorial/data/experiments/seed-71.json
+3bb875d693627e67e81d0ec5fd389344c5c378c2b9d5c8e440347c91324e1a23  1103572  phase2_factorial/data/experiments/seed-89.json
+179b1613370b1375b78b0483ec2f7d7f07a98038eb4f7f990318c1e38a57e571  1103709  phase2_factorial/data/experiments/seed-107.json
+dcb92755dcc62f61ebac9ed229a9120116991b858b3c98cd501740a285bcc88e  1102993  phase2_factorial/data/experiments/seed-131.json
+145393b08b28306f2760678a912a092483fe37f9f0d5d30bed553f15f187c677  1103606  phase2_factorial/data/experiments/seed-163.json
+c506110b7c2097677885f6ce10c4931bf65669eb3fc4d6c422ab2b75a54ad86c  1314799  phase3_conditional/data/experiments/seed-101.json
+a7c0f6fb33226a819d4410c2d0b8bf1be6882ef899b4767c98eeff9498a6ba9c  1314497  phase3_conditional/data/experiments/seed-211.json
+3055e465fbb470b7ff3131a2f77e36dc35dd2e5b9cf42d5bdadcf9ba07b6ef88  1314773  phase3_conditional/data/experiments/seed-307.json
+12d5ad5c283c6d5e1ebad89425866a6254cd3c4372ef53960a59111861d9bf36  528220  phase4_fidelity/data/oracles/A-256-raw-1103.json
+83bfe88f65a126340be649ffd68a336495a39a41a92a5cc4d664348e5e415a8c  528232  phase4_fidelity/data/oracles/A-256-raw-1129.json
+5f9938b8c884c38727707ba529bba05992a38a5afacb904e7dcd9d13471f9a6f  528124  phase4_fidelity/data/oracles/A-256-round2-1103.json
+04e6ab0b2306ea67a350a6bfa3dc49b15891e2d06fbe596c5eea8ddbb7dbc941  528135  phase4_fidelity/data/oracles/A-256-round2-1129.json
+a76faf8a4ce0e238db182a2989d8295f6cba922487a5c3d83141d4002144a4b9  528199  phase4_fidelity/data/oracles/A-256-round5-1103.json
+e15a48b6342d6e1bf6acbb17db7d3f7a6d0e6d35e450b1b698b3bac9669f0728  528207  phase4_fidelity/data/oracles/A-256-round5-1129.json
+41a65d605be8f5b3b4eac1f62103157fdd1ad585e42780ebef0f449329e0ef26  34388  phase4_fidelity/data/oracles/A-64-raw-1103.json
+04c7e3777861b1d9d3ebd08f151117d1a8484413b58588d2d30a44e7cbe8952d  34394  phase4_fidelity/data/oracles/A-64-raw-1129.json
+03e83f93924914f8bb931c9694a7d534de7695425326cc171f0c836f00073d76  34290  phase4_fidelity/data/oracles/A-64-round2-1103.json
+ae1f96d30b65daee791ddb2e6316583d88e834bc85813435e3e865467fe71604  34298  phase4_fidelity/data/oracles/A-64-round2-1129.json
+13523a0fac2b42a0e874e87ce0ad9777b510dc02ee0b7bb2f1d15fa2534d34f2  34366  phase4_fidelity/data/oracles/A-64-round5-1103.json
+d0c26a20a6fb4a85a63dd4c59239ca4363bd40f4ca1380b47f131784398deff6  34369  phase4_fidelity/data/oracles/A-64-round5-1129.json
+fa05cbf765c369b41dc2613c74e4dfacd82bf8ec1e6510fa515f45181f20f8c4  4994  phase4_fidelity/data/oracles/B-classifier-scalerow.json
+82ae722b56e8a54c5704c4027988f2c988d4e90ad298577f46f9e442d013f19b  4994  phase4_fidelity/data/oracles/B-classifier-signflip.json
+dd773c5f0f61ce7ebbd00ded7bf2612bedb23f35f813348124b50c8a33f633ef  4860  phase4_fidelity/data/oracles/B-classifier-zerorow.json
+c73179cbecb6751f9f7900bc60bbc4ed066e5ba7bc14f350f57bc9a68cc6ec11  5647  phase4_fidelity/data/oracles/B-organism-scalerow.json
+62a15fa8ece82e099bd69f2e2d8a1f6993094b0af4723489ade445502c716632  5653  phase4_fidelity/data/oracles/B-organism-signflip.json
+c57a7ee335be667057baf98a617b3866da356ba1d3ca0aae3df306dc23d9acc7  5387  phase4_fidelity/data/oracles/B-organism-zerorow.json
+6196ae72dedf5dd0d73c0dc61cc17991904cee36bce83f71e4b950c831a0d58c  170335  phase4_fidelity/data/oracles/C-original.json
+0e5b93e26bda0f6a9fae0fdbe2305c479adeab82a08beedb25ddfe8477bf83e1  170335  phase4_fidelity/data/oracles/C-permuted.json
+1f7da460009fc41f68d96d45379028a8ccef9560c4a490bf786bc8d0574415b8  171080  phase4_fidelity/data/oracles/D-changed.json
+3ec4b9832494a561676bd21558e149089b8238cc44266732d950aa6a3c14a3a8  171078  phase4_fidelity/data/oracles/D-permuted.json
+ba092200243e18105d40495297c7dbc5b73d59963ba18c904f332fa3a07fd47e  5173398  phase3_conditional/data/results.json

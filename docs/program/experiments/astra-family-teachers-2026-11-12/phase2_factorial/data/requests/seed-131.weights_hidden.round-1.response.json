@@ -1,0 +1,44 @@
+{
+  "request_file": "seed-131.weights_hidden.round-1.json",
+  "request_sha256": "f7a62d63daaec32f1038851f03dcca3890e0bd54ffe25d82839ece54aaccb3dd",
+  "response": {
+    "id": "resp_07905890fc0a1503016af660bfbcbc87d1a0bbbc7dcc4bd346",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 9006,
+      "input_tokens_details": {
+        "cache_write_tokens": 9003,
+        "cached_tokens": 0
+      },
+      "output_tokens": 1060,
+      "output_tokens_details": {
+        "reasoning_tokens": 898
+      },
+      "total_tokens": 10066
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794531519,
+    "output": [
+      {
+        "id": "msg_07905890fc0a1503016af660e1ee3087d188125e8442e75e54",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"hypothesis\":\"A conservative increase in movement-head avoidance through existing obstacle/neighbor features should reduce high-urgency movement error. Small coefficients and bias compensation limit low-urgency drift. Leaving the hidden layer and hazard head unchanged preserves the hazard estimate exactly; this patch strengthens avoidance without claiming to implement full urgency\u2013sensor gating.\",\"edits\":[{\"tensor\":\"w2\",\"index\":[0,1],\"delta\":-0.023},{\"tensor\":\"w2\",\"index\":[0,2],\"delta\":-0.075},{\"tensor\":\"b2\",\"index\":[0],\"delta\":0.061},{\"tensor\":\"w2\",\"index\":[1,7],\"delta\":-0.067},{\"tensor\":\"b2\",\"index\":[1],\"delta\":-0.039}]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  },
+  "elapsed_seconds": 37.883998750010505,
+  "estimated_usd": 0.1655675,
+  "estimate_kind": "reported tokens"
+}

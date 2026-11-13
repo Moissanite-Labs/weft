@@ -1,0 +1,44 @@
+{
+  "request_file": "seed-89.hidden_only.round-1.json",
+  "request_sha256": "979fbef5cc2f0116afcca4f59320cd87bf04caf44e9d49e02f8ac2ece8ca8d55",
+  "response": {
+    "id": "resp_06b09000c3dc7f4c016af66110d94487d1b224ce2ad08832e0",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 8277,
+      "input_tokens_details": {
+        "cache_write_tokens": 8274,
+        "cached_tokens": 0
+      },
+      "output_tokens": 1379,
+      "output_tokens_details": {
+        "reasoning_tokens": 1234
+      },
+      "total_tokens": 9656
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794531600,
+    "output": [
+      {
+        "id": "msg_06b09000c3dc7f4c016af6613483ac87d1820148841d7d715b",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"hypothesis\":\"A conservative movement-only readout adjustment using obstacle- and neighbor-correlated hidden features should strengthen avoidance on active examples while limiting low-urgency drift. Leaving all hidden parameters and the hazard readout unchanged preserves hazard predictions exactly.\",\"edits\":[{\"tensor\":\"w2\",\"index\":[0,0],\"delta\":-0.06},{\"tensor\":\"b2\",\"index\":[0],\"delta\":0.039},{\"tensor\":\"w2\",\"index\":[1,7],\"delta\":-0.025},{\"tensor\":\"w2\",\"index\":[1,9],\"delta\":-0.035},{\"tensor\":\"b2\",\"index\":[1],\"delta\":0.00125}]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  },
+  "elapsed_seconds": 37.84731675009243,
+  "estimated_usd": 0.172405,
+  "estimate_kind": "reported tokens"
+}

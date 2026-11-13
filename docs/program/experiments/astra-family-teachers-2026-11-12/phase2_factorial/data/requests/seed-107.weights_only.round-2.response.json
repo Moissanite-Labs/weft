@@ -1,0 +1,44 @@
+{
+  "request_file": "seed-107.weights_only.round-2.json",
+  "request_sha256": "5286091861d4730f6aa67b8763786b44e4e2c8810680342b51c96601670951be",
+  "response": {
+    "id": "resp_06d4792b8cf9a7ab016af66295012487d1b97cb194b1189a8a",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 6302,
+      "input_tokens_details": {
+        "cache_write_tokens": 6299,
+        "cached_tokens": 0
+      },
+      "output_tokens": 341,
+      "output_tokens_details": {
+        "reasoning_tokens": 141
+      },
+      "total_tokens": 6643
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794531989,
+    "output": [
+      {
+        "id": "msg_06d4792b8cf9a7ab016af6629b12e487d1aa962eac5893d946",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"hypothesis\":\"Increase the validated movement-only correction by 25% relative to its original-source deltas. The prior improvement suggests stronger avoidance will further reduce active movement error. Quadratic scaling estimates low-urgency drift near 0.000474, below the 0.0005 budget, though this remains unvalidated. Keeping hidden parameters and the hazard readout unchanged preserves hazard predictions exactly.\",\"edits\":[{\"tensor\":\"w2\",\"index\":[0,0],\"delta\":0.0878625},{\"tensor\":\"w2\",\"index\":[0,7],\"delta\":-0.1054625},{\"tensor\":\"w2\",\"index\":[0,9],\"delta\":0.1375},{\"tensor\":\"b2\",\"index\":[0],\"delta\":-0.009125},{\"tensor\":\"w2\",\"index\":[1,8],\"delta\":-0.075},{\"tensor\":\"b2\",\"index\":[1],\"delta\":-0.047625}]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  },
+  "elapsed_seconds": 9.168679625028744,
+  "estimated_usd": 0.0958175,
+  "estimate_kind": "reported tokens"
+}

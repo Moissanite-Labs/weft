@@ -1,0 +1,46 @@
+{
+  "source_commit": "d3fd4c2cd2ca843200dbaff06691f56fabd61cde",
+  "matrix_sha256": "a1951de8279f4420e99528953e1aa37a4043eb1227ab2bbd74ffe92480b697b6",
+  "shape": [
+    64,
+    64
+  ],
+  "mean": 0.005935351562500003,
+  "population_std": 0.99506344848164,
+  "frobenius_norm": 63.68519359411574,
+  "first_row_squared_norm": 48.98165422000001,
+  "first_row_norm": 6.998689464464043,
+  "top5_zero_based": [
+    50,
+    8,
+    3,
+    32,
+    49
+  ],
+  "top5_norms": [
+    10.206176505430426,
+    9.27175491263655,
+    9.141837286344579,
+    9.10286135948472,
+    8.94678652310426
+  ],
+  "maximum_absolute_difference_from_listed_row_norms": 8.688071625240212e-05,
+  "zero_based17_norm": 7.590884905595658,
+  "zero_based48_norm": 7.591787465412872,
+  "one_based48_norm": 7.19891047381477,
+  "cited_cells_zero_based_columns": {
+    "1.7987": [
+      11
+    ],
+    "-1.6797": [
+      19
+    ],
+    "-1.5824": [
+      0
+    ]
+  },
+  "two_entry_lower_bounds": [
+    2.4610391666936144,
+    2.395686008223949
+  ]
+}

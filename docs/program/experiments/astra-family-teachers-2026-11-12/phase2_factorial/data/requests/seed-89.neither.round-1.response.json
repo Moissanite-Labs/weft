@@ -1,0 +1,44 @@
+{
+  "request_file": "seed-89.neither.round-1.json",
+  "request_sha256": "e5d30743fef5622399922bdb0bf4d66bd775ec06f10f317fcb4cd100ef6c50d0",
+  "response": {
+    "id": "resp_0d9111fea058c52d016af66114f90487d18b289453ef4394fd",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 5299,
+      "input_tokens_details": {
+        "cache_write_tokens": 5296,
+        "cached_tokens": 0
+      },
+      "output_tokens": 676,
+      "output_tokens_details": {
+        "reasoning_tokens": 586
+      },
+      "total_tokens": 5975
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794531605,
+    "output": [
+      {
+        "id": "msg_0d9111fea058c52d016af66129667487d1be468a929a4b4afd",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"hypothesis\":\"With weights and activations withheld, hidden-unit edits cannot be reliably targeted. The supplied examples suggest a small negative move_x calibration may reduce movement error. Editing only its output bias preserves hazard exactly and bounds low-urgency movement drift below the stated budget; validation must determine whether active movement improves.\",\"edits\":[{\"tensor\":\"b2\",\"index\":[0],\"delta\":-0.015}]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  },
+  "elapsed_seconds": 23.076178499963135,
+  "estimated_usd": 0.10003,
+  "estimate_kind": "reported tokens"
+}

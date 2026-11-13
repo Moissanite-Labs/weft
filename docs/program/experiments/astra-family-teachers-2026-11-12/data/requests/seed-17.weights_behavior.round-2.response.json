@@ -1,0 +1,41 @@
+{
+  "request_file": "seed-17.weights_behavior.round-2.json",
+  "elapsed_seconds": 10.481859999941662,
+  "response": {
+    "id": "resp_01706aa4c385cdb7016af65ea7dea887d192e0d69cf28caab4",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 26551,
+      "input_tokens_details": {
+        "cache_write_tokens": 26548,
+        "cached_tokens": 0
+      },
+      "output_tokens": 339,
+      "output_tokens_details": {
+        "reasoning_tokens": 140
+      },
+      "total_tokens": 26890
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794530983,
+    "output": [
+      {
+        "id": "msg_01706aa4c385cdb7016af65eaee86087d1822d518bc7498a52",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"hypothesis\":\"Increase the validated movement-only adjustment by 8%, cumulatively from the original cell. This should further reduce active-movement error while keeping low-urgency drift near 0.000486, below the 0.0005 budget. All hidden parameters and the hazard readout remain unchanged, preserving hazard predictions exactly. This remains a modest avoidance increase rather than explicit urgency gating.\",\"edits\":[{\"tensor\":\"w2\",\"index\":[0,9],\"delta\":0.0756},{\"tensor\":\"w2\",\"index\":[0,7],\"delta\":0.02376},{\"tensor\":\"b2\",\"index\":[0],\"delta\":-0.059616},{\"tensor\":\"w2\",\"index\":[1,1],\"delta\":-0.0756},{\"tensor\":\"w2\",\"index\":[1,3],\"delta\":-0.02592},{\"tensor\":\"b2\",\"index\":[1],\"delta\":-0.03078}]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  }
+}

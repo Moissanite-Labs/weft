@@ -1,0 +1,41 @@
+{
+  "request_file": "seed-29.weights_behavior.round-2.json",
+  "elapsed_seconds": 7.275864583905786,
+  "response": {
+    "id": "resp_0b1113102f6c697c016af65ebe219c87d1adab205e51a44538",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 26512,
+      "input_tokens_details": {
+        "cache_write_tokens": 26509,
+        "cached_tokens": 0
+      },
+      "output_tokens": 257,
+      "output_tokens_details": {
+        "reasoning_tokens": 78
+      },
+      "total_tokens": 26769
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794531006,
+    "output": [
+      {
+        "id": "msg_0b1113102f6c697c016af65ec1fc7487d1bc1bbdf9a782cdfb",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"hypothesis\":\"The accepted proposal improved active movement while preserving hazard and low-urgency behavior. Increasing its four deltas by 19% should strengthen avoidance further; local quadratic scaling predicts low-urgency drift near 0.000475, below the 0.0005 budget. This remains a conservative, ungated approximation rather than an exact implementation of urgency-dependent avoidance. All deltas are relative to the original source cell.\",\"edits\":[{\"tensor\":\"w1\",\"index\":[4,2],\"delta\":0.02856},{\"tensor\":\"w1\",\"index\":[4,4],\"delta\":0.015378461538461538},{\"tensor\":\"w1\",\"index\":[9,3],\"delta\":0.05593},{\"tensor\":\"w1\",\"index\":[9,5],\"delta\":0.030116153846153846}]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  }
+}

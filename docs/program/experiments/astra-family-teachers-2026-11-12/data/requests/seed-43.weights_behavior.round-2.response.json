@@ -1,0 +1,41 @@
+{
+  "request_file": "seed-43.weights_behavior.round-2.json",
+  "elapsed_seconds": 10.820367833133787,
+  "response": {
+    "id": "resp_0a95b3e1a453e96f016af65ece857c87d1908ee5d6d12da1d7",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 26546,
+      "input_tokens_details": {
+        "cache_write_tokens": 26543,
+        "cached_tokens": 0
+      },
+      "output_tokens": 314,
+      "output_tokens_details": {
+        "reasoning_tokens": 121
+      },
+      "total_tokens": 26860
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794531022,
+    "output": [
+      {
+        "id": "msg_0a95b3e1a453e96f016af65ed56d9087d1a5365e7b3052e65d",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"hypothesis\":\"Increase the previously validated movement-readout adjustment by 18% to strengthen avoidance while retaining the existing goal-following features. The prior low-urgency drift suggests this modest increase should remain within budget, though validation is required. Keeping hidden parameters and the hazard readout unchanged preserves hazard predictions exactly. All deltas are relative to the original source.\",\"edits\":[{\"tensor\":\"w2\",\"index\":[0,9],\"delta\":-0.0885},{\"tensor\":\"w2\",\"index\":[0,1],\"delta\":-0.0236},{\"tensor\":\"b2\",\"index\":[0],\"delta\":-0.06726},{\"tensor\":\"w2\",\"index\":[1,5],\"delta\":-0.08732},{\"tensor\":\"w2\",\"index\":[1,8],\"delta\":0.02478},{\"tensor\":\"b2\",\"index\":[1],\"delta\":-0.037524}]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  }
+}

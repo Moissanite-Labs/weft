@@ -1,0 +1,44 @@
+{
+  "request_file": "seed-71.hidden_only.round-2.json",
+  "request_sha256": "08371cd39bc2e7ab9f7f44d8586ea34cf0775482548f01556bcbaea14207fa23",
+  "response": {
+    "id": "resp_092a8da8e65497f8016af662b4500487d1b1bd5bf5119d8fd5",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 8536,
+      "input_tokens_details": {
+        "cache_write_tokens": 8533,
+        "cached_tokens": 0
+      },
+      "output_tokens": 283,
+      "output_tokens_details": {
+        "reasoning_tokens": 113
+      },
+      "total_tokens": 8819
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794532020,
+    "output": [
+      {
+        "id": "msg_092a8da8e65497f8016af662b8b63487d1b8ec6bef2ff330b9",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"hypothesis\":\"Increase the validated movement-only correction by 50% relative to the original cell. The first proposal improved active movement while using less than half the low-urgency drift budget; this scaling is expected to improve avoidance further with drift near 0.000455, below the 0.0005 budget. Keeping hidden parameters and the hazard readout unchanged preserves hazard predictions exactly. All deltas are cumulative relative to the original cell.\",\"edits\":[{\"tensor\":\"w2\",\"index\":[0,2],\"delta\":0.105},{\"tensor\":\"b2\",\"index\":[0],\"delta\":-0.06825},{\"tensor\":\"w2\",\"index\":[1,5],\"delta\":0.0825},{\"tensor\":\"b2\",\"index\":[1],\"delta\":-0.05775}]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  },
+  "elapsed_seconds": 7.067712499992922,
+  "estimated_usd": 0.1208425,
+  "estimate_kind": "reported tokens"
+}

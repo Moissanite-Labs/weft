@@ -1,0 +1,44 @@
+{
+  "request_file": "seed-107.weights_hidden.round-1.json",
+  "request_sha256": "79f84ef346d6f490ae3dc0ab2ce35c47c251e8afbbf480fab61ecd388cc70310",
+  "response": {
+    "id": "resp_06cd920de7faf916016af6607d9e2887d1b2617ad2ff7dc5ca",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 9010,
+      "input_tokens_details": {
+        "cache_write_tokens": 9007,
+        "cached_tokens": 0
+      },
+      "output_tokens": 4238,
+      "output_tokens_details": {
+        "reasoning_tokens": 3920
+      },
+      "total_tokens": 13248
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794531453,
+    "output": [
+      {
+        "id": "msg_06cd920de7faf916016af660eb993487d1ba85bafb4b052229",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"hypothesis\":\"A conservative movement-readout adjustment can strengthen obstacle and neighbor avoidance while approximately canceling goal components. Keeping all hidden parameters and the hazard readout unchanged preserves hazard predictions exactly; the small correction is intended to keep low-urgency drift within budget.\",\"edits\":[{\"tensor\":\"w2\",\"index\":[0,0],\"delta\":0.046016},{\"tensor\":\"w2\",\"index\":[0,2],\"delta\":-0.032984},{\"tensor\":\"w2\",\"index\":[0,3],\"delta\":0.115784},{\"tensor\":\"w2\",\"index\":[0,4],\"delta\":-0.02556},{\"tensor\":\"w2\",\"index\":[0,5],\"delta\":-0.008592},{\"tensor\":\"w2\",\"index\":[0,9],\"delta\":0.120888},{\"tensor\":\"b2\",\"index\":[0],\"delta\":-0.008629},{\"tensor\":\"w2\",\"index\":[1,0],\"delta\":0.1486},{\"tensor\":\"w2\",\"index\":[1,2],\"delta\":-0.211136},{\"tensor\":\"w2\",\"index\":[1,3],\"delta\":0.157752},{\"tensor\":\"w2\",\"index\":[1,4],\"delta\":0.030864},{\"tensor\":\"w2\",\"index\":[1,5],\"delta\":-0.009888},{\"tensor\":\"w2\",\"index\":[1,9],\"delta\":0.125464},{\"tensor\":\"b2\",\"index\":[1],\"delta\":0.036718}]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  },
+  "elapsed_seconds": 113.87482729111798,
+  "estimated_usd": 0.3245175,
+  "estimate_kind": "reported tokens"
+}

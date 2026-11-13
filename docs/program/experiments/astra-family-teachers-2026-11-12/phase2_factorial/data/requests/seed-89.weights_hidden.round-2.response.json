@@ -1,0 +1,44 @@
+{
+  "request_file": "seed-89.weights_hidden.round-2.json",
+  "request_sha256": "35ddb8f6212554829bf3024fd066aa281a7800333fc35387c0a5b104250b1338",
+  "response": {
+    "id": "resp_086b5e1bf157b472016af662c390ec87d1b5ecb6c9e4f5ccf3",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 9285,
+      "input_tokens_details": {
+        "cache_write_tokens": 9282,
+        "cached_tokens": 0
+      },
+      "output_tokens": 350,
+      "output_tokens_details": {
+        "reasoning_tokens": 150
+      },
+      "total_tokens": 9635
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794532035,
+    "output": [
+      {
+        "id": "msg_086b5e1bf157b472016af662c9ffd887d19dd5846d7e39b6b0",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"hypothesis\":\"Increase the validated movement-only correction to 1.42 times its original magnitude to strengthen avoidance further. Prior validation suggests this remains within the low-urgency drift budget. Keeping hidden parameters and the hazard readout unchanged preserves hazard predictions exactly. All deltas are relative to the original source cell.\",\"edits\":[{\"tensor\":\"w2\",\"index\":[0,0],\"delta\":-0.0781},{\"tensor\":\"b2\",\"index\":[0],\"delta\":0.050765},{\"tensor\":\"w2\",\"index\":[1,0],\"delta\":0.01136},{\"tensor\":\"w2\",\"index\":[1,3],\"delta\":-0.0426},{\"tensor\":\"w2\",\"index\":[1,7],\"delta\":-0.0284},{\"tensor\":\"w2\",\"index\":[1,9],\"delta\":-0.0781},{\"tensor\":\"b2\",\"index\":[1],\"delta\":0.003408}]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  },
+  "elapsed_seconds": 9.860713707981631,
+  "estimated_usd": 0.133555,
+  "estimate_kind": "reported tokens"
+}

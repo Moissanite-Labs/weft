@@ -1,0 +1,44 @@
+{
+  "request_file": "seed-163.weights_only.round-1.json",
+  "request_sha256": "2b08091a9ce0ceced04791139ecb98205151af4f8698fe20b3e4b42595f5a801",
+  "response": {
+    "id": "resp_0b7da405f348c043016af660ef477487d18183eff9ba9b0a5b",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 6035,
+      "input_tokens_details": {
+        "cache_write_tokens": 6032,
+        "cached_tokens": 0
+      },
+      "output_tokens": 886,
+      "output_tokens_details": {
+        "reasoning_tokens": 718
+      },
+      "total_tokens": 6921
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794531567,
+    "output": [
+      {
+        "id": "msg_0b7da405f348c043016af6610aab4c87d1b0ea0d9f4aed7d59",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"hypothesis\":\"Small, axis-aligned increases in avoidance through existing obstacle/neighbor features should reduce active movement error while keeping low-urgency drift within budget. Bias corrections limit resting offsets. Editing only movement readouts preserves the hazard estimate exactly.\",\"edits\":[{\"tensor\":\"w2\",\"index\":[0,8],\"delta\":-0.064},{\"tensor\":\"w2\",\"index\":[0,9],\"delta\":-0.0192},{\"tensor\":\"b2\",\"index\":[0],\"delta\":-0.0264},{\"tensor\":\"w2\",\"index\":[1,0],\"delta\":-0.0584},{\"tensor\":\"w2\",\"index\":[1,3],\"delta\":-0.024},{\"tensor\":\"b2\",\"index\":[1],\"delta\":0.0176}]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  },
+  "elapsed_seconds": 30.48089854209684,
+  "estimated_usd": 0.11973,
+  "estimate_kind": "reported tokens"
+}

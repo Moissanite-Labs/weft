@@ -1,0 +1,44 @@
+{
+  "request_file": "seed-131.hidden_only.round-1.json",
+  "request_sha256": "04329dda551dc5031e6b1ab3c68fe49400d00f1106617464374e47b77fa714d9",
+  "response": {
+    "id": "resp_0f334cbd77d1446c016af660902acc87d1ae31e4a985327a49",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 8285,
+      "input_tokens_details": {
+        "cache_write_tokens": 8282,
+        "cached_tokens": 0
+      },
+      "output_tokens": 1703,
+      "output_tokens_details": {
+        "reasoning_tokens": 1552
+      },
+      "total_tokens": 9988
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794531472,
+    "output": [
+      {
+        "id": "msg_0f334cbd77d1446c016af660c7e77087d19fb5540820fc8d9b",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"hypothesis\":\"A conservative movement-readout adjustment can strengthen obstacle and neighbor avoidance using the existing hidden features. Small, bias-centered changes should limit low-urgency drift while improving active movement; leaving all hidden parameters and the hazard readout unchanged preserves the hazard estimate exactly.\",\"edits\":[{\"tensor\":\"w2\",\"index\":[0,1],\"delta\":-0.012},{\"tensor\":\"w2\",\"index\":[0,2],\"delta\":-0.045},{\"tensor\":\"b2\",\"index\":[0],\"delta\":0.038},{\"tensor\":\"w2\",\"index\":[1,7],\"delta\":-0.04},{\"tensor\":\"b2\",\"index\":[1],\"delta\":-0.024}]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  },
+  "elapsed_seconds": 58.16268541594036,
+  "estimated_usd": 0.188705,
+  "estimate_kind": "reported tokens"
+}

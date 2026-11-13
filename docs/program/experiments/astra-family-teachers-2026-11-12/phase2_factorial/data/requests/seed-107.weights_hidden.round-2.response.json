@@ -1,0 +1,44 @@
+{
+  "request_file": "seed-107.weights_hidden.round-2.json",
+  "request_sha256": "677914729d21259c6579c38dae78b86d7e3a5ebc3377c62e8a9a8ea766895616",
+  "response": {
+    "id": "resp_034c49e5e95a98f0016af66295021087d1be58605fa3b1bb3d",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 9440,
+      "input_tokens_details": {
+        "cache_write_tokens": 9437,
+        "cached_tokens": 0
+      },
+      "output_tokens": 521,
+      "output_tokens_details": {
+        "reasoning_tokens": 160
+      },
+      "total_tokens": 9961
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794531989,
+    "output": [
+      {
+        "id": "msg_034c49e5e95a98f0016af6629b3bd887d1b1da9a5f8959c68c",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"hypothesis\":\"Scale the validated movement-only correction to 1.6 times its original-source deltas. The first proposal improved active movement while using about 35% of the low-urgency drift budget; quadratic scaling predicts drift near 0.000446, below the 0.0005 limit. This should strengthen avoidance further while preserving hazard predictions exactly because hidden parameters and the hazard readout remain unchanged.\",\"edits\":[{\"tensor\":\"w2\",\"index\":[0,0],\"delta\":0.0736256},{\"tensor\":\"w2\",\"index\":[0,2],\"delta\":-0.0527744},{\"tensor\":\"w2\",\"index\":[0,3],\"delta\":0.1852544},{\"tensor\":\"w2\",\"index\":[0,4],\"delta\":-0.040896},{\"tensor\":\"w2\",\"index\":[0,5],\"delta\":-0.0137472},{\"tensor\":\"w2\",\"index\":[0,9],\"delta\":0.1934208},{\"tensor\":\"b2\",\"index\":[0],\"delta\":-0.0138064},{\"tensor\":\"w2\",\"index\":[1,0],\"delta\":0.23776},{\"tensor\":\"w2\",\"index\":[1,2],\"delta\":-0.3378176},{\"tensor\":\"w2\",\"index\":[1,3],\"delta\":0.2524032},{\"tensor\":\"w2\",\"index\":[1,4],\"delta\":0.0493824},{\"tensor\":\"w2\",\"index\":[1,5],\"delta\":-0.0158208},{\"tensor\":\"w2\",\"index\":[1,9],\"delta\":0.2007424},{\"tensor\":\"b2\",\"index\":[1],\"delta\":0.0587488}]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  },
+  "elapsed_seconds": 10.339129624888301,
+  "estimated_usd": 0.1440425,
+  "estimate_kind": "reported tokens"
+}
