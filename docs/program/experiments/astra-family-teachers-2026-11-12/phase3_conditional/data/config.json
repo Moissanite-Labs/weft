@@ -1,0 +1,22 @@
+{
+  "version": "conditional-passing-v3",
+  "seeds": [
+    101,
+    211,
+    307
+  ],
+  "rounds": 4,
+  "candidates_per_round": 4,
+  "max_output_tokens": 8000,
+  "teacher_model": "gpt-6-astra",
+  "low_drift_budget": 0.001,
+  "hazard_absolute_budget": 0.0005,
+  "hazard_relative_budget": 0.02,
+  "rollout_seeds": [
+    1701,
+    1702,
+    1703
+  ],
+  "primary_required_improvement": 0.1,
+  "gradient_steps": 600
+}
