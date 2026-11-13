@@ -157,7 +157,7 @@ public and archived ([releasing](docs/program/releasing.md)).
 
 ## License
 
-- **Code** (`weft/runtime/`, `scripts/`, `site/`, `workers/`, `siliconcordat/`, `siliconcordat-cut/`, `.github/`, and the code in `papers/`) is under the [Apache License 2.0](LICENSE).
+- **Code** (`weft/runtime/`, `scripts/`, `site/`, `workers/`, `siliconcordat/`, `.github/`, and the code in `papers/`) is under the [Apache License 2.0](LICENSE).
 - **Documentation** (`docs/`, the Markdown files, and the papers with their figures and HTML/PDF editions) is under [CC BY 4.0](LICENSE-docs).
   Code listings inside documents may also be used under Apache-2.0.
 
