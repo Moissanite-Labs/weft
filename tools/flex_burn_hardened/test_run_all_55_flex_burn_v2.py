@@ -6,6 +6,7 @@ import importlib.util
 import io
 import json
 import math
+import multiprocessing
 import os
 import sys
 import tempfile
@@ -17,6 +18,31 @@ from pathlib import Path
 
 
 HERE = Path(__file__).resolve().parent
+SRC = HERE / "run_all_55_flex_burn_v2.py"
+
+
+def _r5_cross_process_reserve_worker(src: str, ledger_path: str, cap: float, out_path: str) -> None:
+    """Real-process worker: try one $16.25 reserve against a shared ledger."""
+    import importlib.util
+    import json
+    import sys
+    from pathlib import Path
+
+    spec = importlib.util.spec_from_file_location("flex_burn_v2_r5_worker", src)
+    mod = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    sys.modules["flex_burn_v2_r5_worker"] = mod
+    spec.loader.exec_module(mod)
+    ledger = mod.MasterSharedBudgetLedger(
+        master_cap_usd=cap, ledger_log_path=Path(ledger_path)
+    )
+    ok, reserved, reason = ledger.try_reserve(
+        "weft_111", "gpt-6-astra", "flex", 1_000_000, 100_000
+    )
+    Path(out_path).write_text(
+        json.dumps({"ok": bool(ok), "reserved": float(reserved), "reason": str(reason)}),
+        encoding="utf-8",
+    )
 
 
 def load_mod():
@@ -764,6 +790,134 @@ class ProofR4ReloadDurabilityTests(unittest.TestCase):
             ok, reserved, _reason = self._sixteen_2125(mod, reloaded)
             self.assertFalse(ok)
             self.assertEqual(reserved, 0.0)
+
+
+class ProofR5CrossProcessAndDurabilityTests(unittest.TestCase):
+    """R5 scenarios from review 5886806620: locked reserve, marker spent, directory fsync."""
+
+    def _sixteen_25(self, ledger):
+        return ledger.try_reserve(
+            "weft_111", "gpt-6-astra", "flex", 1_000_000, 100_000
+        )
+
+    def test_two_processes_cannot_both_reserve_the_full_cap(self):
+        """Two real processes each trying $16.25 on a $16.25 cap: exactly one succeeds."""
+        iterations = 50
+        src = str(SRC)
+        ctx = multiprocessing.get_context("spawn")
+        for i in range(iterations):
+            with tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp)
+                path = root / "ledger.jsonl"
+                out_a = root / "a.json"
+                out_b = root / "b.json"
+                procs = [
+                    ctx.Process(
+                        target=_r5_cross_process_reserve_worker,
+                        args=(src, str(path), 16.25, str(out_a)),
+                    ),
+                    ctx.Process(
+                        target=_r5_cross_process_reserve_worker,
+                        args=(src, str(path), 16.25, str(out_b)),
+                    ),
+                ]
+                for proc in procs:
+                    proc.start()
+                for proc in procs:
+                    proc.join(timeout=15)
+                for proc in procs:
+                    self.assertEqual(proc.exitcode, 0, msg=f"iteration {i}: worker exit {proc.exitcode}")
+                results = []
+                for out in (out_a, out_b):
+                    self.assertTrue(out.is_file(), msg=f"iteration {i}: missing {out.name}")
+                    results.append(json.loads(out.read_text(encoding="utf-8")))
+                successes = [row for row in results if row.get("ok")]
+                self.assertEqual(
+                    len(successes),
+                    1,
+                    msg=f"iteration {i}: expected exactly one success, got {results!r}",
+                )
+                reserved = float(successes[0]["reserved"])
+                self.assertAlmostEqual(reserved, 16.25, places=6)
+                mod = load_mod()
+                reloaded = _ledger(mod, 16.25, path)
+                self.assertLessEqual(reloaded.spent_usd, 16.25 + 1e-9)
+                self.assertAlmostEqual(reloaded.spent_usd, reserved, places=6)
+
+    def test_close_markers_record_the_max_spent(self):
+        """A torn line after a $16.25 record must write markers with spent_usd 16.25, not 0."""
+        mod = load_mod()
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "ledger.jsonl"
+            record = {
+                "seq": 1,
+                "event": "unresolved_hold",
+                "reason": "probe_hold",
+                "track": "weft_111",
+                "call_cost_usd": 16.25,
+                "reserved_usd": 16.25,
+                "computed_call_cost_usd": 16.25,
+                "master_cumulative_spent_usd": 16.25,
+                "master_remaining_usd": 0.0,
+                "over_cap_usd": 0.0,
+            }
+            path.write_text(
+                json.dumps(record, ensure_ascii=True) + "\nNOTJSON\n",
+                encoding="utf-8",
+            )
+            ledger = _ledger(mod, 16.25, path)
+            self.assertTrue(ledger._cap_closed)
+            self.assertGreaterEqual(ledger.spent_usd, 16.25 - 1e-9)
+            sibling = Path(str(path) + ".closed")
+            directory = path.parent / f".flex_burn_cap_closed.{path.name}"
+            for marker in (sibling, directory):
+                self.assertTrue(marker.is_file(), msg=f"missing marker {marker}")
+                obj = json.loads(marker.read_text(encoding="utf-8"))
+                self.assertGreaterEqual(
+                    float(obj["spent_usd"]),
+                    16.25 - 1e-9,
+                    msg=f"{marker.name} recorded spent_usd={obj.get('spent_usd')!r}",
+                )
+
+    def test_parent_directory_is_fsynced_after_ledger_creates(self):
+        """Creating the jsonl, seen stamp, close markers, or lock must fsync the parent directory."""
+        mod = load_mod()
+        dir_fds = set()
+        fsynced_dir_fds = []
+        real_open = os.open
+        real_fsync = os.fsync
+        real_close = os.close
+
+        def tracking_open(path, flags, *args, **kwargs):
+            fd = real_open(path, flags, *args, **kwargs)
+            if flags & getattr(os, "O_DIRECTORY", 0):
+                dir_fds.add(fd)
+            return fd
+
+        def tracking_fsync(fd):
+            if fd in dir_fds:
+                fsynced_dir_fds.append(fd)
+            return real_fsync(fd)
+
+        def tracking_close(fd):
+            dir_fds.discard(fd)
+            return real_close(fd)
+
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "ledger.jsonl"
+            with unittest.mock.patch.object(mod.os, "open", tracking_open), unittest.mock.patch.object(
+                mod.os, "fsync", tracking_fsync
+            ), unittest.mock.patch.object(mod.os, "close", tracking_close):
+                ledger = _ledger(mod, 16.25, path)
+                ok, reserved, _reason = self._sixteen_25(ledger)
+                self.assertTrue(ok)
+                if not path.is_file():
+                    ledger.commit_unresolved_hold("weft_111", reserved, reason="probe_hold")
+                ledger._close_cap("probe_dir_fsync")
+        self.assertTrue(
+            fsynced_dir_fds,
+            "parent directory was not fsynced after creating ledger files",
+        )
 
 
 if __name__ == "__main__":
