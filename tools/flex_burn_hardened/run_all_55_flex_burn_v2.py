@@ -72,6 +72,7 @@ import asyncio
 import hashlib
 import http.server
 import json
+import math
 import os
 import re
 import secrets
@@ -173,6 +174,43 @@ HARNESS_FILENAMES: Dict[str, str] = {
 
 class UnknownModelPricingError(ValueError):
     """Raised when a model has no row in MODEL_PRICING_STD_PER_MTOK."""
+
+
+class InvalidLedgerAmount(ValueError):
+    """Raised when a token count or USD amount is negative or non-finite."""
+
+
+class LedgerWriteError(OSError):
+    """Raised when a ledger append fails after the cap has been closed for this process."""
+
+
+def is_finite_nonnegative(value: Any) -> bool:
+    try:
+        number = float(value)
+    except (TypeError, ValueError):
+        return False
+    return math.isfinite(number) and number >= 0.0
+
+
+def require_finite_nonnegative(value: Any, name: str) -> float:
+    if not is_finite_nonnegative(value):
+        raise InvalidLedgerAmount(
+            f"{name} must be a finite non-negative number, got {value!r}"
+        )
+    return float(value)
+
+
+def require_nonnegative_int(value: Any, name: str) -> int:
+    try:
+        number = int(value)
+        as_float = float(value)
+    except (TypeError, ValueError) as exc:
+        raise InvalidLedgerAmount(
+            f"{name} must be a non-negative integer, got {value!r}"
+        ) from exc
+    if not math.isfinite(as_float) or number < 0:
+        raise InvalidLedgerAmount(f"{name} must be a non-negative integer, got {value!r}")
+    return number
 
 
 def _rate_column(rates: Dict[str, float], input_tokens: int) -> Dict[str, float]:
@@ -363,15 +401,23 @@ class MasterSharedBudgetLedger:
             k: TrackUsageStats() for k in DEFAULT_TRACK_WEIGHTS_USD
         }
         self._seq: int = 0
+        self._cap_closed: bool = False
+        self._cap_closed_reason: str = ""
         self._reload_prior_spend_from_ledger()
 
     def _reload_prior_spend_from_ledger(self) -> None:
-        """Load already-settled spend from the ledger file so a later process inherits the remaining cap."""
+        """Load already-settled spend from the ledger file so a later process inherits the remaining cap.
+
+        A non-empty line that is not valid JSON, or a record with a negative or
+        non-finite USD amount, closes the cap: later reserves are refused until
+        an operator repairs the file.
+        """
         if not self.ledger_log_path.is_file():
             return
         try:
             raw_text = self.ledger_log_path.read_text(encoding="utf-8")
-        except OSError:
+        except OSError as exc:
+            self._close_cap(f"cannot read ledger file {self.ledger_log_path}: {exc}")
             return
         prior_spent = 0.0
         prior_std = 0.0
@@ -384,9 +430,28 @@ class MasterSharedBudgetLedger:
             try:
                 entry = json.loads(line)
             except json.JSONDecodeError:
-                continue
+                self._close_cap(
+                    f"torn or invalid ledger line in {self.ledger_log_path}: {line[:120]!r}"
+                )
+                return
             if not isinstance(entry, dict):
-                continue
+                self._close_cap(
+                    f"corrupt ledger record in {self.ledger_log_path}: line is not an object"
+                )
+                return
+            money_keys = (
+                "call_cost_usd",
+                "computed_call_cost_usd",
+                "master_cumulative_spent_usd",
+                "reserved_usd",
+                "standard_equiv_usd",
+            )
+            for key in money_keys:
+                if key in entry and not is_finite_nonnegative(entry[key]):
+                    self._close_cap(
+                        f"corrupt ledger amount {key}={entry[key]!r} in {self.ledger_log_path}"
+                    )
+                    return
             if "seq" in entry:
                 try:
                     prior_seq = max(prior_seq, int(entry["seq"]))
@@ -395,23 +460,19 @@ class MasterSharedBudgetLedger:
             call_cost = 0.0
             std_cost = 0.0
             if "call_cost_usd" in entry:
-                try:
-                    call_cost = float(entry["call_cost_usd"])
-                except (TypeError, ValueError):
-                    call_cost = 0.0
+                call_cost = float(entry["call_cost_usd"])
             if "standard_equiv_usd" in entry:
-                try:
-                    std_cost = float(entry["standard_equiv_usd"])
-                except (TypeError, ValueError):
-                    std_cost = 0.0
+                std_cost = float(entry["standard_equiv_usd"])
             if "master_cumulative_spent_usd" in entry:
-                try:
-                    prior_spent = float(entry["master_cumulative_spent_usd"])
-                    saw_cumulative = True
-                except (TypeError, ValueError):
-                    pass
+                prior_spent = float(entry["master_cumulative_spent_usd"])
+                saw_cumulative = True
             elif not saw_cumulative:
                 prior_spent += call_cost
+            if not is_finite_nonnegative(prior_spent):
+                self._close_cap(
+                    f"corrupt cumulative spent {prior_spent!r} in {self.ledger_log_path}"
+                )
+                return
             prior_std += std_cost
             track_id = entry.get("track")
             if track_id:
@@ -429,11 +490,71 @@ class MasterSharedBudgetLedger:
                         setattr(t_stats, attr, getattr(t_stats, attr) + int(entry.get(field_name, 0) or 0))
                     except (TypeError, ValueError):
                         pass
+        if not is_finite_nonnegative(prior_spent):
+            self._close_cap(f"corrupt reloaded spent {prior_spent!r} in {self.ledger_log_path}")
+            return
         self.spent_usd = prior_spent
-        self.standard_equiv_usd = prior_std
+        self.standard_equiv_usd = prior_std if is_finite_nonnegative(prior_std) else 0.0
         self._seq = prior_seq
 
+    def _close_cap(self, reason: str) -> None:
+        self._cap_closed = True
+        self._cap_closed_reason = reason
+        print(
+            f"[master] Ledger cap closed: {reason}. "
+            "Refusing new reserves until an operator repairs the ledger.",
+            file=sys.stderr,
+        )
+
+    def _append_ledger_line_locked(self, entry: Dict[str, Any]) -> None:
+        """Append one complete JSON line, then the caller may credit spent_usd.
+
+        Safe ordering: validate and write the full line (flush + fsync) before
+        any in-memory spent_usd update. If the append raises, the cap is closed
+        for this process, spent_usd is left unchanged, and in-flight
+        reservations are kept so later reserves are refused.
+        """
+        money_keys = (
+            "call_cost_usd",
+            "computed_call_cost_usd",
+            "master_cumulative_spent_usd",
+            "reserved_usd",
+            "standard_equiv_usd",
+            "overrun_usd",
+            "over_cap_usd",
+        )
+        for key in money_keys:
+            if key in entry:
+                require_finite_nonnegative(entry[key], key)
+        try:
+            line = json.dumps(entry, ensure_ascii=True, allow_nan=False) + "\n"
+        except (TypeError, ValueError) as exc:
+            self._close_cap(f"refusing to write a non-JSON ledger amount: {exc}")
+            raise LedgerWriteError(str(exc)) from exc
+        try:
+            self.ledger_log_path.parent.mkdir(parents=True, exist_ok=True)
+            with self.ledger_log_path.open("a", encoding="utf-8") as fh:
+                fh.write(line)
+                fh.flush()
+                os.fsync(fh.fileno())
+        except OSError as exc:
+            self._close_cap(f"ledger append failed for {self.ledger_log_path}: {exc}")
+            raise LedgerWriteError(str(exc)) from exc
+
+    def _credit_spent_locked(self, amount: float, target: Optional[TrackUsageStats] = None) -> None:
+        """Add a finite non-negative amount to spent_usd. Never decreases spent."""
+        credit = require_finite_nonnegative(amount, "spent credit")
+        if not is_finite_nonnegative(self.spent_usd):
+            self._close_cap(f"in-memory spent_usd is not finite and non-negative: {self.spent_usd!r}")
+            raise InvalidLedgerAmount(self._cap_closed_reason)
+        self.spent_usd += credit
+        if target is not None:
+            if not is_finite_nonnegative(target.spent_usd):
+                target.spent_usd = 0.0
+            target.spent_usd += credit
+
     def try_reserve(
+
         self,
         track_id: str,
         model: str,
@@ -458,8 +579,22 @@ class MasterSharedBudgetLedger:
             )
         except UnknownModelPricingError as exc:
             return False, 0.0, str(exc)
+        if not is_finite_nonnegative(worst_usd):
+            return False, 0.0, "reservation estimate is not a finite non-negative amount"
         with self._lock:
             t_stats = self.tracks.setdefault(track_id, TrackUsageStats())
+            if self._cap_closed:
+                t_stats.calls_rejected_cap += 1
+                return False, 0.0, (
+                    self._cap_closed_reason
+                    or "Ledger cap is closed until an operator repairs the ledger."
+                )
+            if not is_finite_nonnegative(self.spent_usd) or not is_finite_nonnegative(
+                self.reserved_in_flight_usd
+            ):
+                self._close_cap("in-memory spent or reserved amount is not finite and non-negative")
+                t_stats.calls_rejected_cap += 1
+                return False, 0.0, self._cap_closed_reason
             if self.spent_usd >= self.master_cap_usd - 1e-12:
                 t_stats.calls_rejected_cap += 1
                 reason = (
@@ -482,6 +617,8 @@ class MasterSharedBudgetLedger:
 
     def release_without_spend(self, track_id: str, reserved_usd: float, retryable: bool = False) -> None:
         with self._lock:
+            if not is_finite_nonnegative(reserved_usd):
+                return
             self.reserved_in_flight_usd = max(0.0, self.reserved_in_flight_usd - reserved_usd)
             t_stats = self.tracks.setdefault(track_id, TrackUsageStats())
             t_stats.reserved_in_flight_usd = max(0.0, t_stats.reserved_in_flight_usd - reserved_usd)
@@ -504,35 +641,31 @@ class MasterSharedBudgetLedger:
         cache_write_30m_tokens: int = 0,
         cache_write_12h_tokens: int = 0,
     ) -> float:
+        reserved = require_finite_nonnegative(reserved_usd, "reserved_usd")
+        in_tok = require_nonnegative_int(input_tokens, "input_tokens")
+        cached_tok = require_nonnegative_int(cached_tokens, "cached_tokens")
+        out_tok = require_nonnegative_int(output_tokens, "output_tokens")
+        reas_tok = require_nonnegative_int(reasoning_tokens, "reasoning_tokens")
+        write_30 = require_nonnegative_int(cache_write_30m_tokens, "cache_write_30m_tokens")
+        write_12 = require_nonnegative_int(cache_write_12h_tokens, "cache_write_12h_tokens")
         actual_usd, std_usd = compute_exact_cost_usd(
             model=model,
             service_tier=service_tier,
-            input_tokens=input_tokens,
-            cached_tokens=cached_tokens,
-            output_tokens=output_tokens,
-            cache_write_30m_tokens=cache_write_30m_tokens,
-            cache_write_12h_tokens=cache_write_12h_tokens,
+            input_tokens=in_tok,
+            cached_tokens=cached_tok,
+            output_tokens=out_tok,
+            cache_write_30m_tokens=write_30,
+            cache_write_12h_tokens=write_12,
         )
-        charged_usd = actual_usd
-        charged_std = std_usd
-        overrun_usd = max(0.0, actual_usd - reserved_usd)
+        charged_usd = require_finite_nonnegative(actual_usd, "computed_call_cost_usd")
+        charged_std = require_finite_nonnegative(std_usd, "standard_equiv_usd")
+        overrun_usd = max(0.0, charged_usd - reserved)
         with self._lock:
-            self._seq += 1
-            seq_no = self._seq
-            self.reserved_in_flight_usd = max(0.0, self.reserved_in_flight_usd - reserved_usd)
-            self.spent_usd += charged_usd
-            self.standard_equiv_usd += charged_std
-
-            t_stats = self.tracks.setdefault(track_id, TrackUsageStats())
-            t_stats.reserved_in_flight_usd = max(0.0, t_stats.reserved_in_flight_usd - reserved_usd)
-            t_stats.calls_completed += 1
-            t_stats.input_tokens += input_tokens
-            t_stats.cached_tokens += cached_tokens
-            t_stats.output_tokens += output_tokens
-            t_stats.reasoning_tokens += reasoning_tokens
-            t_stats.spent_usd += charged_usd
-            t_stats.standard_equiv_usd += charged_std
-
+            if not is_finite_nonnegative(self.spent_usd):
+                self._close_cap(f"in-memory spent_usd is not finite and non-negative: {self.spent_usd!r}")
+                raise InvalidLedgerAmount(self._cap_closed_reason)
+            projected_spent = self.spent_usd + charged_usd
+            seq_no = self._seq + 1
             entry = {
                 "seq": seq_no,
                 "utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
@@ -540,27 +673,37 @@ class MasterSharedBudgetLedger:
                 "response_id": response_id,
                 "model": model,
                 "service_tier": service_tier,
-                "input_tokens": input_tokens,
-                "cached_tokens": cached_tokens,
-                "output_tokens": output_tokens,
-                "reasoning_tokens": reasoning_tokens,
+                "input_tokens": in_tok,
+                "cached_tokens": cached_tok,
+                "output_tokens": out_tok,
+                "reasoning_tokens": reas_tok,
                 "event": "settled",
                 "call_cost_usd": round(charged_usd, 6),
                 "standard_equiv_usd": round(charged_std, 6),
-                "computed_call_cost_usd": round(actual_usd, 6),
-                "reserved_usd": round(reserved_usd, 6),
+                "computed_call_cost_usd": round(charged_usd, 6),
+                "reserved_usd": round(reserved, 6),
                 "overrun_usd": round(overrun_usd, 6),
-                "over_cap_usd": round(max(0.0, self.spent_usd - self.master_cap_usd), 6),
-                "master_cumulative_spent_usd": round(self.spent_usd, 6),
-                "master_remaining_usd": round(self.master_cap_usd - self.spent_usd, 6),
+                "over_cap_usd": round(max(0.0, projected_spent - self.master_cap_usd), 6),
+                "master_cumulative_spent_usd": round(projected_spent, 6),
+                "master_remaining_usd": round(self.master_cap_usd - projected_spent, 6),
                 "latency_s": round(latency_s, 3),
             }
-            self.ledger_log_path.parent.mkdir(parents=True, exist_ok=True)
-            with self.ledger_log_path.open("a", encoding="utf-8") as fh:
-                fh.write(json.dumps(entry, ensure_ascii=True) + "\n")
+            self._append_ledger_line_locked(entry)
+            self._seq = seq_no
+            self.reserved_in_flight_usd = max(0.0, self.reserved_in_flight_usd - reserved)
+            t_stats = self.tracks.setdefault(track_id, TrackUsageStats())
+            t_stats.reserved_in_flight_usd = max(0.0, t_stats.reserved_in_flight_usd - reserved)
+            self._credit_spent_locked(charged_usd, t_stats)
+            t_stats.standard_equiv_usd += charged_std
+            t_stats.calls_completed += 1
+            t_stats.input_tokens += in_tok
+            t_stats.cached_tokens += cached_tok
+            t_stats.output_tokens += out_tok
+            t_stats.reasoning_tokens += reas_tok
+            self.standard_equiv_usd += charged_std
             if overrun_usd > 1e-12 or self.spent_usd > self.master_cap_usd + 1e-12:
                 print(
-                    f"[master] Ledger overrun: computed=${actual_usd:.6f} reserved=${reserved_usd:.6f} "
+                    f"[master] Ledger overrun: computed=${charged_usd:.6f} reserved=${reserved:.6f} "
                     f"spent=${self.spent_usd:.6f} cap=${self.master_cap_usd:.2f} "
                     f"over_cap=${max(0.0, self.spent_usd - self.master_cap_usd):.6f}",
                     file=sys.stderr,
@@ -570,34 +713,48 @@ class MasterSharedBudgetLedger:
     def commit_unresolved_hold(
         self, track_id: str, reserved_usd: float, reason: str
     ) -> None:
-        """Move an unresolved reservation into spent and append it to the ledger file."""
+        """Move an unresolved reservation into spent and append it to the ledger file.
+
+        Safe ordering matches `_append_ledger_line_locked`: the line is written
+        before spent_usd increases. A negative or non-finite amount is rejected,
+        spent_usd is left unchanged, and in-flight reservations are kept.
+        """
+        if not is_finite_nonnegative(reserved_usd):
+            print(
+                f"[master] Rejected unresolved hold: amount is not a finite "
+                f"non-negative number: {reserved_usd!r} (reason={reason})",
+                file=sys.stderr,
+            )
+            return
+        reserved = float(reserved_usd)
         with self._lock:
-            self._seq += 1
-            seq_no = self._seq
-            self.reserved_in_flight_usd = max(0.0, self.reserved_in_flight_usd - reserved_usd)
-            self.spent_usd += reserved_usd
-            t_stats = self.tracks.setdefault(track_id, TrackUsageStats())
-            t_stats.reserved_in_flight_usd = max(0.0, t_stats.reserved_in_flight_usd - reserved_usd)
-            t_stats.spent_usd += reserved_usd
+            if not is_finite_nonnegative(self.spent_usd):
+                self._close_cap(f"in-memory spent_usd is not finite and non-negative: {self.spent_usd!r}")
+                return
+            projected_spent = self.spent_usd + reserved
+            seq_no = self._seq + 1
             entry = {
                 "seq": seq_no,
                 "utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
                 "event": "unresolved_hold",
                 "reason": reason,
                 "track": track_id,
-                "call_cost_usd": round(reserved_usd, 6),
-                "reserved_usd": round(reserved_usd, 6),
-                "computed_call_cost_usd": round(reserved_usd, 6),
-                "over_cap_usd": round(max(0.0, self.spent_usd - self.master_cap_usd), 6),
-                "master_cumulative_spent_usd": round(self.spent_usd, 6),
-                "master_remaining_usd": round(self.master_cap_usd - self.spent_usd, 6),
+                "call_cost_usd": round(reserved, 6),
+                "reserved_usd": round(reserved, 6),
+                "computed_call_cost_usd": round(reserved, 6),
+                "over_cap_usd": round(max(0.0, projected_spent - self.master_cap_usd), 6),
+                "master_cumulative_spent_usd": round(projected_spent, 6),
+                "master_remaining_usd": round(self.master_cap_usd - projected_spent, 6),
             }
-            self.ledger_log_path.parent.mkdir(parents=True, exist_ok=True)
-            with self.ledger_log_path.open("a", encoding="utf-8") as fh:
-                fh.write(json.dumps(entry, ensure_ascii=True) + "\n")
+            self._append_ledger_line_locked(entry)
+            self._seq = seq_no
+            self.reserved_in_flight_usd = max(0.0, self.reserved_in_flight_usd - reserved)
+            t_stats = self.tracks.setdefault(track_id, TrackUsageStats())
+            t_stats.reserved_in_flight_usd = max(0.0, t_stats.reserved_in_flight_usd - reserved)
+            self._credit_spent_locked(reserved, t_stats)
             print(
                 f"[master] Unresolved hold persisted: reason={reason} "
-                f"held=${reserved_usd:.6f} spent=${self.spent_usd:.6f} cap=${self.master_cap_usd:.2f}",
+                f"held=${reserved:.6f} spent=${self.spent_usd:.6f} cap=${self.master_cap_usd:.2f}",
                 file=sys.stderr,
             )
 
@@ -807,9 +964,13 @@ class SharedLedgerProxyServer:
                     )
                 except Exception as net_exc:
                     # Persist the hold: a transport error may still have been billed upstream.
-                    outer.ledger.commit_unresolved_hold(
-                        track_id, reserved_usd, reason="upstream_network_error"
-                    )
+                    try:
+                        outer.ledger.commit_unresolved_hold(
+                            track_id, reserved_usd, reason="upstream_network_error"
+                        )
+                    except LedgerWriteError:
+                        # Cap is closed and the in-memory reservation is kept.
+                        pass
                     err_bytes = json.dumps(
                         {"error": {"type": "upstream_network_error", "message": str(net_exc)}}
                     ).encode("utf-8")
@@ -854,11 +1015,18 @@ class SharedLedgerProxyServer:
                             cache_write_30m_tokens=write_30,
                             cache_write_12h_tokens=write_12,
                         )
+                    except LedgerWriteError:
+                        # Cap is closed and the in-memory reservation is kept.
+                        pass
                     except Exception:
-                        # Persist the hold: a 200 with unparsable usage may still have been billed.
-                        outer.ledger.commit_unresolved_hold(
-                            track_id, reserved_usd, reason="unparsable_200"
-                        )
+                        # Persist the hold: a 200 with unparsable usage or a negative /
+                        # non-finite cost may still have been billed.
+                        try:
+                            outer.ledger.commit_unresolved_hold(
+                                track_id, reserved_usd, reason="unparsable_200"
+                            )
+                        except LedgerWriteError:
+                            pass
                 else:
                     retryable = status_code in (408, 409, 429, 500, 502, 503, 504)
                     outer.ledger.release_without_spend(track_id, reserved_usd, retryable=retryable)
