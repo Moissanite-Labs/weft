@@ -34,18 +34,66 @@ def summarize(runs):
     }
 
 
-def h_test(paired_deltas):
-    n = len(paired_deltas)
+def _betacf(a, b, x):
+    """Continued fraction for the regularized incomplete beta (Lentz)."""
+    tiny = 1e-300
+    qab, qap, qam = a + b, a + 1.0, a - 1.0
+    c, d = 1.0, 1.0 - qab * x / qap
+    d = 1.0 / (d if abs(d) > tiny else tiny)
+    h = d
+    for m in range(1, 300):
+        m2 = 2 * m
+        aa = m * (b - m) * x / ((qam + m2) * (a + m2))
+        d = 1.0 + aa * d
+        d = 1.0 / (d if abs(d) > tiny else tiny)
+        c = 1.0 + aa / c
+        c = c if abs(c) > tiny else tiny
+        h *= d * c
+        aa = -(a + m) * (qab + m) * x / ((a + m2) * (qap + m2))
+        d = 1.0 + aa * d
+        d = 1.0 / (d if abs(d) > tiny else tiny)
+        c = 1.0 + aa / c
+        c = c if abs(c) > tiny else tiny
+        delta = d * c
+        h *= delta
+        if abs(delta - 1.0) < 1e-15:
+            break
+    return h
+
+
+def _betainc(a, b, x):
+    if x <= 0.0:
+        return 0.0
+    if x >= 1.0:
+        return 1.0
+    lbeta = math.lgamma(a + b) - math.lgamma(a) - math.lgamma(b)
+    front = math.exp(lbeta + a * math.log(x) + b * math.log(1.0 - x))
+    if x < (a + 1.0) / (a + b + 2.0):
+        return front * _betacf(a, b, x) / a
+    return 1.0 - front * _betacf(b, a, 1.0 - x) / b
+
+
+def t_two_sided_p(t, df):
+    """Two-sided p-value of Student's t with df degrees of freedom."""
+    return _betainc(df / 2.0, 0.5, df / (df + t * t))
+
+
+def paired_t_test(deltas):
+    """One-sample Student t-test of paired deltas against 0.
+
+    Returns (mean, t, df, two_sided_p, one_sided_p_upper)."""
+    n = len(deltas)
     if n < 2:
-        return None
-    m = statistics.mean(paired_deltas)
-    sd = statistics.stdev(paired_deltas)
+        raise ValueError("need at least 2 paired deltas")
+    m = statistics.mean(deltas)
+    sd = statistics.stdev(deltas)
     if sd == 0:
-        return (m, 1.0) if m > 0 else (m, 0.5)
-    t = m / (sd / math.sqrt(n)) * math.sqrt(1)  # one-sample t vs 0
-    # crude one-sided p via normal approx for reporting
-    p = 0.5 * math.erfc(-t / math.sqrt(2)) if m > 0 else 1.0
-    return (m, p)
+        raise ValueError("zero variance in paired deltas")
+    t = m / (sd / math.sqrt(n))
+    df = n - 1
+    p2 = t_two_sided_p(t, df)
+    p1 = p2 / 2.0 if t > 0 else 1.0 - p2 / 2.0
+    return m, t, df, p2, p1
 
 
 def main():
@@ -64,6 +112,18 @@ def main():
     print("R1-minus-frozen gains per (seed, agent):", [round(g, 3) for g in gains])
     print("mean gain:", round(statistics.mean(gains), 3),
           "sd:", round(statistics.stdev(gains), 3))
+
+    # Registered test (PREREG-E08.md line 7): two-tailed paired test across the
+    # 3 arena seeds. The unit is the seed: mean of the A and B gains per seed.
+    seed_gains = [(gains[2 * i] + gains[2 * i + 1]) / 2.0 for i in range(len(SEEDS))]
+    m, t, df, p2, _ = paired_t_test(seed_gains)
+    verdict = "met" if (p2 < 0.05 and m > 0) else "NOT met"
+    print("H-E08-A registered test, seed-mean gains:", [round(g, 4) for g in seed_gains])
+    print(f"  t = {t:.5f}, df = {df}, two-sided p = {p2:.4f} -> criterion {verdict}")
+    # Post-hoc only, not the registered test: six (seed, agent) pairs, which
+    # are correlated within a seed.
+    m6, t6, df6, p6_2, p6_1 = paired_t_test(gains)
+    print(f"  post-hoc six-pair: t = {t6:.4f}, df = {df6}, one-sided p = {p6_1:.4f}, two-sided p = {p6_2:.4f}")
 
     # H-E08-B: R1 vs shuffled-decoder control at gen 40
     r1_fin = sum(data[f"R1-{s}"]["last_A"] + data[f"R1-{s}"]["last_B"] for s in SEEDS) / (2 * len(SEEDS))

@@ -6,7 +6,13 @@ Arena geometry, mask, watermark, and invariants port unchanged from
 buffers; semantics preserved; torch absent on this machine).
 
 Entity: W (256x256). Frozen rows 0..63 hold the identity watermark.
-Plastic rows 64..255 carry the thrust head: thrust u = tanh(W @ phi(s))[64:66].
+Plastic rows 64..255 carry the thrust head: z = (W @ phi(s))[64:66] (the
+2-dim thrust slice), u = action_map(z). NOLEX_HEAD unset: rev C,
+u = tanh(z / 2). NOLEX_HEAD=soft: rev D as amended in PREREG-E08.md,
+u = z / sqrt(2 + z.z), so |u_i| < 1 and u ignores every coordinate outside
+the slice. The committed revd-*.jsonl logs were NOT made with this head: they
+came from this file at c62d2653 (sha256 3e18e18e...), which applied
+z * sqrt(256 / (256 + z.z)) to the full 256-vector and sliced afterwards.
 Feature map phi: 16 scalars -> 256 dims, poly 4 | harmonics 6 | tanh 3 | pairs 2 | 16 ones.
 Field H(p,t) = cos(0.35 x - 0.6 t) * sin(0.22 y + 0.6 t) on a 20-unit torus.
 Ring: 1024 f32 shared channel; each entity writes 8 floats per step;
@@ -87,6 +93,25 @@ def phi(s: np.ndarray) -> np.ndarray:
 
 
 DECODER_FINGERPRINT = None
+THRUST = slice(64, 66)
+SOFT_N = 2
+
+
+def head_name() -> str:
+    head = os.environ.get("NOLEX_HEAD", "")
+    if head == "":
+        return "tanh2"
+    if head == "soft":
+        return "soft"
+    raise ValueError(f"unknown NOLEX_HEAD={head!r}; expected unset or 'soft'")
+
+
+def run_config() -> dict:
+    """Environment that changes the decoder without changing the source hash."""
+    return {"NOLEX_HEAD": os.environ.get("NOLEX_HEAD"),
+            "NOLEX_PHI_SHUFFLE": os.environ.get("NOLEX_PHI_SHUFFLE"),
+            "NOLEX_NS_PAIRS": NS_PAIRS,
+            "head": head_name()}
 
 
 def decoder_fingerprint() -> str:
@@ -105,8 +130,7 @@ class Entity:
         self._hippo = []
 
     def thrust(self, s: np.ndarray) -> np.ndarray:
-        z = self.w @ phi(s)
-        return action_map(z)[64:66].astype(np.float32)
+        return decode_thrust(self.w @ phi(s))
 
     def mask(self):
         return pl.plasticity_mask(self.w, core_rows=64)
@@ -194,7 +218,7 @@ def episode(entities, t0=0, steps=EP_LEN):
         thrusts = {}
         for name, ent in entities.items():
             y = ent.w @ feats[name]
-            u = action_map(y)[64:66].astype(np.float32)
+            u = decode_thrust(y)
             thrusts[name] = u
             ent._u = u
             ent._y = y
@@ -281,12 +305,27 @@ def generation(entities, rng):
     return out
 
 
-def action_map(z):
-    import os
-    if os.environ.get("NOLEX_HEAD") == "soft":
-        n = z.shape[0]
-        return z * math.sqrt(n / (n + float(np.dot(z, z))))
+def action_map(z_thrust):
+    """Map the 2-dim thrust slice z = (W @ phi(s))[64:66] to thrust u.
+
+    rev C (NOLEX_HEAD unset): u = tanh(z / 2), elementwise.
+    rev D (NOLEX_HEAD=soft): u = z / sqrt(SOFT_N + z.z), SOFT_N = 2. Each
+    component satisfies |u_i| <= |z| / sqrt(2 + |z|^2) < 1 in exact
+    arithmetic; the float32 cast can round to +/-1.0 once |z| exceeds
+    about 5e3.
+    """
+    z = np.asarray(z_thrust)
+    if z.shape != (2,):
+        raise ValueError(f"action_map expects the 2-dim thrust slice, got shape {z.shape}")
+    if head_name() == "soft":
+        z = z.astype(np.float64)
+        return z / math.sqrt(SOFT_N + float(np.dot(z, z)))
     return np.tanh(z / 2.0)
+
+
+def decode_thrust(y):
+    """The one decoder used by both call sites: slice first, then map."""
+    return action_map(np.asarray(y)[THRUST]).astype(np.float32)
 
 
 def main():
@@ -297,7 +336,8 @@ def main():
     ap.add_argument("--seed", type=int, default=20261112)
     ap.add_argument("--gens", type=int, default=6)
     ns = ap.parse_args()
-    print(json.dumps({"decoder_sha256": decoder_fingerprint(),
+    config = run_config()
+    print(json.dumps({"decoder_sha256": decoder_fingerprint(), "config": config,
                       "regime": ns.regime, "control": ns.control, "seed": ns.seed}))
     rng = np.random.default_rng(ns.seed)
     ents = {"A": Entity(ns.seed)}
@@ -312,6 +352,8 @@ def main():
     for gen in range(1, ns.gens + 1):
         step = generation(ents, rng)
         step["gen"] = gen
+        step["decoder_sha256"] = decoder_fingerprint()
+        step["config"] = config
         step["elapsed_s"] = round(time.time() - t0, 2)
         log.write(json.dumps(step) + "\n")
         log.flush()

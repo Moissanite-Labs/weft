@@ -40,3 +40,18 @@ Two of three probe packets confirm the thrust head saturates near gen 13-33 acro
     u = z * sqrt(n / (n + dot(z, z)))   with n = 2, z = W @ phi(s)[64:66]
 
 Every component remains bounded in (-1, 1), and no z-value ever pins a gradient to exactly zero. The map is disclosed, fixed, and applied identically to all entities and seeds. All other constants, seeds, and invariants unchanged. Runs on this decoder are tagged rev-d. If organisms still plateau at gen 40 across the same 3 seeds, that is the answer to publish.
+
+(Superseded by the amendment below: the formula above does not keep components in (-1, 1), and the code that ran rev D did not implement it.)
+
+## Revision D amendment (2026-11-12, after the rev-D runs; no run uses it yet)
+
+Reviews 5883991622 and 5884687083 on PR #141 found two problems with the registration above and with the code that ran it:
+
+1. The registered map `u = z * sqrt(n / (n + dot(z, z)))` with n = 2 does not keep each component in (-1, 1). At z = [100, 0] it gives 1.41407; the component supremum is sqrt(2).
+2. The code that produced `revd-*.jsonl` (`zerolex_e08.py` at c62d2653, sha256 `3e18e18e2c26ab2efea284ef8ba32b3ba83a80918054374b10a825b16432a12b`) did not implement the registered map either. `action_map` received the full 256-vector, set n = 256, and the call sites sliced [64:66] afterwards. Non-thrust coordinates changed thrust magnitude, and a component could exceed 1 (u[64] = 15.79905 at z[64] = 100).
+
+Chosen geometry, applied in `zerolex_e08.py` from this amendment on: the input is the thrust slice z = (W @ phi(s))[64:66], n = 2, and
+
+    u = z / sqrt(n + dot(z, z))
+
+Each |u_i| <= |z| / sqrt(2 + |z|^2) < 1, and u does not depend on any coordinate outside the slice. `test_revd_head.py` tests both properties and that both call sites (`Entity.thrust` and `episode`) use the same `decode_thrust`. This amendment was written after the rev-D runs, so it does not pre-register them. The committed rev-D logs remain a record of the full 256-vector head. No run with the amended head has been made.

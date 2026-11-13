@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Track 1: strict falsifiers for the discrete no-language channels.
 
-The enforce-at-the-serializer version of the discrete encodings.
+Standalone validators for the discrete encodings. Nothing in E08 calls them
+on a channel write: they are not serializer enforcement. A caller that wants
+enforcement has to run them on every write and refuse on ok == False.
 Two checkers, both deterministic and offline-runnable:
 
 1. strict_body(src)   - a body is accepted only if it parses to an AST whose
@@ -10,6 +12,16 @@ Two checkers, both deterministic and offline-runnable:
                         comments and zero docstrings anywhere. Closes the
                         "smuggle English in comments/names" channel and gives a
                         boolean accept/reject verdict, not a leak count.
+                        Identifier fields checked against the blocklist:
+                        Name.id, Attribute.attr, FunctionDef.name,
+                        alias.name (each dotted part), alias.asname,
+                        ImportFrom.module, arg.arg (positional, *args,
+                        **kwargs, keyword-only), keyword.arg, and
+                        ExceptHandler.name.
+                        Literal payloads: str constants reject at 2 or more
+                        blocklist words (one rare hit is allowed); bytes
+                        constants are decoded as latin-1 and reject at 1 or
+                        more blocklist words.
 2. strict_formula(s)  - a formula is accepted only if every token matches a
                         closed regex class (digits, operators, quantifiers,
                         parentheses, bound variables x/y/t/i/n, Greek glyphs,
@@ -106,6 +118,13 @@ def strict_body(src: str) -> dict:
             hits = _blocklist_hits(node.value)
             if len(hits) >= 2:
                 bad.append(f"string-prose:{hits[:6]}")
+        if isinstance(node, ast.Constant) and isinstance(node.value, bytes):
+            hits = _blocklist_hits(node.value.decode("latin-1"))
+            if hits:
+                bad.append(f"bytes-prose:{hits[:6]}")
+        for kind, ident in _identifier_fields(node):
+            if _contains_blocklist(ident):
+                bad.append(f"{kind}-blocklist:{ident}")
         if isinstance(node, ast.Attribute):
             if not isinstance(node.attr, str) or not re.match(r"^[A-Za-z_][A-Za-z0-9_]*$", node.attr):
                 bad.append(f"attr:{node.attr!r}")
@@ -127,6 +146,25 @@ def strict_body(src: str) -> dict:
     if bad:
         return {"ok": False, "reason": "unsafe-nodes", "bad": sorted(set(bad))[:10]}
     return {"ok": True, "reason": "ok", "bad": []}
+
+
+def _identifier_fields(node):
+    """Yield (kind, identifier) for identifier-bearing fields other than
+    Name.id, Attribute.attr and FunctionDef.name, which are checked inline."""
+    if isinstance(node, ast.alias):
+        for part in node.name.split("."):
+            yield "import", part
+        if node.asname:
+            yield "alias", node.asname
+    elif isinstance(node, ast.ImportFrom) and node.module:
+        for part in node.module.split("."):
+            yield "import", part
+    elif isinstance(node, ast.arg):
+        yield "arg", node.arg
+    elif isinstance(node, ast.keyword) and node.arg is not None:
+        yield "keyword", node.arg
+    elif isinstance(node, ast.ExceptHandler) and node.name:
+        yield "except", node.name
 
 
 def _looks_user_ident(s):

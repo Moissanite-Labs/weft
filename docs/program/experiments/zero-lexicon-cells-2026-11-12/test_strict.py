@@ -48,3 +48,27 @@ print("done")
 r = strict_body("import lzma\nprint('a very nice compressor written in English')\n")
 assert not r["ok"] and any(str(b).startswith("string-prose") for b in r["bad"]), r
 print("ok  English string constant rejected")
+
+# identifier fields and bytes payloads (review 5884687083 item 1)
+X = "cooperate_with_neighbor"
+negative = [
+    (f"import {X}\n", "import-blocklist"),
+    (f"from {X} import y\n", "import-blocklist"),
+    (f"def f({X}):\n    pass\n", "arg-blocklist"),
+    ('print(b"cooperate with neighbor")\n', "bytes-prose"),
+    (f"import lzma as {X}\n", "alias-blocklist"),
+    (f"def f(**{X}):\n    pass\n", "arg-blocklist"),
+    (f"def f(*{X}):\n    pass\n", "arg-blocklist"),
+    (f"f({X}=1)\n", "keyword-blocklist"),
+    (f"try:\n    pass\nexcept ValueError as {X}:\n    pass\n", "except-blocklist"),
+]
+for src, tag in negative:
+    r = strict_body(src)
+    assert not r["ok"], (src, r)
+    assert any(str(b).startswith(tag) for b in r["bad"]), (src, tag, r)
+print("ok  blocklisted import, alias, arg, **kwargs, keyword and bytes rejected")
+
+for src in ("x = 1 + 2\n", "def enc(d):\n    return d + 1\n", "import lzma as lz\nd = lz.compress(b'\\x00\\x01')\n"):
+    r = strict_body(src)
+    assert r["ok"], (src, r)
+print("ok  arithmetic and plain bytes positive controls accepted")
