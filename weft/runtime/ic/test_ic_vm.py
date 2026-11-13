@@ -191,9 +191,6 @@ class TestRecords(unittest.TestCase):
         self.assertEqual(replay_execution(mid, resumed.trace_log).trace_log, resumed.trace_log)
 
 
-if __name__ == "__main__":
-    unittest.main()
-
 
 class TestVerifyExecution(unittest.TestCase):
     """#77: the named `verify_execution` entry point and its return contract."""
@@ -281,3 +278,39 @@ class TestVerifyExecution(unittest.TestCase):
         self.assertEqual(res["status"], "FAIL")
         self.assertIsNone(res["commitment"])
         self.assertIsNone(res["first_failing_step"])
+
+    def test_missing_step_field_fails_at_that_step(self) -> None:
+        initial, record, final, _e = self.run_net()
+        steps = [dict(s) for s in record["steps"]]
+        steps[0].pop("step")
+        res = verify_execution(initial, steps, final)
+        self.assertEqual(res["status"], "FAIL")
+        self.assertEqual(res["first_failing_step"], 1)
+        self.assertIsNone(res["commitment"])
+
+    def test_swapped_final_graph_returns_recomputed_commitment(self) -> None:
+        initial, record, _final, _e = self.run_net()
+        other = pair(FlatCombinatorVM.CON, FlatCombinatorVM.CON)[0]
+        res = verify_execution(initial, record["steps"], serialize_graph_bcp(other))
+        self.assertEqual(res["status"], "FAIL")
+        self.assertIsNone(res["first_failing_step"])
+        self.assertIn("final graph", res["reasons"][0])
+        self.assertIsNotNone(res["commitment"])
+        self.assertEqual(res["commitment"]["trace_commitment_sha256"], record["trace_commitment_sha256"])
+        self.assertEqual(res["commitment"]["final_graph_sha256"], record["final_graph_sha256"])
+
+    def test_zero_step_record_statuses_agree(self) -> None:
+        vm, _a, _b = pair(FlatCombinatorVM.CON, FlatCombinatorVM.CON)
+        initial = vm.snapshot_initial_graph()
+        final = serialize_graph_bcp(vm)
+        res = verify_execution(initial, [], final)
+        self.assertEqual(res["status"], "PASS")
+        self.assertIsNone(res["first_failing_step"])
+        self.assertEqual(res["reasons"], [])
+        self.assertIsNotNone(res["commitment"])
+        self.assertEqual(res["commitment"]["status"], res["status"])
+        self.assertEqual(res["commitment"]["reductions_executed"], 0)
+
+
+if __name__ == "__main__":
+    unittest.main()
