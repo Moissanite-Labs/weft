@@ -1,0 +1,102 @@
+{
+  "supplied_file_sha256": "bc8f51d24fd5f6f1b310328222f4e7f313bfbbb2ecac735681573a6defd66ac3",
+  "scope": "Offline synthetic probes; urlopen mocked; no credentials or paid calls",
+  "input_underestimate": {
+    "reserved": 0.0475,
+    "snapshot": {
+      "max_budget_usd": 0.06,
+      "spent_usd": 0.125,
+      "remaining_usd": 0.0,
+      "total_api_calls": 1,
+      "total_input_tokens": 20000,
+      "total_cached_tokens": 0,
+      "prompt_cache_hit_pct": 0.0,
+      "total_output_tokens": 1000,
+      "total_reasoning_tokens": 0,
+      "served_service_tiers": {
+        "flex": 1
+      }
+    }
+  },
+  "fallback_tier": {
+    "reserved": 0.0475,
+    "snapshot": {
+      "max_budget_usd": 0.06,
+      "spent_usd": 0.095,
+      "remaining_usd": 0.0,
+      "total_api_calls": 1,
+      "total_input_tokens": 4500,
+      "total_cached_tokens": 0,
+      "prompt_cache_hit_pct": 0.0,
+      "total_output_tokens": 1000,
+      "total_reasoning_tokens": 0,
+      "served_service_tiers": {
+        "default": 1
+      }
+    }
+  },
+  "cache_write_accounting": {
+    "ledger": {
+      "max_budget_usd": 1.0,
+      "spent_usd": 0.01,
+      "remaining_usd": 0.99,
+      "total_api_calls": 1,
+      "total_input_tokens": 1000,
+      "total_cached_tokens": 0,
+      "prompt_cache_hit_pct": 0.0,
+      "total_output_tokens": 0,
+      "total_reasoning_tokens": 0,
+      "served_service_tiers": {
+        "default": 1
+      }
+    },
+    "at_requested_write_rate_12_5_per_million": 0.0125
+  },
+  "ambiguous_retry": {
+    "attempts": [
+      "flex",
+      "flex",
+      "flex",
+      "auto",
+      "auto",
+      "auto"
+    ],
+    "exception": "Network/timeout calling OpenAI: <urlopen error synthetic unknown-completion timeout>"
+  },
+  "filesystem_escape": "[exit_code=0]\nSTDOUT:\nLOCAL-SYNTHETIC-SENTINEL\n\n",
+  "outside_write_succeeded": true,
+  "forged_verifier": {
+    "ok": true,
+    "exact_match": true,
+    "edge_ok": true,
+    "raw_len": 31,
+    "compressed_len": 1,
+    "ratio": 999999,
+    "recovered_sha256": "c83d607052d2a0022b3a9264f971dda6fd51c943e469ff908323aa3e6a5c4f1f"
+  },
+  "stateful_one_byte_false_positive": [
+    {
+      "ok": true,
+      "exact_match": true,
+      "edge_ok": true,
+      "raw_len": 23,
+      "compressed_len": 1,
+      "ratio": 23.0,
+      "recovered_sha256": "3c27c3ad2eb2225564bd9916182a92e188296933f18287837a352025af4ee580",
+      "compressed_sha256": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+      "elapsed_ms": 1.451
+    },
+    {
+      "ok": true,
+      "exact_match": true,
+      "edge_ok": true,
+      "raw_len": 34,
+      "compressed_len": 1,
+      "ratio": 34.0,
+      "recovered_sha256": "7e5efa6b81ca85d07c150ab14f3d93d73e66099cc058322b8bfd579a220bab20",
+      "compressed_sha256": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+      "elapsed_ms": 0.422
+    }
+  ],
+  "fresh_decoder_recovered": ""
+}

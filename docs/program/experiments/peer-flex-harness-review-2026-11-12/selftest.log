@@ -1,0 +1,17 @@
+[DONE] rep=00 seed=20261112 arm=v1_implicit_hy4             model=gpt-6.1-sol  wins=0 comm_R1=3.509x stageA_R1=6.293x niche=L2:lzma          cell=$0.0095 total=$0.0095/$22.50
+[DONE] rep=01 seed=20261113 arm=v1_implicit_hy4             model=gpt-6.1-sol  wins=0 comm_R1=3.524x stageA_R1=6.327x niche=L2:lzma          cell=$0.0095 total=$0.0550/$22.50
+[DONE] rep=02 seed=20261114 arm=v1_implicit_hy4             model=gpt-6.1-sol  wins=0 comm_R1=3.537x stageA_R1=6.381x niche=L2:lzma          cell=$0.0095 total=$0.0550/$22.50
+[DONE] rep=01 seed=20261113 arm=r3_explicit_commit_contract model=gpt-6.1-sol  wins=2 comm_R1=6.327x stageA_R1=6.327x niche=L2:lzma          cell=$0.0133 total=$0.0740/$22.50
+[DONE] rep=00 seed=20261112 arm=r3_explicit_commit_contract model=gpt-6.1-sol  wins=2 comm_R1=6.293x stageA_R1=6.293x niche=L2:lzma          cell=$0.0133 total=$0.0740/$22.50
+[DONE] rep=03 seed=20261115 arm=r3_explicit_commit_contract model=gpt-6.1-sol  wins=2 comm_R1=6.332x stageA_R1=6.332x niche=L2:lzma          cell=$0.0133 total=$0.1006/$22.50
+[DONE] rep=02 seed=20261114 arm=r3_explicit_commit_contract model=gpt-6.1-sol  wins=2 comm_R1=6.381x stageA_R1=6.381x niche=L2:lzma          cell=$0.0133 total=$0.1006/$22.50
+[DONE] rep=03 seed=20261115 arm=v1_implicit_hy4             model=gpt-6.1-sol  wins=0 comm_R1=3.544x stageA_R1=6.332x niche=L2:lzma          cell=$0.0095 total=$0.1006/$22.50
+[DONE] rep=04 seed=20261116 arm=v1_implicit_hy4             model=gpt-6.1-sol  wins=0 comm_R1=3.530x stageA_R1=6.317x niche=L2:lzma          cell=$0.0095 total=$0.1006/$22.50
+[DONE] rep=05 seed=20261117 arm=v1_implicit_hy4             model=gpt-6.1-sol  wins=0 comm_R1=3.549x stageA_R1=6.279x niche=L2:lzma          cell=$0.0095 total=$0.1367/$22.50
+[DONE] rep=04 seed=20261116 arm=r3_explicit_commit_contract model=gpt-6.1-sol  wins=2 comm_R1=6.317x stageA_R1=6.317x niche=L2:lzma          cell=$0.0133 total=$0.1367/$22.50
+[DONE] rep=05 seed=20261117 arm=r3_explicit_commit_contract model=gpt-6.1-sol  wins=2 comm_R1=6.279x stageA_R1=6.279x niche=L2:lzma          cell=$0.0133 total=$0.1367/$22.50
+
+Wrote certificate: <scratch-selftest>/weft_111_run_20261113T013855Z/r1_r3_r5_certificates.json
+Wrote SHA-256 manifest: <scratch-selftest>/weft_111_run_20261113T013855Z/SHA256SUMS
+
+[SELFTEST PASSED] Verified R1 sealed 32,805B multi-regime lossless audit, R3 protocol-adherence split (0.0 vs 2.0 narrow wins; 100% Stage-A out-of-channel recovery), R5 exact sign-flip p=0.03125, cached prefix accounting (48.0% hit), and SHA256SUMS.
