@@ -23,3 +23,15 @@ The response negated both output logits. It did not duplicate the analytic row-s
 The reference environment is Python 3.14.6, NumPy 2.5.4 and certifi 2026.10.23. The registration checkpoint passed 19 offline unit tests. Calibration replay recomputes the archived result without a key. See README.md for portable commands.
 
 API response token accounting is captured in response artifacts. Coding-agent tokens are unavailable. The captured response contains observable message text and accounting, excluding internal reasoning items. Credentials are not recorded.
+
+## First family proposals
+
+All nine first-round responses and candidate evaluations are archived. Every proposal was valid. The saved validation decisions are:
+
+| Arm | Valid proposals | Accepted by validation gates |
+| --- | --- | --- |
+| weights_behavior | 3/3 | 3/3 |
+| behavior_only | 3/3 | 2/3 |
+| scrambled_weights | 3/3 | 2/3 |
+
+These are validation decisions, with family held-out outcomes still sealed. Later weight-visible and behavior-only rounds remain in progress. A preliminary statement that the first two scrambled proposals were rejected was corrected after the second was scored. The archived second scrambled proposal was accepted.

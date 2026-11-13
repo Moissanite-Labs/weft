@@ -1,0 +1,41 @@
+{
+  "request_file": "seed-43.weights_behavior.round-1.json",
+  "elapsed_seconds": 26.226282624993473,
+  "response": {
+    "id": "resp_0f8c37d5b9d6a1f9016af65e50ede087d1ad2c1403b7491851",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 26180,
+      "input_tokens_details": {
+        "cache_write_tokens": 26177,
+        "cached_tokens": 0
+      },
+      "output_tokens": 685,
+      "output_tokens_details": {
+        "reasoning_tokens": 507
+      },
+      "total_tokens": 26865
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794530896,
+    "output": [
+      {
+        "id": "msg_0f8c37d5b9d6a1f9016af65e67433c87d19fb41324cb288000",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"hypothesis\":\"A conservative movement-readout adjustment can strengthen obstacle and neighbor avoidance using existing directional features. Bias compensation should limit low-urgency drift, while leaving all hidden parameters and the hazard readout unchanged preserves hazard predictions exactly. This is a modest approximation to urgency-dependent avoidance, not an explicit urgency gate.\",\"edits\":[{\"tensor\":\"w2\",\"index\":[0,9],\"delta\":-0.075},{\"tensor\":\"w2\",\"index\":[0,1],\"delta\":-0.02},{\"tensor\":\"b2\",\"index\":[0],\"delta\":-0.057},{\"tensor\":\"w2\",\"index\":[1,5],\"delta\":-0.074},{\"tensor\":\"w2\",\"index\":[1,8],\"delta\":0.021},{\"tensor\":\"b2\",\"index\":[1],\"delta\":-0.0318}]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  }
+}
