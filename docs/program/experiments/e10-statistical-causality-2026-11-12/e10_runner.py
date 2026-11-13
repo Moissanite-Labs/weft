@@ -7,14 +7,32 @@ import json
 import math
 import sys
 import unittest
-from typing import Dict, Tuple
+from pathlib import Path
+from typing import Dict, List, Tuple
 
 import numpy as np
 
 DIM = 64
 CORE_ROWS = 16
 SEEDS_TRACK_A = [20261112 + i for i in range(12)]
+# Reserved for a Track B runner that emits per-seed output. Unused by this file.
 SEEDS_TRACK_B = [20261120 + i for i in range(12)]
+ARMS_TRACK_A = [
+    "Frozen_Control",
+    "Mismatch_24_t1000",
+    "Matched_80_Unscaled",
+    "Matched_80_RMS_Antithetic",
+]
+TRACK_A_OUTPUT = Path(__file__).with_name("track_a_per_seed.json")
+# Published Track A mean last-returns (four decimals), from this runner.
+PUBLISHED_MEAN_LAST = {
+    "Frozen_Control": 32.5814,
+    "Mismatch_24_t1000": 32.6315,
+    "Matched_80_Unscaled": 33.2787,
+    "Matched_80_RMS_Antithetic": 40.7979,
+}
+PUBLISHED_MEAN_SEEDWISE_PCT_RMS = 0.2692
+PUBLISHED_RATIO_OF_MEANS_RMS = 0.2522
 
 
 def action_map_revd_fixed(z_full: np.ndarray, start: int, k: int) -> np.ndarray:
@@ -127,7 +145,64 @@ def run_microcell_arm(seed: int, mode: str) -> Dict[str, object]:
                         commits += 1
     last_a, last_b = eval_test((w1_a, w2_a), (w1_b, w2_b))
     cd = float(np.linalg.norm(w1_a[:h_core] - w1_a0[:h_core]) + np.linalg.norm(w1_b[:h_core] - w1_b0[:h_core]))
-    return {"first": 0.5 * (first_a + first_b), "last": 0.5 * (last_a + last_b), "commits": commits, "reject_rate": rejects / max(proposals, 1), "core_drift": cd}
+
+    def _watermark_cos(w1: np.ndarray, trig: np.ndarray, targ: np.ndarray) -> float:
+        resp = w1[:h_core, :] @ trig
+        denom = float(np.linalg.norm(resp) * np.linalg.norm(targ)) + 1e-12
+        return float(np.dot(resp, targ) / denom)
+
+    wm = 0.5 * (_watermark_cos(w1_a, trig_a, targ_a) + _watermark_cos(w1_b, trig_b, targ_b))
+    return {
+        "first": 0.5 * (first_a + first_b),
+        "last": 0.5 * (last_a + last_b),
+        "commits": commits,
+        "reject_rate": rejects / max(proposals, 1),
+        "core_drift": cd,
+        "watermark_cos": wm,
+    }
+
+
+def collect_track_a(seeds: List[int] | None = None) -> Dict[str, object]:
+    seeds = list(SEEDS_TRACK_A if seeds is None else seeds)
+    arms: Dict[str, object] = {}
+    for mode in ARMS_TRACK_A:
+        rows = []
+        for seed in seeds:
+            result = run_microcell_arm(seed, mode)
+            first = float(result["first"])
+            last = float(result["last"])
+            pct = 0.0 if first == 0.0 else (last - first) / first
+            rows.append({
+                "seed": seed,
+                "first": first,
+                "last": last,
+                "pct_change": pct,
+                "commits": int(result["commits"]),
+                "reject_rate": float(result["reject_rate"]),
+                "core_drift": float(result["core_drift"]),
+                "watermark_cos": float(result["watermark_cos"]),
+            })
+        mean_last = float(np.mean([row["last"] for row in rows]))
+        arms[mode] = {
+            "seeds": rows,
+            "mean_last": mean_last,
+            "mean_pct_change": float(np.mean([row["pct_change"] for row in rows])),
+            "seeds_improved": int(sum(1 for row in rows if row["last"] > row["first"])),
+            "mean_reject_rate": float(np.mean([row["reject_rate"] for row in rows])),
+            "n": len(rows),
+        }
+    frozen_mean = arms["Frozen_Control"]["mean_last"]
+    rms_mean = arms["Matched_80_RMS_Antithetic"]["mean_last"]
+    return {
+        "arms": arms,
+        "mean_of_seedwise_pct_rms": arms["Matched_80_RMS_Antithetic"]["mean_pct_change"],
+        "ratio_of_means_rms_vs_frozen": (rms_mean / frozen_mean - 1.0) if frozen_mean else 0.0,
+    }
+
+
+def write_track_a_output(payload: Dict[str, object], path: Path = TRACK_A_OUTPUT) -> Path:
+    path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    return path
 
 
 class TestE10Invariants(unittest.TestCase):
@@ -143,12 +218,33 @@ class TestE10Invariants(unittest.TestCase):
     def test_rms_antithetic_core_invariance(self):
         r = run_microcell_arm(20261112, "Matched_80_RMS_Antithetic")
         self.assertEqual(r["core_drift"], 0.0)
+        self.assertAlmostEqual(r["watermark_cos"], 1.0, places=11)
         self.assertGreater(r["last"], r["first"])
+
+    def test_published_track_a_means(self):
+        payload = collect_track_a()
+        arms = payload["arms"]
+        for mode, expected in PUBLISHED_MEAN_LAST.items():
+            self.assertAlmostEqual(arms[mode]["mean_last"], expected, places=4, msg=mode)
+        self.assertEqual(arms["Matched_80_RMS_Antithetic"]["seeds_improved"], 12)
+        self.assertAlmostEqual(payload["mean_of_seedwise_pct_rms"], PUBLISHED_MEAN_SEEDWISE_PCT_RMS, places=4)
+        self.assertAlmostEqual(payload["ratio_of_means_rms_vs_frozen"], PUBLISHED_RATIO_OF_MEANS_RMS, places=4)
+        for mode in ARMS_TRACK_A:
+            for row in arms[mode]["seeds"]:
+                self.assertEqual(row["core_drift"], 0.0)
+                self.assertAlmostEqual(row["watermark_cos"], 1.0, places=11)
 
 
 if __name__ == "__main__":
     if "--full" not in sys.argv:
         unittest.main(verbosity=2)
     else:
-        out = {m: float(np.mean([run_microcell_arm(s, m)["last"] for s in SEEDS_TRACK_A])) for m in ["Frozen_Control", "Mismatch_24_t1000", "Matched_80_Unscaled", "Matched_80_RMS_Antithetic"]}
-        print(json.dumps(out, indent=2))
+        payload = collect_track_a()
+        path = write_track_a_output(payload)
+        means = {mode: payload["arms"][mode]["mean_last"] for mode in ARMS_TRACK_A}
+        print(json.dumps({
+            "means": means,
+            "mean_of_seedwise_pct_rms": payload["mean_of_seedwise_pct_rms"],
+            "ratio_of_means_rms_vs_frozen": payload["ratio_of_means_rms_vs_frozen"],
+            "path": str(path),
+        }, indent=2))

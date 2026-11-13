@@ -1,0 +1,522 @@
+{
+  "arms": {
+    "Frozen_Control": {
+      "seeds": [
+        {
+          "seed": 20261112,
+          "first": 36.412922901941144,
+          "last": 36.412922901941144,
+          "pct_change": 0.0,
+          "commits": 0,
+          "reject_rate": 0.0,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999984555
+        },
+        {
+          "seed": 20261113,
+          "first": 27.276765059561406,
+          "last": 27.276765059561406,
+          "pct_change": 0.0,
+          "commits": 0,
+          "reject_rate": 0.0,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999981783
+        },
+        {
+          "seed": 20261114,
+          "first": 31.985670257882752,
+          "last": 31.985670257882752,
+          "pct_change": 0.0,
+          "commits": 0,
+          "reject_rate": 0.0,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999986993
+        },
+        {
+          "seed": 20261115,
+          "first": 35.92361225751553,
+          "last": 35.92361225751553,
+          "pct_change": 0.0,
+          "commits": 0,
+          "reject_rate": 0.0,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999988733
+        },
+        {
+          "seed": 20261116,
+          "first": 39.79303944483743,
+          "last": 39.79303944483743,
+          "pct_change": 0.0,
+          "commits": 0,
+          "reject_rate": 0.0,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999985155
+        },
+        {
+          "seed": 20261117,
+          "first": 23.340644511822653,
+          "last": 23.340644511822653,
+          "pct_change": 0.0,
+          "commits": 0,
+          "reject_rate": 0.0,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999981656
+        },
+        {
+          "seed": 20261118,
+          "first": 28.99828459684028,
+          "last": 28.99828459684028,
+          "pct_change": 0.0,
+          "commits": 0,
+          "reject_rate": 0.0,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999987546
+        },
+        {
+          "seed": 20261119,
+          "first": 32.21801441861929,
+          "last": 32.21801441861929,
+          "pct_change": 0.0,
+          "commits": 0,
+          "reject_rate": 0.0,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999984814
+        },
+        {
+          "seed": 20261120,
+          "first": 33.41505738803731,
+          "last": 33.41505738803731,
+          "pct_change": 0.0,
+          "commits": 0,
+          "reject_rate": 0.0,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999985141
+        },
+        {
+          "seed": 20261121,
+          "first": 30.98524031502609,
+          "last": 30.98524031502609,
+          "pct_change": 0.0,
+          "commits": 0,
+          "reject_rate": 0.0,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999986786
+        },
+        {
+          "seed": 20261122,
+          "first": 44.912386168462504,
+          "last": 44.912386168462504,
+          "pct_change": 0.0,
+          "commits": 0,
+          "reject_rate": 0.0,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999983065
+        },
+        {
+          "seed": 20261123,
+          "first": 25.71487045726572,
+          "last": 25.71487045726572,
+          "pct_change": 0.0,
+          "commits": 0,
+          "reject_rate": 0.0,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999986401
+        }
+      ],
+      "mean_last": 32.581375648151,
+      "mean_pct_change": 0.0,
+      "seeds_improved": 0,
+      "mean_reject_rate": 0.0,
+      "n": 12
+    },
+    "Mismatch_24_t1000": {
+      "seeds": [
+        {
+          "seed": 20261112,
+          "first": 36.412922901941144,
+          "last": 36.01857431739856,
+          "pct_change": -0.010829907437108315,
+          "commits": 6,
+          "reject_rate": 0.9,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999984555
+        },
+        {
+          "seed": 20261113,
+          "first": 27.276765059561406,
+          "last": 33.6066357129411,
+          "pct_change": 0.23206090016751693,
+          "commits": 7,
+          "reject_rate": 0.8625,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999981783
+        },
+        {
+          "seed": 20261114,
+          "first": 31.985670257882752,
+          "last": 34.31248341026672,
+          "pct_change": 0.07274548676404663,
+          "commits": 2,
+          "reject_rate": 0.975,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999986993
+        },
+        {
+          "seed": 20261115,
+          "first": 35.92361225751553,
+          "last": 34.12464847910807,
+          "pct_change": -0.050077474545480956,
+          "commits": 3,
+          "reject_rate": 0.9625,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999988733
+        },
+        {
+          "seed": 20261116,
+          "first": 39.79303944483743,
+          "last": 29.30786374847263,
+          "pct_change": -0.26349270733389785,
+          "commits": 2,
+          "reject_rate": 0.975,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999985155
+        },
+        {
+          "seed": 20261117,
+          "first": 23.340644511822653,
+          "last": 33.06606336598743,
+          "pct_change": 0.4166731064019504,
+          "commits": 3,
+          "reject_rate": 0.95,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999981656
+        },
+        {
+          "seed": 20261118,
+          "first": 28.99828459684028,
+          "last": 30.763056271239634,
+          "pct_change": 0.0608577955191063,
+          "commits": 2,
+          "reject_rate": 0.9625,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999987546
+        },
+        {
+          "seed": 20261119,
+          "first": 32.21801441861929,
+          "last": 33.381987116230974,
+          "pct_change": 0.03612800846407858,
+          "commits": 2,
+          "reject_rate": 0.8875,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999984814
+        },
+        {
+          "seed": 20261120,
+          "first": 33.41505738803731,
+          "last": 26.989348696071744,
+          "pct_change": -0.19229979518951806,
+          "commits": 6,
+          "reject_rate": 0.9125,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999985141
+        },
+        {
+          "seed": 20261121,
+          "first": 30.98524031502609,
+          "last": 29.506345114823105,
+          "pct_change": -0.04772902146851525,
+          "commits": 6,
+          "reject_rate": 0.9,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999986786
+        },
+        {
+          "seed": 20261122,
+          "first": 44.912386168462504,
+          "last": 41.05135399566089,
+          "pct_change": -0.08596809259519667,
+          "commits": 2,
+          "reject_rate": 0.9625,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999983065
+        },
+        {
+          "seed": 20261123,
+          "first": 25.71487045726572,
+          "last": 29.450050365847975,
+          "pct_change": 0.14525369337518404,
+          "commits": 2,
+          "reject_rate": 0.9625,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999986401
+        }
+      ],
+      "mean_last": 32.63153421617074,
+      "mean_pct_change": 0.026110166010180475,
+      "seeds_improved": 6,
+      "mean_reject_rate": 0.9343750000000001,
+      "n": 12
+    },
+    "Matched_80_Unscaled": {
+      "seeds": [
+        {
+          "seed": 20261112,
+          "first": 36.412922901941144,
+          "last": 31.578143240262502,
+          "pct_change": -0.1327764781393285,
+          "commits": 8,
+          "reject_rate": 0.6375,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999984555
+        },
+        {
+          "seed": 20261113,
+          "first": 27.276765059561406,
+          "last": 31.498133109460227,
+          "pct_change": 0.15476058252073013,
+          "commits": 6,
+          "reject_rate": 0.9,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999981783
+        },
+        {
+          "seed": 20261114,
+          "first": 31.985670257882752,
+          "last": 33.034049549277064,
+          "pct_change": 0.03277653033192083,
+          "commits": 3,
+          "reject_rate": 0.9375,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999986993
+        },
+        {
+          "seed": 20261115,
+          "first": 35.92361225751553,
+          "last": 40.672633425255015,
+          "pct_change": 0.13219776267755337,
+          "commits": 2,
+          "reject_rate": 0.975,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999988733
+        },
+        {
+          "seed": 20261116,
+          "first": 39.79303944483743,
+          "last": 37.78501283388063,
+          "pct_change": -0.05046175509514432,
+          "commits": 2,
+          "reject_rate": 0.975,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999985155
+        },
+        {
+          "seed": 20261117,
+          "first": 23.340644511822653,
+          "last": 30.91997469519056,
+          "pct_change": 0.32472668779685054,
+          "commits": 2,
+          "reject_rate": 0.95,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999981656
+        },
+        {
+          "seed": 20261118,
+          "first": 28.99828459684028,
+          "last": 39.154262024360854,
+          "pct_change": 0.3502268347496388,
+          "commits": 9,
+          "reject_rate": 0.7875,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999987546
+        },
+        {
+          "seed": 20261119,
+          "first": 32.21801441861929,
+          "last": 36.15057469851574,
+          "pct_change": 0.1220609137732511,
+          "commits": 2,
+          "reject_rate": 0.9375,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999984814
+        },
+        {
+          "seed": 20261120,
+          "first": 33.41505738803731,
+          "last": 27.59457629961517,
+          "pct_change": -0.17418737369895676,
+          "commits": 3,
+          "reject_rate": 0.9625,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999985141
+        },
+        {
+          "seed": 20261121,
+          "first": 30.98524031502609,
+          "last": 35.06008500004006,
+          "pct_change": 0.1315092167620821,
+          "commits": 3,
+          "reject_rate": 0.9625,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999986786
+        },
+        {
+          "seed": 20261122,
+          "first": 44.912386168462504,
+          "last": 29.8493032921507,
+          "pct_change": -0.3353881670818262,
+          "commits": 2,
+          "reject_rate": 0.975,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999983065
+        },
+        {
+          "seed": 20261123,
+          "first": 25.71487045726572,
+          "last": 26.04717391493536,
+          "pct_change": 0.01292261838230441,
+          "commits": 7,
+          "reject_rate": 0.9,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999986401
+        }
+      ],
+      "mean_last": 33.27866017357866,
+      "mean_pct_change": 0.0473639477482563,
+      "seeds_improved": 8,
+      "mean_reject_rate": 0.9083333333333333,
+      "n": 12
+    },
+    "Matched_80_RMS_Antithetic": {
+      "seeds": [
+        {
+          "seed": 20261112,
+          "first": 36.412922901941144,
+          "last": 37.19625915580694,
+          "pct_change": 0.02151258925231841,
+          "commits": 4,
+          "reject_rate": 0.0,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999984555
+        },
+        {
+          "seed": 20261113,
+          "first": 27.276765059561406,
+          "last": 34.944812723741705,
+          "pct_change": 0.2811201272378301,
+          "commits": 8,
+          "reject_rate": 0.44594594594594594,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999981783
+        },
+        {
+          "seed": 20261114,
+          "first": 31.985670257882752,
+          "last": 42.00982168108227,
+          "pct_change": 0.31339507167992214,
+          "commits": 7,
+          "reject_rate": 0.0,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999986993
+        },
+        {
+          "seed": 20261115,
+          "first": 35.92361225751553,
+          "last": 42.95737572531682,
+          "pct_change": 0.1957977782796542,
+          "commits": 3,
+          "reject_rate": 0.0,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999988733
+        },
+        {
+          "seed": 20261116,
+          "first": 39.79303944483743,
+          "last": 50.02319036382711,
+          "pct_change": 0.2570839287903878,
+          "commits": 5,
+          "reject_rate": 0.0,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999985155
+        },
+        {
+          "seed": 20261117,
+          "first": 23.340644511822653,
+          "last": 35.337549897049115,
+          "pct_change": 0.5139920356162279,
+          "commits": 4,
+          "reject_rate": 0.0,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999981656
+        },
+        {
+          "seed": 20261118,
+          "first": 28.99828459684028,
+          "last": 43.908688457825605,
+          "pct_change": 0.5141822720992951,
+          "commits": 5,
+          "reject_rate": 0.0,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999987546
+        },
+        {
+          "seed": 20261119,
+          "first": 32.21801441861929,
+          "last": 42.24722173179628,
+          "pct_change": 0.31129191212295676,
+          "commits": 5,
+          "reject_rate": 0.0,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999984814
+        },
+        {
+          "seed": 20261120,
+          "first": 33.41505738803731,
+          "last": 40.600159304854074,
+          "pct_change": 0.21502587391602238,
+          "commits": 9,
+          "reject_rate": 0.6133333333333333,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999985141
+        },
+        {
+          "seed": 20261121,
+          "first": 30.98524031502609,
+          "last": 45.39320443440081,
+          "pct_change": 0.46499442873088415,
+          "commits": 7,
+          "reject_rate": 0.0,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999986786
+        },
+        {
+          "seed": 20261122,
+          "first": 44.912386168462504,
+          "last": 46.500617761510185,
+          "pct_change": 0.035362886021917436,
+          "commits": 9,
+          "reject_rate": 0.49333333333333335,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999983065
+        },
+        {
+          "seed": 20261123,
+          "first": 25.71487045726572,
+          "last": 28.456118044873058,
+          "pct_change": 0.10660164872939497,
+          "commits": 7,
+          "reject_rate": 0.0,
+          "core_drift": 0.0,
+          "watermark_cos": 0.9999999999986401
+        }
+      ],
+      "mean_last": 40.797918273506994,
+      "mean_pct_change": 0.26919671270640094,
+      "seeds_improved": 12,
+      "mean_reject_rate": 0.1293843843843844,
+      "n": 12
+    }
+  },
+  "mean_of_seedwise_pct_rms": 0.26919671270640094,
+  "ratio_of_means_rms_vs_frozen": 0.2521852580470243
+}
