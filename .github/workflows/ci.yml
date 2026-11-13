@@ -67,6 +67,8 @@ jobs:
           python3 weft/runtime/core/selftest.py
           python3 weft/runtime/mac/darwin_sysctl.py
           python3 weft/runtime/mac/metal_loom.py
+      - name: Mac swarm loom tests
+        run: python3 -m unittest discover -s weft/runtime/mac -p 'test_*.py'
       - name: Paper 1 experiments reproduce the published numbers
         run: python3 papers/01-models-as-cells/experiments.py --check
       - name: Paper 2 experiments reproduce the published numbers
@@ -98,7 +100,7 @@ jobs:
         run: |
           python3 weft/runtime/mac/darwin_sysctl.py
           python3 weft/runtime/mac/metal_loom.py
-          python3 -m unittest weft.runtime.mac.test_swarm_loom -v
+          python3 -m unittest discover -s weft/runtime/mac -p 'test_*.py'
       - name: Tree is clean after the run
         run: |
           git status --porcelain
