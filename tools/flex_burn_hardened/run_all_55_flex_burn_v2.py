@@ -49,6 +49,7 @@ Quickstart
   # 2. Maximum-speed concurrent burn across all 4 tracks (recommended when expiry clock is unknown):
   export OPENAI_API_KEY="sk-..."
   python3 run_all_55_flex_burn.py \
+      --confirm-live-spend \
       --mode concurrent \
       --master-budget-usd 53.50 \
       --semver-repo ./semver \
@@ -96,12 +97,41 @@ from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple
 #    Source: https://developers.openai.com/api/docs/pricing
 # =============================================================================
 
+# Standard short-context, cache-write, and long-context (>272K input) rates
+# per 1M tokens from https://developers.openai.com/api/docs/pricing
+LONG_CONTEXT_INPUT_THRESHOLD = 272_000
+
 MODEL_PRICING_STD_PER_MTOK: Dict[str, Dict[str, float]] = {
-    "gpt-6-astra":   {"input": 10.00, "cached_input": 1.00,  "output": 50.00},
-    "gpt-6.1-sol":   {"input": 2.00,  "cached_input": 0.10,  "output": 10.00},
-    "gpt-6-sol":     {"input": 2.00,  "cached_input": 0.20,  "output": 10.00},
-    "gpt-6.1-terra": {"input": 1.00,  "cached_input": 0.05,  "output": 5.00},
-    "gpt-6-luna":    {"input": 0.10,  "cached_input": 0.01,  "output": 0.50},
+    "gpt-6-astra": {
+        "input": 10.00, "cached_input": 1.00, "output": 50.00,
+        "cache_write_30m": 12.50, "cache_write_12h": 25.00,
+        "long_input": 20.00, "long_cached_input": 2.00, "long_output": 75.00,
+        "long_cache_write_30m": 25.00, "long_cache_write_12h": 50.00,
+    },
+    "gpt-6.1-sol": {
+        "input": 2.00, "cached_input": 0.10, "output": 10.00,
+        "cache_write_30m": 2.50, "cache_write_12h": 5.00,
+        "long_input": 4.00, "long_cached_input": 0.20, "long_output": 15.00,
+        "long_cache_write_30m": 5.00, "long_cache_write_12h": 10.00,
+    },
+    "gpt-6-sol": {
+        "input": 2.00, "cached_input": 0.20, "output": 10.00,
+        "cache_write_30m": 2.50, "cache_write_12h": 5.00,
+        "long_input": 4.00, "long_cached_input": 0.40, "long_output": 15.00,
+        "long_cache_write_30m": 5.00, "long_cache_write_12h": 10.00,
+    },
+    "gpt-6.1-terra": {
+        "input": 1.00, "cached_input": 0.05, "output": 5.00,
+        "cache_write_30m": 1.25, "cache_write_12h": 2.50,
+        "long_input": 2.00, "long_cached_input": 0.10, "long_output": 7.50,
+        "long_cache_write_30m": 2.50, "long_cache_write_12h": 5.00,
+    },
+    "gpt-6-luna": {
+        "input": 0.10, "cached_input": 0.01, "output": 0.50,
+        "cache_write_30m": 0.125, "cache_write_12h": 0.25,
+        "long_input": 0.20, "long_cached_input": 0.02, "long_output": 0.75,
+        "long_cache_write_30m": 0.25, "long_cache_write_12h": 0.50,
+    },
 }
 
 SERVICE_TIER_MULTIPLIER: Dict[str, float] = {
@@ -127,6 +157,12 @@ _SECRET_PATTERNS = re.compile(r"(sk-[A-Za-z0-9_-]{12,}|Bearer\s+[A-Za-z0-9._~+/-
 def redact_secrets_in_text(text: str) -> str:
     return _SECRET_PATTERNS.sub("[REDACTED_CREDENTIAL]", text)
 
+
+def write_child_log(log_path: Path, raw_output: bytes) -> None:
+    """Persist child stdout after running redact_secrets_in_text, so hashes see redacted bytes."""
+    text = raw_output.decode("utf-8", errors="replace")
+    log_path.write_text(redact_secrets_in_text(text), encoding="utf-8")
+
 HARNESS_FILENAMES: Dict[str, str] = {
     "weft_111":    "weft_111_flex_harness.py",
     "lean4_astra": "lean4_astra_proof_harness.py",
@@ -135,26 +171,63 @@ HARNESS_FILENAMES: Dict[str, str] = {
 }
 
 
+class UnknownModelPricingError(ValueError):
+    """Raised when a model has no row in MODEL_PRICING_STD_PER_MTOK."""
+
+
+def _rate_column(rates: Dict[str, float], input_tokens: int) -> Dict[str, float]:
+    if input_tokens > LONG_CONTEXT_INPUT_THRESHOLD:
+        return {
+            "input": rates["long_input"],
+            "cached_input": rates["long_cached_input"],
+            "output": rates["long_output"],
+            "cache_write_30m": rates["long_cache_write_30m"],
+            "cache_write_12h": rates["long_cache_write_12h"],
+        }
+    return {
+        "input": rates["input"],
+        "cached_input": rates["cached_input"],
+        "output": rates["output"],
+        "cache_write_30m": rates["cache_write_30m"],
+        "cache_write_12h": rates["cache_write_12h"],
+    }
+
+
 def compute_exact_cost_usd(
     model: str,
     service_tier: str,
     input_tokens: int,
     cached_tokens: int,
     output_tokens: int,
+    cache_write_30m_tokens: int = 0,
+    cache_write_12h_tokens: int = 0,
 ) -> Tuple[float, float]:
     """Return `(settled_tier_cost_usd, unscaled_list_rate_reference_usd)` (settled billing vs reference list rate)."""
     rates = MODEL_PRICING_STD_PER_MTOK.get(model)
     if rates is None:
-        # Conservative fallback to frontier gpt-6-astra rates if a new model alias is passed
-        rates = MODEL_PRICING_STD_PER_MTOK["gpt-6-astra"]
-    mult = SERVICE_TIER_MULTIPLIER.get(service_tier.lower(), 1.0)
-    uncached = max(0, input_tokens - cached_tokens)
+        raise UnknownModelPricingError(f"No pricing row for model {model!r}")
+    col = _rate_column(rates, input_tokens)
     cached = max(0, min(input_tokens, cached_tokens))
+    write_30 = max(0, cache_write_30m_tokens)
+    write_12 = max(0, cache_write_12h_tokens)
+    # Cache writes are a subset of input tokens and are disjoint from cache reads.
+    billed = cached + write_30 + write_12
+    if billed > input_tokens:
+        overflow = billed - input_tokens
+        drop_12 = min(write_12, overflow)
+        write_12 -= drop_12
+        overflow -= drop_12
+        drop_30 = min(write_30, overflow)
+        write_30 -= drop_30
+    uncached_plain = max(0, input_tokens - cached - write_30 - write_12)
     std_usd = (
-        uncached * rates["input"] / 1_000_000.0
-        + cached * rates["cached_input"] / 1_000_000.0
-        + output_tokens * rates["output"] / 1_000_000.0
+        uncached_plain * col["input"] / 1_000_000.0
+        + cached * col["cached_input"] / 1_000_000.0
+        + write_30 * col["cache_write_30m"] / 1_000_000.0
+        + write_12 * col["cache_write_12h"] / 1_000_000.0
+        + output_tokens * col["output"] / 1_000_000.0
     )
+    mult = SERVICE_TIER_MULTIPLIER.get(str(service_tier).lower(), 1.0)
     return (std_usd * mult, std_usd)
 
 
@@ -164,6 +237,99 @@ def estimate_payload_input_tokens(payload: Dict[str, Any]) -> int:
         ensure_ascii=True,
     )
     return max(128, (len(raw) // 3) + 96)
+
+
+def _prompt_cache_ttl(payload: Dict[str, Any]) -> str:
+    options = payload.get("prompt_cache_options")
+    if isinstance(options, dict) and str(options.get("ttl") or "") == "12h":
+        return "12h"
+    return "30m"
+
+
+def _authorization_matches_proxy_token(received: Optional[str], token: str) -> bool:
+    expected = f"Bearer {token}".encode("utf-8")
+    got = (received or "").encode("utf-8")
+    if len(got) != len(expected):
+        return False
+    return secrets.compare_digest(got, expected)
+
+
+def _kill_process_group(pgid: int) -> None:
+    if pgid <= 0:
+        return
+    try:
+        os.killpg(pgid, signal.SIGTERM)
+    except (ProcessLookupError, PermissionError, OSError):
+        return
+    try:
+        time.sleep(0.05)
+        os.killpg(pgid, signal.SIGKILL)
+    except (ProcessLookupError, PermissionError, OSError):
+        return
+
+
+def _terminate_popen(proc: subprocess.Popen) -> None:
+    if proc.poll() is not None:
+        return
+    try:
+        if proc.pid:
+            _kill_process_group(os.getpgid(proc.pid))
+    except (ProcessLookupError, PermissionError, OSError):
+        try:
+            proc.terminate()
+        except OSError:
+            pass
+    try:
+        proc.communicate(timeout=5)
+    except subprocess.TimeoutExpired:
+        try:
+            if proc.pid:
+                _kill_process_group(os.getpgid(proc.pid))
+        except (ProcessLookupError, PermissionError, OSError):
+            try:
+                proc.kill()
+            except OSError:
+                pass
+        try:
+            proc.communicate(timeout=5)
+        except subprocess.TimeoutExpired:
+            pass
+
+
+class ChildProcessGroupRegistry:
+    def __init__(self) -> None:
+        self._lock = threading.Lock()
+        self._pgids: set = set()
+
+    def register_pid(self, pid: Optional[int]) -> None:
+        if not pid:
+            return
+        try:
+            pgid = os.getpgid(pid)
+        except OSError:
+            pgid = pid
+        with self._lock:
+            self._pgids.add(pgid)
+
+    def discard_pid(self, pid: Optional[int]) -> None:
+        if not pid:
+            return
+        try:
+            pgid = os.getpgid(pid)
+        except OSError:
+            pgid = pid
+        with self._lock:
+            self._pgids.discard(pgid)
+
+    def kill_all(self) -> None:
+        with self._lock:
+            pgids = list(self._pgids)
+            self._pgids.clear()
+        for pgid in pgids:
+            _kill_process_group(pgid)
+
+
+CHILD_PROCESS_GROUPS = ChildProcessGroupRegistry()
 
 
 @dataclass
@@ -197,17 +363,101 @@ class MasterSharedBudgetLedger:
             k: TrackUsageStats() for k in DEFAULT_TRACK_WEIGHTS_USD
         }
         self._seq: int = 0
+        self._reload_prior_spend_from_ledger()
+
+    def _reload_prior_spend_from_ledger(self) -> None:
+        """Load already-settled spend from the ledger file so a later process inherits the remaining cap."""
+        if not self.ledger_log_path.is_file():
+            return
+        try:
+            raw_text = self.ledger_log_path.read_text(encoding="utf-8")
+        except OSError:
+            return
+        prior_spent = 0.0
+        prior_std = 0.0
+        prior_seq = 0
+        saw_cumulative = False
+        for raw in raw_text.splitlines():
+            line = raw.strip()
+            if not line:
+                continue
+            try:
+                entry = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            if not isinstance(entry, dict):
+                continue
+            if "seq" in entry:
+                try:
+                    prior_seq = max(prior_seq, int(entry["seq"]))
+                except (TypeError, ValueError):
+                    pass
+            call_cost = 0.0
+            std_cost = 0.0
+            if "call_cost_usd" in entry:
+                try:
+                    call_cost = float(entry["call_cost_usd"])
+                except (TypeError, ValueError):
+                    call_cost = 0.0
+            if "standard_equiv_usd" in entry:
+                try:
+                    std_cost = float(entry["standard_equiv_usd"])
+                except (TypeError, ValueError):
+                    std_cost = 0.0
+            if "master_cumulative_spent_usd" in entry:
+                try:
+                    prior_spent = float(entry["master_cumulative_spent_usd"])
+                    saw_cumulative = True
+                except (TypeError, ValueError):
+                    pass
+            elif not saw_cumulative:
+                prior_spent += call_cost
+            prior_std += std_cost
+            track_id = entry.get("track")
+            if track_id:
+                t_stats = self.tracks.setdefault(str(track_id), TrackUsageStats())
+                t_stats.spent_usd += call_cost
+                t_stats.standard_equiv_usd += std_cost
+                t_stats.calls_completed += 1
+                for field_name, attr in (
+                    ("input_tokens", "input_tokens"),
+                    ("cached_tokens", "cached_tokens"),
+                    ("output_tokens", "output_tokens"),
+                    ("reasoning_tokens", "reasoning_tokens"),
+                ):
+                    try:
+                        setattr(t_stats, attr, getattr(t_stats, attr) + int(entry.get(field_name, 0) or 0))
+                    except (TypeError, ValueError):
+                        pass
+        self.spent_usd = prior_spent
+        self.standard_equiv_usd = prior_std
+        self._seq = prior_seq
 
     def try_reserve(
-        self, track_id: str, model: str, service_tier: str, est_in_tokens: int, max_out_tokens: int
+        self,
+        track_id: str,
+        model: str,
+        service_tier: str,
+        est_in_tokens: int,
+        max_out_tokens: int,
+        cache_write_ttl: str = "30m",
     ) -> Tuple[bool, float, str]:
-        worst_usd, _ = compute_exact_cost_usd(
-            model=model,
-            service_tier=service_tier,
-            input_tokens=est_in_tokens,
-            cached_tokens=0,
-            output_tokens=max_out_tokens,
-        )
+        if int(max_out_tokens) <= 0:
+            return False, 0.0, "max_output_tokens must be a positive integer"
+        write_12 = int(est_in_tokens) if cache_write_ttl == "12h" else 0
+        write_30 = int(est_in_tokens) if cache_write_ttl != "12h" else 0
+        try:
+            worst_usd, _ = compute_exact_cost_usd(
+                model=model,
+                service_tier=service_tier,
+                input_tokens=est_in_tokens,
+                cached_tokens=0,
+                output_tokens=max_out_tokens,
+                cache_write_30m_tokens=write_30,
+                cache_write_12h_tokens=write_12,
+            )
+        except UnknownModelPricingError as exc:
+            return False, 0.0, str(exc)
         with self._lock:
             t_stats = self.tracks.setdefault(track_id, TrackUsageStats())
             projected = self.spent_usd + self.reserved_in_flight_usd + worst_usd
@@ -244,6 +494,8 @@ class MasterSharedBudgetLedger:
         output_tokens: int,
         reasoning_tokens: int,
         latency_s: float,
+        cache_write_30m_tokens: int = 0,
+        cache_write_12h_tokens: int = 0,
     ) -> float:
         actual_usd, std_usd = compute_exact_cost_usd(
             model=model,
@@ -251,13 +503,21 @@ class MasterSharedBudgetLedger:
             input_tokens=input_tokens,
             cached_tokens=cached_tokens,
             output_tokens=output_tokens,
+            cache_write_30m_tokens=cache_write_30m_tokens,
+            cache_write_12h_tokens=cache_write_12h_tokens,
         )
+        charged_usd = actual_usd
+        charged_std = std_usd
+        if actual_usd > reserved_usd + 1e-12:
+            charged_usd = reserved_usd
+            if actual_usd > 0:
+                charged_std = std_usd * (reserved_usd / actual_usd)
         with self._lock:
             self._seq += 1
             seq_no = self._seq
             self.reserved_in_flight_usd = max(0.0, self.reserved_in_flight_usd - reserved_usd)
-            self.spent_usd += actual_usd
-            self.standard_equiv_usd += std_usd
+            self.spent_usd += charged_usd
+            self.standard_equiv_usd += charged_std
 
             t_stats = self.tracks.setdefault(track_id, TrackUsageStats())
             t_stats.reserved_in_flight_usd = max(0.0, t_stats.reserved_in_flight_usd - reserved_usd)
@@ -266,8 +526,8 @@ class MasterSharedBudgetLedger:
             t_stats.cached_tokens += cached_tokens
             t_stats.output_tokens += output_tokens
             t_stats.reasoning_tokens += reasoning_tokens
-            t_stats.spent_usd += actual_usd
-            t_stats.standard_equiv_usd += std_usd
+            t_stats.spent_usd += charged_usd
+            t_stats.standard_equiv_usd += charged_std
 
             entry = {
                 "seq": seq_no,
@@ -280,15 +540,16 @@ class MasterSharedBudgetLedger:
                 "cached_tokens": cached_tokens,
                 "output_tokens": output_tokens,
                 "reasoning_tokens": reasoning_tokens,
-                "call_cost_usd": round(actual_usd, 6),
-                "standard_equiv_usd": round(std_usd, 6),
+                "call_cost_usd": round(charged_usd, 6),
+                "standard_equiv_usd": round(charged_std, 6),
+                "computed_call_cost_usd": round(actual_usd, 6),
                 "master_cumulative_spent_usd": round(self.spent_usd, 6),
                 "master_remaining_usd": round(max(0.0, self.master_cap_usd - self.spent_usd), 6),
                 "latency_s": round(latency_s, 3),
             }
             with self.ledger_log_path.open("a", encoding="utf-8") as fh:
                 fh.write(json.dumps(entry, ensure_ascii=True) + "\n")
-        return actual_usd
+        return charged_usd
 
     def remaining_unreserved_usd(self) -> float:
         with self._lock:
@@ -380,10 +641,16 @@ class SharedLedgerProxyServer:
         ledger: MasterSharedBudgetLedger,
         upstream_fn: UpstreamHandlerFn,
         upstream_timeout_s: float = 910.0,
+        proxy_token: Optional[str] = None,
+        upstream_token: Optional[str] = None,
     ) -> None:
         self.ledger = ledger
         self.upstream_fn = upstream_fn
         self.upstream_timeout_s = upstream_timeout_s
+        self.proxy_token = proxy_token or ("sk-proxy-" + secrets.token_urlsafe(32))
+        self.upstream_token = (
+            upstream_token if upstream_token is not None else os.environ.get("OPENAI_API_KEY", "")
+        )
         self._server: Optional[_ThreadedHTTPServer] = None
         self._thread: Optional[threading.Thread] = None
         self.port: int = 0
@@ -398,6 +665,15 @@ class SharedLedgerProxyServer:
                 return  # Keep stdout clean for structured orchestrator progress
 
             def do_POST(self) -> None:
+                if not _authorization_matches_proxy_token(
+                    self.headers.get("Authorization"), outer.proxy_token
+                ):
+                    err_bytes = json.dumps(
+                        {"error": {"type": "invalid_proxy_token", "message": "Proxy token required"}}
+                    ).encode("utf-8")
+                    self._send_bytes(401, err_bytes)
+                    return
+
                 parsed = urllib.parse.urlparse(self.path)
                 qs = urllib.parse.parse_qs(parsed.query)
                 track_id = "unknown"
@@ -415,10 +691,35 @@ class SharedLedgerProxyServer:
                     err_bytes = json.dumps({"error": {"message": f"Invalid JSON: {exc}"}}).encode("utf-8")
                     self._send_bytes(400, err_bytes)
                     return
+                if not isinstance(payload, dict):
+                    err_bytes = json.dumps({"error": {"message": "JSON body must be an object"}}).encode("utf-8")
+                    self._send_bytes(400, err_bytes)
+                    return
 
                 model = str(payload.get("model", "gpt-6-astra"))
                 tier = str(payload.get("service_tier") or "flex")
-                max_out = int(payload.get("max_output_tokens") or 8192)
+                raw_max = payload.get("max_output_tokens")
+                if raw_max is None:
+                    max_out = 8192
+                else:
+                    try:
+                        max_out = int(raw_max)
+                    except (TypeError, ValueError):
+                        err_bytes = json.dumps(
+                            {"error": {"message": "max_output_tokens must be a positive integer"}}
+                        ).encode("utf-8")
+                        self._send_bytes(400, err_bytes)
+                        return
+                    if max_out <= 0:
+                        err_bytes = json.dumps(
+                            {"error": {"message": "max_output_tokens must be a positive integer"}}
+                        ).encode("utf-8")
+                        self._send_bytes(400, err_bytes)
+                        return
+
+                payload = dict(payload)
+                payload["max_output_tokens"] = max_out
+                cache_ttl = _prompt_cache_ttl(payload)
                 est_in = estimate_payload_input_tokens(payload)
 
                 ok, reserved_usd, reason = outer.ledger.try_reserve(
@@ -427,31 +728,34 @@ class SharedLedgerProxyServer:
                     service_tier=tier,
                     est_in_tokens=est_in,
                     max_out_tokens=max_out,
+                    cache_write_ttl=cache_ttl,
                 )
                 if not ok:
                     # Emit `credit_balance_exhausted` / `insufficient_quota` so child harnesses
                     # trigger their clean graceful stop and write SHA256SUMS!
+                    cutoff_code = "invalid_model" if "No pricing row" in reason else "credit_balance_exhausted"
+                    cutoff_status = 400 if cutoff_code == "invalid_model" else 402
                     cutoff_bytes = json.dumps(
                         {
                             "error": {
-                                "code": "credit_balance_exhausted",
-                                "type": "insufficient_quota",
+                                "code": cutoff_code,
+                                "type": "invalid_request_error" if cutoff_status == 400 else "insufficient_quota",
                                 "message": reason,
                             }
                         }
                     ).encode("utf-8")
-                    self._send_bytes(402, cutoff_bytes)
+                    self._send_bytes(cutoff_status, cutoff_bytes)
                     return
 
                 t0 = time.monotonic()
                 try:
                     status_code, resp_bytes = outer.upstream_fn(
                         payload,
-                        {"Authorization": self.headers.get("Authorization", "")},
+                        {"Authorization": f"Bearer {outer.upstream_token}" if outer.upstream_token else ""},
                         outer.upstream_timeout_s,
                     )
                 except Exception as net_exc:
-                    outer.ledger.release_without_spend(track_id, reserved_usd, retryable=True)
+                    # Keep the reservation: a transport error may still have been billed upstream.
                     err_bytes = json.dumps(
                         {"error": {"type": "upstream_network_error", "message": str(net_exc)}}
                     ).encode("utf-8")
@@ -464,7 +768,21 @@ class SharedLedgerProxyServer:
                         resp_obj = json.loads(resp_bytes.decode("utf-8"))
                         usage = resp_obj.get("usage") or {}
                         in_tok = int(usage.get("input_tokens", 0))
-                        cached_tok = int((usage.get("input_tokens_details") or {}).get("cached_tokens", 0))
+                        details = usage.get("input_tokens_details") or {}
+                        cached_tok = int(details.get("cached_tokens", 0))
+                        write_details = details.get("cache_write_tokens_details") or {}
+                        write_30 = int(write_details.get("ttl_30m_tokens", 0) or 0)
+                        write_12 = int(write_details.get("ttl_12h_tokens", 0) or 0)
+                        if write_30 == 0 and write_12 == 0:
+                            total_write = int(
+                                details.get("cache_write_tokens")
+                                or details.get("cache_creation_tokens")
+                                or 0
+                            )
+                            if cache_ttl == "12h":
+                                write_12 = total_write
+                            else:
+                                write_30 = total_write
                         out_tok = int(usage.get("output_tokens", 0))
                         reas_tok = int((usage.get("output_tokens_details") or {}).get("reasoning_tokens", 0))
                         actual_tier = str(resp_obj.get("service_tier") or tier)
@@ -479,9 +797,12 @@ class SharedLedgerProxyServer:
                             output_tokens=out_tok,
                             reasoning_tokens=reas_tok,
                             latency_s=latency,
+                            cache_write_30m_tokens=write_30,
+                            cache_write_12h_tokens=write_12,
                         )
                     except Exception:
-                        outer.ledger.release_without_spend(track_id, reserved_usd, retryable=False)
+                        # Keep the reservation: a 200 with unparsable usage may still have been billed.
+                        pass
                 else:
                     retryable = status_code in (408, 409, 429, 500, 502, 503, 504)
                     outer.ledger.release_without_spend(track_id, reserved_usd, retryable=retryable)
@@ -552,9 +873,8 @@ def build_track_command_and_env(
     """
     script_path = harnesses_dir / HARNESS_FILENAMES[track_id]
     env = dict(os.environ)
-    # Ensure child scripts have an API key token (even against mock proxy in tests)
-    if not env.get("OPENAI_API_KEY"):
-        env["OPENAI_API_KEY"] = "sk-proxy-metered"
+    # Children authenticate to the loopback proxy with the proxy token, not the upstream key.
+    env["OPENAI_API_KEY"] = proxy.proxy_token
     env["OPENAI_BASE_URL"] = proxy.base_v1_url_for_track(track_id)
 
     budget_str = f"{max(0.05, budget_slice_usd):.4f}"
@@ -732,11 +1052,26 @@ async def launch_single_track(
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.STDOUT,
         env=env,
+        start_new_session=True,
     )
-    stdout_bytes, _ = await proc.communicate()
+    CHILD_PROCESS_GROUPS.register_pid(proc.pid)
+    try:
+        stdout_bytes, _ = await proc.communicate()
+    except BaseException:
+        if proc.returncode is None and proc.pid:
+            try:
+                _kill_process_group(os.getpgid(proc.pid))
+            except (ProcessLookupError, PermissionError, OSError):
+                try:
+                    proc.kill()
+                except ProcessLookupError:
+                    pass
+        raise
+    finally:
+        CHILD_PROCESS_GROUPS.discard_pid(proc.pid)
     elapsed = time.monotonic() - t0
 
-    log_path.write_bytes(stdout_bytes)
+    write_child_log(log_path, stdout_bytes or b"")
     rc = int(proc.returncode or 0)
 
     sha_status, sha_cnt = verify_track_sha256sums_tree(track_out_dir)
@@ -773,6 +1108,35 @@ def compute_scaled_allocations(
     }
 
 
+def _normalize_gather_results(
+    tracks: Sequence[str],
+    results: Sequence[Any],
+    budget_slices: Dict[str, float],
+) -> List[TrackExecutionResult]:
+    normalized: List[TrackExecutionResult] = []
+    for track_id, res in zip(tracks, results):
+        if isinstance(res, TrackExecutionResult):
+            normalized.append(res)
+            continue
+        normalized.append(
+            TrackExecutionResult(
+                track_id=track_id,
+                script_name=HARNESS_FILENAMES.get(track_id, track_id),
+                allocated_budget_usd=round(float(budget_slices.get(track_id, 0.0)), 6),
+                actual_proxy_spent_usd=0.0,
+                returncode=1,
+                wall_seconds=0.0,
+                output_dir=f"track_{track_id}",
+                child_sha256sums_status="ERROR",
+                child_sha256sums_files_checked=0,
+                log_file=f"logs/{track_id}.log",
+                skipped=False,
+                skip_reason=f"{type(res).__name__}: {res}",
+            )
+        )
+    return normalized
+
+
 async def execute_master_schedule(
     *,
     selected_tracks: List[str],
@@ -789,23 +1153,26 @@ async def execute_master_schedule(
     if mode == "concurrent":
         # In `--dynamic-pool`, each child gets up to 75% burst cap while the loopback proxy
         # enforces the exact atomic `$53.50` shared ceiling across all 4 concurrent processes!
+        slices = {
+            t: (ledger.master_cap_usd * 0.75 if dynamic_pool else base_allocs[t])
+            for t in selected_tracks
+        }
         results = await asyncio.gather(
             *(
                 launch_single_track(
                     track_id=t,
                     harnesses_dir=harnesses_dir,
                     run_root=run_root,
-                    budget_slice_usd=(
-                        ledger.master_cap_usd * 0.75 if dynamic_pool else base_allocs[t]
-                    ),
+                    budget_slice_usd=slices[t],
                     proxy=proxy,
                     ledger=ledger,
                     args=args,
                 )
                 for t in selected_tracks
-            )
+            ),
+            return_exceptions=True,
         )
-        return list(results)
+        return _normalize_gather_results(selected_tracks, results, slices)
 
     if mode == "sequential":
         ordered_results: List[TrackExecutionResult] = []
@@ -834,21 +1201,23 @@ async def execute_master_schedule(
         wave2 = [t for t in selected_tracks if t not in ("weft_111", "scry_abios")]
         all_res: List[TrackExecutionResult] = []
         if wave1:
+            w1_slices = {t: base_allocs[t] for t in wave1}
             w1_res = await asyncio.gather(
                 *(
                     launch_single_track(
                         track_id=t,
                         harnesses_dir=harnesses_dir,
                         run_root=run_root,
-                        budget_slice_usd=base_allocs[t],
+                        budget_slice_usd=w1_slices[t],
                         proxy=proxy,
                         ledger=ledger,
                         args=args,
                     )
                     for t in wave1
-                )
+                ),
+                return_exceptions=True,
             )
-            all_res.extend(w1_res)
+            all_res.extend(_normalize_gather_results(wave1, w1_res, w1_slices))
         if wave2:
             rem_budget = ledger.remaining_unreserved_usd()
             w2_allocs = compute_scaled_allocations(wave2, rem_budget)
@@ -864,9 +1233,10 @@ async def execute_master_schedule(
                         args=args,
                     )
                     for t in wave2
-                )
+                ),
+                return_exceptions=True,
             )
-            all_res.extend(w2_res)
+            all_res.extend(_normalize_gather_results(wave2, w2_res, w2_allocs))
         return all_res
 
     raise ValueError(f"Unknown execution mode={mode!r}")
@@ -1023,7 +1393,13 @@ def run_selftest(harnesses_dir: Path) -> int:
         if not (harnesses_dir / HARNESS_FILENAMES[k]).exists()
     ]
     if missing:
-        raise FileNotFoundError(f"Missing sibling harness scripts in {harnesses_dir}: {missing}")
+        print(
+            f"Error: Missing sibling harness scripts in {harnesses_dir}: {missing}. "
+            "This slice ships the orchestrator and ISSUE-158-CLOSURE.md. "
+            "--selftest requires the four sibling scripts named in that note.",
+            file=sys.stderr,
+        )
+        return 1
 
     # Run `--selftest` on all 4 real sibling scripts concurrently
     procs: Dict[str, subprocess.Popen[str]] = {}
@@ -1033,11 +1409,28 @@ def run_selftest(harnesses_dir: Path) -> int:
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
             text=True,
+            start_new_session=True,
         )
     sibling_status: Dict[str, bool] = {}
-    for track_id, p in procs.items():
-        out, _ = p.communicate(timeout=90)
-        assert p.returncode == 0, f"Sibling {track_id} --selftest failed (rc={p.returncode}):\n{out}"
+    for track_id, proc in procs.items():
+        try:
+            out, _ = proc.communicate(timeout=90)
+        except subprocess.TimeoutExpired:
+            _terminate_popen(proc)
+            print(
+                f"Error: Sibling {track_id} --selftest timed out after 90s and was terminated.",
+                file=sys.stderr,
+            )
+            for other in procs.values():
+                if other is not proc and other.poll() is None:
+                    _terminate_popen(other)
+            return 1
+        if proc.returncode != 0:
+            print(
+                f"Error: Sibling {track_id} --selftest failed (rc={proc.returncode}):\n{out}",
+                file=sys.stderr,
+            )
+            return 1
         sibling_status[track_id] = True
 
     print("[selftest] 2/3 Testing live loopback `/v1/responses` shared ledger proxy (concurrent + rollover + 402 cap)...")
@@ -1101,7 +1494,10 @@ def run_selftest(harnesses_dir: Path) -> int:
                         {"model": "gpt-6-astra", "service_tier": "flex", "input": "hi", "max_output_tokens": 4096}
                     ).encode("utf-8"),
                     method="POST",
-                    headers={"Content-Type": "application/json"},
+                    headers={
+                        "Content-Type": "application/json",
+                        "Authorization": f"Bearer {tiny_proxy.proxy_token}",
+                    },
                 )
                 got_402 = False
                 try:
@@ -1113,6 +1509,7 @@ def run_selftest(harnesses_dir: Path) -> int:
             finally:
                 tiny_proxy.stop()
         finally:
+            CHILD_PROCESS_GROUPS.kill_all()
             proxy.stop()
 
         print("[selftest] 3/3 Building & verifying hierarchical MASTER_SHA256SUMS...")
@@ -1174,7 +1571,8 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
     p.add_argument(
         "--selftest",
         action="store_true",
-        help="Run all 4 child --selftest suites + live loopback proxy metering/cutoff + MASTER_SHA256SUMS check.",
+        help="Run all 4 child --selftest suites + live loopback proxy metering/cutoff + MASTER_SHA256SUMS check. "
+        "Requires the four sibling harness scripts in --harnesses-dir (see ISSUE-158-CLOSURE.md).",
     )
     p.add_argument(
         "--harnesses-dir",
@@ -1205,6 +1603,12 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
         "--strict-slices",
         action="store_true",
         help="Restrict each concurrent track strictly to its initial static slice instead of dynamic pooling.",
+    )
+    p.add_argument(
+        "--confirm-live-spend",
+        action="store_true",
+        help="Required, together with OPENAI_API_KEY, to send billed upstream requests. "
+        "Defaults run four concurrent tracks at $53.50.",
     )
     p.add_argument(
         "--master-budget-usd",
@@ -1277,6 +1681,13 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             file=sys.stderr,
         )
         return 2
+    if not args.confirm_live_spend:
+        print(
+            "Error: live spend requires --confirm-live-spend. "
+            "Defaults run four concurrent tracks at $53.50. Use --selftest for the offline path.",
+            file=sys.stderr,
+        )
+        return 2
 
     selected_tracks = [t.strip() for t in args.tracks.split(",") if t.strip()]
     for t in selected_tracks:
@@ -1321,6 +1732,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             )
         )
     finally:
+        CHILD_PROCESS_GROUPS.kill_all()
         proxy.stop()
 
     snap = ledger.snapshot()
