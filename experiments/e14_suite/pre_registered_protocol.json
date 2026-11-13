@@ -1,0 +1,112 @@
+{
+  "protocol_id": "WEFT-E14-ADVERSARIAL-PREREG-2026-11-13",
+  "frozen_before_execution": true,
+  "sample_design": {
+    "n_seeds": 12,
+    "seed_list": [20261112, 20261113, 20261114, 20261115, 20261116, 20261117, 20261118, 20261119, 20261120, 20261121, 20261122, 20261123],
+    "tetrads_per_seed": [[1, 2, 3, 4], [3, 4, 1, 2]],
+    "online_steps_per_run": 24,
+    "matched_evaluations_per_step": 5,
+    "fair_frob_headroom_multiplier": 1.20,
+    "radial_rescaling_enabled_for_all_arms": true
+  },
+  "multiple_testing_correction": {
+    "method": "Holm-Bonferroni step-down over exact two-sided paired Wilcoxon signed-rank tests (n = 12 seeds)",
+    "family_size_M": 10,
+    "fwer_alpha": 0.05
+  },
+  "null_sanity_gates": {
+    "N1_zero_drift_null": {
+      "regime": "R0_ZeroDrift_Null",
+      "comparison": "K1_SO2_Hadamard vs F0_Static_WFBK on final_superposed_score",
+      "pass_criterion": "mean(K1 - F0) <= 0.50 and abs(mean(K1 - F0)) <= 1.50 (K1 must not spuriously beat F0 when drift is zero)"
+    },
+    "N2_shuffled_drift_null": {
+      "regime": "R0_ShuffledDrift_Null",
+      "comparison": "K1_SO2_Hadamard vs F0_Static_WFBK on final_superposed_score",
+      "pass_criterion": "mean(K1 - F0) <= 1.00 and Holm_p >= 0.05 (chasing temporally shuffled drift labels must not beat frozen F0)"
+    }
+  },
+  "pre_registered_hypothesis_family_M10": [
+    {
+      "id": "H01_R1_K1_beats_F0",
+      "regime": "R1_Concurrent_SO2",
+      "metric": "final_superposed_score",
+      "direction": "K1_SO2_Hadamard - F0_Static_WFBK > 0",
+      "min_mean_effect_pts": 25.0,
+      "max_holm_p": 0.05
+    },
+    {
+      "id": "H02_R1_K1_vs_fair_P1",
+      "regime": "R1_Concurrent_SO2",
+      "metric": "superposed_online_mean",
+      "direction": "K1_SO2_Hadamard - P1_Rescaled_2x2_Fiber > 0",
+      "min_mean_effect_pts": 3.0,
+      "max_holm_p": 0.05
+    },
+    {
+      "id": "H03_R1_K1_beats_N1_native_retention",
+      "regime": "R1_Concurrent_SO2",
+      "metric": "stationary_native_d_score",
+      "direction": "K1_SO2_Hadamard - N1_Rescaled_Unprojected_SVD > 0",
+      "min_mean_effect_pts": 10.0,
+      "max_holm_p": 0.05
+    },
+    {
+      "id": "H04_R2_Shear_degrades_K1",
+      "regime": "R1_vs_R2_Degradation",
+      "metric": "final_drifted_ab_mean",
+      "direction": "K1(R1_Concurrent_SO2) - K1(R2_Scale_And_Shear) > 0",
+      "min_mean_effect_pts": 12.0,
+      "max_holm_p": 0.05
+    },
+    {
+      "id": "H05_R2_Fair_P1_beats_K1_under_shear",
+      "regime": "R2_Scale_And_Shear",
+      "metric": "final_drifted_ab_mean",
+      "direction": "P1_Rescaled_2x2_Fiber - K1_SO2_Hadamard > 0",
+      "min_mean_effect_pts": 4.0,
+      "max_holm_p": 0.05
+    },
+    {
+      "id": "H06_R3_CrossSlice_degrades_K1",
+      "regime": "R1_vs_R3_Degradation",
+      "metric": "final_drifted_ab_mean",
+      "direction": "K1(R1_Concurrent_SO2) - K1(R3_CrossSlice_Mixing) > 0",
+      "min_mean_effect_pts": 20.0,
+      "max_holm_p": 0.05
+    },
+    {
+      "id": "H07_R3_Paired4x4_P2_beats_K1_and_P1",
+      "regime": "R3_CrossSlice_Mixing",
+      "metric": "final_superposed_score",
+      "direction": "P2_PairedFlag_4x4 - K1_SO2_Hadamard > 0",
+      "min_mean_effect_pts": 8.0,
+      "max_holm_p": 0.05
+    },
+    {
+      "id": "H08_R4_Leakage_degrades_K1",
+      "regime": "R1_vs_R4_Degradation",
+      "metric": "final_drifted_ab_mean",
+      "direction": "K1(R1_Concurrent_SO2) - K1(R4_OutOfSlice_Leakage) > 0",
+      "min_mean_effect_pts": 25.0,
+      "max_holm_p": 0.05
+    },
+    {
+      "id": "H09_R4_Leakage_degrades_Paired4x4_P2",
+      "regime": "R3_vs_R4_Degradation",
+      "metric": "final_superposed_score",
+      "direction": "P2_PairedFlag_4x4(R3_CrossSlice_Mixing) - P2_PairedFlag_4x4(R4_OutOfSlice_Leakage) > 0",
+      "min_mean_effect_pts": 10.0,
+      "max_holm_p": 0.05
+    },
+    {
+      "id": "H10_R4_N1_flag_violation_cost",
+      "regime": "R4_OutOfSlice_Leakage",
+      "metric": "native_flag_violation",
+      "direction": "N1_Rescaled_Unprojected_SVD - K1_SO2_Hadamard > 0",
+      "min_mean_effect_pts": 0.25,
+      "max_holm_p": 0.05
+    }
+  ]
+}
