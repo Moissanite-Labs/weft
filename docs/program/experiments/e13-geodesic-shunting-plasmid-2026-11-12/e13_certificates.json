@@ -1,0 +1,97 @@
+{
+  "experiment": "E13_Gauge_Aligned_Geodesic_Neural_Plasmid_Splicing",
+  "n_seeds": 12,
+  "organism_architecture": "24 -> 96 (GELU) -> 96 (GELU) -> 8 (12,488 float32 parameters = 49,952 B)",
+  "plasmid_wire_bytes": 1456,
+  "wire_compression_ratio": 34.31,
+  "donor_reference_shifted_novel_r2_mean": 0.8563,
+  "falsifier_3_alignment": {
+    "unaligned_cross_seed_hidden_corr_median": 0.1498,
+    "whitened_procrustes_aligned_corr_median": 0.9304
+  },
+  "falsifier_2_nullity_at_160_anchors": {
+    "A1_exact_readout_nullity_mean": 0.0,
+    "A3_spectral_fisher_nullity_mean": 43.75
+  },
+  "falsifier_1_curvature_retraction": {
+    "drift_rms_flat_tangent_mean": 0.220082,
+    "drift_rms_geodesic_retraction_mean": 0.049253,
+    "mean_drift_reduction_factor": 4.47,
+    "retraction_beats_flat_seeds": "12/12"
+  },
+  "c2_invariant_gate_passes": "12/12",
+  "single_graft_arms": {
+    "pre_graft_host": {
+      "shifted_native_r2_mean": 0.8889,
+      "shifted_native_r2_std": 0.0085,
+      "shifted_novel_r2_mean": -0.4792,
+      "shifted_novel_r2_std": 0.1146,
+      "keep_drift_rms_mean": 0.0,
+      "joint_shifted_passes": "0/12",
+      "joint_pass_count": 0
+    },
+    "A0_raw_coord_delta": {
+      "shifted_native_r2_mean": 0.2495,
+      "shifted_native_r2_std": 0.0376,
+      "shifted_novel_r2_mean": -0.0306,
+      "shifted_novel_r2_std": 0.0248,
+      "keep_drift_rms_mean": 1.7695,
+      "joint_shifted_passes": "0/12",
+      "joint_pass_count": 0
+    },
+    "A1_hard_readout_nullspace_160anchors": {
+      "shifted_native_r2_mean": 0.8889,
+      "shifted_native_r2_std": 0.0085,
+      "shifted_novel_r2_mean": -0.4792,
+      "shifted_novel_r2_std": 0.1146,
+      "keep_drift_rms_mean": 0.0,
+      "joint_shifted_passes": "0/12",
+      "joint_pass_count": 0
+    },
+    "A2_gfpt_flat_no_retraction": {
+      "shifted_native_r2_mean": 0.8709,
+      "shifted_native_r2_std": 0.0121,
+      "shifted_novel_r2_mean": 0.8573,
+      "shifted_novel_r2_std": 0.0203,
+      "keep_drift_rms_mean": 0.220082,
+      "joint_shifted_passes": "11/12",
+      "joint_pass_count": 11
+    },
+    "A3_gfpt_geodesic_excitatory_only": {
+      "shifted_native_r2_mean": 0.8765,
+      "shifted_native_r2_std": 0.0101,
+      "shifted_novel_r2_mean": 0.5386,
+      "shifted_novel_r2_std": 0.0384,
+      "keep_drift_rms_mean": 0.048911,
+      "joint_shifted_passes": "0/12",
+      "joint_pass_count": 0
+    },
+    "A4_gfpt_shunting_geodesic": {
+      "shifted_native_r2_mean": 0.8757,
+      "shifted_native_r2_std": 0.0096,
+      "shifted_novel_r2_mean": 0.8565,
+      "shifted_novel_r2_std": 0.0202,
+      "keep_drift_rms_mean": 0.049253,
+      "joint_shifted_passes": "12/12",
+      "joint_pass_count": 12
+    }
+  },
+  "sign_test_two_sided_p": 0.0004883,
+  "multigen_5skill_cascade_g0_to_g3_shifted_r2": {
+    "ungated_local_val_teacher_160_baseline": [
+      0.1188,
+      -0.5348,
+      -3.4564,
+      -14.2289
+    ],
+    "gated_split_shift_fisher_mdl": [
+      0.1188,
+      0.3408,
+      0.518,
+      0.8266
+    ],
+    "strictly_monotonic_g0_g1_g2_g3_seeds_ungated": "0/12",
+    "strictly_monotonic_g0_g1_g2_g3_seeds_gated": "12/12"
+  },
+  "wall_seconds": 39.7
+}
