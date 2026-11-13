@@ -1,0 +1,1449 @@
+{
+  "repeats": 5,
+  "tasks": [
+    "compress",
+    "csvsum",
+    "fibmod",
+    "maze",
+    "primes",
+    "sortints",
+    "wordfreq",
+    "lcs"
+  ],
+  "runs": [
+    "b5",
+    "b6",
+    "b7",
+    "b8",
+    "b9",
+    "b10",
+    "b11",
+    "g3",
+    "g4"
+  ],
+  "cell_folder_sha256": {
+    "b5": "574d1551278ec3150ced95f38824967ef430da05906a9fcac7eeb65fa5a3497a",
+    "b6": "a95d5a320dd3e5dd86edea40f9ce12e76539f6f7854af74dc7ffd42a93889a3d",
+    "b7": "1362f17d940439bc614cf595a4cafb7ea37e4981546e2a2c66ef206ad8ff13bc",
+    "b8": "f6127836078973cebb18c3ba92b82f38ee2b7c47ec552cd6eb7382aba3c6152a",
+    "b9": "f8d1a305bde19e9952fbe135ef1fede3ffcdf5169a529d1bd78e6e894d6ba20a",
+    "b10": "0bb161614441bb4c118a400597b8c5ad9a77f66bac09e6d0b04b6b5085469734",
+    "b11": "c580ccfac7374248198ccf756e1789b27e52e0b8e681768397490c2442ada547",
+    "g3": "5a2a1a62488fe95601e91e49c90335de1abea6524d0b4b552ad344093f69233b",
+    "g4": "a5ba698ccd9e78fa208c513a34d55b2afb11d4f0186fb194007915643b79f922"
+  },
+  "staged_pre_folder_sha256": {
+    "b10": "5ef4bcb0ee9b15c0c4f880956f20f0aeb55b3d0ea037271f5888cc58832b5fff",
+    "b11": "2c21a2a507b42da2e08fe42cc2bfee542a1b1a196e72ffd57e1f906358ae9caf",
+    "b5": "6d3541cf993a0220a9373116b284b74297e1ed7b09f4a7d7c23d58d8dc8a5e63",
+    "b6": "0256534e9c669edbe933d6049cc93a08168d628ae11efe8ee92e59cb81de6576",
+    "b7": "51991fb3092dc6c747e0e91a7bc95a553f59ee1584a03783ac10b56b7548c29a",
+    "b8": "b657e052a5906ca5bf85b0a17a1fc2a317ea941d4b451ff4ff1b0a6aa3cea584",
+    "b9": "968540b0889569372ae6d93615262f9325d7eaca91159c7e1264d045756c9375",
+    "g3": "c1ef3cc4d7dee2dab62d4559a64e2ecf833c503a05f5d360d6ef571a8f7b1cfa",
+    "g4": "49cec436c2b3b9c6acb9b2fe702a86bdc6318d24402f84105ed48695f407d80e"
+  },
+  "audit_seed": 4697720169128928207,
+  "audit_seed_legacy_fallback": false,
+  "provenance": {
+    "git_commit": "9323272d0594817be4267d130981fb0671c9166a",
+    "operator_handle": "ahrazzle-agent (audited by Ahraz Arifuddin)",
+    "execution_utc": "2026-11-13T03:14:34Z",
+    "os_version": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+    "cpu_brand": "Apple M1 Max",
+    "python_version": "3.14.6",
+    "audit_seed": 4697720169128928207,
+    "interleave_task_order": [
+      "compress",
+      "csvsum",
+      "fibmod",
+      "lcs",
+      "maze",
+      "primes",
+      "sortints",
+      "wordfreq"
+    ],
+    "contender_order_per_task": [
+      "ref",
+      "b5",
+      "b6",
+      "b7",
+      "b8",
+      "b9",
+      "b10",
+      "b11",
+      "g3",
+      "g4"
+    ],
+    "sandbox": true,
+    "bench_lock": "/Users/kethuda/Work/razi-cells/.bench.lock",
+    "wins_rule": "rel > 1.0 + ref_spread (reference-noise threshold)"
+  },
+  "per_task": {
+    "compress": {
+      "scores": {
+        "ref": {
+          "median": 4.6518,
+          "rel": 1.0,
+          "spread": 0.0,
+          "raw": [
+            4.65178,
+            4.65178,
+            4.65178,
+            4.65178,
+            4.65178
+          ],
+          "why": "",
+          "score_path": "compress_subprocess"
+        },
+        "b5": {
+          "median": 7.4891,
+          "rel": 1.6099,
+          "spread": 0.0,
+          "raw": [
+            7.48912,
+            7.48912,
+            7.48912,
+            7.48912,
+            7.48912
+          ],
+          "why": "",
+          "score_path": "compress_module"
+        },
+        "b6": {
+          "median": 6.1318,
+          "rel": 1.3182,
+          "spread": 0.0,
+          "raw": [
+            6.13177,
+            6.13177,
+            6.13177,
+            6.13177,
+            6.13177
+          ],
+          "why": "",
+          "score_path": "compress_module"
+        },
+        "b7": {
+          "median": 7.2094,
+          "rel": 1.5498,
+          "spread": 0.0,
+          "raw": [
+            7.20944,
+            7.20944,
+            7.20944,
+            7.20944,
+            7.20944
+          ],
+          "why": "",
+          "score_path": "compress_module"
+        },
+        "b8": {
+          "median": 7.191,
+          "rel": 1.5459,
+          "spread": 0.0,
+          "raw": [
+            7.19098,
+            7.19098,
+            7.19098,
+            7.19098,
+            7.19098
+          ],
+          "why": "",
+          "score_path": "compress_module"
+        },
+        "b9": {
+          "median": 7.1869,
+          "rel": 1.545,
+          "spread": 0.0,
+          "raw": [
+            7.18694,
+            7.18694,
+            7.18694,
+            7.18694,
+            7.18694
+          ],
+          "why": "",
+          "score_path": "compress_module"
+        },
+        "b10": {
+          "median": 5.5548,
+          "rel": 1.1941,
+          "spread": 0.0,
+          "raw": [
+            5.55478,
+            5.55478,
+            5.55478,
+            5.55478,
+            5.55478
+          ],
+          "why": "",
+          "score_path": "compress_module"
+        },
+        "b11": {
+          "median": 7.191,
+          "rel": 1.5459,
+          "spread": 0.0,
+          "raw": [
+            7.19098,
+            7.19098,
+            7.19098,
+            7.19098,
+            7.19098
+          ],
+          "why": "",
+          "score_path": "compress_module"
+        },
+        "g3": {
+          "median": 7.191,
+          "rel": 1.5459,
+          "spread": 0.0,
+          "raw": [
+            7.19098,
+            7.19098,
+            7.19098,
+            7.19098,
+            7.19098
+          ],
+          "why": "",
+          "score_path": "compress_module"
+        },
+        "g4": {
+          "median": 7.4151,
+          "rel": 1.594,
+          "spread": 0.0,
+          "raw": [
+            7.4151,
+            7.4151,
+            7.4151,
+            7.4151,
+            7.4151
+          ],
+          "why": "",
+          "score_path": "compress_module"
+        }
+      },
+      "ref_median": 4.6518,
+      "ref_spread": 0.0
+    },
+    "csvsum": {
+      "scores": {
+        "ref": {
+          "median": 1.2127,
+          "rel": 1.0,
+          "spread": 0.1284,
+          "raw": [
+            1.21272,
+            1.18998,
+            1.15903,
+            1.31479,
+            1.26014
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "b5": {
+          "median": 1.0992,
+          "rel": 0.9064,
+          "spread": 0.3328,
+          "raw": [
+            0.96259,
+            1.09917,
+            0.78308,
+            1.14883,
+            1.11012
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "b6": {
+          "median": 1.1028,
+          "rel": 0.9094,
+          "spread": 0.4385,
+          "raw": [
+            1.19088,
+            1.14573,
+            0.70729,
+            1.04036,
+            1.10282
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "b7": {
+          "median": 1.2987,
+          "rel": 1.0709,
+          "spread": 0.5656,
+          "raw": [
+            1.3437,
+            1.04296,
+            0.75997,
+            1.29866,
+            1.49448
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "b8": {
+          "median": 2.3193,
+          "rel": 1.9125,
+          "spread": 0.7196,
+          "raw": [
+            2.69942,
+            2.18435,
+            1.27006,
+            2.31931,
+            2.93908
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "b9": {
+          "median": 3.0764,
+          "rel": 2.5368,
+          "spread": 0.4408,
+          "raw": [
+            3.09296,
+            2.94073,
+            1.94438,
+            3.07639,
+            3.30051
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "b10": {
+          "median": 3.4606,
+          "rel": 2.8536,
+          "spread": 0.519,
+          "raw": [
+            3.46061,
+            2.05592,
+            1.87998,
+            3.64761,
+            3.67604
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "b11": {
+          "median": 1.2502,
+          "rel": 1.0309,
+          "spread": 0.5834,
+          "raw": [
+            1.35715,
+            1.02045,
+            0.89331,
+            1.62261,
+            1.25019
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "g3": {
+          "median": 0.0,
+          "rel": 0.0,
+          "spread": null,
+          "raw": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "why": "case 0: wrong output",
+          "score_path": "subprocess"
+        },
+        "g4": {
+          "median": 2.9642,
+          "rel": 2.4442,
+          "spread": 0.6548,
+          "raw": [
+            2.96415,
+            2.18677,
+            2.39603,
+            4.12769,
+            3.59104
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        }
+      },
+      "ref_median": 1.2127,
+      "ref_spread": 0.1284
+    },
+    "fibmod": {
+      "scores": {
+        "ref": {
+          "median": 2.4068,
+          "rel": 1.0,
+          "spread": null,
+          "raw": [],
+          "why": "",
+          "score_path": "both",
+          "ref_median_by_path": {
+            "cli_runpy": 0.1218,
+            "module_callable": 2.4068
+          }
+        },
+        "b5": {
+          "median": 7.3256,
+          "rel": 3.0437,
+          "spread": 0.6496,
+          "raw": [
+            5.49064,
+            6.76459,
+            7.32558,
+            10.06896,
+            10.24936
+          ],
+          "why": "",
+          "score_path": "module_callable",
+          "ref_median_for_path": 2.4068,
+          "ref_spread_for_path": 0.3038
+        },
+        "b6": {
+          "median": 0.0814,
+          "rel": 0.6681,
+          "spread": 0.3303,
+          "raw": [
+            0.07648,
+            0.06575,
+            0.08138,
+            0.09032,
+            0.09263
+          ],
+          "why": "",
+          "score_path": "cli_runpy",
+          "ref_median_for_path": 0.1218,
+          "ref_spread_for_path": 0.4141
+        },
+        "b7": {
+          "median": 0.1413,
+          "rel": 1.1603,
+          "spread": 0.3124,
+          "raw": [
+            0.1053,
+            0.14143,
+            0.12074,
+            0.14945,
+            0.14132
+          ],
+          "why": "",
+          "score_path": "cli_runpy",
+          "ref_median_for_path": 0.1218,
+          "ref_spread_for_path": 0.4141
+        },
+        "b8": {
+          "median": 11.9964,
+          "rel": 4.9844,
+          "spread": 0.1935,
+          "raw": [
+            12.09209,
+            12.26725,
+            9.94605,
+            11.74696,
+            11.99644
+          ],
+          "why": "",
+          "score_path": "module_callable",
+          "ref_median_for_path": 2.4068,
+          "ref_spread_for_path": 0.3038
+        },
+        "b9": {
+          "median": 0.0,
+          "rel": 0.0,
+          "spread": null,
+          "raw": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "why": "cli_runpy exit -9; module_callable exit 1",
+          "score_path": "failed",
+          "ref_median_for_path": 0.0,
+          "ref_spread_for_path": 0.0
+        },
+        "b10": {
+          "median": 0.1128,
+          "rel": 0.9259,
+          "spread": 0.3799,
+          "raw": [
+            0.1082,
+            0.11278,
+            0.13903,
+            0.09619,
+            0.13139
+          ],
+          "why": "",
+          "score_path": "cli_runpy",
+          "ref_median_for_path": 0.1218,
+          "ref_spread_for_path": 0.4141
+        },
+        "b11": {
+          "median": 0.09,
+          "rel": 0.7385,
+          "spread": 0.4362,
+          "raw": [
+            0.08995,
+            0.05388,
+            0.09012,
+            0.07408,
+            0.09312
+          ],
+          "why": "",
+          "score_path": "cli_runpy",
+          "ref_median_for_path": 0.1218,
+          "ref_spread_for_path": 0.4141
+        },
+        "g3": {
+          "median": 0.0394,
+          "rel": 0.3235,
+          "spread": 190.5398,
+          "raw": [
+            0.03565,
+            0.03345,
+            6.76523,
+            7.54072,
+            0.0394
+          ],
+          "why": "",
+          "score_path": "cli_runpy",
+          "ref_median_for_path": 0.1218,
+          "ref_spread_for_path": 0.4141
+        },
+        "g4": {
+          "median": 9.9044,
+          "rel": 4.1152,
+          "spread": 0.7236,
+          "raw": [
+            9.90435,
+            8.61711,
+            11.78207,
+            4.61537,
+            11.03815
+          ],
+          "why": "",
+          "score_path": "module_callable",
+          "ref_median_for_path": 2.4068,
+          "ref_spread_for_path": 0.3038
+        }
+      },
+      "ref_median_by_path": {
+        "cli_runpy": 0.1218,
+        "module_callable": 2.4068
+      },
+      "ref_spread_by_path": {
+        "cli_runpy": 0.4141,
+        "module_callable": 0.3038
+      },
+      "ref_raw_by_path": {
+        "cli_runpy": [
+          0.15243,
+          0.10421,
+          0.1061,
+          0.15464,
+          0.12177
+        ],
+        "module_callable": [
+          2.43815,
+          1.80004,
+          1.96484,
+          2.40678,
+          2.53126
+        ]
+      },
+      "ref_median": 2.4068,
+      "ref_spread": 0.3038
+    },
+    "lcs": {
+      "scores": {
+        "ref": {
+          "median": 0.7396,
+          "rel": 1.0,
+          "spread": 0.2876,
+          "raw": [
+            0.74677,
+            0.68121,
+            0.73957,
+            0.66571,
+            0.87844
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "b5": {
+          "median": 16.7018,
+          "rel": 22.5832,
+          "spread": 0.3929,
+          "raw": [
+            20.63417,
+            16.05508,
+            16.00901,
+            16.70183,
+            22.57107
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "b6": {
+          "median": 18.7888,
+          "rel": 25.405,
+          "spread": 0.8825,
+          "raw": [
+            20.9844,
+            18.7888,
+            5.08809,
+            18.268,
+            21.66955
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "b7": {
+          "median": 17.1658,
+          "rel": 23.2106,
+          "spread": 0.8224,
+          "raw": [
+            17.16585,
+            9.91827,
+            9.51337,
+            18.67194,
+            23.62975
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "b8": {
+          "median": 1.8155,
+          "rel": 2.4548,
+          "spread": 0.8718,
+          "raw": [
+            0.75839,
+            1.58428,
+            2.34118,
+            1.81546,
+            1.93615
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "b9": {
+          "median": 20.7962,
+          "rel": 28.1193,
+          "spread": 0.5189,
+          "raw": [
+            18.99032,
+            11.9123,
+            22.70242,
+            20.79618,
+            21.60479
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "b10": {
+          "median": 18.4136,
+          "rel": 24.8976,
+          "spread": 0.328,
+          "raw": [
+            15.1547,
+            17.22662,
+            18.41355,
+            20.80128,
+            21.19479
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "b11": {
+          "median": 14.1054,
+          "rel": 19.0725,
+          "spread": 0.6403,
+          "raw": [
+            7.39489,
+            14.10545,
+            16.15041,
+            13.05144,
+            16.42728
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "g3": {
+          "median": 17.0218,
+          "rel": 23.0158,
+          "spread": 0.6333,
+          "raw": [
+            12.06115,
+            17.02178,
+            20.057,
+            14.39557,
+            22.84126
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "g4": {
+          "median": 18.1577,
+          "rel": 24.5517,
+          "spread": 0.8132,
+          "raw": [
+            5.48099,
+            15.18767,
+            18.61549,
+            18.15768,
+            20.24753
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        }
+      },
+      "ref_median": 0.7396,
+      "ref_spread": 0.2876
+    },
+    "maze": {
+      "scores": {
+        "ref": {
+          "median": 1.3225,
+          "rel": 1.0,
+          "spread": 0.2609,
+          "raw": [
+            1.17542,
+            1.09095,
+            1.43604,
+            1.32246,
+            1.41923
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "b5": {
+          "median": 2.571,
+          "rel": 1.9441,
+          "spread": 0.2524,
+          "raw": [
+            2.39589,
+            1.98572,
+            2.63454,
+            2.57414,
+            2.57096
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "b6": {
+          "median": 2.4077,
+          "rel": 1.8206,
+          "spread": 0.5135,
+          "raw": [
+            2.4077,
+            1.76679,
+            2.67304,
+            2.33425,
+            3.00307
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "b7": {
+          "median": 4.3937,
+          "rel": 3.3223,
+          "spread": 0.5972,
+          "raw": [
+            4.39365,
+            2.65383,
+            5.27782,
+            3.99577,
+            4.59394
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "b8": {
+          "median": 3.4219,
+          "rel": 2.5875,
+          "spread": 0.726,
+          "raw": [
+            3.41066,
+            2.49749,
+            3.42189,
+            3.71551,
+            4.98194
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "b9": {
+          "median": 2.5429,
+          "rel": 1.9228,
+          "spread": 0.1673,
+          "raw": [
+            2.52821,
+            2.5381,
+            2.68649,
+            2.54285,
+            2.95371
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "b10": {
+          "median": 3.2061,
+          "rel": 2.4243,
+          "spread": 0.5815,
+          "raw": [
+            3.20608,
+            3.15396,
+            3.54441,
+            1.98714,
+            3.85146
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "b11": {
+          "median": 3.6344,
+          "rel": 2.7482,
+          "spread": 0.7378,
+          "raw": [
+            3.04731,
+            3.63436,
+            5.60742,
+            2.92605,
+            5.21928
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "g3": {
+          "median": 4.4027,
+          "rel": 3.3292,
+          "spread": 0.4268,
+          "raw": [
+            2.88126,
+            4.40267,
+            4.76037,
+            3.30164,
+            4.72872
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "g4": {
+          "median": 3.8983,
+          "rel": 2.9478,
+          "spread": 0.6041,
+          "raw": [
+            3.89831,
+            3.29796,
+            5.65276,
+            3.73869,
+            5.34826
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        }
+      },
+      "ref_median": 1.3225,
+      "ref_spread": 0.2609
+    },
+    "primes": {
+      "scores": {
+        "ref": {
+          "median": 15.9967,
+          "rel": 1.0,
+          "spread": 0.7393,
+          "raw": [
+            15.99674,
+            19.04804,
+            18.67774,
+            7.2215,
+            15.93865
+          ],
+          "why": "",
+          "score_path": "primes_cli"
+        },
+        "b5": {
+          "median": 17.7956,
+          "rel": 1.1124,
+          "spread": 0.3621,
+          "raw": [
+            15.7934,
+            21.15699,
+            17.79556,
+            14.71303,
+            18.21503
+          ],
+          "why": "",
+          "score_path": "primes_cli"
+        },
+        "b6": {
+          "median": 16.6967,
+          "rel": 1.0438,
+          "spread": 0.3001,
+          "raw": [
+            16.69665,
+            15.65906,
+            18.59387,
+            14.22047,
+            19.23057
+          ],
+          "why": "",
+          "score_path": "primes_cli"
+        },
+        "b7": {
+          "median": 16.0716,
+          "rel": 1.0047,
+          "spread": 0.9961,
+          "raw": [
+            3.71729,
+            19.72554,
+            17.80744,
+            13.08171,
+            16.07156
+          ],
+          "why": "",
+          "score_path": "primes_cli"
+        },
+        "b8": {
+          "median": 15.1323,
+          "rel": 0.946,
+          "spread": 0.496,
+          "raw": [
+            9.30316,
+            15.13234,
+            16.80877,
+            12.42531,
+            15.81458
+          ],
+          "why": "",
+          "score_path": "primes_cli"
+        },
+        "b9": {
+          "median": 17.926,
+          "rel": 1.1206,
+          "spread": 0.4622,
+          "raw": [
+            10.59552,
+            18.3954,
+            18.88069,
+            15.86321,
+            17.92595
+          ],
+          "why": "",
+          "score_path": "primes_cli"
+        },
+        "b10": {
+          "median": 17.7444,
+          "rel": 1.1093,
+          "spread": 0.483,
+          "raw": [
+            11.1009,
+            17.74439,
+            19.0301,
+            15.68045,
+            19.67157
+          ],
+          "why": "",
+          "score_path": "primes_cli"
+        },
+        "b11": {
+          "median": 18.8848,
+          "rel": 1.1805,
+          "spread": 0.7405,
+          "raw": [
+            6.27689,
+            19.27757,
+            20.26183,
+            18.464,
+            18.88482
+          ],
+          "why": "",
+          "score_path": "primes_cli"
+        },
+        "g3": {
+          "median": 17.6705,
+          "rel": 1.1046,
+          "spread": 0.1797,
+          "raw": [
+            15.60094,
+            17.67051,
+            18.31569,
+            16.01635,
+            18.77632
+          ],
+          "why": "",
+          "score_path": "primes_cli"
+        },
+        "g4": {
+          "median": 16.8039,
+          "rel": 1.0505,
+          "spread": 0.3971,
+          "raw": [
+            16.76832,
+            19.31108,
+            16.80385,
+            12.63825,
+            19.12657
+          ],
+          "why": "",
+          "score_path": "primes_cli"
+        }
+      },
+      "ref_median": 15.9967,
+      "ref_spread": 0.7393
+    },
+    "sortints": {
+      "scores": {
+        "ref": {
+          "median": 1.4988,
+          "rel": 1.0,
+          "spread": 0.4525,
+          "raw": [
+            1.27235,
+            1.4988,
+            1.51488,
+            0.89569,
+            1.57396
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "b5": {
+          "median": 2.5686,
+          "rel": 1.7137,
+          "spread": 0.6192,
+          "raw": [
+            2.16147,
+            2.56856,
+            2.69996,
+            1.31904,
+            2.90939
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "b6": {
+          "median": 1.708,
+          "rel": 1.1396,
+          "spread": 0.1597,
+          "raw": [
+            1.57823,
+            1.79298,
+            1.70796,
+            1.52017,
+            1.78439
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "b7": {
+          "median": 0.9852,
+          "rel": 0.6573,
+          "spread": 0.1847,
+          "raw": [
+            0.99107,
+            0.98522,
+            0.906,
+            0.87203,
+            1.05396
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "b8": {
+          "median": 2.906,
+          "rel": 1.9389,
+          "spread": 0.5595,
+          "raw": [
+            3.44809,
+            1.8223,
+            2.88645,
+            2.90598,
+            3.40056
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "b9": {
+          "median": 1.8684,
+          "rel": 1.2466,
+          "spread": 0.481,
+          "raw": [
+            2.28557,
+            1.65807,
+            1.86844,
+            1.56033,
+            2.45899
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "b10": {
+          "median": 3.7318,
+          "rel": 2.4899,
+          "spread": 0.2309,
+          "raw": [
+            4.23244,
+            3.37089,
+            3.73181,
+            3.45998,
+            4.14786
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "b11": {
+          "median": 7.0791,
+          "rel": 4.7232,
+          "spread": 0.3425,
+          "raw": [
+            5.31446,
+            6.48552,
+            7.73938,
+            7.07913,
+            7.19701
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "g3": {
+          "median": 3.0793,
+          "rel": 2.0545,
+          "spread": 0.2098,
+          "raw": [
+            3.35625,
+            2.71033,
+            3.07928,
+            3.03157,
+            3.30185
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "g4": {
+          "median": 4.6156,
+          "rel": 3.0795,
+          "spread": 0.4413,
+          "raw": [
+            3.61925,
+            4.59273,
+            4.6156,
+            5.31874,
+            5.65629
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        }
+      },
+      "ref_median": 1.4988,
+      "ref_spread": 0.4525
+    },
+    "wordfreq": {
+      "scores": {
+        "ref": {
+          "median": 9.9245,
+          "rel": 1.0,
+          "spread": 0.1711,
+          "raw": [
+            10.09302,
+            9.85038,
+            9.00492,
+            9.9245,
+            10.7033
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "b5": {
+          "median": 11.817,
+          "rel": 1.1907,
+          "spread": 0.5174,
+          "raw": [
+            11.81703,
+            9.13387,
+            6.84144,
+            12.11484,
+            12.95564
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "b6": {
+          "median": 9.4824,
+          "rel": 0.9555,
+          "spread": 0.8363,
+          "raw": [
+            11.23784,
+            3.3081,
+            4.3127,
+            10.56953,
+            9.48244
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "b7": {
+          "median": 11.0197,
+          "rel": 1.1104,
+          "spread": 0.5358,
+          "raw": [
+            12.14746,
+            6.24279,
+            8.89936,
+            11.01973,
+            11.08326
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "b8": {
+          "median": 14.4022,
+          "rel": 1.4512,
+          "spread": 0.5357,
+          "raw": [
+            14.40216,
+            7.51155,
+            10.25,
+            15.22744,
+            14.8253
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "b9": {
+          "median": 10.5674,
+          "rel": 1.0648,
+          "spread": 0.4361,
+          "raw": [
+            12.1901,
+            7.58117,
+            10.53624,
+            11.02728,
+            10.56745
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "b10": {
+          "median": 10.8844,
+          "rel": 1.0967,
+          "spread": 0.4181,
+          "raw": [
+            11.70298,
+            8.03613,
+            7.33249,
+            10.88443,
+            11.88308
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "b11": {
+          "median": 10.5321,
+          "rel": 1.0612,
+          "spread": 0.7075,
+          "raw": [
+            10.5403,
+            3.11908,
+            9.22124,
+            10.57044,
+            10.5321
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "g3": {
+          "median": 10.6708,
+          "rel": 1.0752,
+          "spread": 0.6275,
+          "raw": [
+            13.4573,
+            7.13542,
+            10.95693,
+            6.76101,
+            10.67082
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        },
+        "g4": {
+          "median": 12.7756,
+          "rel": 1.2873,
+          "spread": 0.3897,
+          "raw": [
+            15.95006,
+            10.97147,
+            14.5666,
+            12.77563,
+            12.41498
+          ],
+          "why": "",
+          "score_path": "subprocess"
+        }
+      },
+      "ref_median": 9.9245,
+      "ref_spread": 0.1711
+    }
+  },
+  "run_summaries": {
+    "b5": {
+      "calls": 117,
+      "improvements": 15,
+      "kept_per_100": 12.82,
+      "model": "anthropic:claude-fable-5-1"
+    },
+    "b6": {
+      "calls": 132,
+      "improvements": 17,
+      "kept_per_100": 12.88,
+      "model": "openai:gpt-6-astra"
+    },
+    "b7": {
+      "calls": 123,
+      "improvements": 0,
+      "kept_per_100": 0.0,
+      "model": "opencode-go:hy4"
+    },
+    "b8": {
+      "calls": 116,
+      "improvements": 12,
+      "kept_per_100": 10.34,
+      "model": "opencode-go:gemini-4-argon"
+    },
+    "b9": {
+      "calls": 116,
+      "improvements": 9,
+      "kept_per_100": 7.76,
+      "model": "anthropic:claude-fable-5-1"
+    },
+    "b10": {
+      "calls": 120,
+      "improvements": 15,
+      "kept_per_100": 12.5,
+      "model": "opencode-go:gemini-4-argon"
+    },
+    "b11": {
+      "calls": 118,
+      "improvements": 13,
+      "kept_per_100": 11.02,
+      "model": "anthropic:claude-fable-5-1"
+    },
+    "g3": {
+      "calls": 128,
+      "improvements": 4,
+      "kept_per_100": 3.12,
+      "model": "DeepSeek v4.1 Flash"
+    },
+    "g4": {
+      "calls": 127,
+      "improvements": 2,
+      "kept_per_100": 1.57,
+      "model": "DeepSeek v4.1 Flash"
+    }
+  },
+  "summary_table": [
+    {
+      "run": "b5",
+      "model": "anthropic:claude-fable-5-1",
+      "kept_per_100": 12.82,
+      "median_rel": 1.662,
+      "mean_rel": 4.263,
+      "geom_rel": 2.142,
+      "wins_vs_ref": 6,
+      "total_tasks": 8,
+      "wins_rule": "beats_ref_spread"
+    },
+    {
+      "run": "b6",
+      "model": "openai:gpt-6-astra",
+      "kept_per_100": 12.88,
+      "median_rel": 1.092,
+      "mean_rel": 4.158,
+      "geom_rel": 1.596,
+      "wins_vs_ref": 3,
+      "total_tasks": 8,
+      "wins_rule": "beats_ref_spread"
+    },
+    {
+      "run": "b7",
+      "model": "opencode-go:hy4",
+      "kept_per_100": 0.0,
+      "median_rel": 1.135,
+      "mean_rel": 4.136,
+      "geom_rel": 1.797,
+      "wins_vs_ref": 3,
+      "total_tasks": 8,
+      "wins_rule": "beats_ref_spread"
+    },
+    {
+      "run": "b8",
+      "model": "opencode-go:gemini-4-argon",
+      "kept_per_100": 10.34,
+      "median_rel": 1.926,
+      "mean_rel": 2.228,
+      "geom_rel": 1.993,
+      "wins_vs_ref": 7,
+      "total_tasks": 8,
+      "wins_rule": "beats_ref_spread"
+    },
+    {
+      "run": "b9",
+      "model": "anthropic:claude-fable-5-1",
+      "kept_per_100": 7.76,
+      "median_rel": 1.396,
+      "mean_rel": 4.694,
+      "geom_rel": null,
+      "wins_vs_ref": 4,
+      "total_tasks": 8,
+      "wins_rule": "beats_ref_spread"
+    },
+    {
+      "run": "b10",
+      "model": "opencode-go:gemini-4-argon",
+      "kept_per_100": 12.5,
+      "median_rel": 1.809,
+      "mean_rel": 4.624,
+      "geom_rel": 2.214,
+      "wins_vs_ref": 5,
+      "total_tasks": 8,
+      "wins_rule": "beats_ref_spread"
+    },
+    {
+      "run": "b11",
+      "model": "anthropic:claude-fable-5-1",
+      "kept_per_100": 11.02,
+      "median_rel": 1.363,
+      "mean_rel": 4.013,
+      "geom_rel": 2.091,
+      "wins_vs_ref": 4,
+      "total_tasks": 8,
+      "wins_rule": "beats_ref_spread"
+    },
+    {
+      "run": "g3",
+      "model": "DeepSeek v4.1 Flash",
+      "kept_per_100": 3.12,
+      "median_rel": 1.325,
+      "mean_rel": 4.056,
+      "geom_rel": null,
+      "wins_vs_ref": 4,
+      "total_tasks": 8,
+      "wins_rule": "beats_ref_spread"
+    },
+    {
+      "run": "g4",
+      "model": "DeepSeek v4.1 Flash",
+      "kept_per_100": 1.57,
+      "median_rel": 2.696,
+      "mean_rel": 5.134,
+      "geom_rel": 2.887,
+      "wins_vs_ref": 7,
+      "total_tasks": 8,
+      "wins_rule": "beats_ref_spread"
+    }
+  ]
+}
