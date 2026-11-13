@@ -1,0 +1,1 @@
+python3 compress.py corpus.txt out.bin && python3 compress.py --decompress out.bin restored.txt && python3 -c 'import pathlib; a=pathlib.Path("corpus.txt").read_bytes(); b=pathlib.Path("restored.txt").read_bytes(); c=pathlib.Path("out.bin").stat().st_size; print(100*(1-c/len(a)) if a==b else 0)'

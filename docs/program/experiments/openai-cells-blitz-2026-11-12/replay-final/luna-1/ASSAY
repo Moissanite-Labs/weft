@@ -1,0 +1,8 @@
+python3 - <<'PY'
+from compress import encode,decode
+x=open('corpus.txt','rb').read()
+for _ in range(12):
+ y=encode(x)
+ if decode(y)!=x: print(0); raise SystemExit
+print(100*(1-len(y)/len(x)))
+PY

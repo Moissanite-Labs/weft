@@ -1,0 +1,4 @@
+sh -c 'rm -f tmp/out.bin tmp/restored.txt; for i in $(seq 1 20); do python3 compress.py corpus.txt tmp/out.bin || exit 1; python3 compress.py --decompress tmp/out.bin tmp/restored.txt || exit 1; cmp -s corpus.txt tmp/restored.txt || exit 1; done; python3 - <<"PY"
+import os
+print(100*(1-os.path.getsize("tmp/out.bin")/os.path.getsize("corpus.txt")))
+PY'

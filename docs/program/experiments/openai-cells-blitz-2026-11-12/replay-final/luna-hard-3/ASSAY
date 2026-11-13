@@ -1,0 +1,5 @@
+python3 -c 'import compress, pathlib, sys; p=pathlib.Path("corpus_hard.txt").read_bytes(); c=b""; 
+for _ in range(20):
+ c=compress.encode(p)
+ if compress.decode(c)!=p: print(0); sys.exit(0)
+print(100*(1-len(c)/len(p)))'

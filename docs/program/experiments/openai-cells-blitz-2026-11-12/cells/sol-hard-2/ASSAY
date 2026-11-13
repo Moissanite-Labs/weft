@@ -1,0 +1,6 @@
+python3 -c 'import subprocess
+p=open("corpus_hard.txt","rb").read()
+for _ in range(10):
+ subprocess.run(["python3","compress.py","corpus_hard.txt","out.bin"],check=True)
+ subprocess.run(["python3","compress.py","--decompress","out.bin","restored.txt"],check=True)
+q=open("out.bin","rb").read();r=open("restored.txt","rb").read();print(100*(1-len(q)/len(p)) if r==p else 0)'

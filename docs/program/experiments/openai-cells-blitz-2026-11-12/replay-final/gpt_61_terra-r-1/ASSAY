@@ -1,0 +1,1 @@
+python3 compress.py corpus.txt tmp/assay.bin && python3 compress.py --decompress tmp/assay.bin tmp/assay.txt && python3 -c "from pathlib import Path; a=Path('corpus.txt').read_bytes(); b=Path('tmp/assay.txt').read_bytes(); n=Path('tmp/assay.bin').stat().st_size; print(100*(1-n/len(a)) if a==b and a else 0)"

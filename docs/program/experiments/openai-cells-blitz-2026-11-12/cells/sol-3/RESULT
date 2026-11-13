@@ -1,0 +1,1 @@
+Built stdlib-only `compress.py` with lossless compression and decompression. Verified a byte-identical round trip of `corpus.txt`; the compressed file is 3,002 bytes versus 313,972 bytes (99.04% reduction), well ahead of default zlib’s 35,399 bytes.

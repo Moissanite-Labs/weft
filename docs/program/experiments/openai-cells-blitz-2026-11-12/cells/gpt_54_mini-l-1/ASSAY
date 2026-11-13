@@ -1,0 +1,12 @@
+python3 - <<'PY'
+import os, subprocess, sys
+src='corpus.txt'; enc='out.bin'; dec='restored.txt'
+subprocess.run(['python3','compress.py',src,enc], check=True)
+subprocess.run(['python3','compress.py','--decompress',enc,dec], check=True)
+with open(src,'rb') as a, open(dec,'rb') as b:
+    if a.read()!=b.read():
+        print(0)
+        raise SystemExit
+c=os.path.getsize(src); o=os.path.getsize(enc)
+print(100*(1-o/c))
+PY

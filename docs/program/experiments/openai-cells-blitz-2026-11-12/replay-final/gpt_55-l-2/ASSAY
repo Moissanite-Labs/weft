@@ -1,0 +1,15 @@
+python3 - <<'PY'
+import os, filecmp, tempfile, compress
+orig = os.path.getsize('corpus.txt')
+with tempfile.TemporaryDirectory() as d:
+    out = os.path.join(d, 'out.bin')
+    res = os.path.join(d, 'restored.txt')
+    for _ in range(30):
+        compress.compress('corpus.txt', out)
+        compress.decompress(out, res)
+    if not filecmp.cmp('corpus.txt', res, shallow=False):
+        print(0)
+    else:
+        comp = os.path.getsize(out)
+        print(100 * (1 - comp / orig))
+PY

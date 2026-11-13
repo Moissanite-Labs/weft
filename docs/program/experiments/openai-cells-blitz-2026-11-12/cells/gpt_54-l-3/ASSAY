@@ -1,0 +1,18 @@
+python3 - <<'PY'
+import os, sys
+for f in ('out.bin','restored.txt'):
+    try: os.remove(f)
+    except FileNotFoundError: pass
+if os.system('python3 compress.py corpus.txt out.bin > /tmp/c1.txt 2>&1') != 0:
+    print(0)
+    raise SystemExit(0)
+if os.system('python3 compress.py --decompress out.bin restored.txt > /tmp/c2.txt 2>&1') != 0:
+    print(0)
+    raise SystemExit(0)
+orig=open('corpus.txt','rb').read()
+rest=open('restored.txt','rb').read()
+if orig!=rest:
+    print(0)
+else:
+    print(100*(1-os.path.getsize('out.bin')/os.path.getsize('corpus.txt')))
+PY

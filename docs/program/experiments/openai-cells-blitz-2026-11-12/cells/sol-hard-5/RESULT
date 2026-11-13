@@ -1,0 +1,1 @@
+Built stdlib-only compress.py with a lossless format tailored to the corpus’s structured lines, hexadecimal strings, and base-36 strings. Verified byte-identical round trips; output is 16,964 bytes versus 44,267 bytes original (61.68% reduction), beating default zlib’s 49.42%.

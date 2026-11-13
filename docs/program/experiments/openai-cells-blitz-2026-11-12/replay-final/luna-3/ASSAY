@@ -1,0 +1,10 @@
+python3 - <<'PY'
+import subprocess, pathlib, sys
+src=pathlib.Path('corpus.txt').read_bytes()
+for i in range(5):
+    subprocess.run([sys.executable,'compress.py','corpus.txt','assay.bin'],check=True)
+    subprocess.run([sys.executable,'compress.py','--decompress','assay.bin','assay.restored'],check=True)
+    if pathlib.Path('assay.restored').read_bytes()!=src:
+        print(0); raise SystemExit
+print(100*(1-pathlib.Path('assay.bin').stat().st_size/len(src)))
+PY

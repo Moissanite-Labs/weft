@@ -1,0 +1,1 @@
+python3 -c 'import compress; x=open("corpus_hard.txt","rb").read(); y=b""; exec("for _ in range(150):\n y=compress.compress(x)\n if compress.decompress(y)!=x: print(0); raise SystemExit"); print(100*(1-len(y)/len(x)))'

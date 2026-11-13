@@ -1,0 +1,6 @@
+python3 -c 'import subprocess, pathlib; p=pathlib.Path; src=p("corpus.txt").read_bytes(); ok=True; sizes=[]
+for i in range(8):
+ c=subprocess.run(["python3","compress.py","corpus.txt","tmp/assay.bin"],capture_output=True); d=subprocess.run(["python3","compress.py","--decompress","tmp/assay.bin","tmp/assay.txt"],capture_output=True) if c.returncode==0 else c
+ if c.returncode or d.returncode or not p("tmp/assay.txt").exists() or p("tmp/assay.txt").read_bytes()!=src: ok=False; break
+ sizes.append(p("tmp/assay.bin").stat().st_size)
+print(100*(1-max(sizes)/len(src)) if ok and sizes else 0)'

@@ -1,0 +1,1 @@
+python3 compress.py corpus.txt out.bin && python3 compress.py --decompress out.bin restored.txt && cmp -s corpus.txt restored.txt && python3 -c "import os; print(100*(1-os.path.getsize('out.bin')/os.path.getsize('corpus.txt')))" || echo 0

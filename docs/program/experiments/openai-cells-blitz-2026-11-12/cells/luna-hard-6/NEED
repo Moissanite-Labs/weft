@@ -1,0 +1,7 @@
+NEED: write a stdlib-only Python program `compress.py` in your folder that round-trips `corpus_hard.txt`
+(also in your folder): `python3 compress.py corpus_hard.txt out.bin` writes the compressed form, and
+`python3 compress.py --decompress out.bin restored.txt` restores it byte-identically.
+Your assay prints one number: the percentage size reduction, 100 * (1 - bytes(out.bin)/bytes(corpus_hard.txt)).
+Fitness is 0 when the round trip is wrong in any byte. Higher is better.
+Rules: stdlib only. No imports outside the Python standard library. The corpus is fixed. Beat the
+trivial baseline (zlib with default settings) before anything else.

@@ -1,0 +1,12 @@
+python3 - <<'PY'
+import subprocess, os, sys
+inp='corpus.txt'; out='tmp/out.bin'; rest='tmp/restored.txt'
+subprocess.check_call([sys.executable,'compress.py',inp,out])
+subprocess.check_call([sys.executable,'compress.py','--decompress',out,rest])
+orig=open(inp,'rb').read(); rec=open(rest,'rb').read()
+if orig!=rec:
+    print(0)
+    raise SystemExit
+ratio=100*(1-os.path.getsize(out)/os.path.getsize(inp))
+print(ratio)
+PY

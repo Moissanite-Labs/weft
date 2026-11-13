@@ -1,0 +1,1 @@
+Built stdlib-only compress.py with a self-contained structured-text model and XZ fallback. The corpus round-trips byte-identically to 2,899 bytes, a 99.08% reduction versus 35,399 bytes for default zlib; randomized round-trip checks also passed.

@@ -1,0 +1,11 @@
+python3 - <<'PY'
+import os, subprocess
+original=open('corpus.txt','rb').read()
+for i in range(6):
+    a=subprocess.run(['python3','compress.py','corpus.txt','tmp/assay.bin'],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+    b=subprocess.run(['python3','compress.py','--decompress','tmp/assay.bin','tmp/assay.txt'],stdout=subprocess.PIPE,stderr=subprocess.PIPE) if a.returncode == 0 else None
+    if a.returncode or b.returncode or open('tmp/assay.txt','rb').read() != original:
+        print(0); break
+else:
+    print(100*(1-os.path.getsize('tmp/assay.bin')/len(original)))
+PY
