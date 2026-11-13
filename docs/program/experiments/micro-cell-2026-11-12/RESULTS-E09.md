@@ -8,7 +8,7 @@
 
 ## Headline
 
-The custom micro-cell does not reliably improve over its own early generations on the 3 seeded runs, and only seed 20261112 has a frozen control. It works mechanically (organisms commit, invariants hold everywhere, control arms behave) but the selection rule rewards probe-window episodes, which are not the same distribution as task episodes, so the organism sometimes commits into worse long-horizon behavior and stays there.
+The custom micro-cell does not reliably improve over its own early generations on the 3 seeded runs, and only seed 20261112 has a frozen control. It works mechanically (organisms commit, control arms behave) but the selection rule rewards probe-window episodes, which are not the same distribution as task episodes, so the organism sometimes commits into worse long-horizon behavior and stays there.
 
 ## Per-seed results
 
@@ -44,7 +44,7 @@ This is the same kind of selection-horizon mismatch E08 reported on the matrix o
 
 ## Next steps recorded, not run
 
-1. Fix the selection evaluation horizon to the task horizon (compare candidates on actual 80-step episode rewards from the current world state, not a deterministic 24-step probe at another phase of the field). This is the E10 to run if the program wants it. Expect commits to be rarer and strictly better.
+1. The task-horizon selection run is in `RESULTS-E10.md`. Those logs use the same pre-fix instrument as this record (see the instrument note above).
 2. Once selection is sound, re-run 3 seeds before any conclusion about capacity scaling. Until then, no claim about whether more capacity helps can be made. The organism is not yet reliably selecting for the task.
 3. GRU arm (secondary, H6) not run. Not worth running on a broken selection rule.
 
