@@ -1,0 +1,41 @@
+{
+  "request_file": "seed-17.weights_behavior.round-1.json",
+  "elapsed_seconds": 32.59859233419411,
+  "response": {
+    "id": "resp_0af3bbd9470d7210016af65da34c1c87d18310e9892877d7c5",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 26183,
+      "input_tokens_details": {
+        "cache_write_tokens": 26180,
+        "cached_tokens": 0
+      },
+      "output_tokens": 865,
+      "output_tokens_details": {
+        "reasoning_tokens": 686
+      },
+      "total_tokens": 27048
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794530723,
+    "output": [
+      {
+        "id": "msg_0af3bbd9470d7210016af65dc05da887d1a47a5c3173d6b8d5",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"hypothesis\":\"A conservative movement-only readout adjustment can increase obstacle and neighbor avoidance using existing directional features. Small gains and compensating biases should limit low-urgency drift; leaving all hidden parameters and the hazard readout unchanged preserves hazard predictions exactly. This proposal strengthens avoidance modestly rather than implementing explicit urgency gating.\",\"edits\":[{\"tensor\":\"w2\",\"index\":[0,9],\"delta\":0.07},{\"tensor\":\"w2\",\"index\":[0,7],\"delta\":0.022},{\"tensor\":\"b2\",\"index\":[0],\"delta\":-0.0552},{\"tensor\":\"w2\",\"index\":[1,1],\"delta\":-0.07},{\"tensor\":\"w2\",\"index\":[1,3],\"delta\":-0.024},{\"tensor\":\"b2\",\"index\":[1],\"delta\":-0.0285}]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  }
+}

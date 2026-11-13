@@ -1,0 +1,41 @@
+{
+  "request_file": "seed-29.weights_behavior.round-1.json",
+  "elapsed_seconds": 22.978672709083185,
+  "response": {
+    "id": "resp_02c2d99b4c170966016af65e000e2487d1b9d3fa3a961a7563",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 26170,
+      "input_tokens_details": {
+        "cache_write_tokens": 26167,
+        "cached_tokens": 0
+      },
+      "output_tokens": 541,
+      "output_tokens_details": {
+        "reasoning_tokens": 380
+      },
+      "total_tokens": 26711
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794530816,
+    "output": [
+      {
+        "id": "msg_02c2d99b4c170966016af65e133c6887d19404693a8a0f2c69",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"hypothesis\":\"A small increase in obstacle and neighbor inputs to the negatively weighted movement units should strengthen avoidance while keeping low-urgency drift within budget. Using the 0.65:0.35 vector ratio and units with small hazard readout weights should minimize disturbance to hazard estimates. This conservative proposal increases avoidance strength without claiming to implement exact urgency gating.\",\"edits\":[{\"tensor\":\"w1\",\"index\":[4,2],\"delta\":0.024},{\"tensor\":\"w1\",\"index\":[4,4],\"delta\":0.012923076923076923},{\"tensor\":\"w1\",\"index\":[9,3],\"delta\":0.047},{\"tensor\":\"w1\",\"index\":[9,5],\"delta\":0.02530769230769231}]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  }
+}

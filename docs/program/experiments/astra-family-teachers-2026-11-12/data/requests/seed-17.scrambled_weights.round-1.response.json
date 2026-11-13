@@ -1,0 +1,41 @@
+{
+  "request_file": "seed-17.scrambled_weights.round-1.json",
+  "elapsed_seconds": 50.24910979089327,
+  "response": {
+    "id": "resp_08797b35ee8c9ad5016af65dcdf56c87d18323f0c7dc40b141",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 26184,
+      "input_tokens_details": {
+        "cache_write_tokens": 26181,
+        "cached_tokens": 0
+      },
+      "output_tokens": 1281,
+      "output_tokens_details": {
+        "reasoning_tokens": 1034
+      },
+      "total_tokens": 27465
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794530765,
+    "output": [
+      {
+        "id": "msg_08797b35ee8c9ad5016af65dfbb80887d1b680b99785038501",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"hypothesis\":\"A conservative movement-readout adjustment should strengthen obstacle and neighbor avoidance while limiting low-urgency drift. Paired readout changes approximately cancel cross-axis and goal interference; bias corrections offset the biased neighbor feature. Leaving hidden parameters and the hazard readout unchanged preserves the hazard estimate exactly. This proposal increases avoidance conservatively rather than claiming to implement the full urgency\u2013intensity interaction.\",\"edits\":[{\"tensor\":\"w2\",\"index\":[0,6],\"delta\":-0.045},{\"tensor\":\"w2\",\"index\":[0,3],\"delta\":-0.04},{\"tensor\":\"w2\",\"index\":[0,5],\"delta\":0.013},{\"tensor\":\"w2\",\"index\":[0,9],\"delta\":-0.025},{\"tensor\":\"b2\",\"index\":[0],\"delta\":0.0178},{\"tensor\":\"w2\",\"index\":[1,3],\"delta\":-0.04},{\"tensor\":\"w2\",\"index\":[1,9],\"delta\":-0.04},{\"tensor\":\"w2\",\"index\":[1,5],\"delta\":-0.003},{\"tensor\":\"b2\",\"index\":[1],\"delta\":0.0285}]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  }
+}
