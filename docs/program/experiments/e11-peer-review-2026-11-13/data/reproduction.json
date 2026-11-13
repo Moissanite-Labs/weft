@@ -1,0 +1,103 @@
+{
+  "pr": 155,
+  "pinned_commit": "2b004a7cc0ba305f6a337c8bf2bb3c540d7d7aa3",
+  "github_blob_shas": {
+    "ic_morphogenesis.py": "336ee84a99a0832e27cc4c973edf36ecb7a01d5b",
+    "RESULTS-E11.md": "3989d5e1e672b2829d99115e0dc1cefe15e64652"
+  },
+  "source_sha256": "d8053718f02ebf3dce5e43e49efee7279d3c6e013b5e9346bbe5ab6b22ec27a2",
+  "results_text_sha256": "6cf472c17985b89ddea22bd4bf832d947691a87eb6422f26b022c1fb027d09f7",
+  "commands": [
+    {
+      "command": [
+        "python3",
+        "ic_morphogenesis.py",
+        "--unit"
+      ],
+      "returncode": 0,
+      "created_artifacts": [],
+      "stdout_file": "unit.stdout.txt",
+      "stderr_file": "unit.stderr.txt",
+      "observation": "Runs unit-test main only; no evolution/ES/statistical runner is called."
+    },
+    {
+      "command": [
+        "python3",
+        "ic_morphogenesis.py"
+      ],
+      "returncode": 0,
+      "created_artifacts": [],
+      "stdout_file": "default.stdout.txt",
+      "stderr_file": "default.stderr.txt",
+      "observation": "Runs unit-test main only; no evolution/ES/statistical runner is called."
+    }
+  ],
+  "feature_rank": [
+    {
+      "dimension": 64,
+      "basis_shape": [
+        64,
+        4
+      ],
+      "basis_numeric_rank": 4,
+      "basis_singular_values": [
+        5.6568542494923815,
+        5.656854249492381,
+        5.656854249492381,
+        5.65685424949238
+      ],
+      "sample_input_shape": [
+        64,
+        24
+      ],
+      "sample_input_numeric_rank": 4,
+      "reconstruction_max_abs_error": 1.1102230246251565e-16,
+      "analytic_rank_upper_bound": 4
+    },
+    {
+      "dimension": 256,
+      "basis_shape": [
+        256,
+        4
+      ],
+      "basis_numeric_rank": 4,
+      "basis_singular_values": [
+        11.313708498984763,
+        11.313708498984761,
+        11.313708498984761,
+        11.313708498984761
+      ],
+      "sample_input_shape": [
+        256,
+        24
+      ],
+      "sample_input_numeric_rank": 4,
+      "reconstruction_max_abs_error": 5.551115123125783e-17,
+      "analytic_rank_upper_bound": 4
+    },
+    {
+      "dimension": 512,
+      "basis_shape": [
+        512,
+        4
+      ],
+      "basis_numeric_rank": 4,
+      "basis_singular_values": [
+        16.000000000000004,
+        16.000000000000004,
+        16.0,
+        16.0
+      ],
+      "sample_input_shape": [
+        512,
+        24
+      ],
+      "sample_input_numeric_rank": 4,
+      "reconstruction_max_abs_error": 2.7755575615628914e-17,
+      "analytic_rank_upper_bound": 4
+    }
+  ],
+  "numpy_version": "2.5.4",
+  "scope": "Offline reproducibility review. Command tests plus small N-by-4 linear algebra only; no evolution, training, paid API or full benchmark replacement.",
+  "conclusion": "The two documented commands do not reproduce reported per-seed statistics. Evaluator inputs occupy at most four spatial harmonics, not a full-rank N-dimensional input family."
+}

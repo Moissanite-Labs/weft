@@ -1,0 +1,40 @@
+{
+  "source_sha256": "d8053718f02ebf3dce5e43e49efee7279d3c6e013b5e9346bbe5ab6b22ec27a2",
+  "numpy_version": "2.5.4",
+  "scope": "Synthetic matrices; diagnostic of input-span limitation, not reproduction of E11 reported runs. Frozen core rows unchanged.",
+  "rows": [
+    {
+      "dimension": 64,
+      "matrix_rng_seed": 481,
+      "evaluation_seed": 417,
+      "input_basis_rank": 4,
+      "plastic_operator_rank_upper_bound_after_projection": 4,
+      "original_return": -38.4920849304288,
+      "projected_return": -38.4920849304288,
+      "absolute_return_difference": 0.0,
+      "max_basis_response_difference": 3.0531133177191805e-16
+    },
+    {
+      "dimension": 256,
+      "matrix_rng_seed": 673,
+      "evaluation_seed": 417,
+      "input_basis_rank": 4,
+      "plastic_operator_rank_upper_bound_after_projection": 4,
+      "original_return": -38.177495874311596,
+      "projected_return": -38.177495874311596,
+      "absolute_return_difference": 0.0,
+      "max_basis_response_difference": 7.771561172376096e-16
+    },
+    {
+      "dimension": 512,
+      "matrix_rng_seed": 929,
+      "evaluation_seed": 417,
+      "input_basis_rank": 4,
+      "plastic_operator_rank_upper_bound_after_projection": 4,
+      "original_return": -40.04697744288443,
+      "projected_return": -40.04697744288443,
+      "absolute_return_difference": 0.0,
+      "max_basis_response_difference": 9.992007221626409e-16
+    }
+  ]
+}

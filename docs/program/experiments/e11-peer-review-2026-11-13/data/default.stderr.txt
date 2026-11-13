@@ -1,0 +1,7 @@
+test_arbitrary_scale_plasm_growth_preserves_watermark (__main__.TestE11Morphogenesis.test_arbitrary_scale_plasm_growth_preserves_watermark) ... ok
+test_bcp_roundtrip_and_execution_record_commitment (__main__.TestE11Morphogenesis.test_bcp_roundtrip_and_execution_record_commitment) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.055s
+
+OK

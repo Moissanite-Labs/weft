@@ -1,0 +1,97 @@
+{
+  "source_pr": "https://github.com/Moissanite-Labs/weft/pull/155",
+  "source_commit": "2b004a7cc0ba305f6a337c8bf2bb3c540d7d7aa3",
+  "scope": "Already completed offline diagnostics. No evolution or model/API calls. No modification of the source PR.",
+  "excluded": [
+    "__pycache__",
+    "*.pyc",
+    "MANIFEST.json self-hash"
+  ],
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 1660,
+      "sha256": "b72284e4c13a2c473eef0ada26c43c5ddfb54cd3c38dd45ca99223382ff56f9a"
+    },
+    {
+      "path": "REVIEW.md",
+      "bytes": 9065,
+      "sha256": "6125ef16d4f8d787af7251d2c82a12ab1f037791b0ace7c257c7c1e59713cc9d"
+    },
+    {
+      "path": "data/default.stderr.txt",
+      "bytes": 386,
+      "sha256": "0015588b73fbf13892b05081b3e6001bedbdf7e3466cee123171564264346160"
+    },
+    {
+      "path": "data/default.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "data/input-basis-256.npz",
+      "bytes": 58896,
+      "sha256": "fef4f671ebed34cc47f9aded6543d7345ab48d1188e329fe48569ef7065fd742"
+    },
+    {
+      "path": "data/input-basis-512.npz",
+      "bytes": 116240,
+      "sha256": "3883c8152224b6d91ed12214a38e591fa6a8c9c9a772385bbdfd3bc57772de70"
+    },
+    {
+      "path": "data/input-basis-64.npz",
+      "bytes": 15888,
+      "sha256": "6a343b36acc30b37d8fb0bc03d49caccd6c60ccad7c1ed9cede4b9c4bb605a72"
+    },
+    {
+      "path": "data/projection_inputs_64.npz",
+      "bytes": 63974,
+      "sha256": "6e2990f2c8e8f8e928c9efe5b3d6fa191b88e75d305d60413d5485f87c70827b"
+    },
+    {
+      "path": "data/rank_control.json",
+      "bytes": 1418,
+      "sha256": "078672d8989dfe859d92b3c73b3bf05e8234fa268c804c2303701df40cd483e4"
+    },
+    {
+      "path": "data/reproduction.json",
+      "bytes": 2907,
+      "sha256": "39c87be4695c5eda7e1a673dc3ed95cb4fe4d7447430d635b880c259fd368de4"
+    },
+    {
+      "path": "data/reproduction.stdout.txt",
+      "bytes": 2094,
+      "sha256": "1aae587b8308e4f08ba47461bef7d78eaea695b565b65c2a70bd82af5ba957ac"
+    },
+    {
+      "path": "data/unit.stderr.txt",
+      "bytes": 386,
+      "sha256": "80589ecf6974bd006b9a4fbca16943cf168845b802c85506be5b171b7928b066"
+    },
+    {
+      "path": "data/unit.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "rank_control.py",
+      "bytes": 1913,
+      "sha256": "6ba834c528c23d66090ea11e09a72c98b2d617f83ddef3282f994bffada514b8"
+    },
+    {
+      "path": "reproduce.py",
+      "bytes": 4074,
+      "sha256": "d228b7643ace278f3f3f8c0c4ff242ff4aeb1641581b526c3e987b0cb3662f43"
+    },
+    {
+      "path": "supplied-RESULTS-E11.md",
+      "bytes": 7409,
+      "sha256": "6cf472c17985b89ddea22bd4bf832d947691a87eb6422f26b022c1fb027d09f7"
+    },
+    {
+      "path": "supplied-ic_morphogenesis.py.txt",
+      "bytes": 18788,
+      "sha256": "d8053718f02ebf3dce5e43e49efee7279d3c6e013b5e9346bbe5ab6b22ec27a2"
+    }
+  ]
+}
