@@ -1,0 +1,17 @@
+{
+  "compiler_control": {
+    "ok": true,
+    "stage": "verified",
+    "returncode": 0,
+    "comparator_paranoid_passed": null,
+    "elapsed_sec": 1.304,
+    "diagnostics": "info: Empty: no previous manifest, creating one from scratch\ninfo: toolchain not updated; already up-to-date"
+  },
+  "contains_required_theorem": false,
+  "candidate_source": "Empty.lean",
+  "scanner_candidate": "scanner_candidate.txt",
+  "scanner_violations": [],
+  "scanner_candidate_executed": false,
+  "api_calls": 0,
+  "scope": "Actual harness compiler path accepts a module without any required theorem; scanner permits harmless IO command text. The IO text was not executed."
+}

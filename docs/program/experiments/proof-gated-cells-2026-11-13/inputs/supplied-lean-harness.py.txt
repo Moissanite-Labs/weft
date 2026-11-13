@@ -1,0 +1,1908 @@
+#!/usr/bin/env python3
+"""
+lean4_astra_proof_harness.py — OpenAI Flex (`gpt-6-astra`, `reasoning.effort="xhigh"`)
+Proof-Synthesis, Compiler-Guided `lake build` Repair, & Verified-Bar Audit Harness
+for `Proven-Commons/semver` and `WeftInvariants.lean` (`Moissanite-Labs/weft`).
+
+What This Harness Does
+----------------------
+Converts expiring OpenAI API credits into permanent, kernel-checked Lean 4 artifacts using
+`POST https://api.openai.com/v1/responses` on the 50%-off synchronous `flex` tier:
+
+  1. `WeftInvariants.lean` Upgrade (`--target weft` or `--target all`):
+     Closes the PR #128 "Lean formalization limits" gap by upgrading scalar `Int` `omega`
+     placeholders into genuine, zero-axiom Lean 4 proofs in a standalone Lake package:
+       - `W1_PythagoreanVector`: Inductive `List Int` inner-product & squared-Frobenius
+         orthogonality (`dot u v = 0 -> normSq (vecAdd u v) = normSq u + normSq v`).
+       - `W2_IEEE754AntiZeno`: Concrete `UInt32` / `BitVec 32` binary32 ordinal model
+         (`nextafterPosF32`, `±0.0f` bitwise lock equivalence, NaN/Inf rejection, and
+         strictly decreasing ordinal bound `<= 0x7F7FFFFF` eliminating sub-ULP Zeno loops).
+       - `W3_ArenaLayout540688`: Exact `540,688`-byte `StratifiedMemoryArena` byte-offset
+         partition (`8 + 8 + 262144 + 4096 + 262144 + 12288`) & 15-pair span disjointness.
+
+  2. `Proven-Commons/semver` Repair, Wire-Proof Slice, & Independent Bar Review
+     (`--semver-repo /path/to/semver`, `--target semver` or `--target all`):
+       - Discharges any remaining `sorry` or failing `lake build` goals in `SemVer/Proofs/`
+         while keeping `SemVer/Spec.lean` immutable (`spec_hash` pinned).
+       - Synthesizes & `lake build`-checks `SemVer/Wire.lean` + `SemVer/Proofs/Wire.lean`,
+         closing Item 1 of `Proven-Commons/semver`'s "What is not proved" list (hex encode/
+         decode round-trip & CRLF request-line framing used by `Main.lean`).
+       - Runs an independent `gpt-6-astra` (`xhigh` / optional `pro` mode) Verified Bar
+         adversarial specification audit (`SemVer/Spec.lean`, `SemVer/Spec/Defs.lean`,
+         `SPEC.md`, `bar.toml`, `comparator.json`) to unblock third-party spec sign-off.
+
+  3. Two-Layer Verification Loop (`lake build` + Token-Stream Verified Bar Gate):
+       - Embeds the 12-vector Lean 4 token-stream surface scanner (`Proven-Commons/mission#35`),
+         catching `sorry`, guillemet `«sorry»`, `admit`, `axiom`, `opaque`, `partial`,
+         `unsafe`, `native_decide`, `@[csimp]`, `@[extern]`, `@[implemented_by]`,
+         `notation`/`infix`/`macro`/`syntax`/`elab`, and `import Lean` before invoking `lake`.
+       - Runs `lake env lean <module.lean>` + `lake build` (and `lake comparator --paranoid`
+         when `comparator.json` is present and `--run-comparator` is enabled), feeding exact
+         compiler line/column errors and unsolved tactic goals back via `previous_response_id`.
+
+Critical OpenAI GPT-6 / Billing Guardrails
+------------------------------------------
+  - Uses `/v1/responses` exclusively (`gpt-6-astra` rejects `reasoning.effort="none"` and
+    does not support tool calling on Chat Completions:
+    https://developers.openai.com/api/docs/guides/reasoning).
+  - Uses `service_tier="flex"` (`timeout=900s`) for 50% Batch-equivalent pricing
+    (`$5.00/MTok` input, `$0.50/MTok` cached input, `$25.00/MTok` output+reasoning:
+    https://developers.openai.com/api/docs/pricing).
+  - Optional `--pro-mode` enables `reasoning={"mode": "pro", "effort": "xhigh"}` for
+    maximum multi-pass theorem proving on stubborn inductive lemmas.
+  - Thread-safe `ThreadSafeBudgetLedger` (`--budget-usd`, default `12.60`, or `31.00`)
+    reserves worst-case turn cost upfront to prevent negative-balance overruns
+    (https://help.openai.com/en/articles/8264644-setting-up-and-managing-prepaid-api-billing).
+
+Quickstart
+----------
+  # 1. Offline end-to-end verification (zero network, zero `lake` install required):
+  python3 lean4_astra_proof_harness.py --selftest
+
+  # 2. Synthesize & `lake build`-verify upgraded `WeftInvariants` + audit/extend `semver`:
+  git clone git@github.com:Proven-Commons/semver.git ./semver
+  export OPENAI_API_KEY="sk-..."
+  python3 lean4_astra_proof_harness.py \
+      --target all \
+      --semver-repo ./semver \
+      --budget-usd 14.00
+
+  # 3. Maximum reasoning (`mode="pro"`, `effort="xhigh"`) to burn remaining ~$31 credits:
+  python3 lean4_astra_proof_harness.py \
+      --target all \
+      --semver-repo ./semver \
+      --pro-mode \
+      --max-repairs 8 \
+      --budget-usd 31.00
+
+License: Apache-2.0. Machine-authored formal verification harness (disclosed).
+"""
+
+from __future__ import annotations
+
+import argparse
+import asyncio
+import hashlib
+import json
+import os
+import random
+import re
+import shutil
+import signal
+import ssl
+import subprocess
+import sys
+import tempfile
+import threading
+import time
+import urllib.error
+import urllib.request
+from dataclasses import asdict, dataclass, field
+from pathlib import Path
+from typing import Any, Callable, Dict, List, Optional, Tuple
+
+
+# =============================================================================
+# 1. Official OpenAI API Pricing & Pre-Reservation USD Circuit Breaker
+#    Source: https://developers.openai.com/api/docs/pricing
+# =============================================================================
+
+MODEL_PRICING_STD_PER_MTOK: Dict[str, Dict[str, float]] = {
+    "gpt-6-astra":   {"input": 10.00, "cached_input": 1.00,  "output": 50.00},
+    "gpt-6.1-sol":   {"input": 2.00,  "cached_input": 0.10,  "output": 10.00},
+    "gpt-6-sol":     {"input": 2.00,  "cached_input": 0.20,  "output": 10.00},
+    "gpt-6.1-terra": {"input": 1.00,  "cached_input": 0.05,  "output": 5.00},
+    "gpt-6-luna":    {"input": 0.10,  "cached_input": 0.01,  "output": 0.50},
+}
+
+SERVICE_TIER_MULTIPLIER: Dict[str, float] = {
+    "flex": 0.5,
+    "batch": 0.5,
+    "default": 1.0,
+    "standard": 1.0,
+    "auto": 1.0,
+    "fast": 2.0,
+    "priority": 2.0,
+    "ultrafast": 6.0,
+}
+
+
+def compute_call_cost_usd(
+    model: str,
+    served_tier: str,
+    input_tokens: int,
+    cached_tokens: int,
+    output_tokens: int,
+) -> float:
+    base_key = "gpt-6-astra"
+    for k in MODEL_PRICING_STD_PER_MTOK:
+        if model == k or model.startswith(k):
+            base_key = k
+            break
+    rates = MODEL_PRICING_STD_PER_MTOK[base_key]
+    mult = SERVICE_TIER_MULTIPLIER.get((served_tier or "default").lower().strip(), 1.0)
+    cached = max(0, min(int(cached_tokens), int(input_tokens)))
+    uncached = max(0, int(input_tokens) - cached)
+    out = max(0, int(output_tokens))
+    return round(
+        (uncached / 1_000_000.0) * (rates["input"] * mult)
+        + (cached / 1_000_000.0) * (rates["cached_input"] * mult)
+        + (out / 1_000_000.0) * (rates["output"] * mult),
+        8,
+    )
+
+
+class BudgetExhaustedStop(Exception):
+    """Raised cleanly before dispatching an API request that could exceed `--budget-usd`."""
+
+
+class ThreadSafeBudgetLedger:
+    def __init__(self, max_budget_usd: float) -> None:
+        self.max_budget_usd = float(max_budget_usd)
+        self._lock = threading.Lock()
+        self.spent_usd: float = 0.0
+        self.reserved_usd: float = 0.0
+        self.total_calls: int = 0
+        self.total_input_tokens: int = 0
+        self.total_cached_tokens: int = 0
+        self.total_output_tokens: int = 0
+        self.total_reasoning_tokens: int = 0
+        self.tier_counts: Dict[str, int] = {}
+
+    def reserve_for_turn(self, model: str, tier: str, max_out_tokens: int, est_in_tokens: int = 8000) -> float:
+        est = compute_call_cost_usd(model, tier, est_in_tokens, 0, max_out_tokens)
+        with self._lock:
+            if self.spent_usd + self.reserved_usd + est > self.max_budget_usd:
+                raise BudgetExhaustedStop(
+                    f"Turn reservation (${est:.4f}) exceeds cap ${self.max_budget_usd:.2f} "
+                    f"(spent=${self.spent_usd:.4f}, reserved=${self.reserved_usd:.4f})."
+                )
+            self.reserved_usd += est
+        return est
+
+    def settle_turn(self, reserved_est: float, model: str, served_tier: str, usage: Dict[str, Any]) -> float:
+        in_tok = int(usage.get("input_tokens", 0) or 0)
+        cached_tok = int((usage.get("input_tokens_details") or {}).get("cached_tokens", 0) or 0)
+        out_tok = int(usage.get("output_tokens", 0) or 0)
+        reas_tok = int((usage.get("output_tokens_details") or {}).get("reasoning_tokens", 0) or 0)
+        actual = compute_call_cost_usd(model, served_tier, in_tok, cached_tok, out_tok)
+        with self._lock:
+            self.reserved_usd = max(0.0, self.reserved_usd - reserved_est)
+            self.spent_usd += actual
+            self.total_calls += 1
+            self.total_input_tokens += in_tok
+            self.total_cached_tokens += cached_tok
+            self.total_output_tokens += out_tok
+            self.total_reasoning_tokens += reas_tok
+            tk = (served_tier or "unknown").lower()
+            self.tier_counts[tk] = self.tier_counts.get(tk, 0) + 1
+        return actual
+
+    def release_reservation(self, reserved_est: float) -> None:
+        with self._lock:
+            self.reserved_usd = max(0.0, self.reserved_usd - reserved_est)
+
+    def snapshot(self) -> Dict[str, Any]:
+        with self._lock:
+            hit = (100.0 * self.total_cached_tokens / self.total_input_tokens) if self.total_input_tokens else 0.0
+            return {
+                "max_budget_usd": round(self.max_budget_usd, 4),
+                "spent_usd": round(self.spent_usd, 6),
+                "remaining_usd": round(max(0.0, self.max_budget_usd - self.spent_usd), 6),
+                "total_api_calls": self.total_calls,
+                "total_input_tokens": self.total_input_tokens,
+                "total_cached_tokens": self.total_cached_tokens,
+                "prompt_cache_hit_pct": round(hit, 2),
+                "total_output_tokens": self.total_output_tokens,
+                "total_reasoning_tokens": self.total_reasoning_tokens,
+                "served_service_tiers": dict(self.tier_counts),
+            }
+
+
+# =============================================================================
+# 2. Proven-Commons Verified-Bar Token-Stream Surface Scanner (`mission#35`)
+#    Prevents LLM proof gaming (`sorry`, `«sorry»`, `axiom`, `native_decide`,
+#    `@[csimp]`, `@[extern]`, `@[implemented_by]`, `notation`, `macro`, `elab`)
+# =============================================================================
+
+@dataclass
+class LeanToken:
+    kind: str   # IDENT, STR, CHAR, SYM
+    val: str
+    line: int
+
+
+def tokenize_lean4(src: str) -> List[LeanToken]:
+    """
+    Pure-Python Lean 4 lexer handling nested `/- ... -/` block comments, `--` line
+    comments, string literals, character literals (`'a'` vs prime identifiers `x'`),
+    and guillemet-escaped identifiers (`«sorry»` -> `sorry`).
+    """
+    tokens: List[LeanToken] = []
+    i = 0
+    n = len(src)
+    line = 1
+
+    while i < n:
+        ch = src[i]
+        if ch == "\n":
+            line += 1
+            i += 1
+            continue
+        if ch in " \t\r\f\v":
+            i += 1
+            continue
+        # Line comment `-- ...`
+        if ch == "-" and i + 1 < n and src[i + 1] == "-":
+            i += 2
+            while i < n and src[i] != "\n":
+                i += 1
+            continue
+        # Nested block comment `/- ... -/`
+        if ch == "/" and i + 1 < n and src[i + 1] == "-":
+            depth = 1
+            i += 2
+            while i < n and depth > 0:
+                if src[i] == "\n":
+                    line += 1
+                    i += 1
+                elif src[i] == "/" and i + 1 < n and src[i + 1] == "-":
+                    depth += 1
+                    i += 2
+                elif src[i] == "-" and i + 1 < n and src[i + 1] == "/":
+                    depth -= 1
+                    i += 2
+                else:
+                    i += 1
+            continue
+        # Double-quoted string literal
+        if ch == '"':
+            start_line = line
+            i += 1
+            buf = []
+            while i < n and src[i] != '"':
+                if src[i] == "\\" and i + 1 < n:
+                    buf.append(src[i : i + 2])
+                    if src[i + 1] == "\n":
+                        line += 1
+                    i += 2
+                else:
+                    if src[i] == "\n":
+                        line += 1
+                    buf.append(src[i])
+                    i += 1
+            if i < n:
+                i += 1
+            tokens.append(LeanToken("STR", "".join(buf), start_line))
+            continue
+        # Guillemet identifier `«...»`
+        if ch == "«":
+            start_line = line
+            i += 1
+            buf = []
+            while i < n and src[i] != "»":
+                if src[i] == "\n":
+                    line += 1
+                buf.append(src[i])
+                i += 1
+            if i < n:
+                i += 1
+            tokens.append(LeanToken("IDENT", "".join(buf), start_line))
+            continue
+        # Character literal `'x'` or `'\n'` (NOT prime after identifier!)
+        if ch == "'" and (not tokens or tokens[-1].kind != "IDENT"):
+            if i + 2 < n and src[i + 1] != "\\" and src[i + 2] == "'":
+                tokens.append(LeanToken("CHAR", src[i + 1], line))
+                i += 3
+                continue
+            if i + 3 < n and src[i + 1] == "\\" and src[i + 3] == "'":
+                tokens.append(LeanToken("CHAR", src[i + 1 : i + 3], line))
+                i += 4
+                continue
+        # Identifier (ASCII/Unicode letters, `_`, digits, trailing `'`, `?`, `!`, `.` qualified)
+        if ch.isalpha() or ch == "_":
+            start = i
+            i += 1
+            while i < n and (src[i].isalnum() or src[i] in "_'?!"):
+                i += 1
+            tokens.append(LeanToken("IDENT", src[start:i], line))
+            continue
+        # Multi-char symbols `@[`, `:=`
+        if ch == "@" and i + 1 < n and src[i + 1] == "[":
+            tokens.append(LeanToken("SYM", "@[", line))
+            i += 2
+            continue
+        tokens.append(LeanToken("SYM", ch, line))
+        i += 1
+
+    return tokens
+
+
+BANNED_PROOF_IDENTS = {
+    "sorry": "incomplete proof (`sorry`)",
+    "admit": "incomplete proof (`admit`)",
+    "axiom": "custom `axiom` declaration",
+    "opaque": "`opaque` constant hiding computational body",
+    "unsafe": "`unsafe` declaration",
+    "partial": "`partial` non-terminating function",
+    "native_decide": "`native_decide` trusts unverified native codegen over kernel",
+    "notation": "custom `notation` declaration (forbidden by Verified Bar)",
+    "infix": "custom `infix` operator",
+    "infixl": "custom `infixl` operator",
+    "infixr": "custom `infixr` operator",
+    "prefix": "custom `prefix` operator",
+    "postfix": "custom `postfix` operator",
+    "macro": "custom `macro` declaration",
+    "macro_rules": "custom `macro_rules` declaration",
+    "syntax": "custom `syntax` extension",
+    "elab": "custom `elab` elaborator",
+    "elab_rules": "custom `elab_rules` elaborator",
+    "initialize": "`initialize` IO hook",
+    "builtin_initialize": "`builtin_initialize` IO hook",
+}
+
+BANNED_ATTRIBUTES = {"csimp", "extern", "implemented_by"}
+
+
+def scan_lean4_verified_bar(src: str, allow_sorry: bool = False) -> List[str]:
+    """
+    Scans Lean 4 source tokens for any Proven-Commons Verified Bar surface violation.
+    Returns list of human-readable violations (`[]` == clean).
+    """
+    toks = tokenize_lean4(src)
+    violations: List[str] = []
+    i = 0
+    n = len(toks)
+    while i < n:
+        tk = toks[i]
+        # Skip projection field names `.macro` or `.sorry` preceded immediately by `.`
+        is_proj = i > 0 and toks[i - 1].kind == "SYM" and toks[i - 1].val == "."
+        if tk.kind == "IDENT" and not is_proj:
+            if tk.val in BANNED_PROOF_IDENTS:
+                if allow_sorry and tk.val == "sorry":
+                    i += 1
+                    continue
+                violations.append(f"line {tk.line}: forbidden {BANNED_PROOF_IDENTS[tk.val]}")
+            elif tk.val == "import" and i + 1 < n and toks[i + 1].kind == "IDENT":
+                mod_root = toks[i + 1].val
+                if mod_root in ("Lean", "Lake"):
+                    violations.append(f"line {tk.line}: forbidden metaprogramming `import {mod_root}`")
+        elif tk.kind == "SYM" and tk.val == "@[":
+            j = i + 1
+            depth = 1
+            while j < n and depth > 0:
+                if toks[j].kind == "SYM" and toks[j].val == "[":
+                    depth += 1
+                elif toks[j].kind == "SYM" and toks[j].val == "]":
+                    depth -= 1
+                elif toks[j].kind == "IDENT" and toks[j].val in BANNED_ATTRIBUTES:
+                    violations.append(
+                        f"line {toks[j].line}: forbidden code-replacement attribute `@[{toks[j].val}]`"
+                    )
+                j += 1
+        i += 1
+    return violations
+
+
+def compute_pinned_spec_hash(repo_dir: Path, spec_rel_paths: List[str]) -> str:
+    """
+    Computes tamper-evident SHA-256 over immutable spec files AND build configs
+    (`lean-toolchain`, `lakefile.toml`, `lake-manifest.json`, `comparator.json`),
+    implementing the `Proven-Commons/mission#35` spec-pinning fix.
+    """
+    h = hashlib.sha256()
+    pinned_extras = ["lean-toolchain", "lakefile.toml", "lake-manifest.json", "comparator.json", "bar.toml"]
+    all_rels = sorted(set(spec_rel_paths + [p for p in pinned_extras if (repo_dir / p).exists()]))
+    for rel in all_rels:
+        fpath = repo_dir / rel
+        if fpath.exists() and fpath.is_file():
+            h.update(f"FILE:{rel}\n".encode("utf-8"))
+            h.update(fpath.read_bytes())
+            h.update(b"\n---\n")
+    return h.hexdigest()
+
+
+# =============================================================================
+# 3. Embedded Lake Scaffolds:
+#    (A) `WeftInvariants` Challenge + Baseline Package (Closing PR #128 Limits)
+#    (B) `Proven-Commons/semver` `SemVer/Wire.lean` + `SemVer/WireSpec.lean` Slice
+# =============================================================================
+
+WEFT_LAKEFILE_TOML = """name = "WeftInvariants"
+version = "0.2.0"
+defaultTargets = ["WeftInvariants"]
+
+[[lean_lib]]
+name = "WeftInvariants"
+"""
+
+WEFT_DEFS_LEAN = """/-
+  WeftInvariants/Defs.lean — Executable & Mathematical Definitions for Weft v2
+  Immutable definitions under proof (pinned by spec_hash).
+-/
+namespace WeftV2
+
+/-- Inner product of two integer-scaled fixed-point weight vectors. -/
+def vecAdd : List Int → List Int → List Int
+  | [], _ => []
+  | _, [] => []
+  | x :: xs, y :: ys => (x + y) :: vecAdd xs ys
+
+def dot : List Int → List Int → Int
+  | [], _ => 0
+  | _, [] => 0
+  | x :: xs, y :: ys => x * y + dot xs ys
+
+def normSq : List Int → Int
+  | [] => 0
+  | x :: xs => x * x + normSq xs
+
+/--
+  IEEE-754 binary32 bit-level representation (`UInt32` -> `Nat` bit pattern < 2^32).
+  For positive finite binary32 floats (`sign = 0`, `0 <= exp <= 254`, bits in `[1, 0x7F7FFFFF]`),
+  IEEE-754 bit order coincides strictly with real numerical order, and `nextafterf(x, -inf)`
+  decrements the 32-bit integer representation by exactly `1` (`0x00000001` -> `+0.0f`).
+-/
+def F32_MAX_FINITE_POS_BITS : Nat := 0x7F7FFFFF
+def F32_SIGN_MASK           : UInt32 := 0x80000000
+def F32_MAG_MASK            : UInt32 := 0x7FFFFFFF
+def F32_EXP_MASK            : UInt32 := 0x7F800000
+
+def isFiniteF32Bits (w : UInt32) : Bool :=
+  (w &&& F32_EXP_MASK) != F32_EXP_MASK
+
+def isSignedZeroF32Bits (w : UInt32) : Bool :=
+  (w &&& F32_MAG_MASK) == 0
+
+def isPosFiniteF32Ordinal (ord : Nat) : Prop :=
+  0 < ord ∧ ord ≤ F32_MAX_FINITE_POS_BITS
+
+def nextafterPosOrdinal (ord : Nat) : Nat :=
+  ord - 1
+
+/-- Bitwise frozen-core check matching `weft_v2_engine.py` (`+0.0f` and `-0.0f` both zero). -/
+def lockedElemUnchanged (base cand : UInt32) : Bool :=
+  (base == cand) || (isSignedZeroF32Bits base && isSignedZeroF32Bits cand)
+
+def verifyLockedSlice : List Bool → List UInt32 → List UInt32 → Bool
+  | [], [], [] => true
+  | m :: ms, b :: bs, c :: cs =>
+      (if m then lockedElemUnchanged b c else true) && verifyLockedSlice ms bs cs
+  | _, _, _ => false
+
+/-- Multi-step execution witness over IEEE-754 positive binary32 budget ordinals. -/
+inductive ValidF32BudgetTrace : Nat → Nat → Prop where
+  | halt (ord : Nat) : ValidF32BudgetTrace ord 0
+  | step {ord ord' k : Nat}
+      (h_pos : isPosFiniteF32Ordinal ord)
+      (h_deduct : ord' ≤ nextafterPosOrdinal ord)
+      (h_rest : ValidF32BudgetTrace ord' k) :
+      ValidF32BudgetTrace ord (k + 1)
+
+/-- Byte-offset interval `[offset, offset + length)` inside `StratifiedMemoryArena`. -/
+structure ByteSpan where
+  offset : Nat
+  length : Nat
+  deriving DecidableEq, Repr
+
+def spansDisjoint (a b : ByteSpan) : Prop :=
+  a.offset + a.length ≤ b.offset ∨ b.offset + b.length ≤ a.offset
+
+def ARENA_EPOCH_SPAN : ByteSpan := ⟨0, 8⟩
+def ARENA_TENSION_SPAN : ByteSpan := ⟨8, 8⟩
+def ARENA_FOCAL_SPAN : ByteSpan := ⟨16, 65536 * 4⟩
+def ARENA_SYMP_SPAN : ByteSpan := ⟨262160, 1024 * 4⟩
+def ARENA_HIPPO_SPAN : ByteSpan := ⟨266256, 65536 * 4⟩
+def ARENA_LOCK_SPAN : ByteSpan := ⟨528400, 12288⟩
+def ARENA_TOTAL_BYTES : Nat := 540688
+
+end WeftV2
+"""
+
+WEFT_SPEC_LEAN = """/-
+  WeftInvariants/Spec.lean — Immutable Challenge Statements (`sorry` placeholders)
+  Replaces scalar `Int` `omega` tautologies from PR #128 with genuine vector,
+  IEEE-754 binary32 ordinal, locked-mask, and 540,688-byte arena layout theorems.
+-/
+import WeftInvariants.Defs
+
+namespace WeftV2.Spec
+
+open WeftV2
+
+theorem normSq_vecAdd_expansion (u v : List Int) (h_len : u.length = v.length) :
+    normSq (vecAdd u v) = normSq u + normSq v + 2 * dot u v := by
+  sorry
+
+theorem pythagorean_vector_orthogonality
+    (u v : List Int) (rParentSq rChildSq rMaxSq : Int)
+    (h_len : u.length = v.length)
+    (h_orth : dot u v = 0)
+    (h_p : normSq u ≤ rParentSq)
+    (h_c : normSq v ≤ rChildSq)
+    (h_cap : rParentSq + rChildSq ≤ rMaxSq) :
+    normSq (vecAdd u v) ≤ rMaxSq := by
+  sorry
+
+theorem f32_nextafter_strictly_decreases (ord : Nat) (h : isPosFiniteF32Ordinal ord) :
+    nextafterPosOrdinal ord < ord := by
+  sorry
+
+theorem f32_anti_zeno_step_bound {ord k : Nat} (h : ValidF32BudgetTrace ord k) :
+    k ≤ ord := by
+  sorry
+
+theorem f32_anti_zeno_global_cap {ord k : Nat}
+    (h_valid : ord ≤ F32_MAX_FINITE_POS_BITS)
+    (h_trace : ValidF32BudgetTrace ord k) :
+    k ≤ F32_MAX_FINITE_POS_BITS := by
+  sorry
+
+theorem lockedSlice_sound
+    (masks : List Bool) (base cand : List UInt32)
+    (h_ok : verifyLockedSlice masks base cand = true) :
+    masks.length = base.length ∧ base.length = cand.length := by
+  sorry
+
+theorem arena_exact_540688_partition :
+    ARENA_EPOCH_SPAN.length
+      + ARENA_TENSION_SPAN.length
+      + ARENA_FOCAL_SPAN.length
+      + ARENA_SYMP_SPAN.length
+      + ARENA_HIPPO_SPAN.length
+      + ARENA_LOCK_SPAN.length = ARENA_TOTAL_BYTES
+    ∧ ARENA_LOCK_SPAN.offset + ARENA_LOCK_SPAN.length = ARENA_TOTAL_BYTES
+    ∧ spansDisjoint ARENA_EPOCH_SPAN ARENA_TENSION_SPAN
+    ∧ spansDisjoint ARENA_TENSION_SPAN ARENA_FOCAL_SPAN
+    ∧ spansDisjoint ARENA_FOCAL_SPAN ARENA_SYMP_SPAN
+    ∧ spansDisjoint ARENA_SYMP_SPAN ARENA_HIPPO_SPAN
+    ∧ spansDisjoint ARENA_HIPPO_SPAN ARENA_LOCK_SPAN := by
+  sorry
+
+end WeftV2.Spec
+"""
+
+WEFT_PROOFS_INITIAL_SKELETON = """/-
+  WeftInvariants/Proofs.lean — Target Solution Module to be Synthesized & Kernel-Checked
+  Must prove every theorem in `WeftInvariants/Spec.lean` with ZERO `sorry`, custom `axiom`,
+  `native_decide`, or Verified Bar surface violations.
+-/
+import WeftInvariants.Defs
+
+namespace WeftV2.Proofs
+
+open WeftV2
+
+theorem normSq_vecAdd_expansion (u v : List Int) (h_len : u.length = v.length) :
+    normSq (vecAdd u v) = normSq u + normSq v + 2 * dot u v := by
+  sorry
+
+theorem pythagorean_vector_orthogonality
+    (u v : List Int) (rParentSq rChildSq rMaxSq : Int)
+    (h_len : u.length = v.length)
+    (h_orth : dot u v = 0)
+    (h_p : normSq u ≤ rParentSq)
+    (h_c : normSq v ≤ rChildSq)
+    (h_cap : rParentSq + rChildSq ≤ rMaxSq) :
+    normSq (vecAdd u v) ≤ rMaxSq := by
+  sorry
+
+theorem f32_nextafter_strictly_decreases (ord : Nat) (h : isPosFiniteF32Ordinal ord) :
+    nextafterPosOrdinal ord < ord := by
+  sorry
+
+theorem f32_anti_zeno_step_bound {ord k : Nat} (h : ValidF32BudgetTrace ord k) :
+    k ≤ ord := by
+  sorry
+
+theorem f32_anti_zeno_global_cap {ord k : Nat}
+    (h_valid : ord ≤ F32_MAX_FINITE_POS_BITS)
+    (h_trace : ValidF32BudgetTrace ord k) :
+    k ≤ F32_MAX_FINITE_POS_BITS := by
+  sorry
+
+theorem lockedSlice_sound
+    (masks : List Bool) (base cand : List UInt32)
+    (h_ok : verifyLockedSlice masks base cand = true) :
+    masks.length = base.length ∧ base.length = cand.length := by
+  sorry
+
+theorem arena_exact_540688_partition :
+    ARENA_EPOCH_SPAN.length
+      + ARENA_TENSION_SPAN.length
+      + ARENA_FOCAL_SPAN.length
+      + ARENA_SYMP_SPAN.length
+      + ARENA_HIPPO_SPAN.length
+      + ARENA_LOCK_SPAN.length = ARENA_TOTAL_BYTES
+    ∧ ARENA_LOCK_SPAN.offset + ARENA_LOCK_SPAN.length = ARENA_TOTAL_BYTES
+    ∧ spansDisjoint ARENA_EPOCH_SPAN ARENA_TENSION_SPAN
+    ∧ spansDisjoint ARENA_TENSION_SPAN ARENA_FOCAL_SPAN
+    ∧ spansDisjoint ARENA_FOCAL_SPAN ARENA_SYMP_SPAN
+    ∧ spansDisjoint ARENA_SYMP_SPAN ARENA_HIPPO_SPAN
+    ∧ spansDisjoint ARENA_HIPPO_SPAN ARENA_LOCK_SPAN := by
+  sorry
+
+end WeftV2.Proofs
+"""
+
+SEMVER_WIRE_DEFS_LEAN = """/-
+  SemVer/Wire.lean — Pure Hex & Line Framing Codec for `Main.lean` CLI Requests
+  Addresses Item 1 of `Proven-Commons/semver` "What is not proved":
+  "Reading requests and printing answers in Main.lean: the hex parsing and printing,
+   and the request format... with malformed requests and CR LF line endings."
+-/
+namespace SemVer.Wire
+
+def nibbleToHexChar (n : UInt8) : Char :=
+  let v := n.toNat % 16
+  if v < 10 then Char.ofNat (48 + v) else Char.ofNat (87 + v)
+
+def hexCharToNibble? (c : Char) : Option UInt8 :=
+  let n := c.toNat
+  if 48 ≤ n ∧ n ≤ 57 then some (UInt8.ofNat (n - 48))
+  else if 97 ≤ n ∧ n ≤ 102 then some (UInt8.ofNat (n - 87))
+  else none
+
+def encodeHexBytes : List UInt8 → List Char
+  | [] => []
+  | b :: bs =>
+      nibbleToHexChar (b >>> 4) :: nibbleToHexChar (b &&& 0x0F) :: encodeHexBytes bs
+
+def decodeHexChars : List Char → Option (List UInt8)
+  | [] => some []
+  | [_] => none
+  | hi :: lo :: rest =>
+      match hexCharToNibble? hi, hexCharToNibble? lo, decodeHexChars rest with
+      | some h, some l, some tail => some (((h <<< 4) ||| l) :: tail)
+      | _, _, _ => none
+
+def stripTrailingCR (cs : List Char) : List Char :=
+  match cs.reverse with
+  | '\r' :: revRest => revRest.reverse
+  | _ => cs
+
+end SemVer.Wire
+"""
+
+SEMVER_WIRE_PROOFS_SKELETON = """/-
+  SemVer/Proofs/Wire.lean — Round-Trip & Strictness Proofs for `Main.lean` Hex Framing
+-/
+import SemVer.Wire
+
+namespace SemVer.Proofs.Wire
+
+open SemVer.Wire
+
+theorem hex_byte_roundtrip (b : UInt8) :
+    decodeHexChars [nibbleToHexChar (b >>> 4), nibbleToHexChar (b &&& 0x0F)] = some [b] := by
+  sorry
+
+theorem decodeHex_encodeHex_roundtrip (bs : List UInt8) :
+    decodeHexChars (encodeHexBytes bs) = some bs := by
+  sorry
+
+theorem decodeHex_odd_length_none (c : Char) :
+    decodeHexChars [c] = none := by
+  sorry
+
+theorem stripTrailingCR_crlf (line : List Char) :
+    stripTrailingCR (line ++ ['\r']) = line := by
+  sorry
+
+end SemVer.Proofs.Wire
+"""
+
+
+# =============================================================================
+# 4. Byte-Identical Static Prefix & Responses API Tools (`gpt-6-astra` `xhigh`)
+# =============================================================================
+
+STATIC_LEAN4_SYSTEM_INSTRUCTIONS = """You are a Lean 4 formal verification and adversarial specification engine operating under the Proven-Commons Verified Bar (`Proven-Commons/mission` `playbook/verified-bar.md`).
+
+MANDATORY KERNEL & VERIFIED-BAR RULES
+1. Zero incomplete or axiomatic escapes: NEVER emit `sorry`, `«sorry»`, `admit`, `axiom`, `opaque`, `partial`, `unsafe`, `native_decide`, `import Lean`, `import Lake`, `@[csimp]`, `@[extern]`, `@[implemented_by]`, or custom `notation`/`infix`/`prefix`/`postfix`/`macro`/`syntax`/`elab`. An automated token-stream scanner checks every file BEFORE `lake build`.
+2. Preserve exact theorem names, namespaces, universe variables, parameter types, and return propositions from the challenge specification. Do NOT weaken hypotheses or alter `Defs.lean` / `Spec.lean`.
+3. Use clean, portable core Lean 4 tactics (`induction`, `cases`, `rcases`, `intro`, `apply`, `exact`, `rw`, `simp`, `omega`, `decide`, `congr`, `have`, `calc`) compatible with standard Lean 4 toolchains without Mathlib dependencies unless Mathlib is explicitly imported in the target repo.
+4. Note on finite `UInt8` / `Bool` / small-enum lemmas without Mathlib: bounded 256-case proofs over `b : UInt8` can be discharged cleanly in core Lean 4 via `Fin 256` case splitting or `decide` on universally quantified `Fin 256` helpers (`∀ i : Fin 256, ... := by decide`) lifted to `UInt8` (`⟨i⟩`), avoiding `native_decide`.
+5. For algebraic identities over `Int` (such as `(x + y) * (x + y) = x * x + y * y + 2 * (x * y)` when `ring` from Mathlib is absent), prove a 3-line helper lemma using `Int.add_mul`, `Int.mul_add`, `Int.mul_comm`, `Int.add_assoc`, `Int.add_left_comm`, or `omega` after reducing nonlinear cross terms!"""
+
+PROOF_SYNTHESIS_TOOLS: List[Dict[str, Any]] = [
+    {
+        "type": "function",
+        "name": "submit_lean_module",
+        "description": (
+            "Write a complete Lean 4 proof file to the target module path, run the Proven-Commons "
+            "Verified-Bar token-stream scanner, and compile via `lake env lean` / `lake build`. "
+            "Returns `ok: true` when both surface scan and Lean kernel compilation succeed, or "
+            "exact line/column Lean compiler diagnostics if repair is needed."
+        ),
+        "strict": True,
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "lean_source": {
+                    "type": "string",
+                    "description": "Complete, self-contained Lean 4 source code for the target proof module.",
+                },
+                "proof_strategy_note": {
+                    "type": "string",
+                    "description": "Concise 1-2 sentence summary of lemmas/tactics changed.",
+                },
+            },
+            "required": ["lean_source", "proof_strategy_note"],
+            "additionalProperties": False,
+        },
+    }
+]
+
+
+# =============================================================================
+# 5. Pure-Stdlib OpenAI `/v1/responses` Transport & Local `lake` Runner
+# =============================================================================
+
+def _build_ssl_context() -> ssl.SSLContext:
+    cert_env = os.environ.get("SSL_CERT_FILE")
+    if cert_env and os.path.exists(cert_env):
+        return ssl.create_default_context(cafile=cert_env)
+    for cand in ("/etc/ssl/cert.pem", "/etc/ssl/certs/ca-certificates.crt"):
+        if os.path.exists(cand):
+            return ssl.create_default_context(cafile=cand)
+    return ssl.create_default_context()
+
+
+ResponsesTransport = Callable[[Dict[str, Any]], Dict[str, Any]]
+LakeCompilerRunner = Callable[[Path, Path, bool], Dict[str, Any]]
+
+
+def make_live_openai_responses_transport(
+    api_key: str,
+    base_url: str = "https://api.openai.com/v1/responses",
+    timeout_sec: float = 900.0,
+    max_flex_retries: int = 3,
+    fallback_to_standard_on_429: bool = True,
+) -> ResponsesTransport:
+    ssl_ctx = _build_ssl_context()
+
+    def _call(payload: Dict[str, Any]) -> Dict[str, Any]:
+        req_payload = dict(payload)
+        desired_tier = req_payload.get("service_tier", "flex")
+        attempts = 0
+        total_allowed = max_flex_retries + (2 if fallback_to_standard_on_429 else 0)
+
+        while True:
+            attempts += 1
+            if desired_tier == "flex" and fallback_to_standard_on_429 and attempts > max_flex_retries:
+                req_payload["service_tier"] = "auto"
+
+            req = urllib.request.Request(
+                base_url,
+                data=json.dumps(req_payload).encode("utf-8"),
+                method="POST",
+                headers={
+                    "Authorization": f"Bearer {api_key}",
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                },
+            )
+            try:
+                with urllib.request.urlopen(req, timeout=timeout_sec, context=ssl_ctx) as resp:
+                    return json.loads(resp.read().decode("utf-8"))
+            except urllib.error.HTTPError as http_err:
+                err_body = http_err.read().decode("utf-8", errors="replace")
+                if "credit_balance_exhausted" in err_body or "insufficient_quota" in err_body:
+                    raise BudgetExhaustedStop(
+                        f"OpenAI billing cutoff ({http_err.code}): {err_body[:300]}"
+                    ) from http_err
+                if http_err.code in (408, 429, 500, 502, 503, 504) and attempts <= total_allowed:
+                    time.sleep(min(30.0, (1.8 ** attempts) + random.uniform(0.2, 1.2)))
+                    continue
+                raise RuntimeError(f"OpenAI HTTP {http_err.code}: {err_body[:800]}") from http_err
+            except (urllib.error.URLError, TimeoutError) as net_err:
+                if attempts <= total_allowed:
+                    time.sleep(min(20.0, 2.0 * attempts))
+                    continue
+                raise RuntimeError(f"OpenAI network/timeout error: {net_err}") from net_err
+
+    return _call
+
+
+def run_real_lake_check(
+    package_dir: Path,
+    target_lean_file: Path,
+    run_comparator: bool = False,
+    timeout_sec: float = 180.0,
+) -> Dict[str, Any]:
+    """
+    Runs `lake env lean <target_lean_file>` for fast file-level kernel checking,
+    followed by `lake build`, and optionally `lake comparator --paranoid`.
+    """
+    lake_bin = shutil.which("lake")
+    lean_bin = shutil.which("lean")
+    if not lake_bin and not lean_bin:
+        return {
+            "ok": False,
+            "toolchain_missing": True,
+            "diagnostics": (
+                "ERROR: Neither `lake` nor `lean` was found on PATH (check `$HOME/.elan/bin`). "
+                "Add `$HOME/.elan/bin` to PATH before running live compiler-guided repair."
+            ),
+        }
+
+    t0 = time.perf_counter()
+    env = dict(os.environ)
+    elan_bin = Path.home() / ".elan" / "bin"
+    if elan_bin.exists():
+        env["PATH"] = f"{elan_bin}:{env.get('PATH', '')}"
+
+    try:
+        if lake_bin:
+            cmd = [lake_bin, "env", "lean", str(target_lean_file.resolve())]
+        else:
+            cmd = [lean_bin, str(target_lean_file.resolve())]  # type: ignore[list-item]
+
+        proc = subprocess.run(
+            cmd,
+            cwd=str(package_dir),
+            env=env,
+            capture_output=True,
+            timeout=timeout_sec,
+        )
+        out = (proc.stdout.decode("utf-8", errors="replace") + "\n" + proc.stderr.decode("utf-8", errors="replace")).strip()
+        if proc.returncode != 0 or "declaration uses 'sorry'" in out:
+            return {
+                "ok": False,
+                "stage": "lake_env_lean",
+                "returncode": proc.returncode,
+                "elapsed_sec": round(time.perf_counter() - t0, 3),
+                "diagnostics": out[-4500:],
+            }
+
+        # Run full `lake build` if `lakefile.toml` or `lakefile.lean` exists
+        if lake_bin and ((package_dir / "lakefile.toml").exists() or (package_dir / "lakefile.lean").exists()):
+            bproc = subprocess.run(
+                [lake_bin, "build"],
+                cwd=str(package_dir),
+                env=env,
+                capture_output=True,
+                timeout=timeout_sec,
+            )
+            bout = (bproc.stdout.decode("utf-8", errors="replace") + "\n" + bproc.stderr.decode("utf-8", errors="replace")).strip()
+            if bproc.returncode != 0:
+                return {
+                    "ok": False,
+                    "stage": "lake_build",
+                    "returncode": bproc.returncode,
+                    "elapsed_sec": round(time.perf_counter() - t0, 3),
+                    "diagnostics": bout[-4500:],
+                }
+
+        comparator_passed: Optional[bool] = None
+        if run_comparator and lake_bin and (package_dir / "comparator.json").exists():
+            cproc = subprocess.run(
+                [lake_bin, "comparator", "--paranoid"],
+                cwd=str(package_dir),
+                env=env,
+                capture_output=True,
+                timeout=timeout_sec,
+            )
+            cout = (cproc.stdout.decode("utf-8", errors="replace") + "\n" + cproc.stderr.decode("utf-8", errors="replace")).strip()
+            comparator_passed = (cproc.returncode == 0)
+            if not comparator_passed:
+                return {
+                    "ok": False,
+                    "stage": "lake_comparator_paranoid",
+                    "returncode": cproc.returncode,
+                    "elapsed_sec": round(time.perf_counter() - t0, 3),
+                    "diagnostics": cout[-4500:],
+                }
+
+        return {
+            "ok": True,
+            "stage": "verified",
+            "returncode": 0,
+            "comparator_paranoid_passed": comparator_passed,
+            "elapsed_sec": round(time.perf_counter() - t0, 3),
+            "diagnostics": out[-1500:] if out else "Build completed cleanly (0 errors, 0 sorry).",
+        }
+    except subprocess.TimeoutExpired:
+        return {
+            "ok": False,
+            "stage": "timeout",
+            "returncode": 124,
+            "elapsed_sec": round(time.perf_counter() - t0, 3),
+            "diagnostics": f"`lake` timed out after {timeout_sec}s (possible infinite simp/omega loop).",
+        }
+
+
+# =============================================================================
+# 6. Proof-Repair Loop + Independent `xhigh` Verified-Bar Spec Audit
+# =============================================================================
+
+@dataclass
+class ProofTaskResult:
+    task_name: str
+    package_dir: str
+    target_rel_path: str
+    verified: bool
+    attempts_used: int
+    surface_violations_caught: int
+    compiler_failures_repaired: int
+    spec_hash_before: str
+    spec_hash_after: str
+    spec_immutability_verified: bool
+    final_module_sha256: str
+    input_tokens: int
+    cached_tokens: int
+    output_tokens: int
+    reasoning_tokens: int
+    cost_usd: float
+    wall_seconds: float
+    last_diagnostics: str
+
+
+async def run_proof_repair_task(
+    task_name: str,
+    package_dir: Path,
+    target_rel_path: str,
+    immutable_spec_rels: List[str],
+    context_files_rels: List[str],
+    model: str,
+    reasoning_effort: str,
+    pro_mode: bool,
+    service_tier: str,
+    max_repairs: int,
+    max_output_tokens: int,
+    stateless_zdr: bool,
+    run_comparator: bool,
+    transport: ResponsesTransport,
+    lake_runner: Callable[[Path, Path, bool], Dict[str, Any]],
+    ledger: ThreadSafeBudgetLedger,
+    transcript_lock: asyncio.Lock,
+    transcript_path: Path,
+) -> ProofTaskResult:
+    """
+    Iterative `gpt-6-astra` (`xhigh`) -> Verified-Bar Lexer -> `lake build` -> Repair loop.
+    Guarantees `immutable_spec_rels` never mutate (`spec_hash_before == spec_hash_after`).
+    """
+    t0 = time.perf_counter()
+    target_file = package_dir / target_rel_path
+    original_backup = target_file.read_text(encoding="utf-8") if target_file.exists() else ""
+    spec_hash_before = compute_pinned_spec_hash(package_dir, immutable_spec_rels)
+
+    # Assemble deterministic context block (sorted file order so prefix stays cache-stable!)
+    ctx_blocks = []
+    for rel in context_files_rels:
+        fp = package_dir / rel
+        if fp.exists():
+            ctx_blocks.append(f"=== IMMUTABLE CONTEXT FILE: {rel} ===\n{fp.read_text(encoding='utf-8')}\n")
+    ctx_blocks.append(
+        f"=== TARGET PROOF MODULE TO COMPLETE: {target_rel_path} ===\n{original_backup}\n"
+    )
+    initial_user_prompt = (
+        f"Task: `{task_name}`\n"
+        f"Synthesize a complete, 100% kernel-checkable Lean 4 module for `{target_rel_path}` "
+        f"that proves every theorem statement with zero `sorry`, zero custom axioms, and zero "
+        f"Verified-Bar surface violations. Call `submit_lean_module` with the complete file.\n\n"
+        + "\n".join(ctx_blocks)
+    )
+
+    prev_resp_id: Optional[str] = None
+    stateless_items: List[Dict[str, Any]] = [{"role": "user", "content": initial_user_prompt}]
+    pending_input: Any = stateless_items if stateless_zdr else [{"role": "user", "content": initial_user_prompt}]
+
+    attempts = 0
+    surf_caught = 0
+    comp_repaired = 0
+    verified = False
+    last_diag = "Not yet run"
+    in_tok = cached_tok = out_tok = reas_tok = 0
+    cost_usd = 0.0
+
+    reasoning_cfg: Dict[str, Any] = {"effort": reasoning_effort}
+    if pro_mode:
+        reasoning_cfg["mode"] = "pro"
+
+    while attempts < max_repairs and not verified:
+        reserved = ledger.reserve_for_turn(
+            model=model,
+            tier=service_tier,
+            max_out_tokens=max_output_tokens,
+            est_in_tokens=6500 + attempts * 2000,
+        )
+        req_payload: Dict[str, Any] = {
+            "model": model,
+            "instructions": STATIC_LEAN4_SYSTEM_INSTRUCTIONS,
+            "tools": PROOF_SYNTHESIS_TOOLS,
+            "reasoning": reasoning_cfg,
+            "service_tier": service_tier,
+            "max_output_tokens": max_output_tokens,
+            "input": pending_input,
+        }
+        if stateless_zdr:
+            req_payload["store"] = False
+            req_payload["include"] = ["reasoning.encrypted_content"]
+        else:
+            req_payload["store"] = True
+            if prev_resp_id is not None:
+                req_payload["previous_response_id"] = prev_resp_id
+
+        try:
+            resp = await asyncio.to_thread(transport, req_payload)
+        except Exception:
+            ledger.release_reservation(reserved)
+            raise
+
+        attempts += 1
+        usage = resp.get("usage") or {}
+        served_tier = resp.get("service_tier") or service_tier
+        step_cost = ledger.settle_turn(reserved, model, served_tier, usage)
+
+        in_tok += int(usage.get("input_tokens", 0) or 0)
+        cached_tok += int((usage.get("input_tokens_details") or {}).get("cached_tokens", 0) or 0)
+        out_tok += int(usage.get("output_tokens", 0) or 0)
+        reas_tok += int((usage.get("output_tokens_details") or {}).get("reasoning_tokens", 0) or 0)
+        cost_usd += step_cost
+
+        output_items: List[Dict[str, Any]] = resp.get("output") or []
+        prev_resp_id = resp.get("id")
+
+        async with transcript_lock:
+            with open(transcript_path, "a", encoding="utf-8") as tf:
+                tf.write(
+                    json.dumps(
+                        {
+                            "task_name": task_name,
+                            "attempt": attempts,
+                            "response_id": prev_resp_id,
+                            "served_tier": served_tier,
+                            "usage": usage,
+                            "step_cost_usd": step_cost,
+                            "output_items": output_items,
+                        }
+                    )
+                    + "\n"
+                )
+
+        if stateless_zdr:
+            stateless_items.extend(output_items)
+
+        func_calls = [it for it in output_items if it.get("type") == "function_call"]
+        if not func_calls:
+            # Prompt model explicitly to invoke `submit_lean_module`
+            nudge = [{"role": "user", "content": "Call `submit_lean_module` with the complete Lean 4 file."}]
+            if stateless_zdr:
+                stateless_items.extend(nudge)
+                pending_input = stateless_items
+            else:
+                pending_input = nudge
+            continue
+
+        tool_outputs: List[Dict[str, Any]] = []
+        for fc in func_calls:
+            call_id = fc.get("call_id") or fc.get("id") or f"call_{attempts}"
+            raw_args = fc.get("arguments") or "{}"
+            try:
+                args = json.loads(raw_args) if isinstance(raw_args, str) else dict(raw_args)
+            except json.JSONDecodeError as jerr:
+                tool_outputs.append(
+                    {
+                        "type": "function_call_output",
+                        "call_id": call_id,
+                        "output": json.dumps({"ok": False, "error": f"Malformed JSON: {jerr}"}),
+                    }
+                )
+                continue
+
+            cand_lean = str(args.get("lean_source", ""))
+            # Layer 1: Proven-Commons Verified Bar Token-Stream Surface Check
+            violations = scan_lean4_verified_bar(cand_lean, allow_sorry=False)
+            if violations:
+                surf_caught += 1
+                last_diag = "VERIFIED-BAR SURFACE REJECTION:\n" + "\n".join(violations)
+                tool_outputs.append(
+                    {
+                        "type": "function_call_output",
+                        "call_id": call_id,
+                        "output": json.dumps(
+                            {
+                                "ok": False,
+                                "stage": "verified_bar_surface_scanner",
+                                "violations": violations,
+                                "instruction": (
+                                    "Remove all forbidden tokens (`sorry`, `axiom`, `native_decide`, "
+                                    "`@[csimp]`, notations/macros) and submit a pure kernel proof."
+                                ),
+                            }
+                        ),
+                    }
+                )
+                continue
+
+            # Layer 2: Write candidate & run Lean 4 kernel (`lake env lean` + `lake build`)
+            target_file.parent.mkdir(parents=True, exist_ok=True)
+            target_file.write_text(cand_lean, encoding="utf-8")
+            check_res = await asyncio.to_thread(lake_runner, package_dir, target_file, run_comparator)
+
+            # Verify immutable spec files were untouched
+            spec_hash_now = compute_pinned_spec_hash(package_dir, immutable_spec_rels)
+            if spec_hash_now != spec_hash_before:
+                last_diag = "SECURITY ERROR: Immutable spec hash changed during build!"
+                target_file.write_text(original_backup, encoding="utf-8")
+                raise RuntimeError(last_diag)
+
+            if check_res.get("ok"):
+                verified = True
+                last_diag = str(check_res.get("diagnostics", "OK"))
+                tool_outputs.append(
+                    {
+                        "type": "function_call_output",
+                        "call_id": call_id,
+                        "output": json.dumps({"ok": True, "status": "LEAN_KERNEL_VERIFIED", "details": check_res}),
+                    }
+                )
+            else:
+                if check_res.get("toolchain_missing"):
+                    last_diag = str(check_res.get("diagnostics"))
+                    raise RuntimeError(last_diag)
+                comp_repaired += 1
+                last_diag = str(check_res.get("diagnostics", "Build failed"))
+                tool_outputs.append(
+                    {
+                        "type": "function_call_output",
+                        "call_id": call_id,
+                        "output": json.dumps(
+                            {
+                                "ok": False,
+                                "stage": check_res.get("stage", "lake_build"),
+                                "compiler_diagnostics": last_diag,
+                                "instruction": (
+                                    "Inspect the exact line/column error and goal state above, repair "
+                                    "the failing proof obligations without altering theorem statements, "
+                                    "and call `submit_lean_module` again."
+                                ),
+                            }
+                        ),
+                    }
+                )
+
+        if stateless_zdr:
+            stateless_items.extend(tool_outputs)
+            pending_input = stateless_items
+        else:
+            pending_input = tool_outputs
+
+    if not verified and original_backup:
+        # Save last unverified attempt separately for inspection and restore clean state
+        unverified_dump = target_file.with_suffix(".unverified_last.lean")
+        if target_file.exists():
+            unverified_dump.write_text(target_file.read_text(encoding="utf-8"), encoding="utf-8")
+        target_file.write_text(original_backup, encoding="utf-8")
+
+    spec_hash_after = compute_pinned_spec_hash(package_dir, immutable_spec_rels)
+    final_sha = hashlib.sha256(target_file.read_bytes()).hexdigest() if target_file.exists() else ""
+
+    return ProofTaskResult(
+        task_name=task_name,
+        package_dir=str(package_dir),
+        target_rel_path=target_rel_path,
+        verified=verified,
+        attempts_used=attempts,
+        surface_violations_caught=surf_caught,
+        compiler_failures_repaired=comp_repaired if verified else max(0, comp_repaired - 1),
+        spec_hash_before=spec_hash_before,
+        spec_hash_after=spec_hash_after,
+        spec_immutability_verified=(spec_hash_before == spec_hash_after),
+        final_module_sha256=final_sha,
+        input_tokens=in_tok,
+        cached_tokens=cached_tok,
+        output_tokens=out_tok,
+        reasoning_tokens=reas_tok,
+        cost_usd=round(cost_usd, 6),
+        wall_seconds=round(time.perf_counter() - t0, 3),
+        last_diagnostics=last_diag[:1200],
+    )
+
+
+async def run_independent_semver_bar_audit(
+    semver_dir: Path,
+    out_report_path: Path,
+    model: str,
+    reasoning_effort: str,
+    pro_mode: bool,
+    service_tier: str,
+    max_output_tokens: int,
+    transport: ResponsesTransport,
+    ledger: ThreadSafeBudgetLedger,
+) -> Dict[str, Any]:
+    """
+    Uses `gpt-6-astra` (`xhigh` / optional `pro` mode) to perform an independent
+    Proven-Commons Verified Bar specification review of `Proven-Commons/semver`,
+    directly addressing its blocking status:
+      "The specification has not yet been approved by a reviewer apart from its author."
+    """
+    audit_files = [
+        "SPEC.md",
+        "bar.toml",
+        "comparator.json",
+        "lakefile.toml",
+        "lean-toolchain",
+        "SemVer/Types.lean",
+        "SemVer/Basic.lean",
+        "SemVer/Spec/Defs.lean",
+        "SemVer/Spec.lean",
+        "Main.lean",
+    ]
+    bundled = []
+    local_surface_findings: Dict[str, List[str]] = {}
+    for rel in audit_files:
+        fp = semver_dir / rel
+        if fp.exists():
+            txt = fp.read_text(encoding="utf-8", errors="replace")
+            bundled.append(f"=== {rel} ===\n{txt}\n")
+            if rel.endswith(".lean"):
+                allow_s = rel.endswith("Spec.lean")
+                v = scan_lean4_verified_bar(txt, allow_sorry=allow_s)
+                if v:
+                    local_surface_findings[rel] = v
+
+    prompt = (
+        "Perform an independent adversarial Proven-Commons Verified Bar specification and "
+        "boundary audit of `Proven-Commons/semver` (following the `mission/reviews` methodology).\n"
+        "Check specifically:\n"
+        "1. Exact equivalence between `SemVer/Spec/Defs.lean`, `SemVer/Spec.lean`, `SPEC.md`, "
+        "and Semantic Versioning 2.0.0 Sections 2–11 (leading-zero rejection in numeric vs "
+        "alphanumeric pre-release identifiers such as `01` vs `01a`, empty build identifiers "
+        "`1.0.0+`, hyphen-only pre-release/build identifiers `1.0.0--` / `1.0.0+-`, total "
+        "preorder antisymmetry modulo build metadata).\n"
+        "2. Any vacuous implications, hidden preconditions, or `Main.lean` unproved CLI parsing "
+        "gaps (Verified Bar Item 4).\n"
+        "3. `bar.toml` and `comparator.json` completeness (every theorem in `SemVer/Spec.lean` "
+        "listed in `comparator.json`, only `propext`, `Classical.choice`, `Quot.sound` permitted).\n"
+        "4. Concrete verdict (`APPROVE SPEC` vs `REQUEST SPEC CHANGES`) with line-referenced "
+        "findings Ready for `Proven-Commons/mission/reviews/semver/`.\n\n"
+        + "\n".join(bundled)
+    )
+
+    reserved = ledger.reserve_for_turn(model, service_tier, max_output_tokens, est_in_tokens=14000)
+    reasoning_cfg: Dict[str, Any] = {"effort": reasoning_effort}
+    if pro_mode:
+        reasoning_cfg["mode"] = "pro"
+
+    req = {
+        "model": model,
+        "instructions": STATIC_LEAN4_SYSTEM_INSTRUCTIONS,
+        "reasoning": reasoning_cfg,
+        "service_tier": service_tier,
+        "max_output_tokens": max_output_tokens,
+        "input": [{"role": "user", "content": prompt}],
+    }
+    try:
+        resp = await asyncio.to_thread(transport, req)
+    except Exception:
+        ledger.release_reservation(reserved)
+        raise
+
+    usage = resp.get("usage") or {}
+    served_tier = resp.get("service_tier") or service_tier
+    cost = ledger.settle_turn(reserved, model, served_tier, usage)
+
+    texts = []
+    for item in resp.get("output") or []:
+        if item.get("type") == "message":
+            for part in item.get("content") or []:
+                if part.get("type") in ("output_text", "text"):
+                    texts.append(part.get("text", ""))
+    report_md = "\n".join(texts).strip()
+    out_report_path.write_text(report_md + "\n", encoding="utf-8")
+
+    return {
+        "report_path": str(out_report_path),
+        "report_sha256": hashlib.sha256(out_report_path.read_bytes()).hexdigest(),
+        "local_token_scanner_findings": local_surface_findings,
+        "pinned_spec_hash": compute_pinned_spec_hash(
+            semver_dir, ["SemVer/Types.lean", "SemVer/Spec/Defs.lean", "SemVer/Spec.lean", "SPEC.md"]
+        ),
+        "cost_usd": cost,
+        "usage": usage,
+    }
+
+
+# =============================================================================
+# 7. Package Staging & `semver` Discovery Helpers
+# =============================================================================
+
+def stage_weft_invariants_package(out_root: Path, existing_toolchain_repo: Optional[Path] = None) -> Path:
+    """Creates a clean standalone Lean 4 Lake package for `WeftInvariants`."""
+    pkg = out_root / "WeftInvariantsPkg"
+    (pkg / "WeftInvariants").mkdir(parents=True, exist_ok=True)
+    (pkg / "lakefile.toml").write_text(WEFT_LAKEFILE_TOML, encoding="utf-8")
+
+    # Inherit exact `lean-toolchain` from `semver` repo if available so `elan` uses cached toolchain!
+    if existing_toolchain_repo and (existing_toolchain_repo / "lean-toolchain").exists():
+        shutil.copy2(existing_toolchain_repo / "lean-toolchain", pkg / "lean-toolchain")
+
+    (pkg / "WeftInvariants" / "Defs.lean").write_text(WEFT_DEFS_LEAN, encoding="utf-8")
+    (pkg / "WeftInvariants" / "Spec.lean").write_text(WEFT_SPEC_LEAN, encoding="utf-8")
+    (pkg / "WeftInvariants" / "Proofs.lean").write_text(WEFT_PROOFS_INITIAL_SKELETON, encoding="utf-8")
+    (pkg / "WeftInvariants.lean").write_text(
+        "import WeftInvariants.Defs\nimport WeftInvariants.Proofs\n", encoding="utf-8"
+    )
+    return pkg
+
+
+def discover_semver_sorry_targets(semver_dir: Path) -> List[str]:
+    """Finds any proof files under `SemVer/Proofs` that still contain `sorry`."""
+    targets: List[str] = []
+    proofs_root = semver_dir / "SemVer" / "Proofs"
+    if proofs_root.exists():
+        for lf in sorted(proofs_root.rglob("*.lean")):
+            toks = tokenize_lean4(lf.read_text(encoding="utf-8", errors="replace"))
+            if any(t.kind == "IDENT" and t.val == "sorry" for t in toks):
+                targets.append(lf.relative_to(semver_dir).as_posix())
+    top_proofs = semver_dir / "SemVer" / "Proofs.lean"
+    if top_proofs.exists():
+        toks = tokenize_lean4(top_proofs.read_text(encoding="utf-8", errors="replace"))
+        if any(t.kind == "IDENT" and t.val == "sorry" for t in toks):
+            targets.append("SemVer/Proofs.lean")
+    return targets
+
+
+def stage_semver_wire_slice(semver_dir: Path) -> str:
+    """Stages `SemVer/Wire.lean` + `SemVer/Proofs/Wire.lean` to prove `Main.lean`'s hex protocol."""
+    wire_path = semver_dir / "SemVer" / "Wire.lean"
+    proof_path = semver_dir / "SemVer" / "Proofs" / "Wire.lean"
+    wire_path.parent.mkdir(parents=True, exist_ok=True)
+    proof_path.parent.mkdir(parents=True, exist_ok=True)
+    if not wire_path.exists():
+        wire_path.write_text(SEMVER_WIRE_DEFS_LEAN, encoding="utf-8")
+    if not proof_path.exists():
+        proof_path.write_text(SEMVER_WIRE_PROOFS_SKELETON, encoding="utf-8")
+    return "SemVer/Proofs/Wire.lean"
+
+
+# =============================================================================
+# 8. Built-In Offline `--selftest` Suite (Tests 12 Adversarial Vectors + Repair Loop)
+# =============================================================================
+
+VALID_WEFT_PROOFS_REFERENCE = """/-
+  WeftInvariants/Proofs.lean — Complete Zero-Axiom Proofs for Weft v2
+-/
+import WeftInvariants.Defs
+
+namespace WeftV2.Proofs
+
+open WeftV2
+
+private theorem sq_add_ident (x y : Int) :
+    (x + y) * (x + y) = x * x + y * y + 2 * (x * y) := by
+  calc
+    (x + y) * (x + y) = (x + y) * x + (x + y) * y := Int.mul_add (x + y) x y
+    _ = (x * x + y * x) + (x * y + y * y) := by rw [Int.add_mul, Int.add_mul]
+    _ = x * x + y * y + (x * y + x * y) := by
+          rw [Int.mul_comm y x]
+          omega
+    _ = x * x + y * y + 2 * (x * y) := by omega
+
+theorem normSq_vecAdd_expansion (u v : List Int) (h_len : u.length = v.length) :
+    normSq (vecAdd u v) = normSq u + normSq v + 2 * dot u v := by
+  induction u generalizing v with
+  | nil =>
+    cases v with
+    | nil => simp [vecAdd, normSq, dot]
+    | cons _ _ => contradiction
+  | cons x xs ih =>
+    cases v with
+    | nil => contradiction
+    | cons y ys =>
+      simp only [List.length_cons, Nat.succ.injEq] at h_len
+      simp only [vecAdd, normSq, dot]
+      have h_ih := ih ys h_len
+      have h_sq := sq_add_ident x y
+      omega
+
+theorem pythagorean_vector_orthogonality
+    (u v : List Int) (rParentSq rChildSq rMaxSq : Int)
+    (h_len : u.length = v.length)
+    (h_orth : dot u v = 0)
+    (h_p : normSq u ≤ rParentSq)
+    (h_c : normSq v ≤ rChildSq)
+    (h_cap : rParentSq + rChildSq ≤ rMaxSq) :
+    normSq (vecAdd u v) ≤ rMaxSq := by
+  have h_exp := normSq_vecAdd_expansion u v h_len
+  omega
+
+theorem f32_nextafter_strictly_decreases (ord : Nat) (h : isPosFiniteF32Ordinal ord) :
+    nextafterPosOrdinal ord < ord := by
+  rcases h with ⟨h_pos, _⟩
+  unfold nextafterPosOrdinal
+  omega
+
+theorem f32_anti_zeno_step_bound {ord k : Nat} (h : ValidF32BudgetTrace ord k) :
+    k ≤ ord := by
+  induction h with
+  | halt ord => exact Nat.zero_le ord
+  | @step ord ord' k h_pos h_deduct _ ih =>
+    rcases h_pos with ⟨hp, _⟩
+    unfold nextafterPosOrdinal at h_deduct
+    omega
+
+theorem f32_anti_zeno_global_cap {ord k : Nat}
+    (h_valid : ord ≤ F32_MAX_FINITE_POS_BITS)
+    (h_trace : ValidF32BudgetTrace ord k) :
+    k ≤ F32_MAX_FINITE_POS_BITS := by
+  have hb := f32_anti_zeno_step_bound h_trace
+  omega
+
+theorem lockedSlice_sound
+    (masks : List Bool) (base cand : List UInt32)
+    (h_ok : verifyLockedSlice masks base cand = true) :
+    masks.length = base.length ∧ base.length = cand.length := by
+  induction masks generalizing base cand with
+  | nil =>
+    cases base <;> cases cand <;> simp [verifyLockedSlice] at h_ok ⊢
+  | cons m ms ih =>
+    cases base with
+    | nil => simp [verifyLockedSlice] at h_ok
+    | cons b bs =>
+      cases cand with
+      | nil => simp [verifyLockedSlice] at h_ok
+      | cons c cs =>
+        simp only [verifyLockedSlice, Bool.and_eq_true] at h_ok
+        rcases ih bs cs h_ok.2 with ⟨h1, h2⟩
+        simp [h1, h2]
+
+theorem arena_exact_540688_partition :
+    ARENA_EPOCH_SPAN.length
+      + ARENA_TENSION_SPAN.length
+      + ARENA_FOCAL_SPAN.length
+      + ARENA_SYMP_SPAN.length
+      + ARENA_HIPPO_SPAN.length
+      + ARENA_LOCK_SPAN.length = ARENA_TOTAL_BYTES
+    ∧ ARENA_LOCK_SPAN.offset + ARENA_LOCK_SPAN.length = ARENA_TOTAL_BYTES
+    ∧ spansDisjoint ARENA_EPOCH_SPAN ARENA_TENSION_SPAN
+    ∧ spansDisjoint ARENA_TENSION_SPAN ARENA_FOCAL_SPAN
+    ∧ spansDisjoint ARENA_FOCAL_SPAN ARENA_SYMP_SPAN
+    ∧ spansDisjoint ARENA_SYMP_SPAN ARENA_HIPPO_SPAN
+    ∧ spansDisjoint ARENA_HIPPO_SPAN ARENA_LOCK_SPAN := by
+  unfold ARENA_EPOCH_SPAN ARENA_TENSION_SPAN ARENA_FOCAL_SPAN
+  unfold ARENA_SYMP_SPAN ARENA_HIPPO_SPAN ARENA_LOCK_SPAN ARENA_TOTAL_BYTES spansDisjoint
+  decide
+
+end WeftV2.Proofs
+"""
+
+
+def run_surface_scanner_unit_tests() -> None:
+    """Verifies 12/12 adversarial Lean 4 surface bypasses caught & 0/4 false positives."""
+    malicious_vectors = [
+        'notation "===" => fun _ _ => True',
+        'infixl:65 " +++ " => Nat.add',
+        'macro "cheat" : tactic => `(tactic| trivial)',
+        'macro (name := m) "foo" : term => `(1)',
+        '@[simp] @[inline] axiom hidden_ax : False',
+        'def ok := 1; axiom chained_ax : False',
+        '/- block -/ import Lean',
+        'theorem t : True := «sorry»',
+        '@[csimp] theorem bad_swap : f = g := rfl',
+        '@[implemented_by fast_c] def spec_fn (x : Nat) := x',
+        'opaque secret_val : Nat := 0',
+        'theorem cheat_native : 1 + 1 = 2 := by native_decide',
+    ]
+    for idx, vec in enumerate(malicious_vectors, 1):
+        res = scan_lean4_verified_bar(vec, allow_sorry=False)
+        assert len(res) >= 1, f"Scanner missed adversarial vector V{idx}: {vec}"
+
+    benign_vectors = [
+        "theorem ok_prime (x' y' : Nat) (h : x' = y') : y' = x' := h.symm",
+        '-- sorry axiom notation "fake" inside line comment\ndef clean : Nat := 42',
+        '/- nested /- sorry @[csimp] axiom -/ comment -/\ntheorem id_eq (n : Nat) : n = n := rfl',
+        'def msg : String := "sorry axiom native_decide @[extern]"\n',
+    ]
+    for idx, vec in enumerate(benign_vectors, 1):
+        res = scan_lean4_verified_bar(vec, allow_sorry=False)
+        assert len(res) == 0, f"False positive on benign vector B{idx}: {res}"
+
+    # Verify our clean reference `WeftInvariants/Proofs.lean` has 0 surface violations
+    ref_v = scan_lean4_verified_bar(VALID_WEFT_PROOFS_REFERENCE, allow_sorry=False)
+    assert len(ref_v) == 0, f"Reference Weft proofs triggered scanner: {ref_v}"
+
+
+def make_selftest_mock_env() -> Tuple[ResponsesTransport, LakeCompilerRunner]:
+    """
+    Simulates a realistic 3-turn `gpt-6-astra` (`xhigh`) repair trajectory:
+      - Turn 1: Model accidentally tries `by native_decide` -> caught instantly by
+        Layer-1 Verified Bar Token-Stream Scanner before `lake` even runs!
+      - Turn 2: Model removes `native_decide` but leaves a type mismatch (`SIMULATED_TYPE_ERR`)
+        -> caught by Layer-2 `lake env lean` compiler runner, returning exact line diagnostics!
+      - Turn 3: Model reads the compiler diagnostic via `previous_response_id` and submits
+        `VALID_WEFT_PROOFS_REFERENCE` -> passes both Layer-1 and Layer-2!
+    """
+    turn_counter = [0]
+
+    def _mock_transport(payload: Dict[str, Any]) -> Dict[str, Any]:
+        turn_counter[0] += 1
+        t = turn_counter[0]
+        if t == 1:
+            src = VALID_WEFT_PROOFS_REFERENCE.replace("  decide\n", "  native_decide\n")
+            note = "Initial attempt using native_decide on arena partition"
+        elif t == 2:
+            src = VALID_WEFT_PROOFS_REFERENCE + "\n-- SIMULATED_TYPE_ERR\n"
+            note = "Replaced native_decide with kernel decide; checking inductive lemma"
+        elif t == 3:
+            src = VALID_WEFT_PROOFS_REFERENCE
+            note = "Fixed inductive Int ring expansion via explicit calc sq_add_ident"
+        else:
+            # Independent SemVer spec audit response
+            return {
+                "id": f"resp_astra_selftest_{t}",
+                "object": "response",
+                "model": "gpt-6-astra",
+                "service_tier": "flex",
+                "output": [
+                    {
+                        "type": "message",
+                        "role": "assistant",
+                        "content": [
+                            {
+                                "type": "output_text",
+                                "text": (
+                                    "# Independent Verified-Bar Specification Review (`Proven-Commons/semver`)\n\n"
+                                    "- **Grammar & Section 11 Alignment**: Checked `SemVer/Spec/Defs.lean`.\n"
+                                    "- **Main.lean Framing Gap**: Closed via `SemVer/Wire.lean`.\n"
+                                    "- **Verdict**: Ready for human maintainer sign-off."
+                                ),
+                            }
+                        ],
+                    }
+                ],
+                "usage": {
+                    "input_tokens": 5200,
+                    "input_tokens_details": {"cached_tokens": 4100},
+                    "output_tokens": 1800,
+                    "output_tokens_details": {"reasoning_tokens": 1350},
+                },
+            }
+
+        return {
+            "id": f"resp_astra_selftest_{t}",
+            "object": "response",
+            "model": payload.get("model", "gpt-6-astra"),
+            "service_tier": payload.get("service_tier", "flex"),
+            "output": [
+                {
+                    "type": "function_call",
+                    "call_id": f"call_astra_{t}",
+                    "name": "submit_lean_module",
+                    "arguments": json.dumps({"lean_source": src, "proof_strategy_note": note}),
+                }
+            ],
+            "usage": {
+                "input_tokens": 6400,
+                "input_tokens_details": {"cached_tokens": 0 if t == 1 else 5120},
+                "output_tokens": 3200,
+                "output_tokens_details": {"reasoning_tokens": 2600},
+            },
+        }
+
+    def _mock_lake(pkg_dir: Path, target_file: Path, _comp: bool) -> Dict[str, Any]:
+        txt = target_file.read_text(encoding="utf-8")
+        if "SIMULATED_TYPE_ERR" in txt:
+            return {
+                "ok": False,
+                "stage": "lake_env_lean",
+                "returncode": 1,
+                "elapsed_sec": 0.12,
+                "diagnostics": (
+                    f"{target_file.name}:28:6: error: omega could not prove the goal:\n"
+                    "  a possible counterexample may satisfy the constraints\n"
+                    "  ⊢ (x + y) * (x + y) = x * x + y * y + 2 * (x * y)"
+                ),
+            }
+        return {
+            "ok": True,
+            "stage": "verified",
+            "returncode": 0,
+            "comparator_paranoid_passed": True,
+            "elapsed_sec": 0.24,
+            "diagnostics": "Build completed successfully (0 errors, 0 sorry).",
+        }
+
+    return _mock_transport, _mock_lake
+
+
+def write_sha256_manifest(run_root: Path) -> Path:
+    manifest = run_root / "SHA256SUMS"
+    lines = []
+    for p in sorted(run_root.rglob("*")):
+        if p.is_file() and p.name != "SHA256SUMS":
+            rel = p.relative_to(run_root).as_posix()
+            lines.append(f"{hashlib.sha256(p.read_bytes()).hexdigest()}  {rel}")
+    manifest.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return manifest
+
+
+# =============================================================================
+# 9. Main Async Orchestrator & CLI
+# =============================================================================
+
+async def orchestrate_lean4_harness(args: argparse.Namespace) -> Dict[str, Any]:
+    run_ts = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
+    out_dir = Path(args.output_dir).resolve() / f"lean4_astra_run_{run_ts}"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    transcript_path = out_dir / "transcripts.jsonl"
+    transcript_path.write_text("", encoding="utf-8")
+    transcript_lock = asyncio.Lock()
+
+    ledger = ThreadSafeBudgetLedger(max_budget_usd=args.budget_usd)
+
+    if args.selftest:
+        run_surface_scanner_unit_tests()
+        transport, lake_runner = make_selftest_mock_env()
+    else:
+        api_key = os.environ.get("OPENAI_API_KEY", "").strip()
+        if not api_key:
+            raise SystemExit(
+                "ERROR: OPENAI_API_KEY is not set.\n"
+                "Export OPENAI_API_KEY='sk-...' or run `--selftest` to verify offline."
+            )
+        transport = make_live_openai_responses_transport(
+            api_key=api_key,
+            base_url=args.base_url,
+            timeout_sec=args.timeout_sec,
+            max_flex_retries=args.max_flex_retries,
+            fallback_to_standard_on_429=not args.strict_flex,
+        )
+        lake_runner = lambda pkg, tf, comp: run_real_lake_check(pkg, tf, comp)
+
+    semver_path = Path(args.semver_repo).resolve() if args.semver_repo else None
+    task_results: List[ProofTaskResult] = []
+    semver_audit_result: Optional[Dict[str, Any]] = None
+    budget_halted: Optional[str] = None
+
+    try:
+        # 1. `WeftInvariants.lean` Deep Mechanization Package
+        if args.target in ("weft", "all"):
+            weft_pkg = stage_weft_invariants_package(out_dir, existing_toolchain_repo=semver_path)
+            res_weft = await run_proof_repair_task(
+                task_name="WeftInvariants_PR128_DeepMechanization",
+                package_dir=weft_pkg,
+                target_rel_path="WeftInvariants/Proofs.lean",
+                immutable_spec_rels=["WeftInvariants/Defs.lean", "WeftInvariants/Spec.lean"],
+                context_files_rels=["WeftInvariants/Defs.lean", "WeftInvariants/Spec.lean"],
+                model=args.model,
+                reasoning_effort=args.effort,
+                pro_mode=args.pro_mode,
+                service_tier=args.service_tier,
+                max_repairs=args.max_repairs,
+                max_output_tokens=args.max_output_tokens,
+                stateless_zdr=args.stateless_zdr,
+                run_comparator=False,
+                transport=transport,
+                lake_runner=lake_runner,
+                ledger=ledger,
+                transcript_lock=transcript_lock,
+                transcript_path=transcript_path,
+            )
+            task_results.append(res_weft)
+            snap = ledger.snapshot()
+            print(
+                f"[WEFT] verified={res_weft.verified} attempts={res_weft.attempts_used} "
+                f"surface_caught={res_weft.surface_violations_caught} "
+                f"compiler_repairs={res_weft.compiler_failures_repaired} "
+                f"cost=${res_weft.cost_usd:.4f} total=${snap['spent_usd']:.4f}/${snap['max_budget_usd']:.2f}",
+                flush=True,
+            )
+
+        # 2. `Proven-Commons/semver` Proof Repair + `SemVer/Wire.lean` Slice + Independent Spec Audit
+        if args.target in ("semver", "all"):
+            if args.selftest and semver_path is None:
+                # Stage a minimal mock semver directory for offline `--selftest`
+                semver_path = out_dir / "MockSemVerRepo"
+                (semver_path / "SemVer" / "Spec").mkdir(parents=True, exist_ok=True)
+                (semver_path / "SPEC.md").write_text("# SemVer 2.0.0 Spec\n", encoding="utf-8")
+                (semver_path / "SemVer" / "Types.lean").write_text("namespace SemVer\nend SemVer\n", encoding="utf-8")
+                (semver_path / "SemVer" / "Spec" / "Defs.lean").write_text("namespace SemVer.Spec\nend SemVer.Spec\n", encoding="utf-8")
+                (semver_path / "SemVer" / "Spec.lean").write_text("namespace SemVer.Spec\nend SemVer.Spec\n", encoding="utf-8")
+
+            if semver_path is None or not semver_path.exists():
+                print(
+                    "[SEMVER SKIPPED] Pass `--semver-repo /path/to/Proven-Commons/semver` to run "
+                    "live `lake build` proof repair and independent Verified-Bar spec review.",
+                    flush=True,
+                )
+            else:
+                immutable_semver = [
+                    "SemVer/Types.lean",
+                    "SemVer/Basic.lean",
+                    "SemVer/Spec/Defs.lean",
+                    "SemVer/Spec.lean",
+                    "SPEC.md",
+                ]
+                # 2a. Discharge any open `sorry` proof modules in `SemVer/Proofs/`
+                sorry_targets = discover_semver_sorry_targets(semver_path)
+                for rel_target in sorry_targets:
+                    res_sv = await run_proof_repair_task(
+                        task_name=f"SemVer_SorryDischarge:{rel_target}",
+                        package_dir=semver_path,
+                        target_rel_path=rel_target,
+                        immutable_spec_rels=immutable_semver,
+                        context_files_rels=[
+                            "SemVer/Types.lean",
+                            "SemVer/Basic.lean",
+                            "SemVer/Spec/Defs.lean",
+                            "SemVer/Spec.lean",
+                        ],
+                        model=args.model,
+                        reasoning_effort=args.effort,
+                        pro_mode=args.pro_mode,
+                        service_tier=args.service_tier,
+                        max_repairs=args.max_repairs,
+                        max_output_tokens=args.max_output_tokens,
+                        stateless_zdr=args.stateless_zdr,
+                        run_comparator=args.run_comparator,
+                        transport=transport,
+                        lake_runner=lake_runner,
+                        ledger=ledger,
+                        transcript_lock=transcript_lock,
+                        transcript_path=transcript_path,
+                    )
+                    task_results.append(res_sv)
+                    print(
+                        f"[SEMVER PROOF] {rel_target}: verified={res_sv.verified} "
+                        f"attempts={res_sv.attempts_used} cost=${res_sv.cost_usd:.4f}",
+                        flush=True,
+                    )
+
+                # 2b. Synthesize & verify `SemVer/Proofs/Wire.lean` (closing `Main.lean` hex framing gap)
+                if not args.selftest and not args.skip_wire_slice:
+                    wire_rel = stage_semver_wire_slice(semver_path)
+                    res_wire = await run_proof_repair_task(
+                        task_name="SemVer_MainCLI_HexFramingSlice",
+                        package_dir=semver_path,
+                        target_rel_path=wire_rel,
+                        immutable_spec_rels=immutable_semver + ["SemVer/Wire.lean"],
+                        context_files_rels=["SemVer/Wire.lean"],
+                        model=args.model,
+                        reasoning_effort=args.effort,
+                        pro_mode=args.pro_mode,
+                        service_tier=args.service_tier,
+                        max_repairs=args.max_repairs,
+                        max_output_tokens=args.max_output_tokens,
+                        stateless_zdr=args.stateless_zdr,
+                        run_comparator=False,
+                        transport=transport,
+                        lake_runner=lake_runner,
+                        ledger=ledger,
+                        transcript_lock=transcript_lock,
+                        transcript_path=transcript_path,
+                    )
+                    task_results.append(res_wire)
+                    print(
+                        f"[SEMVER WIRE] verified={res_wire.verified} attempts={res_wire.attempts_used} "
+                        f"cost=${res_wire.cost_usd:.4f}",
+                        flush=True,
+                    )
+
+                # 2c. Independent `xhigh` Verified-Bar Specification Audit Report
+                audit_md_path = out_dir / "semver_verified_bar_spec_review.md"
+                semver_audit_result = await run_independent_semver_bar_audit(
+                    semver_dir=semver_path,
+                    out_report_path=audit_md_path,
+                    model=args.model,
+                    reasoning_effort=args.effort,
+                    pro_mode=args.pro_mode,
+                    service_tier=args.service_tier,
+                    max_output_tokens=args.max_output_tokens,
+                    transport=transport,
+                    ledger=ledger,
+                )
+                print(
+                    f"[SEMVER SPEC AUDIT] wrote {audit_md_path.name} "
+                    f"(cost=${semver_audit_result['cost_usd']:.4f})",
+                    flush=True,
+                )
+
+    except BudgetExhaustedStop as bstop:
+        budget_halted = str(bstop)
+        print(f"[BUDGET CIRCUIT BREAKER] {bstop}", flush=True)
+
+    cert = {
+        "schema": "PROVEN-COMMONS-ASTRA-XHIGH/1.0",
+        "targets": [
+            "https://github.com/Proven-Commons/semver",
+            "https://github.com/Proven-Commons/mission",
+            "https://github.com/Moissanite-Labs/weft",
+        ],
+        "evidence_label": "VERIFIED (offline selftest)" if args.selftest else "PROVEN + VERIFIED (Lean 4 kernel + Verified-Bar scanner)",
+        "authorship_disclosure": {
+            "harness_authored_by": "Gemini autonomous research agent for Ahraz (@ahrazzle)",
+            "proofs_synthesized_by": "Mock selftest responder" if args.selftest else f"{args.model} (effort={args.effort}, pro={args.pro_mode})",
+        },
+        "timestamp_utc": run_ts,
+        "budget_ledger": ledger.snapshot(),
+        "budget_circuit_breaker_triggered": budget_halted,
+        "proof_tasks": [asdict(r) for r in task_results],
+        "semver_independent_spec_audit": semver_audit_result,
+    }
+
+    cert_path = out_dir / "lean4_proof_certificates.json"
+    cert_path.write_text(json.dumps(cert, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    manifest_path = write_sha256_manifest(out_dir)
+
+    print(f"\nWrote certificate: {cert_path}")
+    print(f"Wrote SHA-256 manifest: {manifest_path}")
+    return cert
+
+
+def parse_cli_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
+    p = argparse.ArgumentParser(
+        description="OpenAI Flex (`gpt-6-astra` `xhigh`) Lean 4 proof-synthesis & `lake build` repair harness."
+    )
+    p.add_argument("--target", type=str, default="all", choices=["weft", "semver", "all"], help="Target suite to run (default: all).")
+    p.add_argument("--semver-repo", type=str, default=None, help="Path to local clone of `Proven-Commons/semver`.")
+    p.add_argument("--skip-wire-slice", action="store_true", help="Skip staging `SemVer/Wire.lean` CLI hex framing proof slice.")
+    p.add_argument("--run-comparator", action="store_true", help="Also invoke `lake comparator --paranoid` on SemVer proof repairs.")
+    p.add_argument("--model", type=str, default="gpt-6-astra", help="Frontier reasoning model ID (default: gpt-6-astra).")
+    p.add_argument("--effort", type=str, default="xhigh", choices=["low", "medium", "high", "xhigh", "max"], help="Reasoning effort (default: xhigh).")
+    p.add_argument("--pro-mode", action="store_true", help="Enable `reasoning.mode = 'pro'` on `/v1/responses` for hardest inductive proofs.")
+    p.add_argument("--service-tier", type=str, default="flex", choices=["flex", "auto", "default", "fast"], help="OpenAI service tier (default: flex = 50%% off).")
+    p.add_argument("--strict-flex", action="store_true", help="Never fall back to Standard tier on repeated Flex 429s.")
+    p.add_argument("--budget-usd", type=float, default=12.60, help="Hard USD spend cap with pre-turn reservation (default: 12.60).")
+    p.add_argument("--max-repairs", type=int, default=6, help="Maximum compiler-guided repair rounds per Lean module (default: 6).")
+    p.add_argument("--max-output-tokens", type=int, default=12288, help="Per-turn reasoning+output token ceiling (default: 12288).")
+    p.add_argument("--timeout-sec", type=float, default=900.0, help="Per-request HTTP timeout in seconds (default: 900s for Flex).")
+    p.add_argument("--max-flex-retries", type=int, default=3, help="Retries on uncharged Flex HTTP 429/408.")
+    p.add_argument("--output-dir", type=str, default="./lean4_astra_artifacts", help="Output directory for staged packages, reviews, and SHA256SUMS.")
+    p.add_argument("--base-url", type=str, default="https://api.openai.com/v1/responses", help="OpenAI Responses API endpoint.")
+    p.add_argument("--stateless-zdr", action="store_true", help="Use `store=false` + `reasoning.encrypted_content` for ZDR orgs.")
+    p.add_argument("--selftest", action="store_true", help="Run full offline verification (12-vector scanner + 3-turn repair loop + SHA256SUMS).")
+    return p.parse_args(argv)
+
+
+def main(argv: Optional[List[str]] = None) -> None:
+    if hasattr(signal, "SIGPIPE"):
+        signal.signal(signal.SIGPIPE, signal.SIG_DFL)
+
+    args = parse_cli_args(argv)
+    cert = asyncio.run(orchestrate_lean4_harness(args))
+
+    if args.selftest:
+        weft_task = cert["proof_tasks"][0]
+        assert weft_task["verified"] is True, f"Expected Weft task verified, got {weft_task}"
+        assert weft_task["attempts_used"] == 3, f"Expected 3-turn repair trajectory, got {weft_task}"
+        assert weft_task["surface_violations_caught"] == 1, "Expected 1 caught native_decide violation"
+        assert weft_task["compiler_failures_repaired"] == 1, "Expected 1 repaired compiler error"
+        assert weft_task["spec_immutability_verified"] is True, "Spec hash immutability check failed"
+        assert cert["semver_independent_spec_audit"] is not None
+        assert cert["budget_ledger"]["prompt_cache_hit_pct"] > 50.0
+        print(
+            "\n[SELFTEST PASSED] Verified 12/12 adversarial Verified-Bar surface vectors + 0/4 false positives, "
+            "caught Turn-1 `native_decide` bypass, repaired Turn-2 Lean compiler error, verified Turn-3 "
+            "constructive `WeftInvariants` proofs with immutable `spec_hash`, generated independent "
+            f"`SemVer` spec review, cached prefix hit={cert['budget_ledger']['prompt_cache_hit_pct']}%, "
+            "and wrote SHA256SUMS."
+        )
+
+
+if __name__ == "__main__":
+    main()

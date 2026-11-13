@@ -1,0 +1,268 @@
+[
+  {
+    "epistemic_status": "VERIFIED",
+    "certificate_kind": "DUAL_CHECKER_SYSTEM_LOCK",
+    "system_id": "proofcell_int3_bridge_v1",
+    "tcb_locked": true,
+    "checker_pins": {
+      "spec_sha256": "4123ca2a9ffe3099d7481e6ee844188ed235336ba92324d8be1028d8abbb40bb",
+      "impl_sha256": "2364943b4a96c2200995f3ba296a07f87b1eff8c4cd911c4d42a887615fb10b2",
+      "spec_ast_skeleton_sha256": "27e0d639582723870cc4d0d75f46a8c974d81c1d11d1db818e7fdea52ddbeed6",
+      "impl_ast_skeleton_sha256": "e169a55e8884134a90aa80b6472b653cea2d4c721807fe79b74ecfacacf2feb7",
+      "formal_kernel_sha256": "a2c22e2a5fd06a91f33e62e869b727abd5ec5051dce13215b86a5056c97375cd"
+    },
+    "exact_arithmetic_only": true,
+    "positive_witnesses_verified": [
+      {
+        "name": "accepted_nonzero",
+        "steps": 1,
+        "cost": 1,
+        "transcript_sha256_12": "b38f59d164cf"
+      }
+    ],
+    "must_fail_controls_rejected": 6,
+    "differential_fuzz": {
+      "states_checked": 3,
+      "edges_checked": 6,
+      "discrepancies": 0
+    },
+    "planted_mutations": {
+      "total": 1,
+      "killed": 1,
+      "reports": [
+        {
+          "bug_id": "remove_norm_bound",
+          "description": "Permit an oversized anchor-preserving delta",
+          "killed": true,
+          "catching_vectors": [
+            "rejected_norm"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "epistemic_status": "VERIFIED",
+    "certificate_kind": "TRACE_GOAL_WITNESS",
+    "system_id": "proofcell_int3_bridge_v1",
+    "verified": true,
+    "differential_match": true,
+    "dual_checker_enforced": true,
+    "checker_pins": {
+      "spec_sha256": "4123ca2a9ffe3099d7481e6ee844188ed235336ba92324d8be1028d8abbb40bb",
+      "impl_sha256": "2364943b4a96c2200995f3ba296a07f87b1eff8c4cd911c4d42a887615fb10b2",
+      "formal_kernel_sha256": "a2c22e2a5fd06a91f33e62e869b727abd5ec5051dce13215b86a5056c97375cd"
+    },
+    "premises_asserted": [
+      "dual_checker_transcript_parity",
+      "all_actions_legal_and_alive",
+      "safety_invariant_preserved_at_all_steps",
+      "goal_predicate_satisfied_at_terminal_state",
+      "no_premature_goal_before_final_step"
+    ],
+    "trace_len": 1,
+    "steps_executed": 1,
+    "total_cost": 1,
+    "alive": true,
+    "invariant_ok": true,
+    "invariant_failure_step": null,
+    "invariant_reason": "ok",
+    "final_goal": true,
+    "premature_goal": false,
+    "final_obs_repr": "(1, 4, 0, 5)",
+    "transcript_sha256": "b38f59d164cfee4f60584d2fbce3de83d0ab04fb8a962c76faf0f0440e24a39c",
+    "trace_sha256_12": "b474d42d5d98"
+  },
+  {
+    "epistemic_status": "REJECTED",
+    "certificate_kind": "TRACE_GOAL_WITNESS",
+    "system_id": "proofcell_int3_bridge_v1",
+    "verified": false,
+    "differential_match": true,
+    "dual_checker_enforced": true,
+    "checker_pins": {
+      "spec_sha256": "4123ca2a9ffe3099d7481e6ee844188ed235336ba92324d8be1028d8abbb40bb",
+      "impl_sha256": "2364943b4a96c2200995f3ba296a07f87b1eff8c4cd911c4d42a887615fb10b2",
+      "formal_kernel_sha256": "a2c22e2a5fd06a91f33e62e869b727abd5ec5051dce13215b86a5056c97375cd"
+    },
+    "premises_asserted": [
+      "dual_checker_transcript_parity",
+      "all_actions_legal_and_alive",
+      "safety_invariant_preserved_at_all_steps",
+      "goal_predicate_satisfied_at_terminal_state",
+      "no_premature_goal_before_final_step"
+    ],
+    "trace_len": 1,
+    "steps_executed": 0,
+    "total_cost": 0,
+    "alive": false,
+    "invariant_ok": true,
+    "invariant_failure_step": null,
+    "invariant_reason": "ok",
+    "final_goal": false,
+    "premature_goal": false,
+    "final_obs_repr": "(0, 3, 1, 5)",
+    "transcript_sha256": "029263fabbd0282d199e1710f4f9e11c1a3ef194634cd0ac63f96e2fda56b38b",
+    "trace_sha256_12": "3205a932ea04"
+  },
+  {
+    "epistemic_status": "REJECTED",
+    "certificate_kind": "TRACE_GOAL_WITNESS",
+    "system_id": "proofcell_int3_bridge_v1",
+    "verified": false,
+    "differential_match": true,
+    "dual_checker_enforced": true,
+    "checker_pins": {
+      "spec_sha256": "4123ca2a9ffe3099d7481e6ee844188ed235336ba92324d8be1028d8abbb40bb",
+      "impl_sha256": "2364943b4a96c2200995f3ba296a07f87b1eff8c4cd911c4d42a887615fb10b2",
+      "formal_kernel_sha256": "a2c22e2a5fd06a91f33e62e869b727abd5ec5051dce13215b86a5056c97375cd"
+    },
+    "premises_asserted": [
+      "dual_checker_transcript_parity",
+      "all_actions_legal_and_alive",
+      "safety_invariant_preserved_at_all_steps",
+      "goal_predicate_satisfied_at_terminal_state",
+      "no_premature_goal_before_final_step"
+    ],
+    "trace_len": 1,
+    "steps_executed": 0,
+    "total_cost": 0,
+    "alive": false,
+    "invariant_ok": true,
+    "invariant_failure_step": null,
+    "invariant_reason": "ok",
+    "final_goal": false,
+    "premature_goal": false,
+    "final_obs_repr": "(0, 3, 1, 5)",
+    "transcript_sha256": "029263fabbd0282d199e1710f4f9e11c1a3ef194634cd0ac63f96e2fda56b38b",
+    "trace_sha256_12": "d61f14641415"
+  },
+  {
+    "epistemic_status": "REJECTED",
+    "certificate_kind": "TRACE_GOAL_WITNESS",
+    "system_id": "proofcell_int3_bridge_v1",
+    "verified": false,
+    "differential_match": true,
+    "dual_checker_enforced": true,
+    "checker_pins": {
+      "spec_sha256": "4123ca2a9ffe3099d7481e6ee844188ed235336ba92324d8be1028d8abbb40bb",
+      "impl_sha256": "2364943b4a96c2200995f3ba296a07f87b1eff8c4cd911c4d42a887615fb10b2",
+      "formal_kernel_sha256": "a2c22e2a5fd06a91f33e62e869b727abd5ec5051dce13215b86a5056c97375cd"
+    },
+    "premises_asserted": [
+      "dual_checker_transcript_parity",
+      "all_actions_legal_and_alive",
+      "safety_invariant_preserved_at_all_steps",
+      "goal_predicate_satisfied_at_terminal_state",
+      "no_premature_goal_before_final_step"
+    ],
+    "trace_len": 1,
+    "steps_executed": 0,
+    "total_cost": 0,
+    "alive": false,
+    "invariant_ok": true,
+    "invariant_failure_step": null,
+    "invariant_reason": "ok",
+    "final_goal": false,
+    "premature_goal": false,
+    "final_obs_repr": "(0, 3, 1, 5)",
+    "transcript_sha256": "029263fabbd0282d199e1710f4f9e11c1a3ef194634cd0ac63f96e2fda56b38b",
+    "trace_sha256_12": "778a783f5e5b"
+  },
+  {
+    "epistemic_status": "REJECTED",
+    "certificate_kind": "TRACE_GOAL_WITNESS",
+    "system_id": "proofcell_int3_bridge_v1",
+    "verified": false,
+    "differential_match": true,
+    "dual_checker_enforced": true,
+    "checker_pins": {
+      "spec_sha256": "4123ca2a9ffe3099d7481e6ee844188ed235336ba92324d8be1028d8abbb40bb",
+      "impl_sha256": "2364943b4a96c2200995f3ba296a07f87b1eff8c4cd911c4d42a887615fb10b2",
+      "formal_kernel_sha256": "a2c22e2a5fd06a91f33e62e869b727abd5ec5051dce13215b86a5056c97375cd"
+    },
+    "premises_asserted": [
+      "dual_checker_transcript_parity",
+      "all_actions_legal_and_alive",
+      "safety_invariant_preserved_at_all_steps",
+      "goal_predicate_satisfied_at_terminal_state",
+      "no_premature_goal_before_final_step"
+    ],
+    "trace_len": 1,
+    "steps_executed": 0,
+    "total_cost": 0,
+    "alive": false,
+    "invariant_ok": true,
+    "invariant_failure_step": null,
+    "invariant_reason": "ok",
+    "final_goal": false,
+    "premature_goal": false,
+    "final_obs_repr": "(0, 3, 1, 5)",
+    "transcript_sha256": "029263fabbd0282d199e1710f4f9e11c1a3ef194634cd0ac63f96e2fda56b38b",
+    "trace_sha256_12": "bb5b752d8572"
+  },
+  {
+    "epistemic_status": "REJECTED",
+    "certificate_kind": "TRACE_GOAL_WITNESS",
+    "system_id": "proofcell_int3_bridge_v1",
+    "verified": false,
+    "differential_match": true,
+    "dual_checker_enforced": true,
+    "checker_pins": {
+      "spec_sha256": "4123ca2a9ffe3099d7481e6ee844188ed235336ba92324d8be1028d8abbb40bb",
+      "impl_sha256": "2364943b4a96c2200995f3ba296a07f87b1eff8c4cd911c4d42a887615fb10b2",
+      "formal_kernel_sha256": "a2c22e2a5fd06a91f33e62e869b727abd5ec5051dce13215b86a5056c97375cd"
+    },
+    "premises_asserted": [
+      "dual_checker_transcript_parity",
+      "all_actions_legal_and_alive",
+      "safety_invariant_preserved_at_all_steps",
+      "goal_predicate_satisfied_at_terminal_state",
+      "no_premature_goal_before_final_step"
+    ],
+    "trace_len": 1,
+    "steps_executed": 1,
+    "total_cost": 1,
+    "alive": true,
+    "invariant_ok": true,
+    "invariant_failure_step": null,
+    "invariant_reason": "ok",
+    "final_goal": false,
+    "premature_goal": false,
+    "final_obs_repr": "(1, 3, 1, 5)",
+    "transcript_sha256": "9f8414c124eca4eb446706f5f3cf8ef92e10dd33ac141b9a661493779fb0efea",
+    "trace_sha256_12": "fc7f35e853cc"
+  },
+  {
+    "epistemic_status": "REJECTED",
+    "certificate_kind": "TRACE_GOAL_WITNESS",
+    "system_id": "proofcell_int3_bridge_v1",
+    "verified": false,
+    "differential_match": true,
+    "dual_checker_enforced": true,
+    "checker_pins": {
+      "spec_sha256": "4123ca2a9ffe3099d7481e6ee844188ed235336ba92324d8be1028d8abbb40bb",
+      "impl_sha256": "2364943b4a96c2200995f3ba296a07f87b1eff8c4cd911c4d42a887615fb10b2",
+      "formal_kernel_sha256": "a2c22e2a5fd06a91f33e62e869b727abd5ec5051dce13215b86a5056c97375cd"
+    },
+    "premises_asserted": [
+      "dual_checker_transcript_parity",
+      "all_actions_legal_and_alive",
+      "safety_invariant_preserved_at_all_steps",
+      "goal_predicate_satisfied_at_terminal_state",
+      "no_premature_goal_before_final_step"
+    ],
+    "trace_len": 2,
+    "steps_executed": 1,
+    "total_cost": 1,
+    "alive": true,
+    "invariant_ok": true,
+    "invariant_failure_step": null,
+    "invariant_reason": "ok",
+    "final_goal": true,
+    "premature_goal": true,
+    "final_obs_repr": "(1, 4, 0, 5)",
+    "transcript_sha256": "b38f59d164cfee4f60584d2fbce3de83d0ab04fb8a962c76faf0f0440e24a39c",
+    "trace_sha256_12": "219918bd96ef"
+  }
+]

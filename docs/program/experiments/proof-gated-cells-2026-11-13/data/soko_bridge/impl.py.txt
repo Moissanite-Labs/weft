@@ -1,0 +1,24 @@
+def initial_state():
+    return (0,3,1,5)
+def actions(s):
+    choices = ((0,1,-1,0),(0,1,0,0),(0,0,0,1),(0,3,-3,0),(1,1,-1,0),(0,0,0,0))
+    return choices if s[0] == 0 else ()
+def step(s, a):
+    if s[0] != 0:
+        return None
+    if a[0] != s[0]:
+        return None
+    dx,dy,dz = a[1],a[2],a[3]
+    if dx*dx + dy*dy + dz*dz > 8:
+        return None
+    if dz != 0:
+        return None
+    if dx+dy != 0:
+        return None
+    return (s[0]+1,s[1]+dx,s[2]+dy,s[3]+dz)
+def is_goal(s):
+    return s[0] == 1 and s[1] == 4 and s[2] == 0 and s[3] == 5
+def invariant(s):
+    return s[1]+s[2] == 4 and s[3] == 5
+def project_obs(s):
+    return s

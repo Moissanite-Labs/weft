@@ -1,0 +1,87 @@
+{
+  "accepted": false,
+  "kernel_checked": true,
+  "theorem": "ProofCellConcrete.certificate",
+  "axioms": [],
+  "after": [
+    4,
+    0,
+    5
+  ],
+  "before": [
+    3,
+    1,
+    5
+  ],
+  "delta": [
+    1,
+    -1,
+    0
+  ],
+  "anchors": [
+    [
+      1,
+      0,
+      0
+    ],
+    [
+      0,
+      1,
+      0
+    ],
+    [
+      0,
+      0,
+      1
+    ]
+  ],
+  "frozen": [
+    2
+  ],
+  "radius_sq": 8,
+  "mathematical_gate_passed": false,
+  "proofhash": "2b248ffe52e955723a98ea5c00d68cd8ca87549b9273f4b428803d3bb37c4fe9",
+  "specsha": "f1cd40b4c0b488069255478930a9bc53dad3947dd9e37572253bc78a49c8e275",
+  "request_sha256": "a42e9e767ebc704eef2c1961459cbb25dbd1c301664c5a56a555f1a4d78dfa21",
+  "toolchain": "leanprover/lean4:v4.35.0",
+  "compilerlogs": [
+    {
+      "command": [
+        "--version"
+      ],
+      "returncode": 0,
+      "stdout": "Lean (version 4.35.0, arm64-apple-darwin24.6.0, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "-o",
+        "Core.olean",
+        "Core.lean"
+      ],
+      "returncode": 0,
+      "stdout": "'ProofCell.allowed_guarantees' depends on axioms: [propext, Quot.sound]\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "Certificate.lean"
+      ],
+      "returncode": 0,
+      "stdout": "ProofCellConcrete.certificate :\n  { x := 4, y := 0, z := 5 } = add { x := 3, y := 1, z := 5 } { x := 1, y := -1, z := 0 } \u2227\n    \u00acAllowed { x := 1, y := -1, z := 0 }\n        [{ x := 1, y := 0, z := 0 }, { x := 0, y := 1, z := 0 }, { x := 0, y := 0, z := 1 }] [2] 8\n'ProofCellConcrete.certificate' does not depend on any axioms\n",
+      "stderr": ""
+    }
+  ],
+  "trust_config": {
+    "template": "closed-int-vec3-v1",
+    "template_sha256": "1c0fe6e55b05e08d1a39526842e262d76bc66c4ca6a665f269382754b502b11c",
+    "dimension": 3,
+    "arithmetic": "unbounded Lean Int; bounded host JSON ints",
+    "required_concrete_axioms": [],
+    "generic_algebra_theorem_axioms": [
+      "propext",
+      "Quot.sound"
+    ],
+    "scope": "finite registered fixed-feature anchors; per-transition delta bound; no claim about adapter, hardware or natural world"
+  }
+}

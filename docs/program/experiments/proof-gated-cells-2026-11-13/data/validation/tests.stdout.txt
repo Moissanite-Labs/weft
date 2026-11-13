@@ -1,0 +1,1 @@
+{"soko_commit": "c3afb8d4b17b1b6ebcceaa05704320d555e2c013", "registered": true, "trace_count": 7, "positive_verified": 1, "negative_rejected": 6, "lean_proof": false}
