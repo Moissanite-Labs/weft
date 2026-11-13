@@ -13,6 +13,11 @@ useDefault = true
 # history findings. The allowlist is scoped to that one commit, so the same
 # strings added anywhere else are still reported, and the values themselves
 # are not repeated here.
+# grk-proof triaged all 11 hits as false positives (10 file SHA-256 digests plus 1 prompt_cache_key fixture id).
 [[allowlists]]
 description = "Corpus import test vectors (a18e0ff2), not real secrets."
-commits = ["a18e0ff2a583366709e7bc507b780ee914cb233c"]
+commits = [
+    "a18e0ff2a583366709e7bc507b780ee914cb233c",
+    "09d1e3cadba1d3b2bad480a3f96dd075e9300a67",
+    "f2a72fdc0fa8b859df6ccc98e41d0420e86cddbf",
+]
