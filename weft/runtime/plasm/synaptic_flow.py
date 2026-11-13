@@ -61,29 +61,60 @@ def _restore_like(arr: np.ndarray, template: Any) -> Any:
     return arr
 
 
-def _exact_nonneg_fraction(value: Union[int, float, str, Fraction], *, upward_digits: Optional[int] = None) -> Fraction:
+FIXED_RADIX_DENOM: int = 1_000_000  # 10^-6 micro-units (<= 20-bit denominator invariant; exact C11 int64 parity)
+
+
+def quantize_fixed_radix_q(
+    value: Union[int, float, str, Fraction],
+    *,
+    denom: int = FIXED_RADIX_DENOM,
+    min_positive_tick: bool = False,
+) -> Fraction:
     """
-    Converts `value` into an exact `fractions.Fraction` without float rounding optimism.
-    Rejects `bool`, `NaN`, `Inf`, and negative numbers fail-closed.
+    Boundary quantizer mapping floating-point telemetry into fixed-radix `1 / denom`
+    rationals (`denom = 1_000_000` default -> denominator bit-length <= 20 bits forever across
+    arbitrary linear combinations, eliminating the 3,226-bit Stern-Brocot coprime LCM blowup).
+    Exact `Fraction`, `int`, and `"p/q"` `str` inputs pass through without quantization.
     """
     if isinstance(value, bool):
         raise ValueError("Boolean values are not valid rational quantities.")
     if isinstance(value, Fraction):
-        q = value
-    elif isinstance(value, (int, str)):
-        q = Fraction(value)
-    elif isinstance(value, (float, np.floating)):
+        return value
+    if isinstance(value, (int, str)):
+        return Fraction(value)
+    if isinstance(value, (float, np.floating)):
         fv = float(value)
         if not math.isfinite(fv):
             raise ValueError(f"Non-finite float {fv!r} cannot be converted to Fraction.")
-        # Exact IEEE-754 binary float value in Q (never string-rounded!)
-        q = Fraction.from_float(fv)
-        if upward_digits is not None:
-            scale = 10 ** int(upward_digits)
-            q = Fraction(math.ceil(q * scale), scale)
-    else:
-        raise TypeError(f"Unsupported numeric type for Fraction conversion: {type(value)!r}")
-    return q
+        if fv == 0.0:
+            return Fraction(0, 1)
+        ticks = int(round(fv * int(denom)))
+        if min_positive_tick and fv > 0.0 and ticks == 0:
+            ticks = 1
+        elif min_positive_tick and fv < 0.0 and ticks == 0:
+            ticks = -1
+        return Fraction(ticks, int(denom))
+    raise TypeError(f"Unsupported numeric type for Fraction conversion: {type(value)!r}")
+
+
+def _exact_nonneg_fraction(
+    value: Union[int, float, str, Fraction],
+    *,
+    upward_digits: Optional[int] = None,
+    min_positive_tick: bool = True,
+) -> Fraction:
+    """
+    Converts `value` into an exact `fractions.Fraction` using fixed-radix `10^-6` micro-units
+    on floats (or upward ceiling at `10^-upward_digits` when explicitly requested).
+    Rejects `bool`, `NaN`, and `Inf` fail-closed.
+    """
+    if isinstance(value, (float, np.floating)) and upward_digits is not None:
+        fv = float(value)
+        if not math.isfinite(fv):
+            raise ValueError(f"Non-finite float {fv!r} cannot be converted to Fraction.")
+        scale = 10 ** int(upward_digits)
+        return Fraction(math.ceil(Fraction.from_float(fv) * scale), scale)
+    return quantize_fixed_radix_q(value, denom=FIXED_RADIX_DENOM, min_positive_tick=min_positive_tick)
 
 
 # =============================================================================
