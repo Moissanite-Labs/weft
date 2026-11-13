@@ -1,0 +1,21 @@
+test_compiler_failure_cannot_accept_empty_output (test_verifier.VerifierTests.test_compiler_failure_cannot_accept_empty_output) ... ok
+test_nonzero_edit_checked_no_axioms (test_verifier.VerifierTests.test_nonzero_edit_checked_no_axioms) ... ok
+test_rejection_reasons_are_lean_checked (test_verifier.VerifierTests.test_rejection_reasons_are_lean_checked) ... ok
+test_strict_data_validation (test_verifier.VerifierTests.test_strict_data_validation) ... ok
+test_timeout_saved_and_fail_closed (test_verifier.VerifierTests.test_timeout_saved_and_fail_closed) ... ok
+test_zero_edit_checked (test_verifier.VerifierTests.test_zero_edit_checked) ... ok
+test_incomplete_attempts_are_visible_without_changing_state (test_cell_mcp.CellTests.test_incomplete_attempts_are_visible_without_changing_state) ... ok
+test_lean_checked_rejections_preserve_state (test_cell_mcp.CellTests.test_lean_checked_rejections_preserve_state) ... ok
+test_protocol_and_schema_do_not_expose_code_execution (test_cell_mcp.CellTests.test_protocol_and_schema_do_not_expose_code_execution) ... ok
+test_real_proof_commit_restart_and_stale_rejection (test_cell_mcp.CellTests.test_real_proof_commit_restart_and_stale_rejection) ... ok
+test_restart_rejects_changed_rules_and_corrupt_certificate (test_cell_mcp.CellTests.test_restart_rejects_changed_rules_and_corrupt_certificate) ... ok
+test_stdio_handshake_inspection_and_invalid_json (test_cell_mcp.CellTests.test_stdio_handshake_inspection_and_invalid_json) ... ok
+test_strict_json_and_representation_limit (test_cell_mcp.CellTests.test_strict_json_and_representation_limit) ... ok
+test_two_writers_cannot_commit_same_expected_state (test_cell_mcp.CellTests.test_two_writers_cannot_commit_same_expected_state) ... ok
+test_verifier_exception_and_false_claim_do_not_commit (test_cell_mcp.CellTests.test_verifier_exception_and_false_claim_do_not_commit) ... ok
+test_actual_dual_checker_api (test_soko_bridge.SokoBridgeTests.test_actual_dual_checker_api) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 13.509s
+
+OK

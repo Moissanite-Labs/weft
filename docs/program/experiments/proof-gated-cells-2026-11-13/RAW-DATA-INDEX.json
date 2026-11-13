@@ -1,0 +1,1143 @@
+{
+  "audit": "Byte/hash and repository reachability checks only. No model or numerical experiment rerun.",
+  "repository": "Moissanite-Labs/weft",
+  "teacher_archive_head": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+  "original_history_ref": "refs/heads/record/astra-teachers-prereg-history-20261112",
+  "original_history_head": "d85940c0d078b54f40f4742b33c286c521164567",
+  "responses": [
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/data/calibration/request.response.json",
+      "bytes": 3605,
+      "sha256": "3d185721061ea549632eb474a6ef93ad26b69311a09acf686d3e8423023472ff",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/data/calibration/request.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-17.behavior_only.round-1.response.json",
+      "bytes": 1415,
+      "sha256": "1ea125392d80476e5d547b174f2e682e92dc364678c83b993266e8b56324bd90",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-17.behavior_only.round-1.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-17.behavior_only.round-2.response.json",
+      "bytes": 1527,
+      "sha256": "f88f2a5043f142a796beb9ba08c4c43a3b215226ccee2dc530d424036056c160",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-17.behavior_only.round-2.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-17.behavior_only.round-3.response.json",
+      "bytes": 1523,
+      "sha256": "438b32c58c25b0a98764275a6e92591238b06ce08d620ef36dc332a4b24ac8b7",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-17.behavior_only.round-3.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-17.scrambled_weights.round-1.response.json",
+      "bytes": 2004,
+      "sha256": "ebf56733b6aa5faa19d6c10db589d28d2be4120bd716572df117a0e588823d4b",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-17.scrambled_weights.round-1.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-17.weights_behavior.round-1.response.json",
+      "bytes": 1754,
+      "sha256": "1afd11c25e8894c3aaab6a8f081b22bca7116c2994ffde7d246f79cb530fe538",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-17.weights_behavior.round-1.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-17.weights_behavior.round-2.response.json",
+      "bytes": 1765,
+      "sha256": "d207efca3bb1d13a375277597bca29aec63a697483eb708ff93d2abd6f16cb55",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-17.weights_behavior.round-2.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-17.weights_behavior.round-3.response.json",
+      "bytes": 1844,
+      "sha256": "4b5b5e918f4c32708aadc5e3a73b37b95643fa84775d8d931ed1aa38a3420426",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-17.weights_behavior.round-3.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-29.behavior_only.round-1.response.json",
+      "bytes": 1468,
+      "sha256": "beb3a983d001d0a31b71309acb4eafb00dee4e2dbc762c21c87646ea0356f0bc",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-29.behavior_only.round-1.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-29.behavior_only.round-2.response.json",
+      "bytes": 1517,
+      "sha256": "59e2b0dba5e2d66027f8be0482799ca2c72da24941d74fe21e7c08bf509e883b",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-29.behavior_only.round-2.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-29.behavior_only.round-3.response.json",
+      "bytes": 1547,
+      "sha256": "318d04b56761713eed71165a60c153580f7de8fc6ac9dd9f41518f4a3fa611c1",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-29.behavior_only.round-3.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-29.scrambled_weights.round-1.response.json",
+      "bytes": 1698,
+      "sha256": "659458b16fb25e1151bb0fcf82c3a38df476ff5c8be4a1dd50b24a7c04ece518",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-29.scrambled_weights.round-1.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-29.weights_behavior.round-1.response.json",
+      "bytes": 1686,
+      "sha256": "2ac0760ddc0bcc980f74b781590820a41502f71a9fac65e5d057b5a3f9243138",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-29.weights_behavior.round-1.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-29.weights_behavior.round-2.response.json",
+      "bytes": 1720,
+      "sha256": "bafd498b2cf5862bfa9e2f912b331c2c76463bc842e6961b3acc20f0d4a1f9fd",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-29.weights_behavior.round-2.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-29.weights_behavior.round-3.response.json",
+      "bytes": 1723,
+      "sha256": "b8e27f22c71093dab5e42bf9ded33881d13be645c46f9ad22e2faa6a70fc4e87",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-29.weights_behavior.round-3.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-43.behavior_only.round-1.response.json",
+      "bytes": 1462,
+      "sha256": "033bc77dd416869769f9cf5d933d13b15542c38532033a14412fc5227f38b8a1",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-43.behavior_only.round-1.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-43.behavior_only.round-2.response.json",
+      "bytes": 1551,
+      "sha256": "1bf8cdb261172206122cf93ecaf291c1e37ab7545da8d66af47e7899ad6fb063",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-43.behavior_only.round-2.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-43.behavior_only.round-3.response.json",
+      "bytes": 1526,
+      "sha256": "9b24e25deea90a5bc7a10cdcc30609fafc1108324c993914b14b704f18ac3239",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-43.behavior_only.round-3.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-43.scrambled_weights.round-1.response.json",
+      "bytes": 1564,
+      "sha256": "f7db83c844e522eb574604723bc6e922b2d68f2fb76e2c05aee779ff7c55c3c4",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-43.scrambled_weights.round-1.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-43.weights_behavior.round-1.response.json",
+      "bytes": 1739,
+      "sha256": "7dce38a98ac82d9fa6421583115f349ceb2d2231f091cfc168526e7b1175d906",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-43.weights_behavior.round-1.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-43.weights_behavior.round-2.response.json",
+      "bytes": 1783,
+      "sha256": "7d6306ea68d0c2a38457271b080f18685a0e9201e2e2b1ecc4393e683a7d0c9c",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-43.weights_behavior.round-2.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-43.weights_behavior.round-3.response.json",
+      "bytes": 1786,
+      "sha256": "89f51f2f8749bc848acc8687294b8da49f2f91db167eb577af0a365426f3c95a",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/data/requests/seed-43.weights_behavior.round-3.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-107.hidden_only.round-1.response.json",
+      "bytes": 1959,
+      "sha256": "13ed791af15fd92be4da9d0bb23478d26a3f9fa2ddbdd83236c391982bd955aa",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-107.hidden_only.round-1.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-107.hidden_only.round-2.response.json",
+      "bytes": 2067,
+      "sha256": "79d071fe02731e0c1acdef32c7d737fc771cb0d7b79df6113333b3ad92320510",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-107.hidden_only.round-2.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-107.neither.round-1.response.json",
+      "bytes": 1621,
+      "sha256": "31247143d34ed93a240fdc864b813329995231392b6a24330e46e7df1339a16d",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-107.neither.round-1.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-107.neither.round-2.response.json",
+      "bytes": 1655,
+      "sha256": "e5eb2f932e8b75599ce80c6767331cdd99b1df3935b1022cc1b98aaa09b0f1e1",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-107.neither.round-2.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-107.weights_hidden.round-1.response.json",
+      "bytes": 2285,
+      "sha256": "985290f10be19100412e91dc3c36449bf4740150498df6927cde472a494b4b02",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-107.weights_hidden.round-1.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-107.weights_hidden.round-2.response.json",
+      "bytes": 2393,
+      "sha256": "c812de112a33afe12dc86d96bfba3a808ede357220ff8aabc33210d3877c7e08",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-107.weights_hidden.round-2.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-107.weights_only.round-1.response.json",
+      "bytes": 1898,
+      "sha256": "e230b5fc3bbc3b31ea290648e536dacaf09053d25e4fec476ce65e066ca3dc62",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-107.weights_only.round-1.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-107.weights_only.round-2.response.json",
+      "bytes": 1929,
+      "sha256": "2639eace24a4f4b633d92e530d57a01fe6ae1b8236aface9663815f27cafb936",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-107.weights_only.round-2.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-131.hidden_only.round-1.response.json",
+      "bytes": 1778,
+      "sha256": "77a0bc6d4612459687ae83e67c7f5822205dd8f3b2b5d1fe819684031a740596",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-131.hidden_only.round-1.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-131.hidden_only.round-2.response.json",
+      "bytes": 1833,
+      "sha256": "0318cbcacfa0d7c8b792bac35c84a0cfd4830c9ad19b9904162d6746dfc90e80",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-131.hidden_only.round-2.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-131.neither.round-1.response.json",
+      "bytes": 1654,
+      "sha256": "c63fdee0248bd930686aced7083f3d9394f90aa05dfdfc0c02013177cf6d4357",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-131.neither.round-1.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-131.neither.round-2.response.json",
+      "bytes": 1698,
+      "sha256": "7a888ade43361d5ed81c8d2dbb039fc9bc15fad1af6db0804e81a27828c29d2e",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-131.neither.round-2.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-131.weights_hidden.round-1.response.json",
+      "bytes": 1853,
+      "sha256": "50f3a3c2ecf238ceafa0411010cf12c9462212c9bfd827b8c131d403d345b873",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-131.weights_hidden.round-1.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-131.weights_hidden.round-2.response.json",
+      "bytes": 1884,
+      "sha256": "8d4c4b8a59f7628fc0b4a6359675c79dc5de1993d88a4537c7ca164f3392c3cf",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-131.weights_hidden.round-2.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-131.weights_only.round-1.response.json",
+      "bytes": 1958,
+      "sha256": "aaef99eb65481a416d3ee13829ab60fe0e9e209fc0c764089151703bbd4b9f99",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-131.weights_only.round-1.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-131.weights_only.round-2.response.json",
+      "bytes": 1981,
+      "sha256": "eafbd639042c539e3e5364918eae14d66f30cce1d63c17534d472fff631c0456",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-131.weights_only.round-2.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-163.hidden_only.round-1.response.json",
+      "bytes": 1771,
+      "sha256": "23d3f60be73ab1f6428cf2c37843358a3b9d4b7452f2366aee78aee6510fb19f",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-163.hidden_only.round-1.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-163.hidden_only.round-2.response.json",
+      "bytes": 1893,
+      "sha256": "ee96389c61f7560aaa7ad6f46f5db4b760fb436944a7f3f3d8c4afd718c16da0",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-163.hidden_only.round-2.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-163.neither.round-1.response.json",
+      "bytes": 1676,
+      "sha256": "62ec7a050d1d2f12f2ff795e43c705ecc6555be1cd2703a0cf8fba7a80934026",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-163.neither.round-1.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-163.neither.round-2.response.json",
+      "bytes": 1658,
+      "sha256": "03f915958c9e94c77991477b1003830af826c58d42182d97b4c507ec86f85e05",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-163.neither.round-2.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-163.weights_hidden.round-1.response.json",
+      "bytes": 1819,
+      "sha256": "8d6e3fe9ff2e20d8f3e92b6d0759c42f898d60da3605923f225debd53ceb20a6",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-163.weights_hidden.round-1.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-163.weights_hidden.round-2.response.json",
+      "bytes": 1889,
+      "sha256": "39ee6c4809991f78cc32155b557427058de809da7ae2c16b5966bee5bfe748d9",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-163.weights_hidden.round-2.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-163.weights_only.round-1.response.json",
+      "bytes": 1793,
+      "sha256": "9af12c3988bbb80c6800bed6ccade59ecc12c9514ac6f7e4f8bf1bf90ef6cd61",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-163.weights_only.round-1.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-163.weights_only.round-2.response.json",
+      "bytes": 1864,
+      "sha256": "3bd461df02ef1ea515b7a1feb80e557f9ead1edb82336e47507c6fa124b623cd",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-163.weights_only.round-2.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-71.hidden_only.round-1.response.json",
+      "bytes": 1701,
+      "sha256": "a2cff43a600443c9df7b3e2af78e7bff6db67019dbbfddd3c65315f9a97c4173",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-71.hidden_only.round-1.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-71.hidden_only.round-2.response.json",
+      "bytes": 1853,
+      "sha256": "4a2dd845e0e34edd1844999bda8cb3a1e77b68cf36bca90aefd9e92f46005005",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-71.hidden_only.round-2.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-71.neither.round-1.response.json",
+      "bytes": 1522,
+      "sha256": "1c2f71530b57c36a3466f432889480512b79eba2b220d2c0a56c949f89b70428",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-71.neither.round-1.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-71.neither.round-2.response.json",
+      "bytes": 1501,
+      "sha256": "a0f267101db044f6fa6cd876b59f499b3e641c5882c67dc0318f4652a26fc900",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-71.neither.round-2.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-71.weights_hidden.round-1.response.json",
+      "bytes": 1732,
+      "sha256": "629f4ef4b69e8641f8b0347f82c1231ad4a03d712ab0abb2d88d3ee238c8b0da",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-71.weights_hidden.round-1.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-71.weights_hidden.round-2.response.json",
+      "bytes": 1752,
+      "sha256": "5ebce153008c32bd3f19e0e084f5d5d414363e77ceeb40df91f28a92900846d9",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-71.weights_hidden.round-2.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-71.weights_only.round-1.response.json",
+      "bytes": 1794,
+      "sha256": "e5a8437faf2375d6ad29d8f4363f7e034ca2a3f5607d78d0cb57b549561d92dc",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-71.weights_only.round-1.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-71.weights_only.round-2.response.json",
+      "bytes": 1861,
+      "sha256": "3b43ed72da545cbd60d7741042d7ad342020524de2b7d9ccd250e91c4d1f79b8",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-71.weights_only.round-2.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-89.hidden_only.round-1.response.json",
+      "bytes": 1743,
+      "sha256": "60882d01aaca9ebabc5dd3889f2ce3032e79c35efbffdc683d0f43ee50e797a9",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-89.hidden_only.round-1.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-89.hidden_only.round-2.response.json",
+      "bytes": 1854,
+      "sha256": "201e5ea04e4a5f2db791382bb725aff5543565f96117d97df5cb5616219b682d",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-89.hidden_only.round-2.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-89.neither.round-1.response.json",
+      "bytes": 1598,
+      "sha256": "c5d77c15064f8e99a110be72ab3db5de66e9414fb159fb1dce466bb5bdd1417c",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-89.neither.round-1.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-89.neither.round-2.response.json",
+      "bytes": 1641,
+      "sha256": "798a5c23ccf2dd1ee085d0bc3f75915fce668a2f8e0369f04731e9d12023d835",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-89.neither.round-2.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-89.weights_hidden.round-1.response.json",
+      "bytes": 1866,
+      "sha256": "490b4de3a2c256140a047489554c670fbbaaaaa0bedc7385c0a051f874592d7f",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-89.weights_hidden.round-1.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-89.weights_hidden.round-2.response.json",
+      "bytes": 1918,
+      "sha256": "d6a6474b25230482d58e75991fa7a90d396fa333f8502469c794f295aa205890",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-89.weights_hidden.round-2.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-89.weights_only.round-1.response.json",
+      "bytes": 1767,
+      "sha256": "38a6157e3cdfe23b35bfcdd1cfbd3312383a39dc9ff74b87cd54c2bf9660f739",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-89.weights_only.round-1.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-89.weights_only.round-2.response.json",
+      "bytes": 1839,
+      "sha256": "71d1e0cdb61c1ba55280f2f26a2a82dde0c295eea8d5c74b5dc2b338d499a74e",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/requests/seed-89.weights_only.round-2.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase3_conditional/data/requests/seed-101.tools.round-1.response.json",
+      "bytes": 4045,
+      "sha256": "5bdcaef8ebccc2deea0d2f9a94405765637c59811a3341da7e957d2a8d147dba",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase3_conditional/data/requests/seed-101.tools.round-1.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase3_conditional/data/requests/seed-101.tools.round-2.response.json",
+      "bytes": 4844,
+      "sha256": "097e7b2a5de8c058a5049d4877ee51314a7c84d6b0082fba5e44264138147a8c",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase3_conditional/data/requests/seed-101.tools.round-2.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase3_conditional/data/requests/seed-101.tools.round-3.response.json",
+      "bytes": 4432,
+      "sha256": "c2fdcd0c226d2cd1fb517df706c7af79f0bcf27ddb6ece77c8243cf209aa2469",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase3_conditional/data/requests/seed-101.tools.round-3.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase3_conditional/data/requests/seed-101.tools.round-4.response.json",
+      "bytes": 4507,
+      "sha256": "6d346d6e3956f9267c242143b6b9547384dcf5d5b6e52a2de3d5addda9827f2b",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase3_conditional/data/requests/seed-101.tools.round-4.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase3_conditional/data/requests/seed-211.tools.round-1.response.json",
+      "bytes": 5226,
+      "sha256": "0b68520349f9313cecb311557df1237206535a9345d0c3686620658688019d5f",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase3_conditional/data/requests/seed-211.tools.round-1.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase3_conditional/data/requests/seed-211.tools.round-2.response.json",
+      "bytes": 5235,
+      "sha256": "584ee10281dcfbbeaf3830ba584255ce40db42e509a1a59be54f53e94778b03d",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase3_conditional/data/requests/seed-211.tools.round-2.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase3_conditional/data/requests/seed-211.tools.round-3.response.json",
+      "bytes": 5227,
+      "sha256": "eeed1eb2e4e2ae876ec9f2c31294b7dc35d08cfbee5cb00283b0fc53217f0881",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase3_conditional/data/requests/seed-211.tools.round-3.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase3_conditional/data/requests/seed-211.tools.round-4.response.json",
+      "bytes": 5176,
+      "sha256": "446dce9255d9a0d2289154525b75bf5b2c2ee08ec1cb861ef27dfb700c64a981",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase3_conditional/data/requests/seed-211.tools.round-4.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase3_conditional/data/requests/seed-307.tools.round-1.response.json",
+      "bytes": 3973,
+      "sha256": "cde4111ca9ccea771146e1611ca797769a78b4c081a7ef0468e3bb2d45c96277",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase3_conditional/data/requests/seed-307.tools.round-1.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase3_conditional/data/requests/seed-307.tools.round-2.response.json",
+      "bytes": 7291,
+      "sha256": "16b8084db0074b057287e0a2b764377ce392cb3f486fe2a9425fa63af51e6529",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase3_conditional/data/requests/seed-307.tools.round-2.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase3_conditional/data/requests/seed-307.tools.round-3.response.json",
+      "bytes": 5065,
+      "sha256": "02cce1d2408f72c4e2a65f3ca7a818a0515ccb735decba37ac7d2e3eb2a62867",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase3_conditional/data/requests/seed-307.tools.round-3.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase3_conditional/data/requests/seed-307.tools.round-4.response.json",
+      "bytes": 5216,
+      "sha256": "3869f759c04df9b17880253068dd201cc44fc38f983dbad348a9189b0fc926c7",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase3_conditional/data/requests/seed-307.tools.round-4.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/A-256-raw-1103.response.json",
+      "bytes": 1177,
+      "sha256": "1fc50927579659be8a48f6f0d7bad2b4ebf00c61b5a023491f975bd71e226751",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/A-256-raw-1103.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/A-256-raw-1129.response.json",
+      "bytes": 1179,
+      "sha256": "ae84720712e0e8c29854e408f7799322f6294a1917d70e9704e030bc86846054",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/A-256-raw-1129.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/A-256-round2-1103.response.json",
+      "bytes": 1180,
+      "sha256": "3d460dbce10086c324896566f04da5da19d544b28eaaee9435b9c951b773b270",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/A-256-round2-1103.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/A-256-round2-1129.response.json",
+      "bytes": 1181,
+      "sha256": "b01c22fcaddd85a41b9650513cae6eb0ad9055ed0b94109b51726c286a16ce29",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/A-256-round2-1129.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/A-256-round5-1103.response.json",
+      "bytes": 1178,
+      "sha256": "045d7fe750d3446cc342948baa78db530d8b799617dd9de117a368519e32cb1c",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/A-256-round5-1103.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/A-256-round5-1129.response.json",
+      "bytes": 1181,
+      "sha256": "b2f62f45abf8d56c929ff27855fb49aa136cff8203b34d2ac5b703117278b6b0",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/A-256-round5-1129.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/A-64-raw-1103.response.json",
+      "bytes": 1167,
+      "sha256": "895637527d4339d333304390c7b13244709c16e187470d65078ac78b5ce72080",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/A-64-raw-1103.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/A-64-raw-1129.response.json",
+      "bytes": 1168,
+      "sha256": "8468c31e4d08c6723fa70ee316f786037c0bef270cca0fd6f31f62fe33f6d005",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/A-64-raw-1129.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/A-64-round2-1103.response.json",
+      "bytes": 1171,
+      "sha256": "3aeb438e95ed1b53b67962d8c6fea58358e16c9c5df38a79ee9b26a7de7b1415",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/A-64-round2-1103.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/A-64-round2-1129.response.json",
+      "bytes": 1172,
+      "sha256": "7592315af04a82b7f680602d4cf53dde7d4ceffe0eec088b776682bc58acdd5c",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/A-64-round2-1129.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/A-64-round5-1103.response.json",
+      "bytes": 1168,
+      "sha256": "8ab4c8ea7c9d7a37c6e9ee53dc022dc2e827461d01136e235c824c6bbbc3c3f3",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/A-64-round5-1103.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/A-64-round5-1129.response.json",
+      "bytes": 1172,
+      "sha256": "47addafd766c8f53645fb1c273d543e9eddb6d130f5ce67a95aca6c63e760e8d",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/A-64-round5-1129.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/B-classifier-scalerow.response.json",
+      "bytes": 1259,
+      "sha256": "a41d56825e22bc7e2d43a3d97512d4e29c8dca84753e415a89c6ac2ad5322f7a",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/B-classifier-scalerow.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/B-classifier-signflip.response.json",
+      "bytes": 1257,
+      "sha256": "a3fe1fe3a6dad98677900fb8363092fae9754fd3492789f81a594229185ee78c",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/B-classifier-signflip.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/B-classifier-zerorow.response.json",
+      "bytes": 1180,
+      "sha256": "6bfc24364512640a981702f6a9d5d0e9ada78350652a37ace79c1863ad85769c",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/B-classifier-zerorow.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/B-organism-scalerow.response.json",
+      "bytes": 1335,
+      "sha256": "4391a10af78331946a734857c0db75cbacdab25ca00583edfa18ab4db01f59f7",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/B-organism-scalerow.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/B-organism-signflip.response.json",
+      "bytes": 1336,
+      "sha256": "0704921e8aa16bb666492cb2ec9d7a99dbc63ae00d115b8bce918fbef440096a",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/B-organism-signflip.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/B-organism-zerorow.response.json",
+      "bytes": 1184,
+      "sha256": "705a1c30765ecf03042aa5893f08381bc5a1c9c5caa6fc5d2cfc7757958b5791",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/B-organism-zerorow.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/C-original.response.json",
+      "bytes": 1232,
+      "sha256": "f9bb6d748b9be82b2980cc792ebd2141d51b7b6a41bb1311b077ba5f88cf73c5",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/C-original.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/C-permuted.response.json",
+      "bytes": 1232,
+      "sha256": "c2e9799ae2bf59767ff335aa5ca105f40e47d2e5957be2093f7e1a68eb2207e0",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/C-permuted.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/D-changed.response.json",
+      "bytes": 1166,
+      "sha256": "e0362575043d75ded91198c04bfce8e66e5e8e599ec47ac59d033f77d3332ffb",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/D-changed.response.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/D-permuted.response.json",
+      "bytes": 1166,
+      "sha256": "02a3b3cf92cf0c8d7f889f79d1efa06a0562ce74c94339ccc6196e43b3eaf5d3",
+      "source_commit": "cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6",
+      "storage": "current tracked file",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/cc3d02523c6d6ff6156c78ea34637d63fd1ca0d6/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/requests/D-permuted.response.json"
+    }
+  ],
+  "large_archived_files": [
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/data/results.json",
+      "bytes": 9233396,
+      "sha256": "4f02fc2545b7198b47dee683474005b98cc34485e9e47b29b463c677e7c0fda1",
+      "source_commit": "d85940c0d078b54f40f4742b33c286c521164567",
+      "storage": "preserved repository history",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/d85940c0d078b54f40f4742b33c286c521164567/docs/program/experiments/astra-family-teachers-2026-11-12/data/results.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/data/calibration/experiment.json",
+      "bytes": 580838,
+      "sha256": "9e52b3b239d97091a48694dec56f62e02a21abe32bfe1208a5e18fed7f936522",
+      "source_commit": "d85940c0d078b54f40f4742b33c286c521164567",
+      "storage": "preserved repository history",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/d85940c0d078b54f40f4742b33c286c521164567/docs/program/experiments/astra-family-teachers-2026-11-12/data/calibration/experiment.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/data/experiments/seed-17.json",
+      "bytes": 1103810,
+      "sha256": "80b05d026aedf2712cf3035b07e68a6031b0004ecd1a2a57ccb8b0dafd4bec28",
+      "source_commit": "d85940c0d078b54f40f4742b33c286c521164567",
+      "storage": "preserved repository history",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/d85940c0d078b54f40f4742b33c286c521164567/docs/program/experiments/astra-family-teachers-2026-11-12/data/experiments/seed-17.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/data/experiments/seed-29.json",
+      "bytes": 1103683,
+      "sha256": "bc57f762efff464d2c9919d1e4514df6b5cedf79dabafca5c98bdb7fea6c947f",
+      "source_commit": "d85940c0d078b54f40f4742b33c286c521164567",
+      "storage": "preserved repository history",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/d85940c0d078b54f40f4742b33c286c521164567/docs/program/experiments/astra-family-teachers-2026-11-12/data/experiments/seed-29.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/data/experiments/seed-43.json",
+      "bytes": 1103520,
+      "sha256": "a8eeec966241e872fa8b668c4f67e255cf1fb1a28b601c3101edbb33758beb41",
+      "source_commit": "d85940c0d078b54f40f4742b33c286c521164567",
+      "storage": "preserved repository history",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/d85940c0d078b54f40f4742b33c286c521164567/docs/program/experiments/astra-family-teachers-2026-11-12/data/experiments/seed-43.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/results.json",
+      "bytes": 20227204,
+      "sha256": "0047a27d3431a9bcc2095543145f9035d6ab45f768bc0f3dded44cbf29b6c1f4",
+      "source_commit": "d85940c0d078b54f40f4742b33c286c521164567",
+      "storage": "preserved repository history",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/d85940c0d078b54f40f4742b33c286c521164567/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/results.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/experiments/seed-71.json",
+      "bytes": 1103118,
+      "sha256": "96f91d5c4fb11a02f0ab89826992e2c128404a32cd76840195f47a3b7dbc7f46",
+      "source_commit": "d85940c0d078b54f40f4742b33c286c521164567",
+      "storage": "preserved repository history",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/d85940c0d078b54f40f4742b33c286c521164567/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/experiments/seed-71.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/experiments/seed-89.json",
+      "bytes": 1103572,
+      "sha256": "3bb875d693627e67e81d0ec5fd389344c5c378c2b9d5c8e440347c91324e1a23",
+      "source_commit": "d85940c0d078b54f40f4742b33c286c521164567",
+      "storage": "preserved repository history",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/d85940c0d078b54f40f4742b33c286c521164567/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/experiments/seed-89.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/experiments/seed-107.json",
+      "bytes": 1103709,
+      "sha256": "179b1613370b1375b78b0483ec2f7d7f07a98038eb4f7f990318c1e38a57e571",
+      "source_commit": "d85940c0d078b54f40f4742b33c286c521164567",
+      "storage": "preserved repository history",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/d85940c0d078b54f40f4742b33c286c521164567/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/experiments/seed-107.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/experiments/seed-131.json",
+      "bytes": 1102993,
+      "sha256": "dcb92755dcc62f61ebac9ed229a9120116991b858b3c98cd501740a285bcc88e",
+      "source_commit": "d85940c0d078b54f40f4742b33c286c521164567",
+      "storage": "preserved repository history",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/d85940c0d078b54f40f4742b33c286c521164567/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/experiments/seed-131.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/experiments/seed-163.json",
+      "bytes": 1103606,
+      "sha256": "145393b08b28306f2760678a912a092483fe37f9f0d5d30bed553f15f187c677",
+      "source_commit": "d85940c0d078b54f40f4742b33c286c521164567",
+      "storage": "preserved repository history",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/d85940c0d078b54f40f4742b33c286c521164567/docs/program/experiments/astra-family-teachers-2026-11-12/phase2_factorial/data/experiments/seed-163.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase3_conditional/data/experiments/seed-101.json",
+      "bytes": 1314799,
+      "sha256": "c506110b7c2097677885f6ce10c4931bf65669eb3fc4d6c422ab2b75a54ad86c",
+      "source_commit": "d85940c0d078b54f40f4742b33c286c521164567",
+      "storage": "preserved repository history",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/d85940c0d078b54f40f4742b33c286c521164567/docs/program/experiments/astra-family-teachers-2026-11-12/phase3_conditional/data/experiments/seed-101.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase3_conditional/data/experiments/seed-211.json",
+      "bytes": 1314497,
+      "sha256": "a7c0f6fb33226a819d4410c2d0b8bf1be6882ef899b4767c98eeff9498a6ba9c",
+      "source_commit": "d85940c0d078b54f40f4742b33c286c521164567",
+      "storage": "preserved repository history",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/d85940c0d078b54f40f4742b33c286c521164567/docs/program/experiments/astra-family-teachers-2026-11-12/phase3_conditional/data/experiments/seed-211.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase3_conditional/data/experiments/seed-307.json",
+      "bytes": 1314773,
+      "sha256": "3055e465fbb470b7ff3131a2f77e36dc35dd2e5b9cf42d5bdadcf9ba07b6ef88",
+      "source_commit": "d85940c0d078b54f40f4742b33c286c521164567",
+      "storage": "preserved repository history",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/d85940c0d078b54f40f4742b33c286c521164567/docs/program/experiments/astra-family-teachers-2026-11-12/phase3_conditional/data/experiments/seed-307.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/A-256-raw-1103.json",
+      "bytes": 528220,
+      "sha256": "12d5ad5c283c6d5e1ebad89425866a6254cd3c4372ef53960a59111861d9bf36",
+      "source_commit": "d85940c0d078b54f40f4742b33c286c521164567",
+      "storage": "preserved repository history",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/d85940c0d078b54f40f4742b33c286c521164567/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/A-256-raw-1103.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/A-256-raw-1129.json",
+      "bytes": 528232,
+      "sha256": "83bfe88f65a126340be649ffd68a336495a39a41a92a5cc4d664348e5e415a8c",
+      "source_commit": "d85940c0d078b54f40f4742b33c286c521164567",
+      "storage": "preserved repository history",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/d85940c0d078b54f40f4742b33c286c521164567/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/A-256-raw-1129.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/A-256-round2-1103.json",
+      "bytes": 528124,
+      "sha256": "5f9938b8c884c38727707ba529bba05992a38a5afacb904e7dcd9d13471f9a6f",
+      "source_commit": "d85940c0d078b54f40f4742b33c286c521164567",
+      "storage": "preserved repository history",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/d85940c0d078b54f40f4742b33c286c521164567/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/A-256-round2-1103.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/A-256-round2-1129.json",
+      "bytes": 528135,
+      "sha256": "04e6ab0b2306ea67a350a6bfa3dc49b15891e2d06fbe596c5eea8ddbb7dbc941",
+      "source_commit": "d85940c0d078b54f40f4742b33c286c521164567",
+      "storage": "preserved repository history",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/d85940c0d078b54f40f4742b33c286c521164567/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/A-256-round2-1129.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/A-256-round5-1103.json",
+      "bytes": 528199,
+      "sha256": "a76faf8a4ce0e238db182a2989d8295f6cba922487a5c3d83141d4002144a4b9",
+      "source_commit": "d85940c0d078b54f40f4742b33c286c521164567",
+      "storage": "preserved repository history",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/d85940c0d078b54f40f4742b33c286c521164567/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/A-256-round5-1103.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/A-256-round5-1129.json",
+      "bytes": 528207,
+      "sha256": "e15a48b6342d6e1bf6acbb17db7d3f7a6d0e6d35e450b1b698b3bac9669f0728",
+      "source_commit": "d85940c0d078b54f40f4742b33c286c521164567",
+      "storage": "preserved repository history",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/d85940c0d078b54f40f4742b33c286c521164567/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/A-256-round5-1129.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/A-64-raw-1103.json",
+      "bytes": 34388,
+      "sha256": "41a65d605be8f5b3b4eac1f62103157fdd1ad585e42780ebef0f449329e0ef26",
+      "source_commit": "d85940c0d078b54f40f4742b33c286c521164567",
+      "storage": "preserved repository history",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/d85940c0d078b54f40f4742b33c286c521164567/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/A-64-raw-1103.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/A-64-raw-1129.json",
+      "bytes": 34394,
+      "sha256": "04c7e3777861b1d9d3ebd08f151117d1a8484413b58588d2d30a44e7cbe8952d",
+      "source_commit": "d85940c0d078b54f40f4742b33c286c521164567",
+      "storage": "preserved repository history",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/d85940c0d078b54f40f4742b33c286c521164567/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/A-64-raw-1129.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/A-64-round2-1103.json",
+      "bytes": 34290,
+      "sha256": "03e83f93924914f8bb931c9694a7d534de7695425326cc171f0c836f00073d76",
+      "source_commit": "d85940c0d078b54f40f4742b33c286c521164567",
+      "storage": "preserved repository history",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/d85940c0d078b54f40f4742b33c286c521164567/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/A-64-round2-1103.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/A-64-round2-1129.json",
+      "bytes": 34298,
+      "sha256": "ae1f96d30b65daee791ddb2e6316583d88e834bc85813435e3e865467fe71604",
+      "source_commit": "d85940c0d078b54f40f4742b33c286c521164567",
+      "storage": "preserved repository history",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/d85940c0d078b54f40f4742b33c286c521164567/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/A-64-round2-1129.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/A-64-round5-1103.json",
+      "bytes": 34366,
+      "sha256": "13523a0fac2b42a0e874e87ce0ad9777b510dc02ee0b7bb2f1d15fa2534d34f2",
+      "source_commit": "d85940c0d078b54f40f4742b33c286c521164567",
+      "storage": "preserved repository history",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/d85940c0d078b54f40f4742b33c286c521164567/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/A-64-round5-1103.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/A-64-round5-1129.json",
+      "bytes": 34369,
+      "sha256": "d0c26a20a6fb4a85a63dd4c59239ca4363bd40f4ca1380b47f131784398deff6",
+      "source_commit": "d85940c0d078b54f40f4742b33c286c521164567",
+      "storage": "preserved repository history",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/d85940c0d078b54f40f4742b33c286c521164567/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/A-64-round5-1129.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/B-classifier-scalerow.json",
+      "bytes": 4994,
+      "sha256": "fa05cbf765c369b41dc2613c74e4dfacd82bf8ec1e6510fa515f45181f20f8c4",
+      "source_commit": "d85940c0d078b54f40f4742b33c286c521164567",
+      "storage": "preserved repository history",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/d85940c0d078b54f40f4742b33c286c521164567/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/B-classifier-scalerow.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/B-classifier-signflip.json",
+      "bytes": 4994,
+      "sha256": "82ae722b56e8a54c5704c4027988f2c988d4e90ad298577f46f9e442d013f19b",
+      "source_commit": "d85940c0d078b54f40f4742b33c286c521164567",
+      "storage": "preserved repository history",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/d85940c0d078b54f40f4742b33c286c521164567/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/B-classifier-signflip.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/B-classifier-zerorow.json",
+      "bytes": 4860,
+      "sha256": "dd773c5f0f61ce7ebbd00ded7bf2612bedb23f35f813348124b50c8a33f633ef",
+      "source_commit": "d85940c0d078b54f40f4742b33c286c521164567",
+      "storage": "preserved repository history",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/d85940c0d078b54f40f4742b33c286c521164567/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/B-classifier-zerorow.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/B-organism-scalerow.json",
+      "bytes": 5647,
+      "sha256": "c73179cbecb6751f9f7900bc60bbc4ed066e5ba7bc14f350f57bc9a68cc6ec11",
+      "source_commit": "d85940c0d078b54f40f4742b33c286c521164567",
+      "storage": "preserved repository history",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/d85940c0d078b54f40f4742b33c286c521164567/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/B-organism-scalerow.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/B-organism-signflip.json",
+      "bytes": 5653,
+      "sha256": "62a15fa8ece82e099bd69f2e2d8a1f6993094b0af4723489ade445502c716632",
+      "source_commit": "d85940c0d078b54f40f4742b33c286c521164567",
+      "storage": "preserved repository history",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/d85940c0d078b54f40f4742b33c286c521164567/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/B-organism-signflip.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/B-organism-zerorow.json",
+      "bytes": 5387,
+      "sha256": "c57a7ee335be667057baf98a617b3866da356ba1d3ca0aae3df306dc23d9acc7",
+      "source_commit": "d85940c0d078b54f40f4742b33c286c521164567",
+      "storage": "preserved repository history",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/d85940c0d078b54f40f4742b33c286c521164567/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/B-organism-zerorow.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/C-original.json",
+      "bytes": 170335,
+      "sha256": "6196ae72dedf5dd0d73c0dc61cc17991904cee36bce83f71e4b950c831a0d58c",
+      "source_commit": "d85940c0d078b54f40f4742b33c286c521164567",
+      "storage": "preserved repository history",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/d85940c0d078b54f40f4742b33c286c521164567/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/C-original.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/C-permuted.json",
+      "bytes": 170335,
+      "sha256": "0e5b93e26bda0f6a9fae0fdbe2305c479adeab82a08beedb25ddfe8477bf83e1",
+      "source_commit": "d85940c0d078b54f40f4742b33c286c521164567",
+      "storage": "preserved repository history",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/d85940c0d078b54f40f4742b33c286c521164567/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/C-permuted.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/D-changed.json",
+      "bytes": 171080,
+      "sha256": "1f7da460009fc41f68d96d45379028a8ccef9560c4a490bf786bc8d0574415b8",
+      "source_commit": "d85940c0d078b54f40f4742b33c286c521164567",
+      "storage": "preserved repository history",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/d85940c0d078b54f40f4742b33c286c521164567/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/D-changed.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/D-permuted.json",
+      "bytes": 171078,
+      "sha256": "3ec4b9832494a561676bd21558e149089b8238cc44266732d950aa6a3c14a3a8",
+      "source_commit": "d85940c0d078b54f40f4742b33c286c521164567",
+      "storage": "preserved repository history",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/d85940c0d078b54f40f4742b33c286c521164567/docs/program/experiments/astra-family-teachers-2026-11-12/phase4_fidelity/data/oracles/D-permuted.json"
+    },
+    {
+      "path": "docs/program/experiments/astra-family-teachers-2026-11-12/phase3_conditional/data/results.json",
+      "bytes": 5173398,
+      "sha256": "ba092200243e18105d40495297c7dbc5b73d59963ba18c904f332fa3a07fd47e",
+      "source_commit": "d85940c0d078b54f40f4742b33c286c521164567",
+      "storage": "preserved repository history",
+      "url": "https://github.com/Moissanite-Labs/weft/blob/d85940c0d078b54f40f4742b33c286c521164567/docs/program/experiments/astra-family-teachers-2026-11-12/phase3_conditional/data/results.json"
+    }
+  ],
+  "counts": {
+    "paid_response_files": 96,
+    "large_archived_files": 37,
+    "large_archived_bytes": 52076501
+  },
+  "restore_script": "docs/program/experiments/astra-family-teachers-2026-11-12/restore_generated.py",
+  "restore_index": "docs/program/experiments/astra-family-teachers-2026-11-12/GENERATED-SHA256SUMS",
+  "supplied_lean_harness": {
+    "path": "inputs/supplied-lean-harness.py.txt",
+    "sha256": "9c4f93b74edae9f906b8ea03acce4a3042ddbd037f4209951a3de423633a0571",
+    "bytes": 82375,
+    "status": "quarantined data attachment; not executed in this archival step"
+  },
+  "peer_flex_review": {
+    "head": "fc580a2c1b18a09ecc16a13c4efda907aa0382df",
+    "pr": "https://github.com/Moissanite-Labs/weft/pull/151",
+    "files": [
+      {
+        "path": "docs/program/experiments/peer-flex-harness-review-2026-11-12/supplied-harness.py.txt",
+        "sha256": "bc8f51d24fd5f6f1b310328222f4e7f313bfbbb2ecac735681573a6defd66ac3",
+        "bytes": 70198,
+        "source_commit": "fc580a2c1b18a09ecc16a13c4efda907aa0382df",
+        "url": "https://github.com/Moissanite-Labs/weft/blob/fc580a2c1b18a09ecc16a13c4efda907aa0382df/docs/program/experiments/peer-flex-harness-review-2026-11-12/supplied-harness.py.txt"
+      },
+      {
+        "path": "docs/program/experiments/peer-flex-harness-review-2026-11-12/reproduce.py",
+        "sha256": "cb78a27251a5c4df48646cad84cdb79c342e6a28847bd95c67a8bee370ba4cd5",
+        "bytes": 4249,
+        "source_commit": "fc580a2c1b18a09ecc16a13c4efda907aa0382df",
+        "url": "https://github.com/Moissanite-Labs/weft/blob/fc580a2c1b18a09ecc16a13c4efda907aa0382df/docs/program/experiments/peer-flex-harness-review-2026-11-12/reproduce.py"
+      },
+      {
+        "path": "docs/program/experiments/peer-flex-harness-review-2026-11-12/reproduction.json",
+        "sha256": "690d1b73963ab99b751638f821e637b15d93f7ccfab76e8e5acb9400d9f50c5f",
+        "bytes": 2882,
+        "source_commit": "fc580a2c1b18a09ecc16a13c4efda907aa0382df",
+        "url": "https://github.com/Moissanite-Labs/weft/blob/fc580a2c1b18a09ecc16a13c4efda907aa0382df/docs/program/experiments/peer-flex-harness-review-2026-11-12/reproduction.json"
+      },
+      {
+        "path": "docs/program/experiments/peer-flex-harness-review-2026-11-12/selftest.log",
+        "sha256": "20a227d46fc859bdb83a12cc946bfb3629debf169de1b2e3fd963c3464d85706",
+        "bytes": 2531,
+        "source_commit": "fc580a2c1b18a09ecc16a13c4efda907aa0382df",
+        "url": "https://github.com/Moissanite-Labs/weft/blob/fc580a2c1b18a09ecc16a13c4efda907aa0382df/docs/program/experiments/peer-flex-harness-review-2026-11-12/selftest.log"
+      },
+      {
+        "path": "docs/program/experiments/peer-flex-harness-review-2026-11-12/REVIEW.md",
+        "sha256": "2040830dae3631547fbd3f2d9fb34860cac67a0589a39d3ec49c915328cf8337",
+        "bytes": 8995,
+        "source_commit": "fc580a2c1b18a09ecc16a13c4efda907aa0382df",
+        "url": "https://github.com/Moissanite-Labs/weft/blob/fc580a2c1b18a09ecc16a13c4efda907aa0382df/docs/program/experiments/peer-flex-harness-review-2026-11-12/REVIEW.md"
+      },
+      {
+        "path": "docs/program/experiments/peer-flex-harness-review-2026-11-12/RUNTIME-REVIEW.md",
+        "sha256": "7c03aece0606faf0ce2ab604ea4e4a07b110f54d49550208abdcf028749e3c49",
+        "bytes": 4744,
+        "source_commit": "fc580a2c1b18a09ecc16a13c4efda907aa0382df",
+        "url": "https://github.com/Moissanite-Labs/weft/blob/fc580a2c1b18a09ecc16a13c4efda907aa0382df/docs/program/experiments/peer-flex-harness-review-2026-11-12/RUNTIME-REVIEW.md"
+      },
+      {
+        "path": "docs/program/experiments/peer-flex-harness-review-2026-11-12/README.md",
+        "sha256": "43591bdf0a21b6eec179e03b53505fb96dddcf9e7212a875a7d71e91a47a0125",
+        "bytes": 3074,
+        "source_commit": "fc580a2c1b18a09ecc16a13c4efda907aa0382df",
+        "url": "https://github.com/Moissanite-Labs/weft/blob/fc580a2c1b18a09ecc16a13c4efda907aa0382df/docs/program/experiments/peer-flex-harness-review-2026-11-12/README.md"
+      }
+    ]
+  }
+}

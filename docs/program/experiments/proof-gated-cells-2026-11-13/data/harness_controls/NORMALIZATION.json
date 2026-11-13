@@ -1,0 +1,5 @@
+{
+  "original_sha256": "0b2ddcb18eb6861e880275079469e66528a0290603ee05bef62a174efeff26ef",
+  "published_sha256": "e7c517fda72d422425fb57224d18556a16a2b5701228513dd385b34237c42ed1",
+  "normalization": "Only command-array executable and temporary-directory metadata normalized to lake and <scratch>/Empty.lean. stdout, stderr, returncode, proof source and results unchanged. Original retained in private evidence outside git."
+}

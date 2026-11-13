@@ -1,0 +1,226 @@
+[
+  {
+    "name": "formal_define_system",
+    "arguments": {
+      "system_id": "proofcell_int3_bridge_v1",
+      "description": "Fixed one-step Int3 readout transition; runtime dual replay, not a Lean proof",
+      "spec_code": "def initial_state():\n    return (0, (3, 1, 5))\ndef actions(state):\n    if state[0] != 0:\n        return ()\n    return ((0,1,-1,0),(0,1,0,0),(0,0,0,1),(0,3,-3,0),(1,1,-1,0),(0,0,0,0))\ndef step(state, action):\n    version, weights = state\n    expected = action[0]\n    delta = action[1:]\n    anchors = ((1,1,0),(0,0,1))\n    if version != 0 or expected != version:\n        return None\n    if sum(d*d for d in delta) > 8:\n        return None\n    if any(delta[i] != 0 for i in (2,)):\n        return None\n    for anchor in anchors:\n        if sum(a*d for a,d in zip(anchor,delta)) != 0:\n            return None\n    return (version+1, tuple(w+d for w,d in zip(weights,delta)))\ndef is_goal(state):\n    return state == (1,(4,0,5))\ndef invariant(state):\n    version, weights = state\n    anchors = ((1,1,0),(0,0,1))\n    original = (3,1,5)\n    return all(sum(a*w for a,w in zip(row,weights)) == sum(a*w for a,w in zip(row,original)) for row in anchors) and weights[2] == 5\ndef project_obs(state):\n    return (state[0],state[1][0],state[1][1],state[1][2])\n",
+      "impl_code": "def initial_state():\n    return (0,3,1,5)\ndef actions(s):\n    choices = ((0,1,-1,0),(0,1,0,0),(0,0,0,1),(0,3,-3,0),(1,1,-1,0),(0,0,0,0))\n    return choices if s[0] == 0 else ()\ndef step(s, a):\n    if s[0] != 0:\n        return None\n    if a[0] != s[0]:\n        return None\n    dx,dy,dz = a[1],a[2],a[3]\n    if dx*dx + dy*dy + dz*dz > 8:\n        return None\n    if dz != 0:\n        return None\n    if dx+dy != 0:\n        return None\n    return (s[0]+1,s[1]+dx,s[2]+dy,s[3]+dz)\ndef is_goal(s):\n    return s[0] == 1 and s[1] == 4 and s[2] == 0 and s[3] == 5\ndef invariant(s):\n    return s[1]+s[2] == 4 and s[3] == 5\ndef project_obs(s):\n    return s\n",
+      "positive_witnesses": [
+        {
+          "name": "accepted_nonzero",
+          "trace": [
+            [
+              0,
+              1,
+              -1,
+              0
+            ]
+          ]
+        }
+      ],
+      "must_fail_controls": [
+        {
+          "name": "rejected_anchor",
+          "trace": [
+            [
+              0,
+              1,
+              0,
+              0
+            ]
+          ]
+        },
+        {
+          "name": "rejected_frozen",
+          "trace": [
+            [
+              0,
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "name": "rejected_norm",
+          "trace": [
+            [
+              0,
+              3,
+              -3,
+              0
+            ]
+          ]
+        },
+        {
+          "name": "rejected_stale_version",
+          "trace": [
+            [
+              1,
+              1,
+              -1,
+              0
+            ]
+          ]
+        },
+        {
+          "name": "zero_valid_but_not_goal",
+          "trace": [
+            [
+              0,
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        {
+          "name": "rejected_after_terminal",
+          "trace": [
+            [
+              0,
+              1,
+              -1,
+              0
+            ],
+            [
+              0,
+              1,
+              -1,
+              0
+            ]
+          ]
+        }
+      ],
+      "planted_mutations": [
+        {
+          "bug_id": "remove_norm_bound",
+          "description": "Permit an oversized anchor-preserving delta",
+          "mutated_code": "def initial_state():\n    return (0,3,1,5)\ndef actions(s):\n    choices = ((0,1,-1,0),(0,1,0,0),(0,0,0,1),(0,3,-3,0),(1,1,-1,0),(0,0,0,0))\n    return choices if s[0] == 0 else ()\ndef step(s, a):\n    if s[0] != 0:\n        return None\n    if a[0] != s[0]:\n        return None\n    dx,dy,dz = a[1],a[2],a[3]\n    if dz != 0:\n        return None\n    if dx+dy != 0:\n        return None\n    return (s[0]+1,s[1]+dx,s[2]+dy,s[3]+dz)\ndef is_goal(s):\n    return s[0] == 1 and s[1] == 4 and s[2] == 0 and s[3] == 5\ndef invariant(s):\n    return s[1]+s[2] == 4 and s[3] == 5\ndef project_obs(s):\n    return s\n"
+        }
+      ],
+      "bounded_fuzz_nodes": 32,
+      "exact_arithmetic_only": true,
+      "strict_bar": true
+    }
+  },
+  {
+    "name": "formal_verify_trace",
+    "arguments": {
+      "system_id": "proofcell_int3_bridge_v1",
+      "trace": [
+        [
+          0,
+          1,
+          -1,
+          0
+        ]
+      ],
+      "verification_goal": "goal_witness",
+      "require_exact_terminal_goal": true
+    }
+  },
+  {
+    "name": "formal_verify_trace",
+    "arguments": {
+      "system_id": "proofcell_int3_bridge_v1",
+      "trace": [
+        [
+          0,
+          1,
+          0,
+          0
+        ]
+      ],
+      "verification_goal": "goal_witness",
+      "require_exact_terminal_goal": true
+    }
+  },
+  {
+    "name": "formal_verify_trace",
+    "arguments": {
+      "system_id": "proofcell_int3_bridge_v1",
+      "trace": [
+        [
+          0,
+          0,
+          0,
+          1
+        ]
+      ],
+      "verification_goal": "goal_witness",
+      "require_exact_terminal_goal": true
+    }
+  },
+  {
+    "name": "formal_verify_trace",
+    "arguments": {
+      "system_id": "proofcell_int3_bridge_v1",
+      "trace": [
+        [
+          0,
+          3,
+          -3,
+          0
+        ]
+      ],
+      "verification_goal": "goal_witness",
+      "require_exact_terminal_goal": true
+    }
+  },
+  {
+    "name": "formal_verify_trace",
+    "arguments": {
+      "system_id": "proofcell_int3_bridge_v1",
+      "trace": [
+        [
+          1,
+          1,
+          -1,
+          0
+        ]
+      ],
+      "verification_goal": "goal_witness",
+      "require_exact_terminal_goal": true
+    }
+  },
+  {
+    "name": "formal_verify_trace",
+    "arguments": {
+      "system_id": "proofcell_int3_bridge_v1",
+      "trace": [
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "verification_goal": "goal_witness",
+      "require_exact_terminal_goal": true
+    }
+  },
+  {
+    "name": "formal_verify_trace",
+    "arguments": {
+      "system_id": "proofcell_int3_bridge_v1",
+      "trace": [
+        [
+          0,
+          1,
+          -1,
+          0
+        ],
+        [
+          0,
+          1,
+          -1,
+          0
+        ]
+      ],
+      "verification_goal": "goal_witness",
+      "require_exact_terminal_goal": true
+    }
+  }
+]

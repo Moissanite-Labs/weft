@@ -1,0 +1,22 @@
+[
+  {
+    "command": [
+      "lake",
+      "env",
+      "lean",
+      "<scratch>/Empty.lean"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "info: Empty: no previous manifest, creating one from scratch\ninfo: toolchain not updated; already up-to-date\n"
+  },
+  {
+    "command": [
+      "lake",
+      "build"
+    ],
+    "returncode": 0,
+    "stdout": "\u2714 [2/3] Built Empty (530ms)\nBuild completed successfully (3 jobs).\n",
+    "stderr": ""
+  }
+]
