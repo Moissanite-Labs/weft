@@ -1,0 +1,1591 @@
+#!/usr/bin/env python3
+"""
+weft_111_flex_harness.py — Live OpenAI Responses API (`service_tier="flex"`) Harness
+for Moissanite-Labs/weft Issue #111 (R1 Sealed Audit + R3 Protocol Adherence + R5 Replicates)
+
+Purpose
+-------
+Replaces synthetic NumPy simulations with real, auditable multi-turn LLM colony experiments
+using OpenAI's `/v1/responses` API on the 50%-discounted synchronous `flex` tier:
+
+  * R3 (Protocol-Adherence Control): Runs strictly interleaved replicates comparing
+    Arm A (`v1_implicit_hy4`) vs. Arm B (`r3_explicit_commit_contract`) on identical seeds
+    and tools (`inspect_and_bench`, `propose_select`, `finish_cell`), separating narrow
+    tool-channel protocol blindness (Finding F1/F7) from underlying synthesis capability.
+  * R1 (Channel-Agnostic Stage-A Morphism + Sealed Stage-C Reference Audit): Evaluates both
+    the narrow-channel committed codec (`committed_codec.py`) and the raw workspace artifact
+    left on disk (`workspace/codec.py`) against a cryptographically sealed, multi-regime
+    32,805-byte (`512 x 64B + 37B unaligned tail`) out-of-distribution Weft `WEFT`/`SY2L`
+    telemetry stream never exposed to the cell—measuring both out-of-channel recovery (F1)
+    and proxy-vs-audit generalization gap (F2). Also supports `--retroactive-audit <dir>`.
+  * R5 (Interleaved Replicate & Provenance Bar): Defaults to >= 5 interleaved seed pairs
+    (12 real LLM lineages at default `--replicates 6`; configurable up to full $53.50 burn),
+    logs raw turn-by-turn `/v1/responses` transcripts (`transcripts.jsonl`), exact token &
+    USD spend, paired exact sign-flip permutation p-values, `r1_r3_r5_certificates.json`,
+    and `SHA256SUMS`.
+
+Critical GPT-6 / OpenAI Billing Safeguards
+------------------------------------------
+  1. Uses `POST https://api.openai.com/v1/responses` exclusively. `gpt-6-astra` and
+     `gpt-6.1-sol` reject `reasoning.effort="none"` (HTTP 400) and do not support function
+     calling on `/v1/chat/completions` (https://developers.openai.com/api/docs/guides/reasoning).
+  2. Uses `service_tier="flex"` (`timeout=900s`) for synchronous execution at 50% Batch API
+     rates (https://developers.openai.com/api/docs/guides/flex-processing), avoiding 24-hour
+     Batch API queue expiration risk on expiring credit grants. Uncharged HTTP 429
+     (`Resource Unavailable`) responses retry with jittered backoff.
+  3. Byte-identical static `instructions` + `tools` prefix across all arms and seeds so
+     OpenAI Prompt Caching discounts repeated prefixes by 90%–95% (`$0.05/MTok` on
+     `gpt-6.1-sol` Flex; `$0.50/MTok` on `gpt-6-astra` Flex;
+     https://developers.openai.com/api/docs/pricing).
+  4. Thread-safe USD circuit breaker (`--budget-usd`, default `22.50`, or `53.50` for full
+     $55 grant burn) with pre-turn reservation so concurrent cells never overrun $55.00
+     (https://help.openai.com/en/articles/8264644-setting-up-and-managing-prepaid-api-billing).
+
+Zero external Python packages required (pure Python 3.10+ stdlib).
+
+Quickstart
+----------
+  # 1. Run built-in offline verification suite (zero network / zero cost):
+  python3 weft_111_flex_harness.py --selftest
+
+  # 2. Run 6 interleaved R3 pairs (12 lineages) on gpt-6.1-sol Flex + 3 gpt-6-astra pairs:
+  export OPENAI_API_KEY="sk-..."
+  python3 weft_111_flex_harness.py --replicates 6 --include-astra-replicates 3 --budget-usd 24.00
+
+  # 3. Burn full $53.50 safe cap ($55 expiring grant minus $1.50 settlement buffer):
+  python3 weft_111_flex_harness.py --replicates 12 --include-astra-replicates 8 --budget-usd 53.50
+
+  # 4. Retroactively audit existing archived colony run directories (Issue #111 R1):
+  python3 weft_111_flex_harness.py --retroactive-audit /path/to/archived_colony_runs
+
+License: Apache-2.0 (https://github.com/Moissanite-Labs/weft). Machine-authored harness (disclosed).
+"""
+
+from __future__ import annotations
+
+import argparse
+import ast
+import asyncio
+import hashlib
+import itertools
+import json
+import math
+import os
+import random
+import signal
+import ssl
+import statistics
+import struct
+import subprocess
+import sys
+import tempfile
+import threading
+import time
+import urllib.error
+import urllib.request
+from dataclasses import asdict, dataclass
+from pathlib import Path
+from typing import Any, Callable, Dict, List, Optional, Tuple
+
+
+# =============================================================================
+# 1. Official OpenAI API Pricing Table (USD per 1,000,000 tokens, Nov 2026)
+#    Source: https://developers.openai.com/api/docs/pricing
+# =============================================================================
+
+MODEL_PRICING_STD_PER_MTOK: Dict[str, Dict[str, float]] = {
+    "gpt-6-astra":   {"input": 10.00, "cached_input": 1.00,  "output": 50.00},
+    "gpt-6.1-sol":   {"input": 2.00,  "cached_input": 0.10,  "output": 10.00},
+    "gpt-6-sol":     {"input": 2.00,  "cached_input": 0.20,  "output": 10.00},
+    "gpt-6.1-terra": {"input": 1.00,  "cached_input": 0.05,  "output": 5.00},
+    "gpt-6-luna":    {"input": 0.10,  "cached_input": 0.01,  "output": 0.50},
+    "gpt-5.6-sol":   {"input": 4.00,  "cached_input": 0.40,  "output": 20.00},
+}
+
+SERVICE_TIER_MULTIPLIER: Dict[str, float] = {
+    "flex": 0.5,
+    "batch": 0.5,
+    "default": 1.0,
+    "standard": 1.0,
+    "auto": 1.0,
+    "fast": 2.0,
+    "priority": 2.0,
+    "ultrafast": 6.0,
+}
+
+
+def compute_call_cost_usd(
+    model: str,
+    served_tier: str,
+    input_tokens: int,
+    cached_tokens: int,
+    output_tokens: int,
+) -> float:
+    """Computes exact USD charge from `/v1/responses` usage & served `service_tier`."""
+    base_key = model
+    if base_key not in MODEL_PRICING_STD_PER_MTOK:
+        for k in MODEL_PRICING_STD_PER_MTOK:
+            if model.startswith(k):
+                base_key = k
+                break
+        else:
+            base_key = "gpt-6-astra"  # Conservative upper-bound fallback
+
+    rates = MODEL_PRICING_STD_PER_MTOK[base_key]
+    tier_norm = (served_tier or "default").lower().strip()
+    mult = SERVICE_TIER_MULTIPLIER.get(tier_norm, 1.0)
+
+    cached = max(0, min(int(cached_tokens), int(input_tokens)))
+    uncached = max(0, int(input_tokens) - cached)
+    out = max(0, int(output_tokens))
+
+    cost = (
+        (uncached / 1_000_000.0) * (rates["input"] * mult)
+        + (cached / 1_000_000.0) * (rates["cached_input"] * mult)
+        + (out / 1_000_000.0) * (rates["output"] * mult)
+    )
+    return round(cost, 8)
+
+
+class BudgetExhaustedStop(Exception):
+    """Raised cleanly when hard client-side USD budget cap is reached."""
+
+
+class ThreadSafeBudgetLedger:
+    """Tracks live token & USD spend with pre-turn reservation to prevent $55 overrun."""
+
+    def __init__(self, max_budget_usd: float) -> None:
+        self.max_budget_usd = float(max_budget_usd)
+        self._lock = threading.Lock()
+        self.spent_usd: float = 0.0
+        self.reserved_usd: float = 0.0
+        self.total_calls: int = 0
+        self.total_input_tokens: int = 0
+        self.total_cached_tokens: int = 0
+        self.total_output_tokens: int = 0
+        self.total_reasoning_tokens: int = 0
+        self.tier_counts: Dict[str, int] = {}
+
+    def reserve_for_turn(self, model: str, tier: str, max_out_tokens: int, est_in_tokens: int = 6000) -> float:
+        """Reserves worst-case single-turn cost before firing an HTTP call."""
+        est_cost = compute_call_cost_usd(
+            model=model,
+            served_tier=tier,
+            input_tokens=est_in_tokens,
+            cached_tokens=0,
+            output_tokens=max_out_tokens,
+        )
+        with self._lock:
+            if self.spent_usd + self.reserved_usd + est_cost > self.max_budget_usd:
+                raise BudgetExhaustedStop(
+                    f"Pre-turn reservation (${est_cost:.4f}) would exceed hard cap "
+                    f"${self.max_budget_usd:.2f} (spent=${self.spent_usd:.4f}, "
+                    f"reserved=${self.reserved_usd:.4f})."
+                )
+            self.reserved_usd += est_cost
+        return est_cost
+
+    def settle_turn(
+        self,
+        reserved_est: float,
+        model: str,
+        served_tier: str,
+        usage: Dict[str, Any],
+    ) -> float:
+        in_tok = int(usage.get("input_tokens", 0) or 0)
+        in_details = usage.get("input_tokens_details") or {}
+        cached_tok = int(in_details.get("cached_tokens", 0) or 0)
+        out_tok = int(usage.get("output_tokens", 0) or 0)
+        out_details = usage.get("output_tokens_details") or {}
+        reas_tok = int(out_details.get("reasoning_tokens", 0) or 0)
+
+        actual_cost = compute_call_cost_usd(
+            model=model,
+            served_tier=served_tier,
+            input_tokens=in_tok,
+            cached_tokens=cached_tok,
+            output_tokens=out_tok,
+        )
+        with self._lock:
+            self.reserved_usd = max(0.0, self.reserved_usd - reserved_est)
+            self.spent_usd += actual_cost
+            self.total_calls += 1
+            self.total_input_tokens += in_tok
+            self.total_cached_tokens += cached_tok
+            self.total_output_tokens += out_tok
+            self.total_reasoning_tokens += reas_tok
+            t_key = (served_tier or "unknown").lower()
+            self.tier_counts[t_key] = self.tier_counts.get(t_key, 0) + 1
+        return actual_cost
+
+    def release_reservation(self, reserved_est: float) -> None:
+        with self._lock:
+            self.reserved_usd = max(0.0, self.reserved_usd - reserved_est)
+
+    def snapshot(self) -> Dict[str, Any]:
+        with self._lock:
+            cache_hit_pct = (
+                100.0 * self.total_cached_tokens / self.total_input_tokens
+                if self.total_input_tokens > 0
+                else 0.0
+            )
+            return {
+                "max_budget_usd": round(self.max_budget_usd, 4),
+                "spent_usd": round(self.spent_usd, 6),
+                "remaining_usd": round(max(0.0, self.max_budget_usd - self.spent_usd), 6),
+                "total_api_calls": self.total_calls,
+                "total_input_tokens": self.total_input_tokens,
+                "total_cached_tokens": self.total_cached_tokens,
+                "prompt_cache_hit_pct": round(cache_hit_pct, 2),
+                "total_output_tokens": self.total_output_tokens,
+                "total_reasoning_tokens": self.total_reasoning_tokens,
+                "served_service_tiers": dict(self.tier_counts),
+            }
+
+
+# =============================================================================
+# 2. Byte-Identical Static Prefix & Responses API Tool Definitions
+#    (Kept 100% invariant across ALL arms & seeds to maximize GPT-6 cache hits!)
+# =============================================================================
+
+STATIC_COLONY_SYSTEM_INSTRUCTIONS = """You are an autonomous synthesis cell operating inside the Moissanite-Labs/weft C1/C6 lossless telemetry compression arena.
+
+ENVIRONMENT & ARTIFACT SPECIFICATION
+1. Your isolated working directory contains:
+   - `proxy_telemetry.bin`: a 16,384-byte binary stream of 256 consecutive 64-byte Weft telemetry frames.
+   - `codec.py`: the active Python compression module defining two pure functions:
+       `encode(data: bytes) -> bytes`
+       `decode(blob: bytes) -> bytes`
+2. Lossless invariant: `decode(encode(data)) == data` MUST hold bit-for-bit on arbitrary byte inputs (including frame counts not divisible by 64 and unseen telemetry regimes).
+3. Permitted imports inside `codec.py`: Python standard library only (`struct`, `zlib`, `bz2`, `lzma`, `array`, `collections`, `itertools`, `functools`, `math`). External packages, network calls, filesystem reads outside `data`, or hardcoded lookup tables of `proxy_telemetry.bin` will fail out-of-distribution verification.
+4. Structural hint: Weft telemetry streams consist of fixed-width 64-byte packets with structured headers, smoothly drifting float32/float16 fields, sequence counters, and sparse feature slots. Reversible byte-level pre-transforms (such as 64-byte column/stride transposition, delta coding across consecutive frames, XOR-prev-frame residuals, run-length or move-to-front transforms, or regime-aware framing) paired with stdlib entropy backends (`lzma`, `bz2`, `zlib`) typically outperform single-stage `zlib` while generalizing to unseen telemetry streams.
+5. Keep candidate `codec.py` modules concise, self-contained, and deterministic. Avoid speculative filler."""
+
+RESPONSES_API_TOOLS: List[Dict[str, Any]] = [
+    {
+        "type": "function",
+        "name": "inspect_and_bench",
+        "description": (
+            "Execute a short Python 3 script inside your isolated cell workspace to inspect "
+            "`proxy_telemetry.bin`, test candidate reversible transforms or multi-encoder pipelines, "
+            "or write/verify `codec.py` locally. Returns stdout/stderr (truncated to 4,000 chars)."
+        ),
+        "strict": True,
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "python_code": {
+                    "type": "string",
+                    "description": "Self-contained Python 3 script to run inside the cell workspace.",
+                }
+            },
+            "required": ["python_code"],
+            "additionalProperties": False,
+        },
+    },
+    {
+        "type": "function",
+        "name": "propose_select",
+        "description": (
+            "Submit a complete `codec.py` module defining `encode(data: bytes) -> bytes` and "
+            "`decode(blob: bytes) -> bytes` to the Weft selection gate. Verifies exact lossless "
+            "round-trip on `proxy_telemetry.bin` and updates the kept channel champion if smaller."
+        ),
+        "strict": True,
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "candidate_code": {
+                    "type": "string",
+                    "description": "Complete Python source code for `codec.py` with `encode` and `decode`.",
+                },
+                "notes": {
+                    "type": "string",
+                    "description": "Concise 1-sentence description of the transform + entropy pipeline.",
+                },
+            },
+            "required": ["candidate_code", "notes"],
+            "additionalProperties": False,
+        },
+    },
+    {
+        "type": "function",
+        "name": "finish_cell",
+        "description": "Conclude the cell run once your best lossless compressor is ready.",
+        "strict": True,
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "summary": {
+                    "type": "string",
+                    "description": "Brief summary of final pipeline and achieved byte size.",
+                }
+            },
+            "required": ["summary"],
+            "additionalProperties": False,
+        },
+    },
+]
+
+BASELINE_CODEC_SOURCE = '''"""Baseline Weft v1 cell codec (zlib level 1)."""
+import zlib
+
+def encode(data: bytes) -> bytes:
+    return zlib.compress(data, level=1)
+
+def decode(blob: bytes) -> bytes:
+    return zlib.decompress(blob)
+'''
+
+
+def build_arm_user_prompt(arm: str, max_turns: int, baseline_compressed_bytes: int) -> str:
+    """
+    Constructs the user prompt for Arm A (`v1_implicit_hy4`) vs. Arm B (`r3_explicit_commit_contract`).
+    Notice that `STATIC_COLONY_SYSTEM_INSTRUCTIONS` and `RESPONSES_API_TOOLS` remain 100% identical
+    across both arms so both arms hit the exact same OpenAI prompt cache prefix!
+    """
+    common = (
+        f"Cell budget: up to {max_turns} tool rounds.\n"
+        f"Input stream: `proxy_telemetry.bin` (16,384 raw bytes; baseline `codec.py` = "
+        f"{baseline_compressed_bytes} compressed bytes, {16384 / baseline_compressed_bytes:.3f}x).\n"
+    )
+    if arm == "v1_implicit_hy4":
+        return (
+            common
+            + "Goal: Synthesize the strongest generalizable lossless compressor in `codec.py` "
+            "(`encode(data: bytes) -> bytes` and `decode(blob: bytes) -> bytes`). "
+            "You may run batch multi-encoder benchmarks in `inspect_and_bench` and write your "
+            "winning implementation to `codec.py`, or test candidates interactively, then call "
+            "`finish_cell` when done."
+        )
+    elif arm == "r3_explicit_commit_contract":
+        return (
+            common
+            + "Goal: Synthesize the strongest generalizable lossless compressor (`encode` / `decode`).\n"
+            + "PROTOCOL CONTRACT (WEFT #111 R3): Only lossless candidates formally registered via "
+            "`propose_select(candidate_code, notes)` are recorded as kept improvements and promoted "
+            "to `committed_codec.py`. Writing `codec.py` inside `inspect_and_bench` alone does NOT "
+            "register a kept win. Whenever `inspect_and_bench` identifies a stronger lossless pipeline "
+            "(including intermediate stepping stones and your final champion), ALWAYS call "
+            "`propose_select` with the complete `codec.py` source before calling `finish_cell`."
+        )
+    else:
+        raise ValueError(f"Unknown experimental arm: {arm}")
+
+
+# =============================================================================
+# 3. Deterministic Proxy & Cryptographically Sealed R1 Reference Workloads
+# =============================================================================
+
+def _pack_sy2l_frame(seq: int, tension: float, pairs: List[Tuple[int, float]]) -> bytes:
+    """Packs an exact 64-byte Weft `SY2L` sparse JumpReLU telemetry frame."""
+    pairs_c = pairs[:13]
+    t_f16 = struct.unpack("<H", struct.pack("<e", float(tension)))[0]
+    buf = bytearray(struct.pack("<4sBBHH", b"SY2L", 2, len(pairs_c), seq & 0xFFFF, t_f16))
+    for fid, fval in pairs_c:
+        v_f16 = struct.unpack("<H", struct.pack("<e", float(fval)))[0]
+        buf.extend(struct.pack("<HH", int(fid) & 0xFFFF, v_f16))
+    for _ in range(13 - len(pairs_c)):
+        buf.extend(b"\x00\x00\x00\x00")
+    tag = hashlib.blake2s(bytes(buf), digest_size=2).digest()
+    buf.extend(tag)
+    assert len(buf) == 64
+    return bytes(buf)
+
+
+def generate_proxy_workload(seed: int, n_frames: int = 256) -> bytes:
+    """
+    16,384-byte (`256 x 64B`) in-distribution training proxy placed in cell workspace.
+    Header layout `<4sBBHIff` = 20B + 44B payload = 64B exact.
+    """
+    rng = random.Random(100_000 + seed * 977)
+    out = bytearray()
+    tension = 21.5
+    frob = 13.8
+    for seq in range(n_frames):
+        tension += rng.gauss(0.0, 0.025)
+        frob += 0.012 + rng.gauss(0.0, 0.004)
+        hdr = struct.pack("<4sBBHIff", b"WEFT", 2, 1, 0, seq, tension, frob)
+        payload = bytes(((seq % 16) + k * 3 + (1 if k % 11 == 0 else 0)) & 0xFF for k in range(44))
+        frame = hdr + payload
+        assert len(frame) == 64
+        out.extend(frame)
+    return bytes(out)
+
+
+def generate_sealed_r1_audit_workload(seed: int, n_frames: int = 512) -> bytes:
+    """
+    32,805-byte (`512 x 64B + 37B unaligned tail`) cryptographically sealed R1 workload.
+    NEVER written to any cell workspace; held exclusively in parent harness memory.
+    Spans 4 realistic Weft runtime regimes:
+      - Regime 0 (0..127): Multi-lineage interleaved `WEFT` homeostatic frames [15.0, 35.0]
+      - Regime 1 (128..255): Tension excursion & `WEFT_ERR_TENSION_EXCISION` recovery bursts
+      - Regime 2 (256..383): `SY2L` 64-byte sparse JumpReLU inter-cell latent packets
+      - Regime 3 (384..511): Mixed `WEFT` + `SY2L` multiplexing + trailing 37-byte partial tail
+        (explicitly catches brittle codecs that crash when `len(data) % 64 != 0`!).
+    """
+    rng = random.Random(900_000 + seed * 1337)
+    out = bytearray()
+    t_lin = [19.0, 24.5, 29.0, 16.5]
+    d_lin = [11.0, 42.0, 78.5, 5.2]
+
+    for seq in range(n_frames):
+        regime = seq // 128
+        if regime == 0:
+            lid = seq % 4
+            t_lin[lid] = max(15.2, min(34.8, t_lin[lid] + rng.gauss(0.0, 0.09)))
+            d_lin[lid] = max(0.5, min(119.5, d_lin[lid] + rng.gauss(0.03, 0.06)))
+            hdr = struct.pack("<4sBBHIff", b"WEFT", 2, lid, 0, seq, t_lin[lid], d_lin[lid])
+            body = bytearray(44)
+            for k in range(16):
+                body[k] = (lid * 41 + seq * 5 + k * 7 + rng.randint(0, 1)) & 0xFF
+            frame = hdr + bytes(body)
+            assert len(frame) == 64
+            out.extend(frame)
+        elif regime == 1:
+            flags = 1 if (seq % 29 == 0) else 0
+            spike = 88.4 if flags else (26.0 + 6.0 * math.sin(seq * 0.25))
+            d_val = 118.9 if flags else (54.0 + 0.05 * seq)
+            hdr = struct.pack("<4sBBHIff", b"WEFT", 2, 7, flags, seq, spike, d_val)
+            body = bytes((int(spike * 2) + k * 13 + (seq & 7)) & 0xFF for k in range(44))
+            frame = hdr + body
+            assert len(frame) == 64
+            out.extend(frame)
+        elif regime == 2:
+            n_act = rng.randint(6, 12)
+            base_concepts = [12, 47, 108, 255, 309, 512, 640, 777, 819, 901, 990, 1015]
+            chosen = base_concepts[:n_act]
+            pairs = [(cid, 1.25 + 0.15 * (i + (seq % 5))) for i, cid in enumerate(chosen)]
+            out.extend(_pack_sy2l_frame(seq, 22.8 + rng.gauss(0.0, 0.05), pairs))
+        else:
+            if seq % 3 == 0:
+                pairs = [(19 + k * 64, 2.1 + 0.05 * (seq % 9)) for k in range(9)]
+                out.extend(_pack_sy2l_frame(seq, 20.4, pairs))
+            else:
+                hdr = struct.pack("<4sBBHIff", b"WEFT", 2, seq % 2, 0, seq, 23.1, 31.4 + 0.02 * seq)
+                body = bytes((0 if k >= 14 else ((seq + k * 5) & 0xFF)) for k in range(44))
+                frame = hdr + body
+                assert len(frame) == 64
+                out.extend(frame)
+
+    tail = b"WEFT-TAIL-SYNC:" + bytes((seed + i * 17) & 0xFF for i in range(22))
+    assert len(tail) == 37
+    out.extend(tail)
+    assert len(out) == 512 * 64 + 37
+    return bytes(out)
+
+
+# =============================================================================
+# 4. Isolated Subprocess Sandbox for Cell Execution & Stage-A/Stage-C Verification
+# =============================================================================
+
+_SUBPROCESS_EVAL_DRIVER = r"""
+import hashlib
+import importlib.util
+import json
+import sys
+import time
+
+codec_path = sys.argv[1]
+raw_data = sys.stdin.buffer.read()
+
+t0 = time.perf_counter()
+spec = importlib.util.spec_from_file_location("cell_codec", codec_path)
+mod = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(mod)
+
+if not hasattr(mod, "encode") or not hasattr(mod, "decode"):
+    raise RuntimeError("codec.py must define both encode(data: bytes) and decode(blob: bytes)")
+
+compressed = mod.encode(raw_data)
+if not isinstance(compressed, (bytes, bytearray, memoryview)):
+    raise TypeError(f"encode() returned {type(compressed).__name__}, expected bytes")
+compressed_bytes = bytes(compressed)
+
+recovered = mod.decode(compressed_bytes)
+if not isinstance(recovered, (bytes, bytearray, memoryview)):
+    raise TypeError(f"decode() returned {type(recovered).__name__}, expected bytes")
+recovered_bytes = bytes(recovered)
+elapsed_ms = (time.perf_counter() - t0) * 1000.0
+
+exact_match = (recovered_bytes == raw_data)
+edge_ok = (bytes(mod.decode(bytes(mod.encode(b"")))) == b"") and (
+    bytes(mod.decode(bytes(mod.encode(b"\x42")))) == b"\x42"
+)
+
+print(json.dumps({
+    "ok": bool(exact_match and edge_ok),
+    "exact_match": bool(exact_match),
+    "edge_ok": bool(edge_ok),
+    "raw_len": len(raw_data),
+    "compressed_len": len(compressed_bytes),
+    "ratio": (len(raw_data) / len(compressed_bytes)) if len(compressed_bytes) > 0 else 0.0,
+    "recovered_sha256": hashlib.sha256(recovered_bytes).hexdigest(),
+    "compressed_sha256": hashlib.sha256(compressed_bytes).hexdigest(),
+    "elapsed_ms": round(elapsed_ms, 3),
+}))
+"""
+
+
+def _sanitized_child_env(workspace_dir: Path) -> Dict[str, str]:
+    """Strips API keys and secrets so cell subprocesses NEVER see `OPENAI_API_KEY`."""
+    safe_keys = ("PATH", "LANG", "LC_ALL", "SYSTEMROOT", "WINDIR")
+    env = {k: os.environ[k] for k in safe_keys if k in os.environ}
+    env["HOME"] = str(workspace_dir)
+    env["TMPDIR"] = str(workspace_dir)
+    env["PYTHONDONTWRITEBYTECODE"] = "1"
+    env["PYTHONNOUSERSITE"] = "1"
+    return env
+
+
+def verify_codec_morphism_isolated(
+    codec_path: Path,
+    payload: bytes,
+    workspace_dir: Path,
+    timeout_sec: float = 8.0,
+) -> Dict[str, Any]:
+    """
+    Stage-A / Stage-C functional morphism check in an isolated child Python process.
+    Pipes `payload` via stdin so sealed R1 audit bytes are NEVER written to disk!
+    """
+    if not codec_path.exists():
+        return {"ok": False, "error": f"Missing artifact: {codec_path.name}", "ratio": 0.0}
+    try:
+        proc = subprocess.run(
+            [sys.executable, "-I", "-c", _SUBPROCESS_EVAL_DRIVER, str(codec_path.resolve())],
+            input=payload,
+            capture_output=True,
+            cwd=str(workspace_dir),
+            env=_sanitized_child_env(workspace_dir),
+            timeout=timeout_sec,
+        )
+        if proc.returncode != 0:
+            err_txt = proc.stderr.decode("utf-8", errors="replace").strip()[-600:]
+            return {"ok": False, "error": f"Exit {proc.returncode}: {err_txt}", "ratio": 0.0}
+        out_line = proc.stdout.decode("utf-8", errors="replace").strip().splitlines()[-1]
+        parsed = json.loads(out_line)
+        expected_sha = hashlib.sha256(payload).hexdigest()
+        if parsed.get("recovered_sha256") != expected_sha:
+            parsed["ok"] = False
+            parsed["error"] = "SHA-256 mismatch on decoded payload"
+        return parsed
+    except subprocess.TimeoutExpired:
+        return {"ok": False, "error": f"Timeout > {timeout_sec}s", "ratio": 0.0}
+    except Exception as exc:
+        return {"ok": False, "error": f"{type(exc).__name__}: {exc}", "ratio": 0.0}
+
+
+def run_cell_bench_snippet(python_code: str, workspace_dir: Path, timeout_sec: float = 6.0) -> str:
+    """Executes `inspect_and_bench` inside the cell's isolated workspace directory."""
+    scratch = workspace_dir / "_bench_step.py"
+    scratch.write_text(python_code, encoding="utf-8")
+    try:
+        proc = subprocess.run(
+            [sys.executable, "-I", str(scratch.resolve())],
+            capture_output=True,
+            cwd=str(workspace_dir),
+            env=_sanitized_child_env(workspace_dir),
+            timeout=timeout_sec,
+        )
+        stdout = proc.stdout.decode("utf-8", errors="replace")
+        stderr = proc.stderr.decode("utf-8", errors="replace")
+        combined = f"[exit_code={proc.returncode}]\n"
+        if stdout:
+            combined += f"STDOUT:\n{stdout}\n"
+        if stderr:
+            combined += f"STDERR:\n{stderr}\n"
+        return combined[:4000]
+    except subprocess.TimeoutExpired:
+        return f"[exit_code=124]\nSTDERR: Execution timed out after {timeout_sec}s."
+    except Exception as exc:
+        return f"[exit_code=1]\nSTDERR: {type(exc).__name__}: {exc}"
+    finally:
+        scratch.unlink(missing_ok=True)
+
+
+def classify_map_elites_niche(source_code: str) -> Tuple[str, str]:
+    """
+    Stage-B Behavioral Descriptor `(transform_depth_bin, entropy_coder_family)`
+    extracted deterministically via AST + token analysis of synthesized `codec.py`.
+    """
+    backends = []
+    for mod_name in ("lzma", "bz2", "zlib"):
+        if mod_name in source_code:
+            backends.append(mod_name)
+    if len(backends) >= 2:
+        coder_family = "multi_backend(" + "+".join(sorted(backends)) + ")"
+    elif len(backends) == 1:
+        coder_family = backends[0]
+    else:
+        coder_family = "custom_pure_py"
+
+    src_lower = source_code.lower()
+    transforms_detected = 0
+    if any(k in src_lower for k in ("stride", "transpose", "::64", "range(64)", "% 64", "// 64")):
+        transforms_detected += 1
+    if any(k in src_lower for k in ("delta", "- prev", "diff", "& 0xff", "% 256")):
+        transforms_detected += 1
+    if "^" in source_code or "xor" in src_lower:
+        transforms_detected += 1
+    if any(k in src_lower for k in ("mtf", "move_to_front", "rle", "bwt")):
+        transforms_detected += 1
+
+    try:
+        tree = ast.parse(source_code)
+        helper_defs = sum(1 for n in ast.walk(tree) if isinstance(n, ast.FunctionDef))
+    except SyntaxError:
+        helper_defs = 0
+
+    depth_score = max(transforms_detected, 1 if helper_defs > 3 else 0)
+    depth_bin = f"L{min(3, depth_score)}"
+    return depth_bin, coder_family
+
+
+# =============================================================================
+# 5. Pure-Stdlib OpenAI `/v1/responses` Client (`service_tier="flex"`)
+# =============================================================================
+
+def _build_ssl_context() -> ssl.SSLContext:
+    cert_env = os.environ.get("SSL_CERT_FILE")
+    if cert_env and os.path.exists(cert_env):
+        return ssl.create_default_context(cafile=cert_env)
+    for candidate in ("/etc/ssl/cert.pem", "/etc/ssl/certs/ca-certificates.crt"):
+        if os.path.exists(candidate):
+            return ssl.create_default_context(cafile=candidate)
+    return ssl.create_default_context()
+
+
+ResponsesTransport = Callable[[Dict[str, Any]], Dict[str, Any]]
+
+
+def make_live_openai_responses_transport(
+    api_key: str,
+    base_url: str = "https://api.openai.com/v1/responses",
+    timeout_sec: float = 900.0,
+    max_flex_retries: int = 3,
+    fallback_to_standard_on_429: bool = True,
+) -> ResponsesTransport:
+    """
+    Synchronous HTTP POST wrapper for `https://api.openai.com/v1/responses` (executed
+    concurrently via `asyncio.to_thread`). Handles:
+      - `service_tier="flex"` with 900s timeout per OpenAI Flex guide
+      - Uncharged HTTP 429 (`Resource Unavailable`) & HTTP 408/5xx retries with backoff
+      - Optional fallback to `service_tier="auto"` if Flex capacity stays saturated
+      - Hard stop on `credit_balance_exhausted`
+    """
+    ssl_ctx = _build_ssl_context()
+
+    def _call(payload: Dict[str, Any]) -> Dict[str, Any]:
+        req_payload = dict(payload)
+        desired_tier = req_payload.get("service_tier", "flex")
+        attempts = 0
+        total_allowed = max_flex_retries + (2 if fallback_to_standard_on_429 else 0)
+
+        while True:
+            attempts += 1
+            if (
+                desired_tier == "flex"
+                and fallback_to_standard_on_429
+                and attempts > max_flex_retries
+            ):
+                req_payload["service_tier"] = "auto"
+
+            body_bytes = json.dumps(req_payload).encode("utf-8")
+            req = urllib.request.Request(
+                base_url,
+                data=body_bytes,
+                method="POST",
+                headers={
+                    "Authorization": f"Bearer {api_key}",
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                },
+            )
+            try:
+                with urllib.request.urlopen(req, timeout=timeout_sec, context=ssl_ctx) as resp:
+                    raw = resp.read().decode("utf-8")
+                    return json.loads(raw)
+            except urllib.error.HTTPError as http_err:
+                err_body = http_err.read().decode("utf-8", errors="replace")
+                if "credit_balance_exhausted" in err_body or "insufficient_quota" in err_body:
+                    raise BudgetExhaustedStop(
+                        f"OpenAI returned billing cutoff ({http_err.code}): {err_body[:300]}"
+                    ) from http_err
+
+                if http_err.code in (408, 429, 500, 502, 503, 504) and attempts <= total_allowed:
+                    backoff = min(30.0, (1.8 ** attempts) + random.uniform(0.2, 1.2))
+                    time.sleep(backoff)
+                    continue
+                raise RuntimeError(
+                    f"OpenAI /v1/responses HTTP {http_err.code}: {err_body[:800]}"
+                ) from http_err
+            except (urllib.error.URLError, TimeoutError) as net_err:
+                if attempts <= total_allowed:
+                    time.sleep(min(20.0, 2.0 * attempts))
+                    continue
+                raise RuntimeError(f"Network/timeout calling OpenAI: {net_err}") from net_err
+
+    return _call
+
+
+# =============================================================================
+# 6. Multi-Turn Cell Execution Loop + Stage-A/B/C Evaluation
+# =============================================================================
+
+@dataclass
+class LineageRunRecord:
+    replicate_id: int
+    seed: int
+    arm: str
+    model: str
+    reasoning_effort: str
+    turns_executed: int
+    bench_calls: int
+    propose_select_calls: int
+    narrow_channel_kept_wins: int
+    out_of_channel_win_recovered: bool
+    baseline_proxy_ratio: float
+    committed_proxy_ratio: float
+    committed_r1_audit_ratio: float
+    disk_artifact_proxy_ratio: float
+    disk_artifact_r1_audit_ratio: float
+    effective_best_r1_audit_ratio: float
+    proxy_to_r1_generalization_gap: float
+    r1_lossless_verified: bool
+    map_elites_niche: str
+    input_tokens: int
+    cached_tokens: int
+    output_tokens: int
+    reasoning_tokens: int
+    cost_usd: float
+    wall_seconds: float
+    committed_codec_sha256: str
+    disk_codec_sha256: str
+
+
+async def run_single_colony_lineage(
+    replicate_id: int,
+    seed: int,
+    arm: str,
+    model: str,
+    reasoning_effort: str,
+    service_tier: str,
+    max_turns: int,
+    max_output_tokens: int,
+    stateless_zdr: bool,
+    run_root: Path,
+    proxy_bytes: bytes,
+    sealed_r1_bytes: bytes,
+    transport: ResponsesTransport,
+    ledger: ThreadSafeBudgetLedger,
+    transcript_lock: asyncio.Lock,
+    transcript_path: Path,
+) -> LineageRunRecord:
+    """Executes one complete multi-turn LLM cell lineage and runs Stage-A/B/C verification."""
+    t_start = time.perf_counter()
+    cell_dir = run_root / f"rep_{replicate_id:02d}_{arm}_{model.replace('.', '_')}"
+    ws_dir = cell_dir / "workspace"
+    ws_dir.mkdir(parents=True, exist_ok=True)
+
+    (ws_dir / "proxy_telemetry.bin").write_bytes(proxy_bytes)
+    disk_codec_path = ws_dir / "codec.py"
+    disk_codec_path.write_text(BASELINE_CODEC_SOURCE, encoding="utf-8")
+
+    committed_codec_path = cell_dir / "committed_codec.py"
+    committed_codec_path.write_text(BASELINE_CODEC_SOURCE, encoding="utf-8")
+
+    base_proxy_eval = verify_codec_morphism_isolated(committed_codec_path, proxy_bytes, ws_dir)
+    best_committed_proxy_len = int(base_proxy_eval["compressed_len"])
+    baseline_proxy_ratio = float(base_proxy_eval["ratio"])
+
+    user_prompt = build_arm_user_prompt(arm, max_turns, best_committed_proxy_len)
+
+    prev_response_id: Optional[str] = None
+    stateless_items: List[Dict[str, Any]] = [{"role": "user", "content": user_prompt}]
+    pending_input: Any = stateless_items if stateless_zdr else [{"role": "user", "content": user_prompt}]
+
+    turns_executed = 0
+    bench_calls = 0
+    propose_calls = 0
+    kept_wins = 0
+    cell_in_tok = 0
+    cell_cached_tok = 0
+    cell_out_tok = 0
+    cell_reas_tok = 0
+    cell_cost_usd = 0.0
+    finished = False
+
+    while turns_executed < max_turns and not finished:
+        reserved = ledger.reserve_for_turn(
+            model=model,
+            tier=service_tier,
+            max_out_tokens=max_output_tokens,
+            est_in_tokens=4500 + turns_executed * 1500,
+        )
+        req_payload: Dict[str, Any] = {
+            "model": model,
+            "instructions": STATIC_COLONY_SYSTEM_INSTRUCTIONS,
+            "tools": RESPONSES_API_TOOLS,
+            "reasoning": {"effort": reasoning_effort},
+            "service_tier": service_tier,
+            "max_output_tokens": max_output_tokens,
+            "input": pending_input,
+        }
+        if stateless_zdr:
+            req_payload["store"] = False
+            req_payload["include"] = ["reasoning.encrypted_content"]
+        else:
+            req_payload["store"] = True
+            if prev_response_id is not None:
+                req_payload["previous_response_id"] = prev_response_id
+
+        try:
+            resp = await asyncio.to_thread(transport, req_payload)
+        except Exception:
+            ledger.release_reservation(reserved)
+            raise
+
+        turns_executed += 1
+        usage = resp.get("usage") or {}
+        served_tier = resp.get("service_tier") or service_tier
+        step_cost = ledger.settle_turn(reserved, model, served_tier, usage)
+
+        in_t = int(usage.get("input_tokens", 0) or 0)
+        ca_t = int((usage.get("input_tokens_details") or {}).get("cached_tokens", 0) or 0)
+        ou_t = int(usage.get("output_tokens", 0) or 0)
+        re_t = int((usage.get("output_tokens_details") or {}).get("reasoning_tokens", 0) or 0)
+        cell_in_tok += in_t
+        cell_cached_tok += ca_t
+        cell_out_tok += ou_t
+        cell_reas_tok += re_t
+        cell_cost_usd += step_cost
+
+        output_items: List[Dict[str, Any]] = resp.get("output") or []
+        prev_response_id = resp.get("id")
+
+        async with transcript_lock:
+            with open(transcript_path, "a", encoding="utf-8") as tf:
+                tf.write(
+                    json.dumps(
+                        {
+                            "replicate_id": replicate_id,
+                            "seed": seed,
+                            "arm": arm,
+                            "model": model,
+                            "turn": turns_executed,
+                            "response_id": prev_response_id,
+                            "served_tier": served_tier,
+                            "usage": usage,
+                            "step_cost_usd": step_cost,
+                            "output_items": output_items,
+                        }
+                    )
+                    + "\n"
+                )
+
+        if stateless_zdr:
+            stateless_items.extend(output_items)
+
+        func_calls = [it for it in output_items if it.get("type") == "function_call"]
+        if not func_calls:
+            break
+
+        tool_outputs_for_next_turn: List[Dict[str, Any]] = []
+        for fc in func_calls:
+            call_id = fc.get("call_id") or fc.get("id") or f"call_{turns_executed}"
+            fn_name = fc.get("name", "")
+            raw_args = fc.get("arguments") or "{}"
+            try:
+                args = json.loads(raw_args) if isinstance(raw_args, str) else dict(raw_args)
+            except json.JSONDecodeError as jerr:
+                tool_outputs_for_next_turn.append(
+                    {
+                        "type": "function_call_output",
+                        "call_id": call_id,
+                        "output": json.dumps({"ok": False, "error": f"Invalid JSON args: {jerr}"}),
+                    }
+                )
+                continue
+
+            if fn_name == "inspect_and_bench":
+                bench_calls += 1
+                py_code = str(args.get("python_code", ""))
+                bench_out = await asyncio.to_thread(run_cell_bench_snippet, py_code, ws_dir)
+                tool_outputs_for_next_turn.append(
+                    {
+                        "type": "function_call_output",
+                        "call_id": call_id,
+                        "output": bench_out,
+                    }
+                )
+
+            elif fn_name == "propose_select":
+                propose_calls += 1
+                cand_src = str(args.get("candidate_code", ""))
+                cand_file = cell_dir / f"_cand_turn_{turns_executed}_{propose_calls}.py"
+                cand_file.write_text(cand_src, encoding="utf-8")
+                eval_res = await asyncio.to_thread(
+                    verify_codec_morphism_isolated, cand_file, proxy_bytes, ws_dir
+                )
+                cand_file.unlink(missing_ok=True)
+
+                if eval_res.get("ok"):
+                    c_len = int(eval_res["compressed_len"])
+                    improved = c_len < best_committed_proxy_len
+                    if improved:
+                        best_committed_proxy_len = c_len
+                        kept_wins += 1
+                        committed_codec_path.write_text(cand_src, encoding="utf-8")
+                        disk_codec_path.write_text(cand_src, encoding="utf-8")
+                    gate_reply = {
+                        "ok": True,
+                        "lossless_verified": True,
+                        "kept_improvement": improved,
+                        "candidate_compressed_bytes": c_len,
+                        "candidate_proxy_ratio": round(float(eval_res["ratio"]), 4),
+                        "best_committed_bytes": best_committed_proxy_len,
+                        "narrow_channel_kept_wins": kept_wins,
+                    }
+                else:
+                    gate_reply = {
+                        "ok": False,
+                        "lossless_verified": False,
+                        "kept_improvement": False,
+                        "error": eval_res.get("error", "Verification failed"),
+                        "best_committed_bytes": best_committed_proxy_len,
+                    }
+                tool_outputs_for_next_turn.append(
+                    {
+                        "type": "function_call_output",
+                        "call_id": call_id,
+                        "output": json.dumps(gate_reply),
+                    }
+                )
+
+            elif fn_name == "finish_cell":
+                finished = True
+                tool_outputs_for_next_turn.append(
+                    {
+                        "type": "function_call_output",
+                        "call_id": call_id,
+                        "output": json.dumps({"ok": True, "status": "cell_terminated"}),
+                    }
+                )
+            else:
+                tool_outputs_for_next_turn.append(
+                    {
+                        "type": "function_call_output",
+                        "call_id": call_id,
+                        "output": json.dumps({"ok": False, "error": f"Unknown tool: {fn_name}"}),
+                    }
+                )
+
+        if stateless_zdr:
+            stateless_items.extend(tool_outputs_for_next_turn)
+            pending_input = stateless_items
+        else:
+            pending_input = tool_outputs_for_next_turn
+
+    # =========================================================================
+    # Stage-A (Channel-Agnostic Morphism) + Stage-B (MAP-Elites) + Stage-C (Sealed R1 Audit)
+    # =========================================================================
+    comm_proxy = await asyncio.to_thread(
+        verify_codec_morphism_isolated, committed_codec_path, proxy_bytes, ws_dir
+    )
+    comm_r1 = await asyncio.to_thread(
+        verify_codec_morphism_isolated, committed_codec_path, sealed_r1_bytes, ws_dir
+    )
+    disk_proxy = await asyncio.to_thread(
+        verify_codec_morphism_isolated, disk_codec_path, proxy_bytes, ws_dir
+    )
+    disk_r1 = await asyncio.to_thread(
+        verify_codec_morphism_isolated, disk_codec_path, sealed_r1_bytes, ws_dir
+    )
+
+    comm_p_ratio = float(comm_proxy["ratio"]) if comm_proxy.get("ok") else 0.0
+    comm_r1_ratio = float(comm_r1["ratio"]) if comm_r1.get("ok") else 0.0
+    disk_p_ratio = float(disk_proxy["ratio"]) if disk_proxy.get("ok") else 0.0
+    disk_r1_ratio = float(disk_r1["ratio"]) if disk_r1.get("ok") else 0.0
+
+    out_of_channel_recovered = bool(
+        disk_r1.get("ok") and (disk_r1_ratio > comm_r1_ratio * 1.01)
+    )
+    if disk_r1_ratio >= comm_r1_ratio and disk_r1.get("ok"):
+        best_r1_ratio = disk_r1_ratio
+        best_proxy_ratio = disk_p_ratio
+        best_src = disk_codec_path.read_text(encoding="utf-8")
+        r1_ok = True
+    else:
+        best_r1_ratio = comm_r1_ratio
+        best_proxy_ratio = comm_p_ratio
+        best_src = committed_codec_path.read_text(encoding="utf-8")
+        r1_ok = bool(comm_r1.get("ok"))
+
+    depth_bin, coder_fam = classify_map_elites_niche(best_src)
+    niche_key = f"{depth_bin}:{coder_fam}"
+
+    comm_sha = hashlib.sha256(committed_codec_path.read_bytes()).hexdigest()
+    disk_sha = hashlib.sha256(disk_codec_path.read_bytes()).hexdigest()
+    wall_s = round(time.perf_counter() - t_start, 3)
+
+    return LineageRunRecord(
+        replicate_id=replicate_id,
+        seed=seed,
+        arm=arm,
+        model=model,
+        reasoning_effort=reasoning_effort,
+        turns_executed=turns_executed,
+        bench_calls=bench_calls,
+        propose_select_calls=propose_calls,
+        narrow_channel_kept_wins=kept_wins,
+        out_of_channel_win_recovered=out_of_channel_recovered,
+        baseline_proxy_ratio=round(baseline_proxy_ratio, 4),
+        committed_proxy_ratio=round(comm_p_ratio, 4),
+        committed_r1_audit_ratio=round(comm_r1_ratio, 4),
+        disk_artifact_proxy_ratio=round(disk_p_ratio, 4),
+        disk_artifact_r1_audit_ratio=round(disk_r1_ratio, 4),
+        effective_best_r1_audit_ratio=round(best_r1_ratio, 4),
+        proxy_to_r1_generalization_gap=round(best_proxy_ratio - best_r1_ratio, 4),
+        r1_lossless_verified=r1_ok,
+        map_elites_niche=niche_key,
+        input_tokens=cell_in_tok,
+        cached_tokens=cell_cached_tok,
+        output_tokens=cell_out_tok,
+        reasoning_tokens=cell_reas_tok,
+        cost_usd=round(cell_cost_usd, 6),
+        wall_seconds=wall_s,
+        committed_codec_sha256=comm_sha,
+        disk_codec_sha256=disk_sha,
+    )
+
+
+# =============================================================================
+# 7. Exact Paired Permutation Statistics, Retroactive R1 Audit & SHA256SUMS
+# =============================================================================
+
+def exact_paired_sign_flip_pvalue(diffs: List[float]) -> float:
+    """
+    Exact two-sided paired sign-flip permutation p-value over `N` seed-matched pairs.
+    Zero parametric normality assumptions; exact for R5 replicate counts (N = 5..20).
+    """
+    n = len(diffs)
+    if n == 0:
+        return 1.0
+    obs = abs(sum(diffs) / n)
+    if obs == 0.0:
+        return 1.0
+    extreme = 0
+    total = 1 << n
+    for signs in itertools.product((-1.0, 1.0), repeat=n):
+        perm_mean = abs(sum(s * d for s, d in zip(signs, diffs)) / n)
+        if perm_mean >= obs - 1e-12:
+            extreme += 1
+    return round(extreme / total, 6)
+
+
+def summarize_records(records: List[LineageRunRecord], sealed_hashes: Dict[int, str]) -> Dict[str, Any]:
+    by_arm: Dict[str, List[LineageRunRecord]] = {}
+    map_elites_archive: Dict[str, Dict[str, Any]] = {}
+
+    for rec in records:
+        key = f"{rec.arm}@{rec.model}"
+        by_arm.setdefault(key, []).append(rec)
+        cur_champ = map_elites_archive.get(rec.map_elites_niche)
+        if cur_champ is None or rec.effective_best_r1_audit_ratio > cur_champ["best_r1_audit_ratio"]:
+            map_elites_archive[rec.map_elites_niche] = {
+                "best_r1_audit_ratio": rec.effective_best_r1_audit_ratio,
+                "replicate_id": rec.replicate_id,
+                "seed": rec.seed,
+                "arm": rec.arm,
+                "model": rec.model,
+                "disk_codec_sha256": rec.disk_codec_sha256,
+            }
+
+    arm_summaries: Dict[str, Any] = {}
+    for key, arr in by_arm.items():
+        wins = [r.narrow_channel_kept_wins for r in arr]
+        comm_r1 = [r.committed_r1_audit_ratio for r in arr]
+        eff_r1 = [r.effective_best_r1_audit_ratio for r in arr]
+        gaps = [r.proxy_to_r1_generalization_gap for r in arr]
+        costs = [r.cost_usd for r in arr]
+        arm_summaries[key] = {
+            "n_lineages": len(arr),
+            "narrow_channel_kept_wins_mean": round(statistics.mean(wins), 3),
+            "narrow_channel_kept_wins_sd": round(statistics.stdev(wins), 3) if len(wins) > 1 else 0.0,
+            "out_of_channel_wins_recovered_count": sum(1 for r in arr if r.out_of_channel_win_recovered),
+            "committed_r1_ratio_mean": round(statistics.mean(comm_r1), 4),
+            "committed_r1_ratio_sd": round(statistics.stdev(comm_r1), 4) if len(comm_r1) > 1 else 0.0,
+            "stage_a_recovered_r1_ratio_mean": round(statistics.mean(eff_r1), 4),
+            "stage_a_recovered_r1_ratio_sd": round(statistics.stdev(eff_r1), 4) if len(eff_r1) > 1 else 0.0,
+            "proxy_minus_r1_gap_mean": round(statistics.mean(gaps), 4),
+            "all_r1_lossless_verified": all(r.r1_lossless_verified for r in arr),
+            "mean_cost_usd": round(statistics.mean(costs), 5),
+            "total_cost_usd": round(sum(costs), 5),
+        }
+
+    paired_tests: Dict[str, Any] = {}
+    models_present = sorted({r.model for r in records})
+    for mdl in models_present:
+        arm_a_map = {r.seed: r for r in records if r.model == mdl and r.arm == "v1_implicit_hy4"}
+        arm_b_map = {r.seed: r for r in records if r.model == mdl and r.arm == "r3_explicit_commit_contract"}
+        shared_seeds = sorted(set(arm_a_map).intersection(arm_b_map))
+        if shared_seeds:
+            win_diffs = [
+                float(arm_b_map[s].narrow_channel_kept_wins - arm_a_map[s].narrow_channel_kept_wins)
+                for s in shared_seeds
+            ]
+            comm_r1_diffs = [
+                arm_b_map[s].committed_r1_audit_ratio - arm_a_map[s].committed_r1_audit_ratio
+                for s in shared_seeds
+            ]
+            eff_r1_diffs = [
+                arm_b_map[s].effective_best_r1_audit_ratio - arm_a_map[s].effective_best_r1_audit_ratio
+                for s in shared_seeds
+            ]
+            paired_tests[mdl] = {
+                "n_interleaved_pairs": len(shared_seeds),
+                "meets_r5_five_replicate_bar": len(shared_seeds) >= 5,
+                "r3_minus_v1_kept_wins_mean": round(statistics.mean(win_diffs), 4),
+                "r3_minus_v1_kept_wins_exact_p": exact_paired_sign_flip_pvalue(win_diffs),
+                "r3_minus_v1_committed_r1_ratio_delta": round(statistics.mean(comm_r1_diffs), 4),
+                "r3_minus_v1_committed_r1_exact_p": exact_paired_sign_flip_pvalue(comm_r1_diffs),
+                "r3_minus_v1_stage_a_r1_ratio_delta": round(statistics.mean(eff_r1_diffs), 4),
+                "r3_minus_v1_stage_a_r1_exact_p": exact_paired_sign_flip_pvalue(eff_r1_diffs),
+            }
+
+    return {
+        "sealed_r1_workload_sha256_by_seed": {str(k): v for k, v in sorted(sealed_hashes.items())},
+        "arm_summaries": arm_summaries,
+        "paired_r3_adherence_tests": paired_tests,
+        "map_elites_behavioral_archive": map_elites_archive,
+        "map_elites_niches_populated": len(map_elites_archive),
+    }
+
+
+def write_sha256_manifest(run_root: Path) -> Path:
+    """Writes standard `sha256sum -c SHA256SUMS` compatible manifest over run outputs."""
+    manifest_path = run_root / "SHA256SUMS"
+    entries: List[str] = []
+    for path in sorted(run_root.rglob("*")):
+        if path.is_file() and path.name != "SHA256SUMS":
+            rel = path.relative_to(run_root).as_posix()
+            digest = hashlib.sha256(path.read_bytes()).hexdigest()
+            entries.append(f"{digest}  {rel}")
+    manifest_path.write_text("\n".join(entries) + "\n", encoding="utf-8")
+    return manifest_path
+
+
+def run_retroactive_r1_audit(archive_dir: Path, seed: int = 20261112) -> Dict[str, Any]:
+    """
+    Issue #111 R1 Retroactive Audit Mode: scans any archived colony directory for
+    `*codec*.py` artifacts and evaluates them against the sealed 32,805-byte R1 stream.
+    """
+    sealed_r1 = generate_sealed_r1_audit_workload(seed)
+    sealed_sha = hashlib.sha256(sealed_r1).hexdigest()
+    candidates = sorted(archive_dir.rglob("*codec*.py"))
+    results = []
+    with tempfile.TemporaryDirectory(prefix="weft_r1_retro_") as tmp:
+        tmp_path = Path(tmp)
+        for cpath in candidates:
+            res = verify_codec_morphism_isolated(cpath, sealed_r1, tmp_path)
+            depth_b, fam = classify_map_elites_niche(cpath.read_text(encoding="utf-8", errors="replace"))
+            results.append(
+                {
+                    "artifact_path": str(cpath),
+                    "artifact_sha256": hashlib.sha256(cpath.read_bytes()).hexdigest(),
+                    "lossless_ok": bool(res.get("ok")),
+                    "sealed_r1_ratio": round(float(res.get("ratio", 0.0)), 4),
+                    "compressed_bytes": res.get("compressed_len"),
+                    "map_elites_niche": f"{depth_b}:{fam}",
+                    "error": res.get("error"),
+                }
+            )
+    return {
+        "mode": "retroactive_r1_audit",
+        "archive_dir": str(archive_dir),
+        "sealed_r1_bytes": len(sealed_r1),
+        "sealed_r1_sha256": sealed_sha,
+        "artifacts_audited": len(results),
+        "results": results,
+    }
+
+
+# =============================================================================
+# 8. Built-in Offline Mock `/v1/responses` Server for `--selftest`
+# =============================================================================
+
+def make_selftest_mock_transport() -> ResponsesTransport:
+    """
+    Simulates realistic `gpt-6.1-sol` Responses API multi-turn behavior offline:
+      - Arm A (`v1_implicit_hy4`): benchmarks `stride-64 + delta + lzma` inside
+        `inspect_and_bench`, writes `codec.py` directly to workspace disk, and calls
+        `finish_cell` without `propose_select` -> narrow channel records 0 wins while
+        Stage-A recovers the full R1 held-out compression win!
+      - Arm B (`r3_explicit_commit_contract`): benchmarks in `inspect_and_bench` AND
+        registers both its `stride-64 + zlib` stepping stone and `stride-64 + delta + lzma`
+        champion via `propose_select`!
+    """
+    state_lock = threading.Lock()
+    sessions: Dict[str, Dict[str, Any]] = {}
+    counter = [0]
+
+    stride_zlib_codec = '''import zlib
+def encode(data: bytes) -> bytes:
+    n = len(data)
+    rem = n % 64
+    core = data[:n - rem]
+    rows = n // 64
+    trans = bytearray(len(core))
+    for r in range(rows):
+        base = r * 64
+        for c in range(64):
+            trans[c * rows + r] = core[base + c]
+    return bytes([rem]) + zlib.compress(bytes(trans) + data[n - rem:], level=9)
+
+def decode(blob: bytes) -> bytes:
+    rem = blob[0]
+    raw = zlib.decompress(blob[1:])
+    core_len = len(raw) - rem
+    if core_len == 0:
+        return raw
+    rows = core_len // 64
+    out = bytearray(core_len)
+    for c in range(64):
+        col_off = c * rows
+        for r in range(rows):
+            out[r * 64 + c] = raw[col_off + r]
+    return bytes(out) + raw[core_len:]
+'''
+
+    stride_delta_lzma_codec = '''import lzma
+def encode(data: bytes) -> bytes:
+    n = len(data)
+    rem = n % 64
+    core = data[:n - rem]
+    rows = n // 64
+    trans = bytearray(len(core))
+    for c in range(64):
+        prev = 0
+        out_off = c * rows
+        for r in range(rows):
+            b = core[r * 64 + c]
+            trans[out_off + r] = (b - prev) & 0xFF
+            prev = b
+    return bytes([rem]) + lzma.compress(bytes(trans) + data[n - rem:], preset=6)
+
+def decode(blob: bytes) -> bytes:
+    rem = blob[0]
+    raw = lzma.decompress(blob[1:])
+    core_len = len(raw) - rem
+    if core_len == 0:
+        return raw
+    rows = core_len // 64
+    out = bytearray(core_len)
+    for c in range(64):
+        prev = 0
+        col_off = c * rows
+        for r in range(rows):
+            b = (raw[col_off + r] + prev) & 0xFF
+            out[r * 64 + c] = b
+            prev = b
+    return bytes(out) + raw[core_len:]
+'''
+
+    def _mock_call(payload: Dict[str, Any]) -> Dict[str, Any]:
+        with state_lock:
+            counter[0] += 1
+            cid = counter[0]
+            prev_id = payload.get("previous_response_id")
+            if prev_id is None:
+                prompt_txt = json.dumps(payload.get("input", ""))
+                is_r3 = "PROTOCOL CONTRACT (WEFT #111 R3)" in prompt_txt
+                turn_num = 1
+            else:
+                sess = sessions[prev_id]
+                is_r3 = sess["is_r3"]
+                turn_num = sess["turn"] + 1
+
+            resp_id = f"resp_selftest_{cid:05d}"
+            sessions[resp_id] = {"is_r3": is_r3, "turn": turn_num}
+
+        if turn_num == 1:
+            bench_script = (
+                "from pathlib import Path\n"
+                "raw = Path('proxy_telemetry.bin').read_bytes()\n"
+                f"src = {stride_delta_lzma_codec!r}\n"
+                "ns = {}\nexec(src, ns)\n"
+                "comp = ns['encode'](raw)\n"
+                "assert ns['decode'](comp) == raw\n"
+                "Path('codec.py').write_text(src)\n"
+                "print('hy4_batch_synth_bytes=', len(comp))\n"
+            )
+            out_items = [
+                {
+                    "type": "function_call",
+                    "call_id": f"call_{cid}_1",
+                    "name": "inspect_and_bench",
+                    "arguments": json.dumps({"python_code": bench_script}),
+                }
+            ]
+        elif turn_num == 2 and is_r3:
+            out_items = [
+                {
+                    "type": "function_call",
+                    "call_id": f"call_{cid}_2a",
+                    "name": "propose_select",
+                    "arguments": json.dumps(
+                        {
+                            "candidate_code": stride_zlib_codec,
+                            "notes": "64B column transpose + zlib-9 stepping stone",
+                        }
+                    ),
+                },
+                {
+                    "type": "function_call",
+                    "call_id": f"call_{cid}_2b",
+                    "name": "propose_select",
+                    "arguments": json.dumps(
+                        {
+                            "candidate_code": stride_delta_lzma_codec,
+                            "notes": "64B column transpose + per-column delta + lzma-6",
+                        }
+                    ),
+                },
+            ]
+        else:
+            out_items = [
+                {
+                    "type": "function_call",
+                    "call_id": f"call_{cid}_fin",
+                    "name": "finish_cell",
+                    "arguments": json.dumps({"summary": "Completed lossless telemetry synthesis."}),
+                }
+            ]
+
+        return {
+            "id": resp_id,
+            "object": "response",
+            "model": payload.get("model", "gpt-6.1-sol"),
+            "service_tier": payload.get("service_tier", "flex"),
+            "output": out_items,
+            "usage": {
+                "input_tokens": 2400,
+                "input_tokens_details": {"cached_tokens": 0 if turn_num == 1 else 1920},
+                "output_tokens": 650,
+                "output_tokens_details": {"reasoning_tokens": 420},
+            },
+        }
+
+    return _mock_call
+
+
+# =============================================================================
+# 9. Interleaved Orchestrator & CLI Entrypoint
+# =============================================================================
+
+async def orchestrate_weft_111_suite(args: argparse.Namespace) -> Dict[str, Any]:
+    run_ts = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
+    out_dir = Path(args.output_dir).resolve() / f"weft_111_run_{run_ts}"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    transcript_path = out_dir / "transcripts.jsonl"
+    transcript_path.write_text("", encoding="utf-8")
+
+    ledger = ThreadSafeBudgetLedger(max_budget_usd=args.budget_usd)
+
+    if args.selftest:
+        transport = make_selftest_mock_transport()
+    else:
+        api_key = os.environ.get("OPENAI_API_KEY", "").strip()
+        if not api_key:
+            raise SystemExit(
+                "ERROR: OPENAI_API_KEY environment variable is not set.\n"
+                "Export OPENAI_API_KEY='sk-...' or run with `--selftest` to verify offline."
+            )
+        transport = make_live_openai_responses_transport(
+            api_key=api_key,
+            base_url=args.base_url,
+            timeout_sec=args.timeout_sec,
+            max_flex_retries=args.max_flex_retries,
+            fallback_to_standard_on_429=not args.strict_flex,
+        )
+
+    schedule: List[Tuple[int, int, str, str, str]] = []
+    for rep in range(args.replicates):
+        seed = args.base_seed + rep
+        arms_pair = (
+            ["v1_implicit_hy4", "r3_explicit_commit_contract"]
+            if rep % 2 == 0
+            else ["r3_explicit_commit_contract", "v1_implicit_hy4"]
+        )
+        for arm in arms_pair:
+            schedule.append((rep, seed, arm, args.sol_model, args.sol_effort))
+
+    for rep in range(args.include_astra_replicates):
+        seed = args.base_seed + rep
+        arms_pair = (
+            ["v1_implicit_hy4", "r3_explicit_commit_contract"]
+            if rep % 2 == 0
+            else ["r3_explicit_commit_contract", "v1_implicit_hy4"]
+        )
+        for arm in arms_pair:
+            schedule.append((100 + rep, seed, arm, args.astra_model, args.astra_effort))
+
+    unique_seeds = sorted({s for _, s, _, _, _ in schedule})
+    proxy_by_seed = {s: generate_proxy_workload(s) for s in unique_seeds}
+    sealed_r1_by_seed = {s: generate_sealed_r1_audit_workload(s) for s in unique_seeds}
+    sealed_r1_hashes = {
+        s: hashlib.sha256(sealed_r1_by_seed[s]).hexdigest() for s in unique_seeds
+    }
+
+    sem = asyncio.Semaphore(max(1, args.concurrency))
+    transcript_lock = asyncio.Lock()
+    completed_records: List[LineageRunRecord] = []
+    budget_halted_reason: Optional[str] = None
+
+    async def _run_guarded(item: Tuple[int, int, str, str, str]) -> Optional[LineageRunRecord]:
+        nonlocal budget_halted_reason
+        rep_id, sd, arm_name, mdl, eff = item
+        async with sem:
+            if budget_halted_reason is not None:
+                return None
+            try:
+                rec = await run_single_colony_lineage(
+                    replicate_id=rep_id,
+                    seed=sd,
+                    arm=arm_name,
+                    model=mdl,
+                    reasoning_effort=eff,
+                    service_tier=args.service_tier,
+                    max_turns=args.max_turns,
+                    max_output_tokens=args.max_output_tokens,
+                    stateless_zdr=args.stateless_zdr,
+                    run_root=out_dir,
+                    proxy_bytes=proxy_by_seed[sd],
+                    sealed_r1_bytes=sealed_r1_by_seed[sd],
+                    transport=transport,
+                    ledger=ledger,
+                    transcript_lock=transcript_lock,
+                    transcript_path=transcript_path,
+                )
+                snap = ledger.snapshot()
+                print(
+                    f"[DONE] rep={rep_id:02d} seed={sd} arm={arm_name:<27} model={mdl:<12} "
+                    f"wins={rec.narrow_channel_kept_wins} comm_R1={rec.committed_r1_audit_ratio:.3f}x "
+                    f"stageA_R1={rec.effective_best_r1_audit_ratio:.3f}x "
+                    f"niche={rec.map_elites_niche:<16} cell=${rec.cost_usd:.4f} "
+                    f"total=${snap['spent_usd']:.4f}/${snap['max_budget_usd']:.2f}",
+                    flush=True,
+                )
+                return rec
+            except BudgetExhaustedStop as bstop:
+                budget_halted_reason = str(bstop)
+                print(f"[BUDGET CIRCUIT BREAKER] {bstop}", flush=True)
+                return None
+
+    if schedule:
+        first_rec = await _run_guarded(schedule[0])
+        if first_rec is not None:
+            completed_records.append(first_rec)
+        if len(schedule) > 1 and budget_halted_reason is None:
+            rest_results = await asyncio.gather(*(_run_guarded(it) for it in schedule[1:]))
+            for r in rest_results:
+                if r is not None:
+                    completed_records.append(r)
+
+    stats_summary = summarize_records(completed_records, sealed_r1_hashes)
+    certificate = {
+        "schema": "WEFT-ISSUE111-R1R3R5/1.0",
+        "repository_target": "https://github.com/Moissanite-Labs/weft/issues/111",
+        "evidence_label": "VERIFIED (offline selftest mock)" if args.selftest else "VERIFIED (live OpenAI Responses API)",
+        "authorship_disclosure": {
+            "harness_authored_by": "Gemini autonomous research agent for Ahraz (@ahrazzle)",
+            "colony_cells_executed_by": "Mock selftest responder" if args.selftest else f"{args.sol_model} / {args.astra_model} via OpenAI /v1/responses",
+        },
+        "timestamp_utc": run_ts,
+        "configuration": {
+            "service_tier": args.service_tier,
+            "strict_flex": args.strict_flex,
+            "replicates_sol": args.replicates,
+            "replicates_astra": args.include_astra_replicates,
+            "max_turns_per_cell": args.max_turns,
+            "concurrency": args.concurrency,
+            "stateless_zdr": args.stateless_zdr,
+            "proxy_workload_bytes": 16384,
+            "sealed_r1_audit_workload_bytes": 512 * 64 + 37,
+        },
+        "budget_ledger": ledger.snapshot(),
+        "budget_circuit_breaker_triggered": budget_halted_reason,
+        "summary": stats_summary,
+        "lineage_records": [asdict(r) for r in completed_records],
+    }
+
+    cert_path = out_dir / "r1_r3_r5_certificates.json"
+    cert_path.write_text(json.dumps(certificate, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    manifest_path = write_sha256_manifest(out_dir)
+
+    print(f"\nWrote certificate: {cert_path}")
+    print(f"Wrote SHA-256 manifest: {manifest_path}")
+    return certificate
+
+
+def parse_cli_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
+    p = argparse.ArgumentParser(
+        description="OpenAI Flex (`/v1/responses`) harness for Moissanite-Labs/weft Issue #111 (R1/R3/R5)."
+    )
+    p.add_argument("--replicates", type=int, default=6, help="Interleaved R3 seed pairs on Sol (default: 6 pairs = 12 lineages, >= R5 bar of 5).")
+    p.add_argument("--include-astra-replicates", type=int, default=0, help="Additional interleaved R3 seed pairs on gpt-6-astra (e.g. 5 for frontier comparison).")
+    p.add_argument("--sol-model", type=str, default="gpt-6.1-sol", help="Primary workhorse model ID (default: gpt-6.1-sol).")
+    p.add_argument("--sol-effort", type=str, default="medium", choices=["low", "medium", "high", "xhigh", "max"], help="Reasoning effort for Sol (never 'none').")
+    p.add_argument("--astra-model", type=str, default="gpt-6-astra", help="Frontier reasoning model ID (default: gpt-6-astra).")
+    p.add_argument("--astra-effort", type=str, default="high", choices=["low", "medium", "high", "xhigh", "max"], help="Reasoning effort for Astra (never 'none').")
+    p.add_argument("--service-tier", type=str, default="flex", choices=["flex", "auto", "default", "fast"], help="OpenAI processing tier (default: flex = 50%% off).")
+    p.add_argument("--strict-flex", action="store_true", help="Never fall back to Standard tier on repeated Flex 429s (guarantees 0.5x rate).")
+    p.add_argument("--budget-usd", type=float, default=22.50, help="Hard USD spend cutoff with pre-turn reservation (set 53.50 for full $55 grant burn).")
+    p.add_argument("--max-turns", type=int, default=8, help="Maximum tool rounds per cell lineage (default: 8).")
+    p.add_argument("--max-output-tokens", type=int, default=6144, help="Per-turn output+reasoning token cap (default: 6144).")
+    p.add_argument("--concurrency", type=int, default=4, help="Parallel async cell lineages after cache-warming call #1 (default: 4).")
+    p.add_argument("--timeout-sec", type=float, default=900.0, help="Per-request HTTP timeout in seconds (OpenAI recommends 900s for Flex).")
+    p.add_argument("--max-flex-retries", type=int, default=3, help="Retries on Flex HTTP 429/408 before fallback or error.")
+    p.add_argument("--base-seed", type=int, default=20261112, help="Deterministic base seed for paired proxy & R1 workloads.")
+    p.add_argument("--output-dir", type=str, default="./weft_111_artifacts", help="Directory to store transcripts, codecs, certificates, and SHA256SUMS.")
+    p.add_argument("--base-url", type=str, default="https://api.openai.com/v1/responses", help="OpenAI Responses API endpoint.")
+    p.add_argument("--stateless-zdr", action="store_true", help="Use store=false + reasoning.encrypted_content for Zero Data Retention orgs.")
+    p.add_argument("--retroactive-audit", type=str, default=None, help="Run sealed R1 audit retroactively over an existing directory of archived codecs.")
+    p.add_argument("--selftest", action="store_true", help="Run full offline end-to-end verification using a deterministic mock /v1/responses server.")
+    return p.parse_args(argv)
+
+
+def main(argv: Optional[List[str]] = None) -> None:
+    if hasattr(signal, "SIGPIPE"):
+        signal.signal(signal.SIGPIPE, signal.SIG_DFL)
+
+    args = parse_cli_args(argv)
+    if args.retroactive_audit:
+        rep = run_retroactive_r1_audit(Path(args.retroactive_audit), seed=args.base_seed)
+        print(json.dumps(rep, indent=2))
+        return
+
+    cert = asyncio.run(orchestrate_weft_111_suite(args))
+    if args.selftest:
+        paired = cert["summary"]["paired_r3_adherence_tests"]["gpt-6.1-sol"]
+        assert paired["n_interleaved_pairs"] == args.replicates
+        assert paired["meets_r5_five_replicate_bar"] is True
+        assert paired["r3_minus_v1_kept_wins_mean"] == 2.0, f"Expected +2.0 R3 kept wins, got {paired}"
+        assert paired["r3_minus_v1_kept_wins_exact_p"] < 0.05, f"Expected p < 0.05, got {paired}"
+        v1_arm = cert["summary"]["arm_summaries"]["v1_implicit_hy4@gpt-6.1-sol"]
+        r3_arm = cert["summary"]["arm_summaries"]["r3_explicit_commit_contract@gpt-6.1-sol"]
+        assert v1_arm["narrow_channel_kept_wins_mean"] == 0.0
+        assert v1_arm["out_of_channel_wins_recovered_count"] == args.replicates
+        assert v1_arm["stage_a_recovered_r1_ratio_mean"] > 4.0
+        assert r3_arm["committed_r1_ratio_mean"] == v1_arm["stage_a_recovered_r1_ratio_mean"]
+        assert cert["budget_ledger"]["prompt_cache_hit_pct"] > 40.0
+        print(
+            "\n[SELFTEST PASSED] Verified R1 sealed 32,805B multi-regime lossless audit, "
+            "R3 protocol-adherence split (0.0 vs 2.0 narrow wins; 100% Stage-A out-of-channel recovery), "
+            f"R5 exact sign-flip p={paired['r3_minus_v1_kept_wins_exact_p']}, "
+            f"cached prefix accounting ({cert['budget_ledger']['prompt_cache_hit_pct']}% hit), and SHA256SUMS."
+        )
+
+
+if __name__ == "__main__":
+    main()
