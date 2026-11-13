@@ -1,0 +1,46 @@
+// aywa_loom.wgsl — WebGPU instanced warp-bar shader for ML Weft C7 Aywa Living Loom.
+// Consumes `packCellRecords(cells)` Float32Array (`vec4<f32>` per singular mode).
+// License: Apache-2.0
+
+struct CellRecord {
+  x_norm: f32,
+  capture: f32,
+  stratum: f32,
+  tension_norm: f32,
+};
+
+@group(0) @binding(0) var<storage, read> cells: array<CellRecord>;
+
+struct VsOut {
+  @builtin(position) pos: vec4<f32>,
+  @location(0) color: vec4<f32>,
+};
+
+@vertex
+fn vs_main(@builtin(vertex_index) vid: u32, @builtin(instance_index) iid: u32) -> VsOut {
+  let rec = cells[iid];
+  let quad = array<vec2<f32>, 6>(
+    vec2<f32>(-0.025, 0.0), vec2<f32>(0.025, 0.0), vec2<f32>(-0.025, 1.0),
+    vec2<f32>(-0.025, 1.0), vec2<f32>(0.025, 0.0), vec2<f32>(0.025, 1.0)
+  );
+  let q = quad[vid];
+  let x = -0.84 + rec.x_norm * 1.68 + q.x;
+  let h = clamp(rec.capture, 0.02, 1.0) * 1.55;
+  let y = -0.78 + q.y * h;
+
+  var out: VsOut;
+  out.pos = vec4<f32>(x, y, 0.0, 1.0);
+  if (rec.stratum > 1.5) {
+    out.color = vec4<f32>(0.878, 0.698, 0.322, 0.92); // Carbon-gold locked warp
+  } else if (rec.stratum > 0.5) {
+    out.color = vec4<f32>(0.220, 0.741, 0.973, 0.90); // Iron-cyan active weft
+  } else {
+    out.color = vec4<f32>(0.545, 0.588, 0.671, 0.30); // Residual uncaptured mode
+  }
+  return out;
+}
+
+@fragment
+fn fs_main(in: VsOut) -> @location(0) vec4<f32> {
+  return in.color;
+}

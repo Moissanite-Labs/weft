@@ -1,0 +1,50 @@
+{
+  "accepted": true,
+  "kernel_checked": true,
+  "axioms": [],
+  "theorem": "VerifiedGraftConcrete.certificate",
+  "toolchain": "leanprover/lean4:v4.35.0",
+  "request_sha256": "34aad9a27cd5140f854c6c51f8d4bd5cc5256046a08d656bb967c5ba3b591c1d",
+  "proof_sha256": "00ecdbd4524b49c7299c788c499313654bb0f0a0e4b7a7253a3644d6cffb4762",
+  "spec_sha256": "187d7c3b5da68000eb1802102f7649c0161e3022a37eb5b820fcd54ac5a2faaf",
+  "verifier_sha256": "64faacf833796663c716e3c788186ab2eaefc63781907fb5dfe88120fc5a79ba",
+  "compilerlogs": [
+    {
+      "command": [
+        "--version"
+      ],
+      "returncode": 0,
+      "stdout": "Lean (version 4.35.0, arm64-apple-darwin24.6.0, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "-o",
+        "Core.olean",
+        "Core.lean"
+      ],
+      "returncode": 0,
+      "stdout": "'VerifiedGraft.span_retention' depends on axioms: [propext, Quot.sound]\n'VerifiedGraft.conflict_witness' does not depend on any axioms\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "Certificate.lean"
+      ],
+      "returncode": 0,
+      "stdout": "VerifiedGraftConcrete.certificate : apply host witness \u2260 apply target witness\n'VerifiedGraftConcrete.certificate' does not depend on any axioms\n",
+      "stderr": ""
+    }
+  ],
+  "scope": "If this witness is protected, every candidate preserving its host output fails the conflicting target output. Membership in a deployment protected basis must be bound by the caller.",
+  "universal_theorem": "VerifiedGraftConcrete.universal_conflict",
+  "universal_theorem_axioms": [],
+  "host_output": [
+    0,
+    0
+  ],
+  "target_output": [
+    1,
+    0
+  ]
+}

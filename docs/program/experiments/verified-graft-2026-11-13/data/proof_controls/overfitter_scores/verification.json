@@ -1,0 +1,44 @@
+{
+  "accepted": true,
+  "kernel_checked": true,
+  "axioms": [],
+  "theorem": "VerifiedGraftConcrete.certificate",
+  "toolchain": "leanprover/lean4:v4.35.0",
+  "request_sha256": "86eae390c536acc89d1e17075b3f6077f6f41a23172b21a091da35ab6d9c800c",
+  "proof_sha256": "3e8681812ef7723b32597d0c166a58d90773178e3129c59e9018050ca6357a8a",
+  "spec_sha256": "187d7c3b5da68000eb1802102f7649c0161e3022a37eb5b820fcd54ac5a2faaf",
+  "verifier_sha256": "64faacf833796663c716e3c788186ab2eaefc63781907fb5dfe88120fc5a79ba",
+  "compilerlogs": [
+    {
+      "command": [
+        "--version"
+      ],
+      "returncode": 0,
+      "stdout": "Lean (version 4.35.0, arm64-apple-darwin24.6.0, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "-o",
+        "Core.olean",
+        "Core.lean"
+      ],
+      "returncode": 0,
+      "stdout": "'VerifiedGraft.span_retention' depends on axioms: [propext, Quot.sound]\n'VerifiedGraft.conflict_witness' does not depend on any axioms\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "Certificate.lean"
+      ],
+      "returncode": 0,
+      "stdout": "VerifiedGraftConcrete.certificate : totalError actual0 target inputs0 = 0 \u2227 totalError actual1 target inputs1 = 18\n'VerifiedGraftConcrete.certificate' does not depend on any axioms\n",
+      "stderr": ""
+    }
+  ],
+  "scope": "Concrete exact integer deployment/score/decision records. Generic integer-span lemma uses standard logical axioms; host, compiler execution and physical effects remain outside this proof.",
+  "computed_sse": {
+    "A": 0,
+    "B": 18
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "A_count": 12,
+  "B_count": 12,
+  "C_count": 24,
+  "calibration_count": 8,
+  "candidate_budget": 4,
+  "cases": [
+    "compatible",
+    "saturated"
+  ],
+  "confirmation": "strict SSE reduction and 10*newSSE<=9*parentSSE on both A and B; rank A only; B evaluates provisional winner only; no B reranking",
+  "delta_bound": 4,
+  "features": 6,
+  "max_cells": 2,
+  "max_rounds": 2,
+  "mode_policy": "compatible: graft/abstain; saturated: exact-preserving graft, routed fork or abstain; forks only saturated",
+  "outputs": 2,
+  "proposal_source": "separate deterministic mechanical control cohort and externally supplied real teacher cohort; no fabricated teacher responses",
+  "radius_sq": 192,
+  "scope": "Fixed integer linear readouts and explicit task-ID routing; not a general nonlinear or pretrained-model result",
+  "seeds": [
+    211,
+    337
+  ],
+  "stop": "stop when selected new-task coefficient matrix equals hidden target exactly; round 2 otherwise uses fresh A2/B2",
+  "version": "verified-graft-v1"
+}

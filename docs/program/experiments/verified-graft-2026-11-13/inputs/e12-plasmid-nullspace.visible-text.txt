@@ -1,0 +1,15 @@
+E12 Horizontal BCP Plasmid Grafting & Jacobian Null-Space Gate
+G2 Null-Space BCP Graft
+G1 Ungated BCP Graft
+C1 Raw Copy (Permuted)
+Reshuffle Sibling Basis
+Shifted Native Retention (Skill 2)
++56.73 (0.00 drop)
+0-Shot Transferred Skill (172 B)
++39.32 (+123.85 gain)
+Null-Space Residual ||ΔW·Q_keep||_F
+0.0000 (10/12 pass)
+Left: 8-node (172 B) donor plasmid grafted onto host aux port via SUP(5)
+Right: Native wake skill (green) vs grafted chemotaxis (blue) under shift
+Distribution Shift Surge
+2.4×

@@ -1,0 +1,1 @@
+{"batches":{"A":{"inputs":[[1,0,0,0,0,0],[0,1,0,0,0,0],[0,0,1,0,0,0],[0,0,0,1,0,0],[0,0,0,0,1,0],[0,0,0,0,0,1]],"sse":0,"task":"new"}},"deployment":{"cell_count":1,"root":[[0,0,0,1,1,1],[0,0,0,1,-1,0]],"router":{"native":"root","new":"root"},"specialist":null},"kind":"scores","target":[[0,0,0,1,1,1],[0,0,0,1,-1,0]]}

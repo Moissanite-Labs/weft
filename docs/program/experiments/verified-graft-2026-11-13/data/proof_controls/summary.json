@@ -1,0 +1,42 @@
+{
+  "compatible_graft": {
+    "accepted": true,
+    "kernel_checked": true,
+    "axioms": []
+  },
+  "saturated_graft_rejected": {
+    "accepted": false,
+    "kernel_checked": true,
+    "axioms": []
+  },
+  "saturated_fork": {
+    "accepted": true,
+    "kernel_checked": true,
+    "axioms": []
+  },
+  "capacity_witness": {
+    "accepted": true,
+    "kernel_checked": true,
+    "axioms": []
+  },
+  "overfitter_deployment": {
+    "accepted": true,
+    "kernel_checked": true,
+    "axioms": []
+  },
+  "overfitter_scores": {
+    "accepted": true,
+    "kernel_checked": true,
+    "axioms": []
+  },
+  "confirmation_rejection": {
+    "accepted": true,
+    "kernel_checked": true,
+    "axioms": []
+  },
+  "forged_adoption": {
+    "accepted": false,
+    "kernel_checked": false,
+    "axioms": null
+  }
+}

@@ -1,0 +1,94 @@
+/**
+ * aywa-ic-confluent.js — C3 Lafont (1997) Symmetric Interaction Combinators (γ, δ, ε)
+ * with Mixture-of-Depths ε-pruning and order-invariant normal-form SHA-256 receipts.
+ * License: Apache-2.0
+ */
+
+import { sha256Hex } from "./aywa-sha256.js";
+import { makeDeterministicRng } from "./aywa-continuum-plasm.js";
+
+export function createCombinatorCascadeNet(totalLeaves = 8, salientLeaves = 6) {
+  const k = Math.max(0, Math.min(totalLeaves, salientLeaves));
+  const activePairs = [];
+  for (let leaf = 0; leaf < totalLeaves; leaf++) {
+    if (leaf < k) {
+      activePairs.push({ id: `L${leaf}-dup`, a: "δ", b: "γ", leaf, tag: `leaf_${leaf}:salient` });
+    } else {
+      activePairs.push({ id: `L${leaf}-prune`, a: "ε", b: "δ", leaf, tag: `leaf_${leaf}:pruned` });
+    }
+  }
+  return {
+    totalLeaves,
+    salientLeaves: k,
+    baselineDenseQuanta: totalLeaves * 6,
+    quantaSpent: 0,
+    activePairs,
+    normalFormWires: []
+  };
+}
+
+export function reduceCombinatorStep(net, indexChoice = 0) {
+  if (net.activePairs.length === 0) return 0;
+  const idx = Math.max(0, Math.min(net.activePairs.length - 1, indexChoice));
+  const pair = net.activePairs.splice(idx, 1)[0];
+  let stepCost = 1;
+
+  if (pair.a === "δ" && pair.b === "γ") {
+    stepCost = 2; // Commutation δ-γ spawns 3 elementary annihilations (cost 2 + 1 + 1 + 1? Wait: 2 + 3*1 = 5 or 2 + 2*1 + 2 = 6; let's keep exact integer rule cost!)
+    net.activePairs.push({ id: `${pair.id}.L`, a: "γ", b: "γ", leaf: pair.leaf, tag: `${pair.tag}:L` });
+    net.activePairs.push({ id: `${pair.id}.R`, a: "δ", b: "δ", leaf: pair.leaf, tag: `${pair.tag}:R` });
+    net.activePairs.push({ id: `${pair.id}.F`, a: "γ", b: "ε", leaf: pair.leaf, tag: `${pair.tag}:F` });
+  } else if (pair.a === "γ" && pair.b === "ε") {
+    stepCost = 1;
+    net.activePairs.push({ id: `${pair.id}.E`, a: "ε", b: "ε", leaf: pair.leaf, tag: `${pair.tag}:cap` });
+  } else if (pair.a === "ε" && pair.b === "δ") {
+    stepCost = 1;
+    net.activePairs.push({ id: `${pair.id}.V`, a: "ε", b: "ε", leaf: pair.leaf, tag: `${pair.tag}:void` });
+  } else {
+    // Annihilation (γ-γ, δ-δ, ε-ε)
+    stepCost = 1;
+    net.normalFormWires.push(`${pair.leaf}:${pair.tag}->NF`);
+  }
+
+  net.quantaSpent += stepCost;
+  return stepCost;
+}
+
+export function canonicalCombinatorHash(net) {
+  const act = net.activePairs.map(p => `${p.leaf}:${p.a}-${p.b}:${p.tag}`).sort().join("|");
+  const nf = net.normalFormWires.slice().sort().join("|");
+  return sha256Hex(`WEFT_IC_V2||ACT[${act}]||NF[${nf}]`);
+}
+
+export function reduceToNormalForm(net, rng = null) {
+  while (net.activePairs.length > 0) {
+    const pick = rng ? Math.floor(rng() * net.activePairs.length) : 0;
+    reduceCombinatorStep(net, pick);
+  }
+  return {
+    quantaSpent: net.quantaSpent,
+    normalFormSha256: canonicalCombinatorHash(net),
+    savingsPctVsDense: ((1.0 - net.quantaSpent / net.baselineDenseQuanta) * 100.0)
+  };
+}
+
+export function verifyRandomizedConfluence(totalLeaves = 8, salientLeaves = 5, numSchedules = 50, seed = 20261112) {
+  const rng = makeDeterministicRng(seed);
+  const hashes = new Set();
+  const quantaSet = new Set();
+
+  for (let s = 0; s < numSchedules; s++) {
+    const net = createCombinatorCascadeNet(totalLeaves, salientLeaves);
+    const out = reduceToNormalForm(net, rng);
+    hashes.add(out.normalFormSha256);
+    quantaSet.add(out.quantaSpent);
+  }
+
+  return {
+    confluent: hashes.size === 1 && quantaSet.size === 1,
+    schedulesTested: numSchedules,
+    uniqueHashes: hashes.size,
+    normalFormSha256: Array.from(hashes)[0],
+    invariantQuanta: Array.from(quantaSet)[0]
+  };
+}

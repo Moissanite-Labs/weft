@@ -1,0 +1,11 @@
+{
+  "repository": "https://github.com/NousResearch/hermes-agent",
+  "checkout_commit": "2bd378ed1b8d6bf2192cb26e0a55ff3091e6bd19",
+  "source_files": {
+    "agent/auxiliary_client.py": "c151d34d056abdb09937a8ccd02cf7990db561e594f750cc105f19b0dfe3dabe",
+    "agent/sdk_transform_bypass.py": "6887046105bd5e666631aa9a0d0a81488392ba8978ede650ae4e31abc36ccbd6",
+    "hermes_cli/auth_codex.py": "e21f78752fcaaff40932face80ae7692e3d9f4c882d952ee9c8135c09116bc2c",
+    "hermes_bootstrap.py": "f242036b2d35b92283b9a7e97c7059e537607fc4b02026f657a6d00cb4683f69"
+  },
+  "note": "Working-source hashes are authoritative if local edits differ from commit; no auth files inspected."
+}

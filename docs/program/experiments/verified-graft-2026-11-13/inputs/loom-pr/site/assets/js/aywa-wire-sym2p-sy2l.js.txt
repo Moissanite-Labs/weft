@@ -1,0 +1,191 @@
+/**
+ * aywa-wire-sym2p-sy2l.js — C6 Telemetry & Wire Verifiers:
+ *   1. `parseSym2pLine` / `verifySym2pLine` / `encodeSym2pTelemetry` (w3ft.org & abios)
+ *   2. `encodeSy2lFrame64` / `decodeSy2lFrame64` (exact 64-byte JumpReLU sparse frame)
+ *   3. `packCellRecords` (WebGPU / Canvas2D flat Float32Array cell packer matching weft-loom.js)
+ * License: Apache-2.0
+ */
+
+import { decodeFloat16Bits, encodeFloat16Bits, sha256Hex } from "./aywa-sha256.js";
+
+export function encodeSym2pTelemetry({
+  role = 0x01,
+  actionState = 0x03,
+  seq = 1,
+  fields = []
+}) {
+  const rHex = (role & 0xff).toString(16).padStart(2, "0");
+  const sHex = (actionState & 0xff).toString(16).padStart(2, "0");
+  const qHex = (seq & 0xffff).toString(16).padStart(4, "0");
+  const forms = fields.map(([k, v]) => `(${k} ${v})`).join(" ");
+  const payload = `[s-exp ${forms}]`;
+  const digest = sha256Hex(payload);
+  return `:`.concat(rHex, ":", sHex, ":", qHex, payload, digest);
+}
+
+export function parseSym2pLine(rawLine) {
+  const line = String(rawLine || "").trim();
+  const m = line.match(/^:([0-9a-fA-F]{2}):([0-9a-fA-F]{2}):([0-9a-fA-F]{4})(\[s-exp .*\])([0-9a-fA-F]{64})$/);
+  if (!m) {
+    return { ok: false, errorCode: "E_FRAME_SYNTAX", message: "Malformed :rr:ss:qqqq[s-exp ...]<sha256> line" };
+  }
+  const role = parseInt(m[1], 16);
+  const actionState = parseInt(m[2], 16);
+  const sequence = parseInt(m[3], 16);
+  const payload = m[4];
+  const claimedSha256 = m[5].toLowerCase();
+
+  let depth = 0;
+  for (let i = 0; i < payload.length; i++) {
+    if (payload[i] === "(") depth++;
+    else if (payload[i] === ")") depth--;
+    if (depth < 0) {
+      return { ok: false, errorCode: "E_SEXPR_UNBALANCED", message: "Negative '(' depth in payload" };
+    }
+  }
+  if (depth !== 0) {
+    return { ok: false, errorCode: "E_SEXPR_UNBALANCED", message: "Unclosed '(' in S-expression payload" };
+  }
+
+  const pairs = {};
+  const pairRegex = /\(([a-zA-Z0-9_.-]+)\s+([^()\s]+)\)/g;
+  let hit;
+  while ((hit = pairRegex.exec(payload)) !== null) {
+    const num = Number(hit[2]);
+    pairs[hit[1]] = Number.isNaN(num) ? hit[2] : num;
+  }
+
+  return {
+    ok: true,
+    role,
+    actionState,
+    sequence,
+    payload,
+    claimedSha256,
+    fields: pairs,
+    byteLength: new TextEncoder().encode(line).length
+  };
+}
+
+export function verifySym2pLine(rawLine) {
+  const parsed = parseSym2pLine(rawLine);
+  if (!parsed.ok) return parsed;
+  const computedSha256 = sha256Hex(parsed.payload);
+  if (computedSha256 !== parsed.claimedSha256) {
+    return {
+      ok: false,
+      errorCode: "E_SHA256_MISMATCH",
+      expectedSha256: computedSha256,
+      claimedSha256: parsed.claimedSha256,
+      message: "Payload SHA-256 mismatch"
+    };
+  }
+  return { ...parsed, verified: true, computedSha256 };
+}
+
+/**
+ * Pack up to 13 monosemantic JumpReLU `(featId, value)` activations into an exact 64-byte `SY2L` frame.
+ */
+export function encodeSy2lFrame64({ seq = 0, tension = 20.0, features = [] } = {}) {
+  const frame = new Uint8Array(64);
+  const dv = new DataView(frame.buffer);
+  frame[0] = 0x53; frame[1] = 0x59; frame[2] = 0x32; frame[3] = 0x4c; // "SY2L"
+  frame[4] = 2; // version 2
+  const count = Math.min(13, features.length);
+  frame[5] = count;
+  dv.setUint16(6, seq & 0xffff, true);
+  dv.setUint16(8, encodeFloat16Bits(tension), true);
+
+  for (let slot = 0; slot < count; slot++) {
+    const off = 10 + slot * 4;
+    dv.setUint16(off, features[slot].id & 0xffff, true);
+    dv.setUint16(off + 2, encodeFloat16Bits(features[slot].value), true);
+  }
+  const tagHex = sha256Hex(frame.subarray(0, 62)).slice(0, 4);
+  dv.setUint16(62, parseInt(tagHex, 16), true);
+  return frame;
+}
+
+export function decodeSy2lFrame64(frameBytes) {
+  if (!(frameBytes instanceof Uint8Array) || frameBytes.byteLength !== 64) {
+    return { ok: false, errorCode: "E_SY2L_LEN" };
+  }
+  if (
+    frameBytes[0] !== 0x53 ||
+    frameBytes[1] !== 0x59 ||
+    frameBytes[2] !== 0x32 ||
+    frameBytes[3] !== 0x4c
+  ) {
+    return { ok: false, errorCode: "E_SY2L_MAGIC" };
+  }
+  const dv = new DataView(frameBytes.buffer, frameBytes.byteOffset, 64);
+  const expectedTag = parseInt(sha256Hex(frameBytes.subarray(0, 62)).slice(0, 4), 16);
+  const actualTag = dv.getUint16(62, true);
+  if (expectedTag !== actualTag) {
+    return { ok: false, errorCode: "E_SY2L_TAG_MISMATCH", expectedTag, actualTag };
+  }
+  const version = frameBytes[4];
+  const count = frameBytes[5];
+  if (count > 13) return { ok: false, errorCode: "E_SY2L_COUNT" };
+
+  const seq = dv.getUint16(6, true);
+  const tension = decodeFloat16Bits(dv.getUint16(8, true));
+  const features = [];
+  for (let slot = 0; slot < count; slot++) {
+    const off = 10 + slot * 4;
+    features.push({
+      id: dv.getUint16(off, true),
+      value: decodeFloat16Bits(dv.getUint16(off + 2, true))
+    });
+  }
+  return { ok: true, version, seq, tension, features };
+}
+
+/**
+ * Packs cell / mode state records into a flat 4-float-aligned `Float32Array` storage buffer
+ * ready for `aywa_loom.wgsl` WebGPU instanced rendering (compatible with `weft-loom.js`).
+ */
+export const LAYERS = Object.freeze(["C1", "C2", "C3", "C4", "C5", "C6", "C7"]);
+
+export const LOCUS_LAYERS = Object.freeze({
+  ContinuumPlasm: "C1",
+  WeftInvariants: "C2",
+  LafontIC: "C3",
+  CausalField: "C4",
+  ExoConsent: "C5",
+  AbiosWire: "C6",
+  AywaEido: "C7"
+});
+
+export function layerHue(layerId) {
+  const idx = LAYERS.indexOf(String(layerId));
+  if (idx < 0) return 0.60;
+  return ((idx * 0.138) + 0.08) % 1.0;
+}
+
+export function labelMetrics(text, charWidthPx = 7.2, lineHeightPx = 14.0) {
+  const s = String(text ?? "");
+  const lines = s.split(String.fromCharCode(10));
+  let maxChars = 0;
+  for (const ln of lines) {
+    if (ln.length > maxChars) maxChars = ln.length;
+  }
+  return {
+    width: maxChars * charWidthPx,
+    height: lines.length * lineHeightPx,
+    lines: lines.length
+  };
+}
+
+export function packCellRecords(cells) {
+  const stride = 4; // [modeIndexNormalized, captureRatio, stratumCode, tensionNormalized]
+  const out = new Float32Array(cells.length * stride);
+  for (let i = 0; i < cells.length; i++) {
+    const c = cells[i];
+    out[i * stride + 0] = Number(c.xNorm ?? 0);
+    out[i * stride + 1] = Number(c.capture ?? 0);
+    out[i * stride + 2] = Number(c.stratum ?? 0); // 0=residual, 1=active_weft, 2=locked_warp
+    out[i * stride + 3] = Number(c.tension ?? 20.0) / 85.0;
+  }
+  return out;
+}

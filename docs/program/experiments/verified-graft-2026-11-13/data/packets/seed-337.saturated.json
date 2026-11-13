@@ -1,0 +1,280 @@
+{
+  "version": "verified-graft-v1",
+  "host_weights": [
+    [
+      2,
+      -2,
+      1,
+      -2,
+      1,
+      0
+    ],
+    [
+      0,
+      -2,
+      -2,
+      0,
+      0,
+      1
+    ]
+  ],
+  "donor_weights": [
+    [
+      -2,
+      2,
+      1,
+      0,
+      2,
+      1
+    ],
+    [
+      2,
+      1,
+      -1,
+      -1,
+      1,
+      -2
+    ]
+  ],
+  "native_basis": [
+    [
+      0,
+      0,
+      -1,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      1,
+      0
+    ],
+    [
+      1,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  ],
+  "protected_basis": [
+    [
+      0,
+      0,
+      -1,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      1,
+      0
+    ],
+    [
+      1,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      1
+    ],
+    [
+      0,
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      -1,
+      0,
+      0
+    ]
+  ],
+  "capacity_case": "saturated",
+  "calibration": [
+    {
+      "id": 0,
+      "donor_features": [
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0
+      ],
+      "receiver_features": [
+        0,
+        1,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": 1,
+      "donor_features": [
+        0,
+        -1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "receiver_features": [
+        0,
+        0,
+        0,
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "id": 2,
+      "donor_features": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        -1
+      ],
+      "receiver_features": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": 3,
+      "donor_features": [
+        -1,
+        -2,
+        2,
+        2,
+        -2,
+        0
+      ],
+      "receiver_features": [
+        0,
+        2,
+        -2,
+        1,
+        2,
+        2
+      ]
+    },
+    {
+      "id": 4,
+      "donor_features": [
+        -1,
+        -1,
+        0,
+        0,
+        -1,
+        0
+      ],
+      "receiver_features": [
+        0,
+        1,
+        0,
+        1,
+        1,
+        0
+      ]
+    },
+    {
+      "id": 5,
+      "donor_features": [
+        0,
+        0,
+        0,
+        1,
+        0,
+        0
+      ],
+      "receiver_features": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 6,
+      "donor_features": [
+        0,
+        0,
+        1,
+        0,
+        0,
+        0
+      ],
+      "receiver_features": [
+        0,
+        0,
+        -1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": 7,
+      "donor_features": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "receiver_features": [
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0
+      ]
+    }
+  ],
+  "task": "New task: use host function on native_basis span and donor function on its orthogonal complement, after aligning paired activation coordinates. Native task keeps the host function on protected_basis span. Fork uses declared task IDs native/new.",
+  "action_schema": {
+    "mode": "graft|fork|abstain",
+    "delta": "2 rows x 6 exact integers -4..4, relative ORIGINAL host"
+  },
+  "constraints": {
+    "delta_norm_sq_max": 192,
+    "max_cells": 2,
+    "fork_allowed": true
+  }
+}

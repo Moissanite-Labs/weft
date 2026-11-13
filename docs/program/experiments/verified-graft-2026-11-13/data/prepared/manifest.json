@@ -1,0 +1,33 @@
+{
+  "files": {
+    "config.json": {
+      "bytes": 1014,
+      "sha256": "4ac5b4a05d60affad59dea193b15780d23adf785f3195b7b2df673dfa0dde216"
+    },
+    "hidden/seed-211.json": {
+      "bytes": 8981,
+      "sha256": "67e5f027f4547bdca20a71309da7b6baff695f39a48e0719ed890db635c91734"
+    },
+    "hidden/seed-337.json": {
+      "bytes": 8978,
+      "sha256": "e29236025dc60abdcaa31988b770d383aab744a94979e792068f34ddc8019e12"
+    },
+    "requests/seed-211-compatible-round-1.json": {
+      "bytes": 4357,
+      "sha256": "53458d8de4a2ed2928000cb16cc6aaafe47e0df7d4b15e1cc375a9e59c5c0a41"
+    },
+    "requests/seed-211-saturated-round-1.json": {
+      "bytes": 4602,
+      "sha256": "1154c095acadab3d259938f1fa59ff16a8bc7d31823038af502fbe158724b27c"
+    },
+    "requests/seed-337-compatible-round-1.json": {
+      "bytes": 4354,
+      "sha256": "1f8fc70f548f11d22aadc0968901af9b414cb13b46e6215bd5c5e8466c52031e"
+    },
+    "requests/seed-337-saturated-round-1.json": {
+      "bytes": 4599,
+      "sha256": "900a5f1325d503d75e6df36bb76772bf81e71d6b7ea6755e729ac7b033d8e5cc"
+    }
+  },
+  "role": "pre-call generated artifacts"
+}

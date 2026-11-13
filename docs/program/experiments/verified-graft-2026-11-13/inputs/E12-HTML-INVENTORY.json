@@ -1,0 +1,24 @@
+{
+  "path": "inputs/e12-plasmid-nullspace.html.txt",
+  "bytes": 113387,
+  "sha256": "852d6b758173ea51140f4c1ef77f14e5c57c8f95d5e08e586ef61386302ba5fe",
+  "review": "Static source only. No rendering or execution.",
+  "external_script_or_media": [],
+  "network_api_mentions": {
+    "fetch(": 0,
+    "XMLHttpRequest": 0,
+    "WebSocket": 0,
+    "EventSource": 0,
+    "navigator.gpu": 0
+  },
+  "functions": [
+    "syncBody",
+    "applyTheme",
+    "getCssVar",
+    "syncSlider",
+    "updateReadouts",
+    "draw",
+    "f",
+    "all"
+  ]
+}

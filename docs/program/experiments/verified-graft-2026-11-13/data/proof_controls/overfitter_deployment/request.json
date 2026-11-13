@@ -1,0 +1,1 @@
+{"action":{"delta":[[0,0,0,1,1,-2],[0,0,0,0,0,0]],"mode":"graft"},"kind":"deployment","visible":{"capacity_case":"compatible","host_weights":[[0,0,0,0,0,0],[0,0,0,0,0,0]],"native_basis":[[1,0,0,0,0,0],[0,1,0,0,0,0],[0,0,1,0,0,0]],"protected_basis":[[1,0,0,0,0,0],[0,1,0,0,0,0],[0,0,1,0,0,0]]}}

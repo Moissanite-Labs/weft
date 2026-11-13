@@ -1,0 +1,106 @@
+{
+  "protected_subspace": {
+    "matrix": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "u": [
+      [
+        1,
+        0
+      ]
+    ],
+    "v": [
+      [
+        1,
+        0
+      ]
+    ],
+    "projected_delta": [
+      0,
+      0,
+      0,
+      4
+    ],
+    "protected_input_output_change": [
+      0,
+      0
+    ],
+    "unprotected_input_output_change": [
+      0,
+      4
+    ],
+    "protected_output_projection_change": [
+      0,
+      0
+    ],
+    "scope": "Preserves the specified left/right subspaces; other input-output behavior may change."
+  },
+  "nonorthogonal_basis": {
+    "unit_norm_but_nonorthogonal_columns": [
+      [
+        1,
+        0
+      ],
+      [
+        0.7071067811865476,
+        0.7071067811865476
+      ]
+    ],
+    "input_matrix": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "projected_delta": [
+      -1.5000000000000002,
+      -2.0000000000000004,
+      1.4999999999999998,
+      1.9999999999999996
+    ],
+    "residual_left_projection_norms": [
+      2.5000000000000004,
+      4.965068306494546e-16
+    ],
+    "after_explicit_gram_schmidt_delta": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "after_explicit_gram_schmidt_norm": 0,
+    "scope": "Public projector assumes orthonormal columns. Internal normal construction uses Gram-Schmidt; this is a precondition boundary, not evidence that every internal call fails."
+  },
+  "float64_vs_float32": {
+    "baseline": [
+      4294967296
+    ],
+    "candidate": [
+      4294967424
+    ],
+    "actual_binary64_distance": 128,
+    "checked_binary32_baseline": [
+      4294967296
+    ],
+    "checked_binary32_candidate": [
+      4294967296
+    ],
+    "radius": 120,
+    "unlocked_gate": {
+      "ok": true,
+      "code": "WEFT_OK",
+      "distance": 0,
+      "nextBudget": 9
+    },
+    "locked_gate": {
+      "ok": true,
+      "code": "WEFT_OK",
+      "distance": 0,
+      "nextBudget": 9
+    },
+    "scope": "Gate checks quantized binary32 values. Committing unrounded binary64 values would not inherit its distance or frozen-bit guarantee."
+  }
+}

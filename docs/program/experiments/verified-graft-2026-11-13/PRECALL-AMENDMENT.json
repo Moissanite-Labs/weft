@@ -1,0 +1,22 @@
+{
+  "original_public_registration_commit": "09d1e3cadba1d3b2bad480a3f96dd075e9300a67",
+  "scientific_teacher_calls_before_amendment": 0,
+  "scientific_rules_changed": false,
+  "generated_instances_requests_changed": false,
+  "reason": [
+    "Bind observable stream text to the normalized response text when deltas exist.",
+    "Require exact registered instructions and one user text item with no hidden history.",
+    "Keep cohort manifests separate so later teacher records do not invalidate the offline replay."
+  ],
+  "changed_code": {
+    "run_graft.py": {
+      "before": "376741dada6adbbedcb7dd27c5cf7a3b5f3ebf36a7810d65f1c538c675854291",
+      "after": "cc460929cebf06ca387b6f746fba95621a0bed439c8b164840315593929b826f"
+    },
+    "test_graft.py": {
+      "before": "a000b7b68bb9f7fc99a03b323999a1b8db6a03d810ac702984c8ff8c0a8b9e5e",
+      "after": "1e5f79a153f13aadfc09a1c30acdfb77e1d597537d160204762f2dbd8554f479"
+    }
+  },
+  "validation": "Nine graft tests pass. Existing coordinator cached-selection validation was already included in the initial public registration."
+}

@@ -1,0 +1,14 @@
+test_bound_transport_and_wrong_terminal_are_not_anonymous_actions (test_graft.GraftTests.test_bound_transport_and_wrong_terminal_are_not_anonymous_actions) ... ok
+test_confirmation_rejects_explicit_overfit_without_rerank (test_graft.GraftTests.test_confirmation_rejects_explicit_overfit_without_rerank) ... ok
+test_exact_data_schema_and_distinct_fork (test_graft.GraftTests.test_exact_data_schema_and_distinct_fork) ... ok
+test_exact_rank_matches_signed_permutation (test_graft.GraftTests.test_exact_rank_matches_signed_permutation) ... ok
+test_feedback_does_not_disclose_confirmation_or_final (test_graft.GraftTests.test_feedback_does_not_disclose_confirmation_or_final) ... ok
+test_mechanical_alignment_uses_only_visible_packet (test_graft.GraftTests.test_mechanical_alignment_uses_only_visible_packet) ... ok
+test_rank_five_packet_has_two_distinct_completions (test_graft.GraftTests.test_rank_five_packet_has_two_distinct_completions) ... ok
+test_saturated_nonzero_graft_cannot_satisfy_preservation (test_graft.GraftTests.test_saturated_nonzero_graft_cannot_satisfy_preservation) ... ok
+test_teacher_response_schema_no_invented_or_extra_children (test_graft.GraftTests.test_teacher_response_schema_no_invented_or_extra_children) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.036s
+
+OK

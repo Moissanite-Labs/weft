@@ -1,0 +1,122 @@
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+import {
+  WEFT_CONSTANTS,
+  WEFT_STATUS,
+  compensatedFrobeniusDistance,
+  verifyPythagoreanMitosis,
+  verifyRoyaltySplit,
+  verifyTensionGate,
+  verifyWeakNormSizeCheck,
+  verifyWeightUpdateSafety
+} from "../../../site/assets/js/aywa-invariant-v2.js";
+import { toF32 } from "../../../site/assets/js/aywa-sha256.js";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const CORPUS_PATH = path.resolve(__dirname, "../invariants/vectors_v2_12case.json");
+
+test("12-case shared conformance corpus (6 weight + 3 tension + 3 royalty)", () => {
+  const corpus = JSON.parse(fs.readFileSync(CORPUS_PATH, "utf8"));
+  assert.equal(corpus.constants.R_INVARIANT, WEFT_CONSTANTS.R_INVARIANT);
+  assert.equal(corpus.constants.TENSION_MAX, WEFT_CONSTANTS.TENSION_MAX);
+
+  for (const vec of corpus.weight_update_vectors) {
+    const base = Float32Array.from(vec.baseline, v => (v === "NaN" ? NaN : Number(v)));
+    const cand = Float32Array.from(vec.candidate, v => (v === "NaN" ? NaN : Number(v)));
+    const res = verifyWeightUpdateSafety(base, cand, vec.r_invariant, vec.budget, vec.cost);
+    assert.equal(res.ok, vec.expected_ok, `Failed ok check on ${vec.id}`);
+    assert.equal(res.code, vec.expected_code, `Failed status code on ${vec.id}`);
+    if (vec.expected_distance !== undefined && res.ok) {
+      assert.ok(Math.abs(res.distance - vec.expected_distance) < 1e-6);
+    }
+  }
+
+  for (const tv of corpus.tension_vectors) {
+    const res = verifyTensionGate(tv.tension);
+    assert.equal(res.homeostatic, tv.expected_homeostatic, `Homeostatic mismatch on ${tv.id}`);
+    assert.equal(res.excised, tv.expected_excised, `Excision mismatch on ${tv.id}`);
+    assert.equal(res.code, tv.expected_code, `Code mismatch on ${tv.id}`);
+  }
+
+  for (const rv of corpus.royalty_attribution_vectors) {
+    const res = verifyRoyaltySplit(rv.total_units);
+    assert.equal(res.ok, rv.expected_ok, `Royalty ok mismatch on ${rv.id}`);
+    if (rv.expected_ok) {
+      assert.equal(res.upstream, rv.expected_upstream);
+      assert.equal(res.weaver, rv.expected_weaver);
+      assert.equal(res.upstream + res.weaver, rv.total_units);
+    }
+  }
+});
+
+test("Flip-signs bug: weak norm-size check passes while WEFT-INVARIANTS/2.0 rejects", () => {
+  const w0 = new Float32Array([45, -45, 45, -45]);
+  const wFlip = new Float32Array([-45, 45, -45, 45]);
+  const weak = verifyWeakNormSizeCheck(w0, wFlip, 120.0);
+  assert.equal(weak.ok, true);
+  assert.equal(weak.sizeDelta, 0.0);
+
+  const strong = verifyWeightUpdateSafety(w0, wFlip, 120.0, 10.0, 1.0);
+  assert.equal(strong.ok, false);
+  assert.equal(strong.code, WEFT_STATUS.WEFT_ERR_RADIUS_EXCEEDED);
+  assert.ok(Math.abs(strong.distance - 180.0) < 1e-6);
+});
+
+test("IEEE-754 Zeno sub-ULP free-step exploit blocked across 100,000 steps", () => {
+  let bNaive = toF32(100.0);
+  let bV2 = toF32(100.0);
+  const subUlpCost = toF32(3.0e-6); // < 0.5 * ulp(100.0f) = 3.8146973e-6f
+  const w0 = new Float32Array([1.0, 2.0]);
+  const w1 = new Float32Array([1.2, 2.2]);
+
+  for (let s = 0; s < 100000; s++) {
+    bNaive = toF32(bNaive - subUlpCost);
+    const prev = bV2;
+    const res = verifyWeightUpdateSafety(w0, w1, 120.0, bV2, subUlpCost);
+    assert.equal(res.ok, true);
+    assert.ok(res.nextBudget < prev, `Step ${s} failed strict ULP decrease`);
+    bV2 = res.nextBudget;
+  }
+  assert.equal(bNaive, 100.0, "Naive float32 deduction suffers 0 depletion");
+  assert.ok(bV2 < 99.3, `Expected >=100k ULP drop from 100.0f, got ${bV2}`);
+});
+
+test("Bitwise locked_mask normalizes +0.0f/-0.0f and rejects 1-ULP core mutation", () => {
+  const base = new Float32Array([0.0, 1.0, 2.0, 3.0]);
+  const candSignedZero = new Float32Array([-0.0, 1.0, 5.0, 7.0]);
+  const mask = new Uint8Array([1, 1, 0, 0]);
+
+  const okZero = verifyWeightUpdateSafety(base, candSignedZero, 120.0, 10.0, 0.5, mask);
+  assert.equal(okZero.ok, true);
+
+  const dv = new DataView(new ArrayBuffer(4));
+  dv.setFloat32(0, 1.0, true);
+  dv.setUint32(0, dv.getUint32(0, true) + 1, true);
+  const oneUlp = dv.getFloat32(0, true);
+
+  const candTampered = new Float32Array([0.0, oneUlp, 2.0, 3.0]);
+  const rej = verifyWeightUpdateSafety(base, candTampered, 120.0, 10.0, 0.5, mask);
+  assert.equal(rej.ok, false);
+  assert.equal(rej.code, WEFT_STATUS.WEFT_ERR_FROZEN_CORE_MUTATED);
+});
+
+test("N=65,536 StratifiedMemoryArena boundary precision & Pythagorean mitosis", () => {
+  const N = 65536;
+  const base = new Float32Array(N);
+  const val = toF32(119.999 / Math.sqrt(N));
+  const cand = new Float32Array(N).fill(val);
+  const res = compensatedFrobeniusDistance(base, cand, null);
+  assert.equal(res.ok, true);
+  assert.ok(res.distance <= 120.0 && res.distance > 119.99);
+
+  const dp = new Float32Array([3.0, 0.0, 4.0, 0.0]); // norm 5
+  const dc = new Float32Array([0.0, 6.0, 0.0, 8.0]); // norm 10, exact dot 0 -> combined sqrt(125)
+  const pm = verifyPythagoreanMitosis(dp, dc, 120.0, 1e-6);
+  assert.equal(pm.ok, true);
+  assert.equal(pm.cosineOverlap, 0.0);
+  assert.ok(Math.abs(pm.combinedNorm - Math.sqrt(125.0)) < 1e-12);
+});

@@ -1,0 +1,74 @@
+{
+  "accepted": false,
+  "kernel_checked": true,
+  "axioms": [],
+  "theorem": "VerifiedGraftConcrete.certificate",
+  "toolchain": "leanprover/lean4:v4.35.0",
+  "request_sha256": "5321851573896e841edccc24f1e522570b1b8d365841f53508fc67e201763f70",
+  "proof_sha256": "a5f9d1c23a1f1cd1413eb0abe781fc06f877f78fa8dcb833c7ab0e19f11e3607",
+  "spec_sha256": "187d7c3b5da68000eb1802102f7649c0161e3022a37eb5b820fcd54ac5a2faaf",
+  "verifier_sha256": "64faacf833796663c716e3c788186ab2eaefc63781907fb5dfe88120fc5a79ba",
+  "compilerlogs": [
+    {
+      "command": [
+        "--version"
+      ],
+      "returncode": 0,
+      "stdout": "Lean (version 4.35.0, arm64-apple-darwin24.6.0, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "-o",
+        "Core.olean",
+        "Core.lean"
+      ],
+      "returncode": 0,
+      "stdout": "'VerifiedGraft.span_retention' depends on axioms: [propext, Quot.sound]\n'VerifiedGraft.conflict_witness' does not depend on any axioms\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "Certificate.lean"
+      ],
+      "returncode": 0,
+      "stdout": "VerifiedGraftConcrete.certificate :\n  allowed host delta basis true 0 = false \u2227\n    basisValid native 3 = true \u2227\n      covers basis native = true \u2227\n        rootAfter host delta 0 = claimedRoot \u2227\n          specialistAfter host delta 0 = claimedSpecialist \u2227\n            transferUsesSpecialist 0 = false \u2227 nativeUsesSpecialist 0 = false \u2227 cellCount 0 = 1\n'VerifiedGraftConcrete.certificate' does not depend on any axioms\n",
+      "stderr": ""
+    }
+  ],
+  "scope": "Concrete exact integer deployment/score/decision records. Generic integer-span lemma uses standard logical axioms; host, compiler execution and physical effects remain outside this proof.",
+  "deployment": {
+    "root": [
+      [
+        0,
+        0,
+        0,
+        1,
+        1,
+        1
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    "specialist": null,
+    "router": {
+      "native": "root",
+      "new": "root"
+    },
+    "cell_count": 1
+  },
+  "legal": false,
+  "delta_norm_sq": 3,
+  "span_retention_theorem": null,
+  "span_retention_axioms": [
+    "propext",
+    "Quot.sound"
+  ],
+  "span_scope": "All integer linear combinations of the registered protected vectors, using the checked basis equalities."
+}
