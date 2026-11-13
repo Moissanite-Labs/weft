@@ -90,3 +90,9 @@ Phase one was reviewed in review 5884649320 on PR #146, which recomputed its hea
 Phase-one round 1 prompts were committed before any family response. The phase-one round 2 and round 3 prompts, and the phase-two round 2 prompts, were committed in the same commits as their responses. They depend on earlier feedback, and each harness rebuilds them and rejects a mismatch, but they were not committed before their own calls. PROTOCOL.md records this as Deviation D2, the scramble seed correction as D1 and the phase-three packet limits as D3.
 
 The archived phase-one, phase-two and phase-three replays matched on the reference macOS arm64 machine. On Linux x86_64 with the same NumPy version they do not reproduce: phases one and two finish with different results, and phase three stops at its request-binding check because the floating-point training diagnostics in its requests differ. Calibration replay and phase-four replay match there.
+
+## Additional unpaid geometry diagnostic
+
+A separate local geometry diagnostic used fresh synthetic models and no paid calls. Seven tests and exact replay passed. It distinguishes exact permutation equivariance and fixed-feature anchor preservation from local Jacobian constraints, finite nonlinear drift and unconstrained shifted behavior. This is mathematical feasibility evidence, rather than learned skill transfer.
+
+PEER-SYNTHESIS-REVIEW.md evaluates the synthesis in issue #149 against pinned repository evidence and related work. E11-PROPOSAL.md describes a future matched transfer study, including recipient-local fitting, feasibility rejection and scoped preservation certificates. The four paid studies and their 96-response accounting remain unchanged.

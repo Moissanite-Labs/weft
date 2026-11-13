@@ -67,3 +67,9 @@ The single manual candidate was informed by an earlier fitted patch and was reje
 Final conditional replay matched exactly, with results hash edc94c5c0b51bdb4b17bc8796f48abc5372cf6408433189de508f82d7de26c69. An initial analysis command used an incorrect argument and failed before report rendering. Correcting that command did not change experimental outcomes.
 
 All workers stopped after 96 paid responses: 22 first-study responses including calibration, 40 factorial, 12 conditional and 22 fidelity probes. API-USAGE.json counts each original response once. Estimated API cost is $28.2913675 at the recorded rates, without an invoice claim. Cached input tokens were zero in the saved usage. Coding-agent tokens remain unavailable.
+
+## Additional unpaid geometry diagnostic
+
+A separate local geometry diagnostic used fresh synthetic models and no paid calls. Seven tests and exact replay passed. It distinguishes exact permutation equivariance and fixed-feature anchor preservation from local Jacobian constraints, finite nonlinear drift and unconstrained shifted behavior. This is mathematical feasibility evidence, rather than learned skill transfer.
+
+PEER-SYNTHESIS-REVIEW.md evaluates the synthesis in issue #149 against pinned repository evidence and related work. E11-PROPOSAL.md describes a future matched transfer study, including recipient-local fitting, feasibility rejection and scoped preservation certificates. The four paid studies and their 96-response accounting remain unchanged.

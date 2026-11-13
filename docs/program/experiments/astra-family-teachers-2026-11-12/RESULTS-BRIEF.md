@@ -18,3 +18,9 @@ API-USAGE.json lists each original response once. The total estimated API cost i
 Credentials and internal reasoning items are excluded, while observable answers, patches, rejected candidates, normalized failures and usage remain archived.
 
 Start with README.md for reproduction commands and the artifact index. RESULTS.md contains first-study details. Each follow-up directory contains its own protocol, result report, review and data. No deployment or merge is part of this archive.
+
+## Additional unpaid geometry diagnostic
+
+A separate local geometry diagnostic used fresh synthetic models and no paid calls. Seven tests and exact replay passed. It distinguishes exact permutation equivariance and fixed-feature anchor preservation from local Jacobian constraints, finite nonlinear drift and unconstrained shifted behavior. This is mathematical feasibility evidence, rather than learned skill transfer.
+
+PEER-SYNTHESIS-REVIEW.md evaluates the synthesis in issue #149 against pinned repository evidence and related work. E11-PROPOSAL.md describes a future matched transfer study, including recipient-local fitting, feasibility rejection and scoped preservation certificates. The four paid studies and their 96-response accounting remain unchanged.

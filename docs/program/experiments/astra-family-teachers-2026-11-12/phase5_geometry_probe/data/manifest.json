@@ -1,0 +1,12 @@
+{
+  "sha256": {
+    "artifacts.json": "c7ef1d607a6795aa716b24c5653401d66364c7129933f011632b6735f6f7a690",
+    "results.json": "9b96677d07ed4c1a34a974ab1c53f603a5d6eb007f2686be33ae4c01f6638072"
+  },
+  "code_sha256": "670fcedd6ae279bf17e82284b30708336268f8d93c5959f7777151a0ec7fc0d2",
+  "python": "3.14.6",
+  "numpy": "2.5.4",
+  "elapsed_seconds": 0.022326417034491897,
+  "command": "python3 geometry.py run --out data",
+  "replay": "python3 geometry.py replay --out data"
+}
