@@ -18,7 +18,7 @@ The custom micro-cell does not reliably improve over its own early generations o
 | 20261113 | 8 | 34.57 → 27.82 | 30.88 → 30.67 | (not run) |
 | 20261114 | 4 | 30.85 → 26.54 | 31.32 → 30.73 | (not run) |
 
-A regressed on 2 of 3 seeds. B was flat-to-slightly-up on all 3. Mean A across seeds, generation 1 to generation 40: 30.700 -> 27.449 (-10.6%). Mean B: 29.675 -> 30.823 (+3.9%). Commits change only the plastic periphery `wp`; the code never writes the core, so core drift is 0 by construction, but the logged `wm_drift` compared `wc` with itself and is not an independent measurement. Watermark cosine is 1.000 in all 40 generations of the 3 learning runs and of the seed-20261112 frozen control.
+A regressed on 2 of 3 seeds. B's generation-1 to generation-40 changes are +4.24, -0.21 and -0.59. Only seed 20261112 B rises. Mean A across seeds, generation 1 to generation 40: 30.700 -> 27.449 (-10.6%). Mean B: 29.675 -> 30.823 (+3.9%). Commits change only the plastic periphery `wp`; the code never writes the core, so core drift is 0 by construction, but the logged `wm_drift` compared `wc` with itself and is not an independent measurement. Watermark cosine is 1.000 in all 40 generations of the 3 learning runs and of the seed-20261112 frozen control.
 
 ## Hypothesis read-out vs `PREREG-E09.md`
 
