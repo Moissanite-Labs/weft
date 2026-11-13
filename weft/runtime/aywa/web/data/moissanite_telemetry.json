@@ -3,6 +3,7 @@
   "source": "fixture",
   "organization": "Moissanite-Labs",
   "origin_thread": "weft/telemetry-fixture#1",
+  "captured_at_unix_s": 1762560000,
   "active_nodes": 19,
   "org_tension": 0.2053,
   "gini_index": 0.2167,
@@ -15,7 +16,7 @@
   "uniform_frame_64b_floats": [
     19.0,
     0.2053,
-    1762560000.0,
+    0.0,
     0.2167,
     0.18,
     0.55,
