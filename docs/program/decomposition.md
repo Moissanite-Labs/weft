@@ -91,7 +91,7 @@ Per PROGRAM.md, the GitHub Wiki is not used; the "wiki" is a directory reviewed 
 |---|---|---|---|
 | I1 | 64-byte telemetry frame (16 × f32 little-endian; slot map) | C6 → C7, C1 | Exists implicitly in `github_harvester.py:79-87`. Undocumented. JS packs zeros into the velocity slots (`sources/A` §6.4). |
 | I2 | SYM-2P line (role byte, action byte, decimal sequence, s-expression, SHA-256) | C6 → C7 | Fixed and vector-tested in PR #12 (#13). The key vocabulary is still unsettled (`tension`/`gini` vs `con`/`owner`/…). |
-| I3 | Safety gate API plus conformance vectors ([`I3-invariant-gate.md`](../interfaces/I3-invariant-gate.md)) | C2 → C1, C3, C5, C7, C4 (constants) | Spec filed (`docs/interfaces/I3-invariant-gate.md`); 27 shared vectors in `weft/runtime/invariants/vectors.json` (15 weight-update, 8 tension, 4 royalty) executed directly by Python and C11. The browser port skips `reject_negative_cost` pending issue #168 (#42). |
+| I3 | Safety gate API plus conformance vectors ([`I3-invariant-gate.md`](../interfaces/I3-invariant-gate.md)) | C2 → C1, C3, C5, C7, C4 (constants) | Spec filed (`docs/interfaces/I3-invariant-gate.md`); 27 shared vectors in `weft/runtime/invariants/vectors.json` (15 weight-update, 8 tension, 4 royalty) executed directly by Python and C11. The browser port defers four float32/mask weight-update vectors listed in I3 (#42). |
 | I4 | Plasm shm layout `[4,64,512]` / `[4]` / `[8,512]` | C1 → cells, daemon | Stated in `WEFT-ARCHITECTURE-LOCK.md`. No spec file. |
 | I5 | IC net serialization (BCP) and trace commitment | C3 → C4 (commitments), C8 | The corpus gives no field widths (`thread1:4629-4645`). |
 | I6 | Ledger ABI and events (topics computed, not hand-written; see L7) | C4 → C5 | Not yet generated. |
