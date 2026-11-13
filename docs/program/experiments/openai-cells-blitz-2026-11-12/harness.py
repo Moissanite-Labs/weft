@@ -170,6 +170,10 @@ def do_assay(cell: Path, log, command: str) -> str:
 # re-evaluated there; the log records its content hash and before/after scores.
 # Fixed 2026-11-12 after zero-aska's PR #139 finding (winner was never written;
 # disk kept the last candidate). See RECONCILIATION-2026-11-12.md.
+# Adoption is gated on that re-evaluation: the restored winner must pass the
+# assay (r['ok']) and still beat the incumbent under the same rule used to pick
+# it. Otherwise the incumbent bytes (or the original absence) are restored, a
+# verification-failed result is logged, and the return string is not a win.
 def do_variants(cell: Path, log, path: str, versions: list[str]) -> str:
     p = inside(cell, path)
     if p is None:
@@ -201,21 +205,48 @@ def do_variants(cell: Path, log, path: str, versions: list[str]) -> str:
         elif p.exists():
             # restore the original absence: no candidate survives a no-win call
             p.unlink()
-        log("variants_result", {"adopted": None, "incumbent_median": inc_med,
+        log("variants_result", {"adopted": None, "outcome": "no-win",
+                                "incumbent_median": inc_med,
                                 "incumbent_sha256": inc_hash})
         return f"no variant beat the incumbent (median {inc_med:.4f}). Body unchanged."
     # restore the selected candidate to disk and re-evaluate it there
     p.write_text(versions[best_i])
     after = run_assay(cell)
     winner_hash = hashlib.sha256(versions[best_i].encode()).hexdigest()
-    log("variants_result", {"adopted": best_i, "median": best_med,
-                            "content_sha256": winner_hash,
-                            "incumbent_sha256": inc_hash,
-                            "before_median": inc_med,
-                            "after_scores": after["scores"] if after else None,
-                            "after_median": after["median"] if after else None,
-                            "after_ok": bool(after and after["ok"])})
+    after_ok = bool(after and after["ok"])
+    verified = after_ok and verification_holds(after["scores"], inc_med)
+    fields = {"median": best_med,
+              "content_sha256": winner_hash,
+              "incumbent_sha256": inc_hash,
+              "before_median": inc_med,
+              "after_scores": after["scores"] if after else None,
+              "after_median": after["median"] if after else None,
+              "after_ok": after_ok}
+    if not verified:
+        if inc is not None:
+            p.write_text(inc)
+        elif p.exists():
+            p.unlink()
+        log("variants_result", {"adopted": None, "outcome": "verification-failed",
+                                "verified_index": best_i, **fields})
+        return (f"verification failed for candidate {best_i}: after scores "
+                f"{fields['after_scores']} vs incumbent {inc_med:.4f}. "
+                "Incumbent restored. Body unchanged.")
+    log("variants_result", {"adopted": best_i, "outcome": "adopt", **fields})
     return f"variant {best_i} adopted. median {best_med:.4f} vs incumbent {inc_med:.4f}."
+
+
+def verification_holds(scores: list, inc_med: float) -> bool:
+    """Re-apply the selection rule to the post-restore verification runs."""
+    s = [x for x in scores if x is not None]
+    if len(s) != len(scores) or not s:
+        return False
+    return statistics.median(s) > inc_med * WIN_MARGIN and min(s) >= inc_med * 0.97
+
+
+def counts_as_win(name: str, result: str) -> bool:
+    """The `wins` counter in main(): only a verified adoption counts."""
+    return name == "variants" and result.startswith("variant ") and " adopted." in result
 
 
 def tool_dispatch(cell: Path, log, name: str, args: dict) -> str:
@@ -327,7 +358,7 @@ def main():
                 log("finished", {"step": step, "wins": wins, "calls": calls})
                 print(json.dumps({"cell": TARGET_CELL, "model": TARGET_NAME, "done": True, "wins": wins, "calls": calls, **USAGE}))
                 return
-            if name == "variants" and result.startswith(("variant",)) and "adopted" in result:
+            if counts_as_win(name, result):
                 wins += 1
         if not calls_this and not text_bits:
             log("note", {"msg": "no actionable output this step"})
