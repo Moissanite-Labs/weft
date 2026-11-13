@@ -125,7 +125,13 @@ static inline bool weft_verify_weight_update_safety_masked(
         if (out_distance != NULL) *out_distance = INFINITY;
         return false;
     }
-    if (*metabolic_budget <= 0.0f || step_cost <= 0.0f || r_invariant < 0.0f) {
+    if (step_cost <= 0.0f) {
+        /* A non-positive cost must leave *metabolic_budget unchanged: subtracting a
+         * negative cost minted free budget, so a later positive-cost step could pass. */
+        if (out_distance != NULL) *out_distance = INFINITY;
+        return false;
+    }
+    if (*metabolic_budget <= 0.0f || r_invariant < 0.0f) {
         *metabolic_budget -= step_cost;
         if (out_distance != NULL) *out_distance = INFINITY;
         return false;

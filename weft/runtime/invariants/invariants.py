@@ -104,9 +104,11 @@ def verify_weight_update_safety_ex(
     Evaluate the baseline-relative Frobenius distance and metabolic budget gate.
 
     Returns `(accepted, baseline_distance, remaining_budget, reason)`.
-    Notice that on rejection due to weight safety or non-finite values, the
-    caller's budget is not consumed (`remaining_budget == current_budget`), whereas
-    on budget precondition failure `remaining_budget` reports `current_budget - step_cost`
+    Notice that on rejection due to weight safety, non-finite values, or a
+    non-positive step_cost, the caller's budget is not consumed
+    (`remaining_budget == current_budget`). A negative cost therefore cannot
+    mint budget. On a non-positive current_budget, a negative radius, or a
+    budget underflow, remaining_budget reports `current_budget - step_cost`
     so callers can inspect the deficit.
     """
     b_val = float(current_budget)
@@ -115,7 +117,9 @@ def verify_weight_update_safety_ex(
 
     if not (math.isfinite(b_val) and math.isfinite(c_val) and math.isfinite(r_val)):
         return False, float("inf"), float("nan"), "non_finite_parameters"
-    if b_val <= 0.0 or c_val <= 0.0 or r_val < 0.0:
+    if c_val <= 0.0:
+        return False, float("inf"), b_val, "non_positive_budget_or_cost"
+    if b_val <= 0.0 or r_val < 0.0:
         return False, float("inf"), b_val - c_val, "non_positive_budget_or_cost"
     if b_val < c_val:
         return False, float("inf"), b_val - c_val, "insufficient_metabolic_budget"
