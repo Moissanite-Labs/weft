@@ -1,5 +1,55 @@
 # Experiment E11: Morphogenetic IC-to-Plasm — Growing Arbitrary-Scale Plasm Matrices from 492-Byte BCP Graphs
+# Experiment E11: Morphogenetic IC-to-Plasm Multi-Scale Readout
 
+**Date:** 2026-11-12  
+**Author:** `mithrax-exo` (AI-assisted via Gemini; updated per review on #155)  
+**Status:** **Claimed** (exploratory readout; numerical thresholds specified post-hoc relative to #153; awaiting independent reviewer re-run of `python3 ic_morphogenesis.py --benchmark`).
+
+## 1. Interpreter Boundary & Resource Accounting
+
+- **Serialized Generative Description (`BCP` Seed):** `492 B` (`12 B` header + `24 x 20 B` combinator records). This is the per-organism generative description size, **not** total evaluation cost.
+- **Shared Interpreter Footprint:** `ic_morphogenesis.py` (~21 KB source: `MorphogeneticCombinatorVM` + dyadic Kronecker / angular morphogen unfolding + benchmark harness).
+- **Compute & Spend:** `$0.00` API spend; `204` total colony cells (`12` seeds `20261112..20261123` across `64²`, `256²`, `512²`). Mean CPU wall time per 30-generation colony cell at `512²`: `859.2 ms` (`D_Direct_Matrix_ES`), `3,804.3 ms` (`M1_Morphogenetic_IC`), and `86.4 ms` (`M1_ZeroShot_From64`, single unfolding).
+- **Scope of Core Invariance:** `grow_plasm_from_bcp` writes only `w0[core_rows:, :]` by slice construction in this standalone runner; runtime hardware/arena enforcement requires C1 `StratifiedMemoryArena` integration.
+
+## 2. Capacity- & Spectrum-Matched Topology Control (`C2_Dense_CapacityMatched_Scramble`)
+
+To isolate spatial/developmental topology from matrix density, rank, and norm (#155 review item 3), `C2_Dense_CapacityMatched_Scramble` executes the **exact same `MorphogeneticCombinatorVM` reduction and dense 6-motif Kronecker + harmonic synthesis** as `M1`—preserving **100% identical singular values, rank, dense fill, and Frobenius/RMS norm** (verified in `test_dense_capacity_matched_scramble_preserves_exact_spectrum_and_norm`)—while permuting row/column spatial coordinates via a fixed per-seed permutation.
+
+## 3. Exploratory Multi-Scale Readout (`N = 12` Seeds, Non-Parametric Wilcoxon + Holm-Bonferroni)
+
+| Scale | Arm | Gen. Seed Bytes | Mean / Median (IQR) | Gain vs Direct ES (Wilcoxon `p`) | Gain vs Dense Scramble (Wilcoxon `p`) | Commits | CPU `ms`/cell |
+| :--- | :--- | ---: | ---: | ---: | ---: | ---: | ---: |
+| **`64²`** | `C1_Frozen` | `16,384 B` | `-1.37 / +8.40` (`34.85`) | `-18.82` (`0.000488`) | `-5.63` (`0.000488`) | `0.00` | `2.5` |
+| **`64²`** | `D_Direct_Matrix_ES` | `16,384 B` | `+17.44 / +23.95` (`28.03`) | `0.00` (`1.000000`) | `+13.19` (`0.000488`) | `13.83` | `141.9` |
+| **`64²`** | `C2_Dense_CapacityMatched_Scramble` | `492 B` | `+4.26 / +13.70` (`33.38`) | `-13.19` (`0.000488`) | `0.00` (`1.000000`) | `17.17` | `283.2` |
+| **`64²`** | `C3_Sparse_Scramble_IC` | `492 B` | `+5.39 / +16.70` (`31.52`) | `-12.05` (`0.000488`) | `+1.14` (`0.151367`) | `15.58` | `202.6` |
+| **`64²`** | **`M1_Morphogenetic_IC`** | **`492 B`** | **`+33.48 / +39.44` (`15.68`)** | **`+16.03` (`0.004883`)** | **`+29.22` (`0.001465`)** | `12.83` | `271.6` |
+| **`256²`** | `C1_Frozen` | `262,144 B` | `-2.47 / +7.43` (`30.33`) | `-6.49` (`0.000977`) | `-4.44` (`0.000488`) | `0.00` | `5.4` |
+| **`256²`** | `D_Direct_Matrix_ES` | `262,144 B` | `+4.02 / +11.74` (`33.17`) | `0.00` (`1.000000`) | `+2.05` (`0.004883`) | `4.00` | `292.0` |
+| **`256²`** | `C2_Dense_CapacityMatched_Scramble` | `492 B` | `+1.97 / +10.61` (`33.81`) | `-2.05` (`0.004883`) | `0.00` (`1.000000`) | `15.25` | `1,307.1` |
+| **`256²`** | `C3_Sparse_Scramble_IC` | `492 B` | `+2.87 / +11.32` (`30.93`) | `-1.15` (`0.266113`) | `+0.90` (`0.092285`) | `12.83` | `293.5` |
+| **`256²`** | **`M1_Morphogenetic_IC`** | **`492 B`** | **`+36.68 / +40.10` (`10.40`)** | **`+32.66` (`0.000977`)** | **`+34.71` (`0.000488`)** | `14.83` | `1,111.8` |
+| **`256²`** | **`M1_ZeroShot_From64`** | **`492 B`** | **`+31.69 / +36.98` (`9.14`)** | **`+27.67` (`0.001465`)** | **`+29.72` (`0.001465`)** | `0.00` | `20.5` |
+| **`512²`** | `C1_Frozen` | `1,048,576 B` | `-2.25 / +8.32` (`38.24`) | `-1.43` (`0.062500`) | `-2.70` (`0.000488`) | `0.00` | `15.5` |
+| **`512²`** | `D_Direct_Matrix_ES` | `1,048,576 B` | `-0.82 / +8.32` (`35.44`) | `0.00` (`1.000000`) | `-1.28` (`0.009277`) | `0.83` | `859.2` |
+| **`512²`** | `C2_Dense_CapacityMatched_Scramble` | `492 B` | `+0.45 / +8.60` (`34.97`) | `+1.28` (`0.009277`) | `0.00` (`1.000000`) | `14.08` | `4,233.5` |
+| **`512²`** | `C3_Sparse_Scramble_IC` | `492 B` | `-0.95 / +5.70` (`32.95`) | `-0.13` (`0.909668`) | `-1.40` (`0.026855`) | `12.25` | `619.7` |
+| **`512²`** | **`M1_Morphogenetic_IC`** | **`492 B`** | **`+39.51 / +41.03` (`5.94`)** | **`+40.33` (`0.000488`)** | **`+39.05` (`0.000488`)** | `15.00` | `3,804.3` |
+| **`512²`** | **`M1_ZeroShot_From64`** | **`492 B`** | **`+31.46 / +36.58` (`8.00`)** | **`+32.29` (`0.001465`)** | **`+31.01` (`0.001465`)** | `0.00` | `86.4` |
+
+### Holm-Bonferroni Adjusted Two-Sided Wilcoxon `p`-Values (8 Primary Comparisons)
+- `256_M1_vs_DenseScramble`: `0.003906` · `512_M1_vs_DirectES`: `0.003906` · `512_M1_vs_DenseScramble`: `0.003906`
+- `256_M1_vs_DirectES`: `0.004883` · `64_M1_vs_DenseScramble`: `0.005859` · `64_M1_vs_DirectES`: `0.005859`
+- `256_ZeroShot_vs_DirectES`: `0.005859` · `512_ZeroShot_vs_DirectES`: `0.005859`
+
+## 4. Reproducing Raw Per-Seed Evidence (`e11_per_seed.jsonl`)
+```bash
+python3 docs/program/experiments/e11-ic-plasm-morphogenesis-2026-11-12/ic_morphogenesis.py --unit
+python3 docs/program/experiments/e11-ic-plasm-morphogenesis-2026-11-12/ic_morphogenesis.py --benchmark
+```
+Running `--benchmark` verifies all 204 `(scale, arm, seed)` cells (exiting nonzero if any cell is missing or non-finite) and writes `e11_per_seed.jsonl` and `e11_benchmark_summary.json`.
+```
 **Date:** 2026-11-12  
 **Author:** `mithrax-exo` (AI-assisted research & execution via Gemini, closing #153 and building on #141, #142, #143, and #147)  
 **Status:** Executed across `N = 12` independent colony seeds (`20261112..20261123`, `df = 11`, two-sided paired `t`-tests) and 3 `Plasm` matrix scales (`64x64` = 4,096 weights, `256x256` = 65,536 weights, `512x512` = 262,144 weights); unit tests pass in `0.06s`; `core_drift == 0.0` and `watermark_cos == 1.0` everywhere.
