@@ -1,4 +1,4 @@
-# Preregistration: Experiment E15 — Graded-Difficulty Chemostat, Spore-Fraction Sweep, and Zero-Order Step Cooling
+# Preregistration: Experiment E15 - Graded-Difficulty Chemostat, Spore-Fraction Sweep, and Zero-Order Step Cooling
 
 Date: 2026-11-11
 Status: Preregistered and committed prior to running `run_e15.py` or collecting benchmark data.
@@ -12,10 +12,11 @@ Experiment E14 (`docs/program/experiments/apple-silicon-swarm-2026-11/README.md`
 2. Sweep the spore fraction in Law 2c (`0.50` in E14 cost 27% of `hgt_foraging`'s error reduction).
 3. Settle the Benchmark 1 vectorization speedup under pinned CPU thread counts.
 
-Auditing `weft/runtime/mac/swarm_loom.py` prior to E15 surfaced three concrete implementation defects in `dissipative_chemostat`:
-1. **Inverted Law 2b gap multiplier and pool reset (`swarm_loom.py:429-440`)**: `sense_m = 1 - best_tile_error[m] / E0[m]` measures the fraction *already solved*, so `gap_mult = 1 / clamp(1 - sense_m, min=0.25)` awarded `4.0x` payout to easy, mostly solved tiles and `1.0x` to stalled, unsolved tiles. In addition, any `1e-3` improvement reset `chemostat_pool[m]` back to `tile_bounty` (`160.0`), destroying accumulated flux on hard tiles.
-2. **Cross-niche spore velocity contamination (`swarm_loom.py:503`)**: Recolonized spores reset `W` toward `W0` on `target_niches`, but copied `self.velocity[donor_indices]` from random survivors on *different* tiles.
-3. **Fixed `0.012` subspace step overshoot and static `mean_tension = 22.0` (`swarm_loom.py:235, 399`)**: At `dim = 128, subspace_rank = 4`, a masked rank-4 Gaussian step scaled by `0.012` has Frobenius norm `~2.66` (`53%` of the `5.0` target distance), stalling zero-order descent around `4-6%` error reduction.
+The E14 `dissipative_chemostat` path uses the PR #118 gap-pay rule (`metab.py` `eff_reward`, and `swarm_loom.py` `1 / clamp(1 - sense, min=0.25)` with a 4x cap): payout grows as the remaining distance to the known record shrinks. `graded_chemostat` uses a different allocation rule, `(unsolved_gap / mean_unsolved_gap)^2`, which pays relatively unsolved tiles. The reward rule, the mass-conserving pool update, and the spore inheritance path change together in this mode, so no outcome isolates reward direction. The pool still resets to `tile_bounty` when a tile's best error improves by more than `1e-3`.
+
+Two further changes in the same mode, plus a step-scale question carried from E14:
+1. **Cross-niche spore velocity contamination (`swarm_loom.py:503`)**: Recolonized spores reset `W` toward `W0` on `target_niches`, but copied `self.velocity[donor_indices]` from random survivors on *different* tiles.
+2. **Fixed `0.012` subspace step overshoot and static `mean_tension = 22.0` (`swarm_loom.py:235, 399`)**: At `dim = 128, subspace_rank = 4`, a masked rank-4 Gaussian step scaled by `0.012` has Frobenius norm `~2.66` (`53%` of the `5.0` target distance), stalling zero-order descent around `4-6%` error reduction.
 
 ## Fixed Protocol (Committed Before Execution)
 
@@ -27,11 +28,11 @@ Auditing `weft/runtime/mac/swarm_loom.py` prior to E15 surfaced three concrete i
 - **Arms compared on identical seeds (`7` arms x `10` seeds = `70` colony runs)**:
   1. `hgt_foraging` (unchanged E14 baseline, fixed step `0.012`).
   2. `dissipative_chemostat` (unchanged E14 Law 2 implementation, `spore_fraction = 0.50`, fixed step `0.012`).
-  3. `graded_chemostat_sp000` (repaired Law 2b + niche-clean Law 2c, `spore_fraction = 0.00`, fixed step `0.012`).
-  4. `graded_chemostat_sp125` (repaired Law 2b + niche-clean Law 2c, `spore_fraction = 0.125`, fixed step `0.012`).
-  5. `graded_chemostat_sp250` (repaired Law 2b + niche-clean Law 2c, `spore_fraction = 0.25`, fixed step `0.012`).
-  6. `graded_chemostat_sp500` (repaired Law 2b + niche-clean Law 2c, `spore_fraction = 0.50`, fixed step `0.012`).
-  7. `graded_chemostat_cooled` (repaired Law 2b + niche-clean Law 2c, `spore_fraction = 0.25`, plus zero-order per-cell step-scale cooling `adaptive_step = True`).
+  3. `graded_chemostat_sp000` (`graded_chemostat` allocation rule and niche-clean Law 2c, `spore_fraction = 0.00`, fixed step `0.012`).
+  4. `graded_chemostat_sp125` (`graded_chemostat` allocation rule and niche-clean Law 2c, `spore_fraction = 0.125`, fixed step `0.012`).
+  5. `graded_chemostat_sp250` (`graded_chemostat` allocation rule and niche-clean Law 2c, `spore_fraction = 0.25`, fixed step `0.012`).
+  6. `graded_chemostat_sp500` (`graded_chemostat` allocation rule and niche-clean Law 2c, `spore_fraction = 0.50`, fixed step `0.012`).
+  7. `graded_chemostat_cooled` (`graded_chemostat` allocation rule and niche-clean Law 2c, `spore_fraction = 0.25`, plus zero-order per-cell step-scale cooling `adaptive_step = True`).
 
 ## Preregistered Predictions
 
@@ -49,3 +50,7 @@ Auditing `weft/runtime/mac/swarm_loom.py` prior to E15 surfaced three concrete i
    - For `n_cells = 512, dim = 256, n_niches = 8, batch_size = 16`, batched tensor evaluation achieves at least `5.0x` speedup over serial per-cell evaluation under both `torch.set_num_threads(1)` and default multi-core CPU threads on Apple M1 Max. (Metal/MPS is recorded if `torch.backends.mps.is_available()` is true in the execution environment; if macOS `sandbox-exec` blocks Metal IOKit, MPS remains explicitly unmeasured in this run.)
 5. **P5 (Invariants across all 70 runs)**:
    - Across all 7 arms and 10 seeds, `max_core_drift == 0.0`, `min_watermark_cosine >= 0.999999`, and `max_committed_distance <= 10.0`.
+
+## Amendment, 2026-11-12
+
+Wording of the #118 gap-pay rule and the `graded_chemostat` allocation rule was corrected after review. The pool reset on a best-error improvement of more than `1e-3` is kept. Predictions and the fixed protocol are unchanged.

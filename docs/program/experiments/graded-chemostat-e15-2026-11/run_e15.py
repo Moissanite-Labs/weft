@@ -6,7 +6,7 @@ Executes the preregistered protocol in `PREREGISTRATION.md`:
   - Seeds 20261121..20261130 (10 seeds), 60 generations, 256 cells, dim=128, 8 tiles
   - Graded landscape: tile_ranks=[1, 2, 4, 6, 8, 12, 16, 24],
     tile_condition_numbers=[1.0, 1.5, 2.0, 3.0, 4.5, 6.0, 9.0, 12.0]
-  - 7 arms comparing E14 baselines against repaired Law 2b/2c + spore sweep + cooling
+  - 7 arms comparing E14 baselines against the graded_chemostat allocation rule + spore sweep + cooling
   - Pinned-thread (threads=1) and default multi-core vectorization benchmark (P4)
 Writes `results.json` in this directory and exits 0 if invariant checks (P5) hold.
 """
@@ -74,16 +74,30 @@ def probe_host() -> Dict[str, Any]:
 
 
 def run_vectorization_benchmark() -> Dict[str, Any]:
-    """Evaluate P4 under pinned 1-thread CPU, default multi-thread CPU, and MPS if available."""
+    """Evaluate P4 under pinned 1-thread CPU, default multi-thread CPU, and MPS if available.
+
+    Both the serial path and the batched path touch all `n_cells` cells, so
+    the timings share a working set. An earlier draft timed 32 cells on the
+    serial path and extrapolated 16x, which does not match the batched
+    working set of 512.
+    """
     n_cells = 512
     dim = 256
     n_niches = 8
     batch_size = 16
     n_iters = 20
-    sample_cells = 32
 
     orig_threads = torch.get_num_threads()
-    records: Dict[str, Any] = {}
+    records: Dict[str, Any] = {
+        "n_cells": n_cells,
+        "dim": dim,
+        "n_niches": n_niches,
+        "batch_size": batch_size,
+        "n_iters": n_iters,
+        "serial_cells": n_cells,
+        "batched_cells": n_cells,
+        "default_num_threads": int(orig_threads),
+    }
 
     for label, n_threads in (("pinned_1_thread", 1), (f"multicore_{orig_threads}_threads", orig_threads)):
         torch.set_num_threads(n_threads)
@@ -92,21 +106,21 @@ def run_vectorization_benchmark() -> Dict[str, Any]:
         w0_cpu = torch.randn(n_cells, dim, dim, dtype=torch.float32)
         x_cpu = torch.randn(n_niches, batch_size, dim, dtype=torch.float32)
 
+        # Warmup on the full working set.
         for i in range(4):
             for m in range(n_niches):
                 _ = torch.matmul(x_cpu[m], w_cpu[i])
             _ = torch.linalg.norm(w_cpu[i] - w0_cpu[i])
+        _ = torch.matmul(x_cpu.unsqueeze(0), w_cpu.unsqueeze(1))
+        _ = torch.linalg.matrix_norm(w_cpu - w0_cpu, ord="fro", dim=(1, 2))
 
         t0 = time.perf_counter()
         for _ in range(n_iters):
-            for i in range(sample_cells):
+            for i in range(n_cells):
                 for m in range(n_niches):
                     _ = torch.matmul(x_cpu[m], w_cpu[i])
                 _ = torch.linalg.norm(w_cpu[i] - w0_cpu[i])
-        t_serial_ms = ((time.perf_counter() - t0) / n_iters) * (n_cells / sample_cells) * 1000.0
-
-        _ = torch.matmul(x_cpu.unsqueeze(0), w_cpu.unsqueeze(1))
-        _ = torch.linalg.matrix_norm(w_cpu - w0_cpu, ord="fro", dim=(1, 2))
+        t_serial_ms = ((time.perf_counter() - t0) / n_iters) * 1000.0
 
         t0 = time.perf_counter()
         for _ in range(n_iters):
@@ -116,9 +130,11 @@ def run_vectorization_benchmark() -> Dict[str, Any]:
 
         records[label] = {
             "threads": n_threads,
+            "serial_cells": n_cells,
+            "batched_cells": n_cells,
             "serial_cpu_ms": round(t_serial_ms, 4),
             "batched_cpu_ms": round(t_batched_ms, 4),
-            "speedup_batched_vs_serial": round(t_serial_ms / t_batched_ms, 4),
+            "speedup_batched_vs_serial": round(t_serial_ms / t_batched_ms, 4) if t_batched_ms > 0 else None,
         }
 
     torch.set_num_threads(orig_threads)
