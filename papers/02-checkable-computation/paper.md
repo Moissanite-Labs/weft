@@ -290,10 +290,10 @@ every parsed metric and every header field.
 
 ### 6.7 E7: the 64-byte frame
 
-The frame that feeds the shader packs sixteen `float32` values. One of them is a Unix timestamp. At the fixture's
-time (1.76 × 10⁹ s), adjacent `float32` values are **128 seconds** apart, so the slot cannot hold anything finer
-than about two minutes. The browser worker overwrites that slot with a page-relative clock, which is fine for
-animation, but the slot should not be read as wall-clock time.
+The frame that feeds the shader packs sixteen `float32` values. The fixture stores integer wall-clock time
+outside the frame as `captured_at_unix_s` (1,762,560,000) and writes 0.0 into slot 2. At that Unix value
+(1.76 × 10⁹ s), adjacent `float32` values are **128 seconds** apart, which is why slot 2 is a relative clock.
+The browser worker writes a page-relative clock into that slot.
 
 ## 7. What this does not show
 

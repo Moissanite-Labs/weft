@@ -80,7 +80,7 @@
         <div class="cta">
           <a class="btn btn-primary" href="ml-weft-paper-2-checkable-computation-v1.1.pdf" download>
             <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
-            Download PDF <span class="btn-meta">362 KB</span>
+            Download PDF <span class="btn-meta">333 KB</span>
           </a>
           <a class="btn" href="https://github.com/Moissanite-Labs/weft/blob/main/papers/02-checkable-computation/paper.md">Source</a>
           <a class="btn" href="#cite">Cite</a>
@@ -467,7 +467,7 @@ C = \mathrm{SHA256}\bigl(\texttt{WEFT-IC-EXEC-V1:} \,\|\, I \,\|\, \texttt{:STEP
 </section>
 <section id="e7-the-64-byte-frame" class="level3">
 <h3>6.7 E7: the 64-byte frame</h3>
-<p>The frame that feeds the shader packs sixteen <code>float32</code> values. One of them is a Unix timestamp. At the fixture’s time (1.76 × 10⁹ s), adjacent <code>float32</code> values are <strong>128 seconds</strong> apart, so the slot cannot hold anything finer than about two minutes. The browser worker overwrites that slot with a page-relative clock, which is fine for animation, but the slot should not be read as wall-clock time.</p>
+<p>The frame that feeds the shader packs sixteen <code>float32</code> values. The fixture stores integer wall-clock time outside the frame as <code>captured_at_unix_s</code> (1,762,560,000) and writes 0.0 into slot 2. At that Unix value (1.76 × 10⁹ s), adjacent <code>float32</code> values are <strong>128 seconds</strong> apart, which is why slot 2 is a relative clock. The browser worker writes a page-relative clock into that slot.</p>
 </section>
 </section>
 <section id="what-this-does-not-show" class="level2">

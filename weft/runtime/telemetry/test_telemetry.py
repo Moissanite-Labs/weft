@@ -70,9 +70,20 @@ class TestWeftTelemetry(unittest.TestCase):
 
         # Demonstrate why Unix timestamps cannot live in slot 2: binary32 ULP at 1,762,560,000 is 128.0 s.
         self.assertEqual(float32_ulp_spacing(1762560000.0), 128.0)
-        # Across a 24-hour relative session (86,400 s), binary32 spacing is <= 7.8125 ms; at 2^23 s max, <= 1.0 s.
+        # Across a 24-hour relative session (86,400 s), binary32 spacing is <= 7.8125 ms;
+        # at the inclusive 2^23 s endpoint, spacing is 1.0 s.
         self.assertLessEqual(float32_ulp_spacing(86400.0), 0.0078125)
-        self.assertLessEqual(float32_ulp_spacing(MAX_RELATIVE_CLOCK_SECONDS - 1.0), 0.5)
+        self.assertEqual(float32_ulp_spacing(MAX_RELATIVE_CLOCK_SECONDS), 1.0)
+
+        for spec in FRAME64_SLOT_SPECS:
+            upper = float(spec["domain"].split(",")[1].rstrip(" ]"))
+            spacing = float32_ulp_spacing(upper)
+            self.assertAlmostEqual(
+                spec["max_ulp"],
+                spacing,
+                delta=0.001 * spacing,
+                msg=f"slot {spec['slot']} {spec['name']} max_ulp {spec['max_ulp']!r} != ulp({upper}) {spacing!r}",
+            )
 
         for bad_time in (1762560000.0, MAX_RELATIVE_CLOCK_SECONDS + 1.0, -0.001, float("nan"), float("inf")):
             with self.subTest(bad_time=bad_time):
@@ -89,6 +100,12 @@ class TestWeftTelemetry(unittest.TestCase):
         # Direct raw float array encoding must also enforce slot 2 relative-clock bounds
         with self.assertRaises(ValueError):
             encode_frame_64b_bytes([19.0, 0.2, 1762560000.0] + [0.0] * 13)
+
+        # Values that overflow IEEE-754 binary32 raise ValueError, not OverflowError.
+        with self.assertRaises(ValueError):
+            encode_frame_64b_bytes([1e39] + [0.0] * 15)
+        with self.assertRaises(ValueError):
+            float32_ulp_spacing(1e39)
 
     def test_frame64_roundtrip_and_sym2p_roundtrip(self) -> None:
         """Interfaces I1 and I2: 64-byte frame and SYM-2P packet round-trip cleanly."""

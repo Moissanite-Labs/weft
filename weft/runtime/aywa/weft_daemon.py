@@ -5,13 +5,14 @@ Weft Sovereign Autonomic Daemon (Aywa 64-Byte Telemetry Bridge)
 Delegates host hardware probing and organization harvesting to Codebase C6
 (`weft/runtime/telemetry/`) so hardware unavailability is reported honestly (#16),
 `suspended_accounts` is never emitted (#15), and slot 2 (`system_time`) carries
-monotonic process-relative elapsed seconds rather than wall-clock or thermal
-proxies (#78).
+the one-shot harvest interval (or an explicit `elapsed_seconds`) rather than
+wall-clock or thermal proxies (#78).
 """
 
 from __future__ import annotations
 
 import json
+import math
 import os
 import sys
 import tempfile
@@ -54,7 +55,12 @@ def build_unified_64b_frame(
         if elapsed_seconds is None
         else float(elapsed_seconds)
     )
-    floats[2] = round(rel_s % MAX_RELATIVE_CLOCK_SECONDS, 4)
+    if not math.isfinite(rel_s) or rel_s < 0.0 or rel_s > MAX_RELATIVE_CLOCK_SECONDS:
+        raise ValueError(
+            f"elapsed_seconds ({rel_s!r}) must be finite relative seconds in "
+            f"[0.0, {MAX_RELATIVE_CLOCK_SECONDS:.1f}]"
+        )
+    floats[2] = round(rel_s, 4)
 
     packed = encode_frame_64b_bytes(floats)
     if out_dir is not None:

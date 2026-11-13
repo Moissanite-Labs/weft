@@ -2,7 +2,8 @@
 
 Status: implemented-layout contract and conformance profile, document version 1.
 Tracks issue #78. Producer: C6 (`weft/runtime/telemetry/frame64.py`,
-`harvester.py`, `weft_daemon.py`). Consumers: C7 (`weft/runtime/aywa/dashboard_layout.wgsl`,
+`harvester.py`, `weft_daemon.py`). Consumers: C7 (`weft/runtime/aywa/web/assets/shaders/dashboard_layout.wgsl`,
+`weft/runtime/aywa/web/assets/js/weft-loom.js`,
 `weft/runtime/aywa/web/assets/workers/telemetry-worker.js`) and local daemon bridges.
 
 ## Scope and byte layout
@@ -14,8 +15,8 @@ in little-endian byte order (`struct.Struct("<16f")`). Every slot must be finite
 | Slot | Byte offset | Field (`dashboard_layout.wgsl`) | Unit / domain | Max binary32 ULP in domain |
 |---:|---:|---|---|---:|
 | `0` | `0` | `active_nodes` | Node count in `[0, 65536]` | `0.0078125` |
-| `1` | `4` | `org_tension` | Tension scalar in `[0.0, 85.0]` | `7.63e-06` |
-| `2` | `8` | `system_time` | **Relative elapsed seconds** in `[0.0, 8388608.0]` (`2^23` s ≈ `97.09` d) | `0.5` s (`<= 7.8125` ms under 24 h) |
+| `1` | `4` | `org_tension` | Tension scalar in `[0.0, 1.0]`; the served shader clamps to `[0.0, 1.0]` | `1.19e-07` |
+| `2` | `8` | `system_time` | **Relative elapsed seconds** in `[0.0, 8388608.0]` (`2^23` s ≈ `97.09` d) | `1.0` s (`<= 7.8125` ms under 24 h) |
 | `3` | `12` | `gini_index` | Gini ratio in `[0.0, 1.0]` | `1.19e-07` |
 | `4` | `16` | `user_rounding` | Eido barycentric rounding in `[0.0, 1.0]` | `1.19e-07` |
 | `5` | `20` | `user_density` | Eido barycentric density in `[0.0, 1.0]` | `1.19e-07` |
@@ -37,12 +38,16 @@ epoch chosen by the producer or animation loop:
 - Static snapshot / fixture files (`harvester.py`) write `0.0` into slot 2 and
   carry integer UTC wall-clock time **outside** the 64-byte frame as
   `captured_at_unix_s` in `moissanite_telemetry.json`.
-- Browser consumers (`telemetry-worker.js`) write `performance.now() / 1000`
-  (tab-relative elapsed seconds).
-- Long-running host daemons (`weft_daemon.py`) write monotonic process uptime
-  modulo `MAX_RELATIVE_CLOCK_SECONDS` (`8,388,608.0` s).
+- `weft-loom.js` writes `(performance.now() - t0) / 1000` into slot 2 on every
+  frame, or the constant `12.0` under reduced motion.
+- `telemetry-worker.js` writes `performance.now() / 1000` (tab-relative elapsed
+  seconds) on each poll. These JS writers do not enforce `[0, 2^23]`.
+- `weft_daemon.py` is a one-shot harvest: slot 2 is the harvest interval
+  (about `0.0006` s on a self-test). Callers may pass `elapsed_seconds`
+  explicitly; values outside `[0.0, 8,388,608.0]` raise `ValueError`.
 - `pack_uniform_frame_64b` and `encode_frame_64b_bytes` reject negative values,
-  non-finite values, and values above `8,388,608.0` s (`ValueError`).
+  values that are not finite in binary32, and values above `8,388,608.0` s
+  (`ValueError`).
 
 ## Conformance
 
