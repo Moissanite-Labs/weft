@@ -29,3 +29,7 @@ Local compute only. If the primary arm produces three seeds of zero improvement 
 ## Deliverable
 
 `docs/program/experiments/micro-cell-2026-11-12/` on branch `record/micro-cell-2026-11-12`, PR through review, misses published alongside wins, credit lineage from issue #142 and this file.
+
+## Correction note, 2026-11-12 (added after the runs, during review of PR #143)
+
+The clauses H1 to H6 above are the registration and are not changed. The arm description "P (primary): MLP head, 768 hidden, plastic from row 192" does not match the organism that ran. As run: a frozen 256x256 watermarked core and a plastic 512x256 periphery `wp` (768 hidden units in total), with only `wp` mutated; the output head and biases stay at their initial values; thrust is the deterministic `mu`, and `lsig` is unused. Arms A (GRU) and R (shuffled decoder) were not run, and F (frozen) was run for seed 20261112 only. See the correction note in `00-DESIGN.md` and the verdicts in `RESULTS-E09.md`.

@@ -2,6 +2,15 @@
 
 Date: 2026-11-12. Follow-on to E08 (zero-lexicon cells, PR #141) and issue #142 (program: invariant-gated micro-model organisms). Exploratory record.
 
+> Correction, 2026-11-12 (review of PR #143). The sections below are the design as registered and are left unchanged. The organism that `microcell.py` actually runs, and that produced every committed log, differs from them:
+>
+> - Hidden layer: 768 units built from a frozen 256x256 watermarked core `wc` (no row of it is ever written) and a 512x256 periphery `wp`. The watermark is embedded in rows 0..191 of `wc`.
+> - Plasticity: only `wp` (512x256) is mutated. `W_mu`, `W_sg` and all four bias vectors keep their initial values. There is no plastic head.
+> - Action: `u = mu = tanh((W_mu @ H + b_mu) / 2)`, deterministic. The `log sigma^2` output is computed and discarded; no stochastic arm was run.
+> - Gate as run in the committed logs: periphery Frobenius drift vs `wp_base` <= 120 plus the 1.01 probe rule. The watermark call compared `wc` with itself and did not gate acceptance, so the logged `wm_drift` of 0 was not an independent check. From this correction on, `microcell.py` keeps `wc_base` at init, logs `core_drift = ||wc - wc_base||`, calls `watermark_verify(wc_base, wc, ...)` and rejects a candidate when core drift is not exactly 0.0 or the cosine is below 0.85.
+> - Episode state: the committed logs were produced without resetting each cell's previous action `_u` between episodes and probes. The corrected script resets it; `--legacy-u-leak` reproduces the committed logs.
+> - The GRU arm (1b) and the shuffled-decoder control were not run. The frozen control was run for seed 20261112 only.
+
 ## Research question
 
 The E08 matrix organism learns under the invariant gate but plateaus early (antithetic ES finds nothing past ~gen 11 to gen 13 in 3 seeds). It is a ~130-parameter actor. This experiment asks: with ~800K parameters of real nonlinear wiring, gated by the same plasticity mask, watermark, and selection rule, does an organism adapt more, faster, and without saturating?

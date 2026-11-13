@@ -39,4 +39,3 @@ gen 37: returns={'A': 37.333, 'B': 33.57} collisions=0 committed={'A': 0, 'B': 1
 gen 38: returns={'A': 37.39, 'B': 34.407} collisions=0 committed={'A': 0, 'B': 0}
 gen 39: returns={'A': 37.37, 'B': 34.421} collisions=0 committed={'A': 0, 'B': 0}
 gen 40: returns={'A': 37.381, 'B': 34.403} collisions=0 committed={'A': 0, 'B': 0}
-wrote /Users/kethuda/Documents/exo/weft/work/micro-cell-2026-11-12/logs/e10-20261112.jsonl
