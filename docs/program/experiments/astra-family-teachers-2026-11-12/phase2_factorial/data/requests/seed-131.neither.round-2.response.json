@@ -1,0 +1,44 @@
+{
+  "request_file": "seed-131.neither.round-2.json",
+  "request_sha256": "390c9baf39012e566f20f68a54b5c40853970a3f4211cc477a2070339ab6688f",
+  "response": {
+    "id": "resp_00d2e7a5012406b2016af6629f4ee487d1b1981b9c626c3360",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 5504,
+      "input_tokens_details": {
+        "cache_write_tokens": 5501,
+        "cached_tokens": 0
+      },
+      "output_tokens": 564,
+      "output_tokens_details": {
+        "reasoning_tokens": 447
+      },
+      "total_tokens": 6068
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794531999,
+    "output": [
+      {
+        "id": "msg_00d2e7a5012406b2016af662af8b6087d1b48ece59f65b138b",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"hypothesis\":\"The prior negative move_x bias probe worsened validation movement MSE and active-movement MSE. A smaller positive bias adjustment tests the opposite local direction while limiting low-urgency drift. Changing only the movement output bias preserves hazard exactly, and the tanh Lipschitz bound limits movement drift MSE to 0.0000005 per input. This is a conservative validation-informed correction, not an identified urgency-dependent avoidance mechanism.\",\"edits\":[{\"tensor\":\"b2\",\"index\":[0],\"delta\":0.001}]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  },
+  "elapsed_seconds": 19.10811399994418,
+  "estimated_usd": 0.0969925,
+  "estimate_kind": "reported tokens"
+}

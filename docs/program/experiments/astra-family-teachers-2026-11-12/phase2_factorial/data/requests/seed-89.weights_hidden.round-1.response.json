@@ -1,0 +1,44 @@
+{
+  "request_file": "seed-89.weights_hidden.round-1.json",
+  "request_sha256": "7376110d1d1255c4ad5e42acc836677e9663d6a598fe36ac2836eccf5fe23649",
+  "response": {
+    "id": "resp_0e65d8e63e0d64c2016af66121a41487d1876fb441c9376fcc",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 8988,
+      "input_tokens_details": {
+        "cache_write_tokens": 8985,
+        "cached_tokens": 0
+      },
+      "output_tokens": 1033,
+      "output_tokens_details": {
+        "reasoning_tokens": 848
+      },
+      "total_tokens": 10021
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794531617,
+    "output": [
+      {
+        "id": "msg_0e65d8e63e0d64c2016af6613ea61c87d194952b4e72141fad",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"hypothesis\":\"A small, centered movement-only readout correction from obstacle- and neighbor-sensitive hidden units should strengthen avoidance and reduce active movement error while limiting low-urgency drift. Leaving all hidden parameters and the hazard readout unchanged preserves the hazard estimate exactly.\",\"edits\":[{\"tensor\":\"w2\",\"index\":[0,0],\"delta\":-0.055},{\"tensor\":\"b2\",\"index\":[0],\"delta\":0.03575},{\"tensor\":\"w2\",\"index\":[1,0],\"delta\":0.008},{\"tensor\":\"w2\",\"index\":[1,3],\"delta\":-0.03},{\"tensor\":\"w2\",\"index\":[1,7],\"delta\":-0.02},{\"tensor\":\"w2\",\"index\":[1,9],\"delta\":-0.055},{\"tensor\":\"b2\",\"index\":[1],\"delta\":0.0024}]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  },
+  "elapsed_seconds": 31.473932875087485,
+  "estimated_usd": 0.1639925,
+  "estimate_kind": "reported tokens"
+}

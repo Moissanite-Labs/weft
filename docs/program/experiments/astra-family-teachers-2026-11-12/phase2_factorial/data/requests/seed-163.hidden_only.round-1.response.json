@@ -1,0 +1,44 @@
+{
+  "request_file": "seed-163.hidden_only.round-1.json",
+  "request_sha256": "70f55711a0ec0225f8ab7a3e08db197c148afbce8812151bf2cea451d3b8e6db",
+  "response": {
+    "id": "resp_0203d10980220e1d016af660ca4d6087d19903b1a0732f369f",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 8275,
+      "input_tokens_details": {
+        "cache_write_tokens": 8272,
+        "cached_tokens": 0
+      },
+      "output_tokens": 1667,
+      "output_tokens_details": {
+        "reasoning_tokens": 1508
+      },
+      "total_tokens": 9942
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794531530,
+    "output": [
+      {
+        "id": "msg_0203d10980220e1d016af660fdc89c87d1be2db2cf9548af3b",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"hypothesis\":\"A small, centered movement-only readout adjustment using obstacle-sensitive hidden features should strengthen avoidance while keeping low-urgency drift limited. Leaving all hidden parameters and the hazard readout unchanged preserves hazard predictions exactly.\",\"edits\":[{\"tensor\":\"w2\",\"index\":[0,8],\"delta\":-0.055},{\"tensor\":\"w2\",\"index\":[0,9],\"delta\":-0.025},{\"tensor\":\"b2\",\"index\":[0],\"delta\":-0.016},{\"tensor\":\"w2\",\"index\":[1,0],\"delta\":-0.065},{\"tensor\":\"w2\",\"index\":[1,3],\"delta\":-0.02},{\"tensor\":\"b2\",\"index\":[1],\"delta\":0.026}]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  },
+  "elapsed_seconds": 54.28414191608317,
+  "estimated_usd": 0.18678,
+  "estimate_kind": "reported tokens"
+}

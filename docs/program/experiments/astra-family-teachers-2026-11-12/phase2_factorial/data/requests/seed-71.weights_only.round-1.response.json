@@ -1,0 +1,44 @@
+{
+  "request_file": "seed-71.weights_only.round-1.json",
+  "request_sha256": "971f1093248d575e27d4adfb49d83f0b0bfb30b61157268d406073e4d4e878a5",
+  "response": {
+    "id": "resp_05c34e41b7355f7b016af6610dbe1887d18ce6c64b5cd47ca6",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 6007,
+      "input_tokens_details": {
+        "cache_write_tokens": 6004,
+        "cached_tokens": 0
+      },
+      "output_tokens": 675,
+      "output_tokens_details": {
+        "reasoning_tokens": 516
+      },
+      "total_tokens": 6682
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794531597,
+    "output": [
+      {
+        "id": "msg_05c34e41b7355f7b016af66121314487d1ac1b85fadef885f0",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"hypothesis\":\"A small movement-only readout adjustment strengthens avoidance through existing obstacle/neighbor features. Combining units 1 and 2 favors obstacle avoidance along x; unit 5 strengthens avoidance along y. Bias compensation limits low-urgency drift, while unchanged hidden parameters and hazard readout preserve hazard predictions exactly.\",\"edits\":[{\"tensor\":\"w2\",\"index\":[0,1],\"delta\":-0.014},{\"tensor\":\"w2\",\"index\":[0,2],\"delta\":0.07},{\"tensor\":\"b2\",\"index\":[0],\"delta\":-0.052},{\"tensor\":\"w2\",\"index\":[1,5],\"delta\":0.055},{\"tensor\":\"b2\",\"index\":[1],\"delta\":-0.0319}]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  },
+  "elapsed_seconds": 22.471671415958554,
+  "estimated_usd": 0.10883,
+  "estimate_kind": "reported tokens"
+}

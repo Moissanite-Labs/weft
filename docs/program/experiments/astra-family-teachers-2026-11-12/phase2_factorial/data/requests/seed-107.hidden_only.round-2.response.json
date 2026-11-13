@@ -1,0 +1,44 @@
+{
+  "request_file": "seed-107.hidden_only.round-2.json",
+  "request_sha256": "5c3c0291ae4b4f892171d6a61108a3468eeae312c58586e9e8239ccdf72688ce",
+  "response": {
+    "id": "resp_0aad77c3cbe90182016af66295026887d1853a37bfbba5769a",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 8624,
+      "input_tokens_details": {
+        "cache_write_tokens": 8621,
+        "cached_tokens": 0
+      },
+      "output_tokens": 445,
+      "output_tokens_details": {
+        "reasoning_tokens": 198
+      },
+      "total_tokens": 9069
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794531989,
+    "output": [
+      {
+        "id": "msg_0aad77c3cbe90182016af6629d036487d19c429666d36f42b5",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"hypothesis\":\"The first proposal improved active movement while preserving hazard and remaining below the low-urgency drift budget. Scaling that validated movement-readout direction by 1.75 should strengthen avoidance further, with estimated low-urgency drift near 0.00043. All deltas remain relative to the original source. Leaving hidden parameters and the hazard readout unchanged preserves hazard exactly.\",\"edits\":[{\"tensor\":\"w2\",\"index\":[0,2],\"delta\":0.105},{\"tensor\":\"w2\",\"index\":[0,5],\"delta\":0.0875},{\"tensor\":\"w2\",\"index\":[0,3],\"delta\":-0.0525},{\"tensor\":\"b2\",\"index\":[0],\"delta\":-0.014},{\"tensor\":\"w2\",\"index\":[1,2],\"delta\":-0.1225},{\"tensor\":\"w2\",\"index\":[1,5],\"delta\":-0.105},{\"tensor\":\"w2\",\"index\":[1,3],\"delta\":0.04375},{\"tensor\":\"w2\",\"index\":[1,4],\"delta\":-0.07},{\"tensor\":\"b2\",\"index\":[1],\"delta\":0.007}]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  },
+  "elapsed_seconds": 11.385948833078146,
+  "estimated_usd": 0.1300425,
+  "estimate_kind": "reported tokens"
+}

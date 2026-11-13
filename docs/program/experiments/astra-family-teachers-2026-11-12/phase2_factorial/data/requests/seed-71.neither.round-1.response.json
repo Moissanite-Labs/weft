@@ -1,0 +1,44 @@
+{
+  "request_file": "seed-71.neither.round-1.json",
+  "request_sha256": "5bdb133bd5139f64a9a0b1ce1279310ca416a36a713ceca4300f1f81d67ab91e",
+  "response": {
+    "id": "resp_086f435d98209274016af66100a27087d1bbc6e062f220de85",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 5287,
+      "input_tokens_details": {
+        "cache_write_tokens": 5284,
+        "cached_tokens": 0
+      },
+      "output_tokens": 450,
+      "output_tokens_details": {
+        "reasoning_tokens": 370
+      },
+      "total_tokens": 5737
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794531584,
+    "output": [
+      {
+        "id": "msg_086f435d98209274016af6610f08a087d19dfca65ea3c83b33",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"hypothesis\":\"With weights and activations withheld, the useful edit direction is unidentified. This small movement-readout probe leaves hazard exactly unchanged and bounds low-urgency movement drift below the budget. Validation feedback can determine whether to retain or reverse its direction.\",\"edits\":[{\"tensor\":\"w2\",\"index\":[0,4],\"delta\":0.02}]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  },
+  "elapsed_seconds": 16.2491808750201,
+  "estimated_usd": 0.08858,
+  "estimate_kind": "reported tokens"
+}
