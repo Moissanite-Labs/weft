@@ -156,11 +156,15 @@ class SettlementAndReservationTests(unittest.TestCase):
                 latency_s=0.01,
             )
             snap = ledger.snapshot()
-            self.assertLessEqual(snap["spent_usd"], reserved + 1e-12)
-            self.assertLessEqual(
-                snap["spent_usd"] + ledger.reserved_in_flight_usd,
-                1.00 + 1e-12,
+            # Computed table cost is charged even when it exceeds the reservation.
+            self.assertGreater(snap["spent_usd"], reserved)
+            self.assertGreater(snap["spent_usd"], 1.00)
+            self.assertGreater(snap.get("over_cap_usd", 0.0), 0.0)
+            ok2, reserved2, _reason2 = ledger.try_reserve(
+                "weft_111", "gpt-6-luna", "flex", 128, 16
             )
+            self.assertFalse(ok2)
+            self.assertEqual(reserved2, 0.0)
 
     def test_transport_error_keeps_reservation(self):
         mod = load_mod()
@@ -184,8 +188,9 @@ class SettlementAndReservationTests(unittest.TestCase):
                     getattr(proxy, "proxy_token", None),
                 )
                 self.assertEqual(status, 502)
-                self.assertGreater(ledger.reserved_in_flight_usd, 0.0)
-                self.assertEqual(ledger.spent_usd, 0.0)
+                self.assertGreater(ledger.spent_usd + ledger.reserved_in_flight_usd, 0.0)
+                self.assertTrue((Path(tmp) / "ledger.jsonl").is_file())
+                self.assertGreater((Path(tmp) / "ledger.jsonl").stat().st_size, 0)
             finally:
                 proxy.stop()
 
@@ -211,8 +216,9 @@ class SettlementAndReservationTests(unittest.TestCase):
                     getattr(proxy, "proxy_token", None),
                 )
                 self.assertEqual(status, 200)
-                self.assertGreater(ledger.reserved_in_flight_usd, 0.0)
-                self.assertEqual(ledger.spent_usd, 0.0)
+                self.assertGreater(ledger.spent_usd + ledger.reserved_in_flight_usd, 0.0)
+                self.assertTrue((Path(tmp) / "ledger.jsonl").is_file())
+                self.assertGreater((Path(tmp) / "ledger.jsonl").stat().st_size, 0)
             finally:
                 proxy.stop()
 
@@ -405,6 +411,124 @@ class SelftestMissingScriptsTests(unittest.TestCase):
         self.assertEqual(rc, 1)
         err = buf.getvalue()
         self.assertIn("weft_111_flex_harness.py", err)
+
+
+class ProofR2MoneySafetyTests(unittest.TestCase):
+    """R2 scenarios from review 5886504774: charge table cost, persist unresolved holds."""
+
+    def test_settlement_charges_computed_cost_and_blocks_later_reserve(self):
+        """$1 cap, 2M-input Astra flex 200: computed $20.00375 must be spent, not the $0.0033 reserve."""
+        mod = load_mod()
+
+        def huge_200(_payload, _headers, _timeout):
+            body = {
+                "id": "resp_oversize",
+                "service_tier": "flex",
+                "usage": {
+                    "input_tokens": 2_000_000,
+                    "input_tokens_details": {"cached_tokens": 0},
+                    "output_tokens": 100,
+                    "output_tokens_details": {"reasoning_tokens": 0},
+                },
+            }
+            return 200, json.dumps(body).encode("utf-8")
+
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "master_api_ledger.jsonl"
+            ledger = _ledger(mod, 1.00, path)
+            proxy = mod.SharedLedgerProxyServer(ledger=ledger, upstream_fn=huge_200)
+            port = proxy.start()
+            try:
+                status, _body = _post_json(
+                    f"http://127.0.0.1:{port}/t/weft_111/v1/responses",
+                    {
+                        "model": "gpt-6-astra",
+                        "service_tier": "flex",
+                        "input": "hi",
+                        "max_output_tokens": 100,
+                    },
+                    getattr(proxy, "proxy_token", None),
+                )
+            finally:
+                proxy.stop()
+            self.assertEqual(status, 200)
+            computed, _std = mod.compute_exact_cost_usd(
+                "gpt-6-astra", "flex", 2_000_000, 0, 100
+            )
+            self.assertAlmostEqual(computed, 20.00375, places=6)
+            self.assertAlmostEqual(ledger.spent_usd, 20.00375, places=6)
+            entries = [
+                json.loads(line)
+                for line in path.read_text(encoding="utf-8").splitlines()
+                if line.strip()
+            ]
+            self.assertTrue(entries)
+            last = entries[-1]
+            self.assertAlmostEqual(float(last["call_cost_usd"]), 20.00375, places=6)
+            self.assertAlmostEqual(float(last["computed_call_cost_usd"]), 20.00375, places=6)
+            self.assertAlmostEqual(float(last["master_cumulative_spent_usd"]), 20.00375, places=6)
+            self.assertGreater(float(last.get("overrun_usd", 0.0)), 0.0)
+            ok, reserved, _reason = ledger.try_reserve(
+                "weft_111", "gpt-6-astra", "flex", 128, 36_000
+            )
+            self.assertFalse(ok)
+            self.assertEqual(reserved, 0.0)
+            reloaded = _ledger(mod, 1.00, path)
+            self.assertAlmostEqual(reloaded.spent_usd, 20.00375, places=6)
+            ok2, reserved2, _reason2 = reloaded.try_reserve(
+                "weft_111", "gpt-6-astra", "flex", 128, 36_000
+            )
+            self.assertFalse(ok2)
+            self.assertEqual(reserved2, 0.0)
+
+    def test_unresolved_hold_persists_and_reload_refuses_16_25_reserve(self):
+        """A transport timeout (and an unparsable 200) must land in the ledger so reload refuses $16.25."""
+        mod = load_mod()
+
+        def boom(_payload, _headers, _timeout):
+            raise TimeoutError("upstream timeout")
+
+        def bad_200(_payload, _headers, _timeout):
+            return 200, b"not-json"
+
+        def _sixteen_25(ledger):
+            return ledger.try_reserve(
+                "weft_111", "gpt-6-astra", "flex", 1_000_000, 100_000
+            )
+
+        with tempfile.TemporaryDirectory() as tmp:
+            # Confirm the $16.25 figure itself on a clean $16.25 cap.
+            probe_path = Path(tmp) / "probe.jsonl"
+            probe = _ledger(mod, 16.25, probe_path)
+            ok_probe, reserved_probe, _ = _sixteen_25(probe)
+            self.assertTrue(ok_probe)
+            self.assertAlmostEqual(reserved_probe, 16.25, places=6)
+
+            for name, upstream in (("transport", boom), ("unparsable_200", bad_200)):
+                path = Path(tmp) / f"{name}.jsonl"
+                ledger = _ledger(mod, 16.25, path)
+                proxy = mod.SharedLedgerProxyServer(ledger=ledger, upstream_fn=upstream)
+                port = proxy.start()
+                try:
+                    _status, _body = _post_json(
+                        f"http://127.0.0.1:{port}/t/weft_111/v1/responses",
+                        {
+                            "model": "gpt-6-luna",
+                            "service_tier": "flex",
+                            "input": "hi",
+                            "max_output_tokens": 64,
+                        },
+                        getattr(proxy, "proxy_token", None),
+                    )
+                finally:
+                    proxy.stop()
+                self.assertGreater(ledger.spent_usd + ledger.reserved_in_flight_usd, 0.0)
+                self.assertTrue(path.is_file() and path.stat().st_size > 0)
+                reloaded = _ledger(mod, 16.25, path)
+                self.assertGreater(reloaded.spent_usd + reloaded.reserved_in_flight_usd, 0.0)
+                ok, reserved, _reason = _sixteen_25(reloaded)
+                self.assertFalse(ok, msg=f"{name}: reload accepted the $16.25 reserve")
+                self.assertEqual(reserved, 0.0)
 
 
 if __name__ == "__main__":

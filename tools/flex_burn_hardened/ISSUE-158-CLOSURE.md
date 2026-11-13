@@ -14,7 +14,7 @@ Those scripts live outside this slice. When they are missing, `--selftest` print
 The orchestrator:
 
 1. **Pricing.** Rates follow the public OpenAI pricing table, including cache-write (30-minute and 12-hour) and long-context (input above 272K tokens) columns. A model without a row is rejected; billing does not fall back to another model's rate.
-2. **Reservation and settlement.** Prior spend is reloaded from `master_api_ledger.jsonl`, so a later process inherits the remaining cap. A settlement cannot exceed its reservation. Transport errors and unparsable `200` responses keep the reservation. The reserved `max_output_tokens` is written onto the forwarded payload.
+2. **Reservation and settlement.** Prior spend is reloaded from `master_api_ledger.jsonl`, so a later process inherits the remaining cap. Settlement charges the computed table cost against the cap, including when that cost exceeds the reservation; the ledger entry records the overrun, and new reserves are refused once spent is at or above the cap. Transport errors and unparsable `200` responses persist the reserved hold to the ledger file, and a later process reloads it as spent. The reserved `max_output_tokens` is written onto the forwarded payload.
 3. **Live spend gate.** A billed upstream call requires both `OPENAI_API_KEY` and `--confirm-live-spend`. Defaults are four concurrent tracks at `$53.50`.
 4. **Child isolation.** `asyncio.gather(..., return_exceptions=True)` turns a failed track into exit code 1. The run `finally` kills child process groups. A selftest `Popen` that exceeds the 90s `communicate` timeout is terminated.
 5. **Log sanitization.** `redact_secrets_in_text` runs on child output before the log is written and hashed into `MASTER_SHA256SUMS`.
