@@ -23,6 +23,6 @@ Start with README.md for reproduction commands and the artifact index. RESULTS.m
 
 ## Additional unpaid geometry diagnostic
 
-A separate local geometry diagnostic used fresh synthetic models and no paid calls. Seven tests and exact replay passed. It distinguishes exact permutation equivariance and fixed-feature anchor preservation from local Jacobian constraints, finite nonlinear drift and unconstrained shifted behavior. This is mathematical feasibility evidence, rather than learned skill transfer.
+A separate local geometry diagnostic used fresh synthetic models and no paid calls. Seven tests passed. Exact replay matched on the recorded macOS arm64 / Python 3.14.6 run. On Linux x86_64 with Python 3.13.5 and NumPy 2.5.4, `python3 geometry.py replay --out data` raises ValueError: Replay mismatch artifacts.json (323 numeric diffs, max abs 2.6650903706126883e-13). It distinguishes exact permutation equivariance and fixed-feature anchor preservation from local Jacobian constraints, finite nonlinear drift and unconstrained shifted behavior. This is mathematical feasibility evidence, rather than learned skill transfer.
 
 PEER-SYNTHESIS-REVIEW.md evaluates the synthesis in issue #149 against pinned repository evidence and related work. E11-PROPOSAL.md describes a future matched transfer study, including recipient-local fitting, feasibility rejection and scoped preservation certificates. The four paid studies and their 96-response accounting remain unchanged.

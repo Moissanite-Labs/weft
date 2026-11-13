@@ -1,6 +1,6 @@
 # Numerical fidelity results
 
-All 22 fixed paid probes completed and produced valid answers. Evaluation and exact replay completed with no pending probes. These probes test deliberately narrow numerical tasks. They do not establish general dense-weight understanding or a numerical precision limit.
+All 22 fixed paid probes completed and produced valid answers. Evaluation and exact replay completed with no pending probes on the recorded macOS arm64 / Python 3.14.6 run, and the phase-four replay also matches on Linux x86_64. These probes test deliberately narrow numerical tasks. They do not establish general dense-weight understanding or a numerical precision limit.
 
 | Probe | Result | Scope |
 | --- | --- | --- |

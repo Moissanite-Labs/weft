@@ -88,7 +88,7 @@ No paid API calls or experiment-code changes were made for this review. The 96-c
 
 ## Independent check of the accompanying geometry diagnostic
 
-Reviewed phase5_geometry_probe/geometry.py, its captured arrays and results, and the tests. All seven tests and an independent replay passed. The nondegenerate counterexample at (a,b)=(1,1) has J delta=0 but finite drift −0.214815 at step 1, with the smaller-step sweep exhibiting the expected second-order behavior.
+Reviewed phase5_geometry_probe/geometry.py, its captured arrays and results, and the tests. All seven tests passed. Exact replay matched on the recorded macOS arm64 / Python 3.14.6 run. On Linux x86_64 with Python 3.13.5 and NumPy 2.5.4, `python3 geometry.py replay --out data` raises ValueError: Replay mismatch artifacts.json (323 numeric diffs, max abs 2.6650903706126883e-13). The nondegenerate counterexample at (a,b)=(1,1) has J delta=0 but finite drift −0.214815 at step 1, with the smaller-step sweep exhibiting the expected second-order behavior.
 
 The fixed-feature solver correctly uses the right-singular-vector nullspace and fits ten arbitrary probe targets while preserving eight anchors to roughly 1e-15. Known permutation transport and independently recomputed minimum-norm solutions agree to about 2.9e-13. Forty generic keep anchors give full rank 25 and zero nullity, with no useful edit.
 
