@@ -140,7 +140,7 @@ def e2_plasm_cycles(device: torch.device = torch.device("cpu")) -> dict:
     for seed in SEEDS:
         torch.manual_seed(seed)
         t0 = time.perf_counter()
-        res = plasm.run_weft_plasm_cycle(generations=GENERATIONS, shm_name=f"weft_wp1_{os.getpid()}_{seed}")
+        res = plasm.run_weft_plasm_cycle(generations=GENERATIONS, shm_name=f"weft_wp1_{os.getpid()}_{seed}", perturbation_seed=seed)
         if device.type == "mps":
             torch.mps.synchronize()
         elapsed = (time.perf_counter() - t0) * 1000
@@ -209,7 +209,7 @@ def e5_radius_sweep(device: torch.device = torch.device("cpu")) -> dict:
             commits, ratios, reported, max_dist, reasons = [], [], [], [], {}
             for seed in SEEDS:
                 torch.manual_seed(seed)
-                res = plasm.run_weft_plasm_cycle(generations=GENERATIONS, shm_name=f"weft_wp1r_{os.getpid()}_{seed}")
+                res = plasm.run_weft_plasm_cycle(generations=GENERATIONS, shm_name=f"weft_wp1r_{os.getpid()}_{seed}", perturbation_seed=seed)
                 gens = res["generations"]
                 committed_drifts = [g["frobenius_drift"] for g in gens if g["invariant_safe"]]
                 commits.append(len(committed_drifts))

@@ -1,11 +1,11 @@
 {
   "schema": "weft-paper-1-results/1",
   "environment": {
-    "commit": "88f4d88779bd5c34481842a2d7ede40174140d16",
-    "python": "3.13.18",
-    "torch": "2.15.0+cpu",
-    "machine": "x86_64",
-    "system": "Linux",
+    "commit": "9323272d0594817be4267d130981fb0671c9166a",
+    "python": "3.14.6",
+    "torch": "2.15.0",
+    "machine": "arm64",
+    "system": "Darwin",
     "device": "cpu"
   },
   "e1_compared_sizes": {
@@ -31,7 +31,7 @@
       {
         "theta_deg": 5.0,
         "size_change": 3.375077994860476e-14,
-        "distance": 1.1172831810957888,
+        "distance": 1.117283181095789,
         "closed_form_distance": 1.1172831810957884,
         "weak_check_accepts": true,
         "gate_accepts": true,
@@ -49,7 +49,7 @@
       {
         "theta_deg": 15.0,
         "size_change": 2.1316282072803006e-14,
-        "distance": 3.3433463436451945,
+        "distance": 3.343346343645195,
         "closed_form_distance": 3.343346343645196,
         "weak_check_accepts": true,
         "gate_accepts": false,
@@ -58,7 +58,7 @@
       {
         "theta_deg": 20.0,
         "size_change": 3.552713678800501e-15,
-        "distance": 4.4478888873477445,
+        "distance": 4.447888887347745,
         "closed_form_distance": 4.447888887347744,
         "weak_check_accepts": true,
         "gate_accepts": false,
@@ -67,7 +67,7 @@
       {
         "theta_deg": 25.0,
         "size_change": 1.2434497875801753e-14,
-        "distance": 5.543964621751747,
+        "distance": 5.543964621751748,
         "closed_form_distance": 5.543964621751747,
         "weak_check_accepts": true,
         "gate_accepts": false,
@@ -84,8 +84,8 @@
       },
       {
         "theta_deg": 35.0,
-        "size_change": 1.2434497875801753e-14,
-        "distance": 7.702389981549399,
+        "size_change": 1.0658141036401503e-14,
+        "distance": 7.702389981549401,
         "closed_form_distance": 7.702389981549403,
         "weak_check_accepts": true,
         "gate_accepts": false,
@@ -93,7 +93,7 @@
       },
       {
         "theta_deg": 40.0,
-        "size_change": 1.0658141036401503e-14,
+        "size_change": 8.881784197001252e-15,
         "distance": 8.760630921593807,
         "closed_form_distance": 8.760630921593803,
         "weak_check_accepts": true,
@@ -121,7 +121,7 @@
       {
         "theta_deg": 55.0,
         "size_change": 5.329070518200751e-15,
-        "distance": 11.827400397461613,
+        "distance": 11.827400397461615,
         "closed_form_distance": 11.827400397461622,
         "weak_check_accepts": true,
         "gate_accepts": false,
@@ -129,8 +129,8 @@
       },
       {
         "theta_deg": 60.0,
-        "size_change": 1.7763568394002505e-15,
-        "distance": 12.807185618380386,
+        "size_change": 0.0,
+        "distance": 12.807185618380387,
         "closed_form_distance": 12.80718561838038,
         "weak_check_accepts": true,
         "gate_accepts": false,
@@ -138,8 +138,8 @@
       },
       {
         "theta_deg": 65.0,
-        "size_change": 0.0,
-        "distance": 13.762591633561717,
+        "size_change": 1.7763568394002505e-15,
+        "distance": 13.762591633561719,
         "closed_form_distance": 13.76259163356171,
         "weak_check_accepts": true,
         "gate_accepts": false,
@@ -147,8 +147,8 @@
       },
       {
         "theta_deg": 70.0,
-        "size_change": 3.552713678800501e-15,
-        "distance": 14.691799773353965,
+        "size_change": 5.329070518200751e-15,
+        "distance": 14.691799773353967,
         "closed_form_distance": 14.691799773353974,
         "weak_check_accepts": true,
         "gate_accepts": false,
@@ -156,8 +156,8 @@
       },
       {
         "theta_deg": 75.0,
-        "size_change": 7.105427357601002e-15,
-        "distance": 15.593041237250338,
+        "size_change": 5.329070518200751e-15,
+        "distance": 15.59304123725034,
         "closed_form_distance": 15.593041237250352,
         "weak_check_accepts": true,
         "gate_accepts": false,
@@ -174,7 +174,7 @@
       },
       {
         "theta_deg": 85.0,
-        "size_change": 1.2434497875801753e-14,
+        "size_change": 1.5987211554602254e-14,
         "distance": 17.304818381787783,
         "closed_form_distance": 17.3048183817878,
         "weak_check_accepts": true,
@@ -184,7 +184,7 @@
       {
         "theta_deg": 90.0,
         "size_change": 1.0658141036401503e-14,
-        "distance": 18.1120955973432,
+        "distance": 18.112095597343203,
         "closed_form_distance": 18.11209559734319,
         "weak_check_accepts": true,
         "gate_accepts": false,
@@ -192,7 +192,7 @@
       },
       {
         "theta_deg": 95.0,
-        "size_change": 1.2434497875801753e-14,
+        "size_change": 1.4210854715202004e-14,
         "distance": 18.884895409504846,
         "closed_form_distance": 18.884895409504818,
         "weak_check_accepts": true,
@@ -202,7 +202,7 @@
       {
         "theta_deg": 100.0,
         "size_change": 8.881784197001252e-15,
-        "distance": 19.621746749907164,
+        "distance": 19.621746749907167,
         "closed_form_distance": 19.621746749907167,
         "weak_check_accepts": true,
         "gate_accepts": false,
@@ -219,7 +219,7 @@
       },
       {
         "theta_deg": 110.0,
-        "size_change": 2.4868995751603507e-14,
+        "size_change": 2.6645352591003757e-14,
         "distance": 20.982064561769725,
         "closed_form_distance": 20.98206456176973,
         "weak_check_accepts": true,
@@ -229,8 +229,8 @@
       {
         "theta_deg": 115.0,
         "size_change": 1.4210854715202004e-14,
-        "distance": 21.602941590959635,
-        "closed_form_distance": 21.602941590959656,
+        "distance": 21.602941590959638,
+        "closed_form_distance": 21.602941590959652,
         "weak_check_accepts": true,
         "gate_accepts": false,
         "gate_reason": "baseline_distance_exceeded"
@@ -246,7 +246,7 @@
       },
       {
         "theta_deg": 125.0,
-        "size_change": 2.1316282072803006e-14,
+        "size_change": 1.9539925233402755e-14,
         "distance": 22.72022477205548,
         "closed_form_distance": 22.72022477205544,
         "weak_check_accepts": true,
@@ -255,7 +255,7 @@
       },
       {
         "theta_deg": 130.0,
-        "size_change": 5.329070518200751e-15,
+        "size_change": 7.105427357601002e-15,
         "distance": 23.214504111923855,
         "closed_form_distance": 23.214504111923866,
         "weak_check_accepts": true,
@@ -264,7 +264,7 @@
       },
       {
         "theta_deg": 135.0,
-        "size_change": 5.329070518200751e-15,
+        "size_change": 7.105427357601002e-15,
         "distance": 23.664593323789113,
         "closed_form_distance": 23.664593323789084,
         "weak_check_accepts": true,
@@ -291,7 +291,7 @@
       },
       {
         "theta_deg": 150.0,
-        "size_change": 1.0658141036401503e-14,
+        "size_change": 8.881784197001252e-15,
         "distance": 24.74158270174309,
         "closed_form_distance": 24.741582701743084,
         "weak_check_accepts": true,
@@ -328,7 +328,7 @@
       {
         "theta_deg": 170.0,
         "size_change": 1.5987211554602254e-14,
-        "distance": 25.516900821014804,
+        "distance": 25.516900821014808,
         "closed_form_distance": 25.51690082101478,
         "weak_check_accepts": true,
         "gate_accepts": false,
@@ -385,7 +385,7 @@
     "proposals_total": 120,
     "alpha_wins": 120,
     "beta_wins": 0,
-    "elapsed_ms_median": 67.1038749999866,
+    "elapsed_ms_median": 111.55445803888142,
     "runs": [
       {
         "seed": 0,
@@ -453,8 +453,8 @@
         "min_watermark_alignment": 1.0,
         "max_watermark_response_drift": 0.0,
         "final_budget": 70.0,
-        "elapsed_ms": 132.42505599998822,
-        "final_weights_sha256": "0xbc2faae4ed365d10e9ba0a375ea1ba365bf9deb429bf75d030131c432e0c16e8"
+        "elapsed_ms": 224.96541705913842,
+        "final_weights_sha256": "0x8d17a762aa6d3ca6d57b03d4ce09b465b60f0d1d030ec8e31d9a6c98ddec45e8"
       },
       {
         "seed": 1,
@@ -522,8 +522,8 @@
         "min_watermark_alignment": 1.0,
         "max_watermark_response_drift": 0.0,
         "final_budget": 70.0,
-        "elapsed_ms": 61.608669999998256,
-        "final_weights_sha256": "0x5910dcf3ebbf70c834c2fb972d979bb9220490ca8f1bcda0d8ae91b94f098540"
+        "elapsed_ms": 206.49870787747204,
+        "final_weights_sha256": "0x5eed954ad34e96146bbb4f6aac558aa634ad82d31ecc9ab915993a3918fc96d7"
       },
       {
         "seed": 2,
@@ -532,13 +532,13 @@
         "final_error": 0.461199,
         "error_by_generation": [
           1.460006,
-          1.289139,
+          1.289138,
           1.142796,
           1.015766,
           0.906115,
           0.810813,
           0.732535,
-          0.663201,
+          0.663202,
           0.602322,
           0.548805,
           0.501043,
@@ -556,7 +556,7 @@
           0.401561,
           0.423777,
           0.443811,
-          0.461692
+          0.461691
         ],
         "tension_by_generation": [
           20.2577,
@@ -591,8 +591,8 @@
         "min_watermark_alignment": 1.0,
         "max_watermark_response_drift": 0.0,
         "final_budget": 70.0,
-        "elapsed_ms": 66.63265000003094,
-        "final_weights_sha256": "0xb98090f0e4ca669b21535a0e9015f17f8c0dc27963ad94b78b96252750c60c1f"
+        "elapsed_ms": 143.8914998434484,
+        "final_weights_sha256": "0x5dc53f524f6c3c0755b2893c6771cf965bc61b14466785465148b191f9ad72ac"
       },
       {
         "seed": 3,
@@ -625,7 +625,7 @@
           0.400954,
           0.422052,
           0.441786,
-          0.459935
+          0.459936
         ],
         "tension_by_generation": [
           20.2571,
@@ -660,8 +660,8 @@
         "min_watermark_alignment": 1.0,
         "max_watermark_response_drift": 0.0,
         "final_budget": 70.0,
-        "elapsed_ms": 67.1038749999866,
-        "final_weights_sha256": "0x03a26e8649ccef2c9f5aafd62bd40f37914869e302a8a8744eb077c9f3e36815"
+        "elapsed_ms": 91.86970815062523,
+        "final_weights_sha256": "0x111e7a30a9dc49c76338d2fb4a2078870eca36a98cadd4e01751e32e873ea3b1"
       },
       {
         "seed": 4,
@@ -673,7 +673,7 @@
           1.28816,
           1.140615,
           1.018348,
-          0.909124,
+          0.909123,
           0.814846,
           0.732519,
           0.660639,
@@ -729,8 +729,8 @@
         "min_watermark_alignment": 1.0,
         "max_watermark_response_drift": 0.0,
         "final_budget": 70.0,
-        "elapsed_ms": 67.46144200002391,
-        "final_weights_sha256": "0xa5b3aca2870b908b2d5e9d4cfdf6996ce3d35b8ba654cbaaf451cc8945b654dd"
+        "elapsed_ms": 133.58954107388854,
+        "final_weights_sha256": "0x2773812ffc4f25dea56fd04428be900c913fd392ffb67de572681b9875a9d77b"
       },
       {
         "seed": 5,
@@ -761,7 +761,7 @@
           0.352591,
           0.379232,
           0.403249,
-          0.424478,
+          0.424477,
           0.444165,
           0.461932
         ],
@@ -798,8 +798,8 @@
         "min_watermark_alignment": 1.0,
         "max_watermark_response_drift": 0.0,
         "final_budget": 70.0,
-        "elapsed_ms": 85.4621619999989,
-        "final_weights_sha256": "0x19ff9609ecf09b8dcc4b680023ec8410f1cf4db92b88aa2cdc3c5b42a9022f3f"
+        "elapsed_ms": 98.7823330797255,
+        "final_weights_sha256": "0x2ede749812a5827d20358bb7e3976e6ab2088af5242d3a9fb3f7ab36a99e54ef"
       },
       {
         "seed": 6,
@@ -867,8 +867,8 @@
         "min_watermark_alignment": 1.0,
         "max_watermark_response_drift": 0.0,
         "final_budget": 70.0,
-        "elapsed_ms": 60.672174999979234,
-        "final_weights_sha256": "0x47dbe711b532d5648f948e51e366e2aac6e3704d23d8f0ac6428999bb10f35e6"
+        "elapsed_ms": 111.55445803888142,
+        "final_weights_sha256": "0xbae5d639558a21f9fc8736c5658fe04f86d0f1f9e86b6cd84e8eb4377e099acd"
       },
       {
         "seed": 7,
@@ -936,8 +936,8 @@
         "min_watermark_alignment": 1.0,
         "max_watermark_response_drift": 0.0,
         "final_budget": 70.0,
-        "elapsed_ms": 58.80343499995888,
-        "final_weights_sha256": "0x9d90ec37a109230fc309df08b06470d3d02724c7a2e1ed019c5ff0a88300e414"
+        "elapsed_ms": 92.21070888452232,
+        "final_weights_sha256": "0xcf9921ffccd964a89ec897f0821e3ada37d1391e78c8c785094b1ce04f9cfa25"
       },
       {
         "seed": 8,
@@ -952,7 +952,7 @@
           0.906871,
           0.812824,
           0.733787,
-          0.662933,
+          0.662932,
           0.603198,
           0.549238,
           0.50108,
@@ -1005,8 +1005,8 @@
         "min_watermark_alignment": 1.0,
         "max_watermark_response_drift": 0.0,
         "final_budget": 70.0,
-        "elapsed_ms": 61.96652400001312,
-        "final_weights_sha256": "0x97d4695e27bb050158af03cde3b0292e16cdab671cee30380f350585ed217d19"
+        "elapsed_ms": 102.69183292984962,
+        "final_weights_sha256": "0xa6b2e900bd14b204d0afce11c916f77d6b1e022837a94ea2ba3218235c27380e"
       },
       {
         "seed": 9,
@@ -1024,7 +1024,7 @@
           0.661852,
           0.600994,
           0.550198,
-          0.502817,
+          0.502818,
           0.461825
         ],
         "drift_by_generation": [
@@ -1074,8 +1074,8 @@
         "min_watermark_alignment": 1.0,
         "max_watermark_response_drift": 0.0,
         "final_budget": 70.0,
-        "elapsed_ms": 82.25351300001194,
-        "final_weights_sha256": "0xe0b341977d69d2f72be91cb2be9ca04335dfd93b09e54f84bd46c4743877875b"
+        "elapsed_ms": 93.44549989327788,
+        "final_weights_sha256": "0x57bbb2512e9b21d7c44e0e6037d86dbb2b1a1fcbeff8a438c6826cd3e477a3f4"
       }
     ]
   },
@@ -1086,7 +1086,7 @@
     "first_unmasked_failure_scale": 16,
     "rank1_overwrite": {
       "detected": true,
-      "cosine": -0.036694999784231186,
+      "cosine": -0.03669503331184387,
       "reason": "cosine_alignment_below_threshold",
       "distance": 4.3197808265686035,
       "gate_accepts_at_R_invariant": true
@@ -1118,7 +1118,7 @@
         "unmasked": {
           "retained": true,
           "cosine": 0.9999316334724426,
-          "response_drift": 0.011722207340489042,
+          "response_drift": 0.011722191197565752,
           "reason": "ok"
         }
       },
@@ -1133,7 +1133,7 @@
         "unmasked": {
           "retained": true,
           "cosine": 0.9997270703315735,
-          "response_drift": 0.023444441999771342,
+          "response_drift": 0.023444427098611383,
           "reason": "ok"
         }
       },
@@ -1162,8 +1162,8 @@
         },
         "unmasked": {
           "retained": true,
-          "cosine": 0.995697021484375,
-          "response_drift": 0.09377775806497873,
+          "cosine": 0.9956970810890198,
+          "response_drift": 0.09377773819676545,
           "reason": "ok"
         }
       },
@@ -1207,8 +1207,8 @@
         },
         "unmasked": {
           "retained": true,
-          "cosine": 0.9639435410499573,
-          "response_drift": 0.28133328412904285,
+          "cosine": 0.963943600654602,
+          "response_drift": 0.2813332443926163,
           "reason": "ok"
         }
       },
@@ -1222,8 +1222,8 @@
         },
         "unmasked": {
           "retained": false,
-          "cosine": 0.9390729665756226,
-          "response_drift": 0.37511107199634147,
+          "cosine": 0.9390730857849121,
+          "response_drift": 0.37511103225991493,
           "reason": "trigger_response_drift_exceeded"
         }
       },
@@ -1237,7 +1237,7 @@
         },
         "unmasked": {
           "retained": false,
-          "cosine": 0.8788219690322876,
+          "cosine": 0.8788220882415771,
           "response_drift": 0.5626665682580857,
           "reason": "trigger_response_drift_exceeded"
         }
@@ -1252,8 +1252,8 @@
         },
         "unmasked": {
           "retained": false,
-          "cosine": 0.8130781650543213,
-          "response_drift": 0.7502221439926829,
+          "cosine": 0.8130782246589661,
+          "response_drift": 0.7502220645198299,
           "reason": "cosine_alignment_below_threshold"
         }
       }
@@ -1297,8 +1297,8 @@
       {
         "radius": 0.2,
         "commits_mean": 2.0,
-        "error_ratio_mean": 0.7774478995075056,
-        "library_reported_error_ratio_mean": 0.6891825028751966,
+        "error_ratio_mean": 0.7774478391675989,
+        "library_reported_error_ratio_mean": 0.6891825632151033,
         "max_committed_distance": 0.162182,
         "gate_reasons": {
           "ok": 20,
@@ -1308,8 +1308,8 @@
       {
         "radius": 0.3,
         "commits_mean": 5.0,
-        "error_ratio_mean": 0.5474764040794604,
-        "library_reported_error_ratio_mean": 0.49102425784931675,
+        "error_ratio_mean": 0.5474763437395536,
+        "library_reported_error_ratio_mean": 0.49102419750940995,
         "max_committed_distance": 0.290032,
         "gate_reasons": {
           "ok": 50,
