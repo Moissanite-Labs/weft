@@ -12,7 +12,7 @@ Experiment E14 (`docs/program/experiments/apple-silicon-swarm-2026-11/README.md`
 2. Sweep the spore fraction in Law 2c (`0.50` in E14 cost 27% of `hgt_foraging`'s error reduction).
 3. Settle the Benchmark 1 vectorization speedup under pinned CPU thread counts.
 
-The E14 `dissipative_chemostat` path uses the PR #118 gap-pay rule (`metab.py` `eff_reward`, and `swarm_loom.py` `1 / clamp(1 - sense, min=0.25)` with a 4x cap): payout grows as the remaining distance to the known record shrinks. `graded_chemostat` uses a different allocation rule, `(unsolved_gap / mean_unsolved_gap)^2`, which pays relatively unsolved tiles. The reward rule, the mass-conserving pool update, and the spore inheritance path change together in this mode, so no outcome isolates reward direction. The pool still resets to `tile_bounty` when a tile's best error improves by more than `1e-3`.
+The E14 `dissipative_chemostat` path uses the PR #118 gap-pay rule (`metab.py` `eff_reward`, and `swarm_loom.py` `1 / clamp(1 - sense, min=0.25)` with a 4x cap): payout grows as the remaining distance to the known record shrinks, and the pool is set back to `tile_bounty` when a tile's best error improves by more than `1e-3`. `graded_chemostat` uses a different allocation rule, `(unsolved_gap / mean_unsolved_gap)^2`, which pays relatively unsolved tiles, and a mass-conserving pool: `best_tile_error` is updated with a minimum, the pool grows by `0.5 * tile_bounty * gap_mult` each generation, capped at `8.0 * tile_bounty`, the offer is `min(pool, tile_bounty * gap_mult)`, and the pool is reduced by the unlocked payout. The reward rule, the pool update, and the spore inheritance path change together in this mode, so no outcome isolates reward direction.
 
 Two further changes in the same mode, plus a step-scale question carried from E14:
 1. **Cross-niche spore velocity contamination (`swarm_loom.py:503`)**: Recolonized spores reset `W` toward `W0` on `target_niches`, but copied `self.velocity[donor_indices]` from random survivors on *different* tiles.
@@ -53,4 +53,8 @@ Two further changes in the same mode, plus a step-scale question carried from E1
 
 ## Amendment, 2026-11-12
 
-Wording of the #118 gap-pay rule and the `graded_chemostat` allocation rule was corrected after review. The pool reset on a best-error improvement of more than `1e-3` is kept. Predictions and the fixed protocol are unchanged.
+Wording of the #118 gap-pay rule and the `graded_chemostat` allocation rule was corrected after review. Predictions and the fixed protocol are unchanged.
+
+## Amendment, 2026-11-12 (pool rule)
+
+The `graded_chemostat` pool is mass-conserving: `best_tile_error` is updated with a minimum, the pool grows by `0.5 * tile_bounty * gap_mult` each generation, capped at `8.0 * tile_bounty`, the offer is `min(pool, tile_bounty * gap_mult)`, and the pool is reduced by the unlocked payout. The `1e-3` best-error reset to `tile_bounty` is the `dissipative_chemostat` rule. Predictions and the fixed protocol are unchanged.

@@ -8,7 +8,7 @@ Raw data: `results.json`
 
 ## Summary
 
-Experiment E15 tested the three open questions from E14 (`docs/program/experiments/apple-silicon-swarm-2026-11/README.md` Next items): graded-difficulty tiles, sweeping the Law 2c spore fraction, and pinned-thread vectorization timing, together with three `graded_chemostat` changes in `swarm_loom.py`: a new unsolved-gap allocation rule and a mass-conserving pool, niche-clean spore velocity reset, and optional zero-order homeostatic step cooling. The reward rule, the pool update, and the spore inheritance path changed together, so no outcome in this record isolates reward direction.
+Experiment E15 tested the three open questions from E14 (`docs/program/experiments/apple-silicon-swarm-2026-11/README.md` Next items): graded-difficulty tiles, sweeping the Law 2c spore fraction, and pinned-thread vectorization timing, together with three `graded_chemostat` changes in `swarm_loom.py`: a new unsolved-gap allocation rule and a mass-conserving pool, niche-clean spore velocity reset, and optional zero-order homeostatic step cooling. In the mass-conserving pool, `best_tile_error` is updated with a minimum, the pool grows by `0.5 * tile_bounty * gap_mult` each generation, capped at `8.0 * tile_bounty`, the offer is `min(pool, tile_bounty * gap_mult)`, and the pool is reduced by the unlocked payout. The reward rule, the pool update, and the spore inheritance path changed together, so no outcome in this record isolates reward direction.
 
 Four of eight preregistered prediction clauses held (`P2a`, `P3a`, `P3b`, `P5`) and four failed (`P1a`, `P1b`, `P2b`, `P4`). Both the misses and the wins expose concrete mechanisms:
 
