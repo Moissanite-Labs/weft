@@ -1,0 +1,316 @@
+{
+  "scope": "Descriptive two-seed pilot; fixed demand within each lineage; no population inference, demand-reversal recovery, throughput or GPU gain established.",
+  "comparisons": [
+    {
+      "seed": 171,
+      "demand": "quiet",
+      "heldout_costs": {
+        "root_stem": 2104,
+        "fixed_hand": 1307,
+        "teacher_final": 1216,
+        "random_selected_generation1": 1184,
+        "random_selected_generation2": 1149,
+        "unchanged_parent_generation2": 1149
+      },
+      "teacher_improvement_over_root_percent": 42.20532319391635,
+      "teacher_genome": {
+        "gain_num": 1,
+        "gain_den": 1,
+        "deadband": 1,
+        "bias": 1,
+        "cap_low": 1,
+        "cap_high": 1
+      }
+    },
+    {
+      "seed": 171,
+      "demand": "urgent",
+      "heldout_costs": {
+        "root_stem": 1813,
+        "fixed_hand": 2376,
+        "teacher_final": 1813,
+        "random_selected_generation1": 1813,
+        "random_selected_generation2": 1813,
+        "unchanged_parent_generation2": 1813
+      },
+      "teacher_improvement_over_root_percent": 0.0,
+      "teacher_genome": {
+        "gain_num": 1,
+        "gain_den": 1,
+        "deadband": 0,
+        "bias": 0,
+        "cap_low": 2,
+        "cap_high": 2
+      }
+    },
+    {
+      "seed": 293,
+      "demand": "quiet",
+      "heldout_costs": {
+        "root_stem": 1830,
+        "fixed_hand": 998,
+        "teacher_final": 949,
+        "random_selected_generation1": 1142,
+        "random_selected_generation2": 884,
+        "unchanged_parent_generation2": 884
+      },
+      "teacher_improvement_over_root_percent": 48.14207650273224,
+      "teacher_genome": {
+        "gain_num": 1,
+        "gain_den": 1,
+        "deadband": 1,
+        "bias": -1,
+        "cap_low": 1,
+        "cap_high": 1
+      }
+    },
+    {
+      "seed": 293,
+      "demand": "urgent",
+      "heldout_costs": {
+        "root_stem": 1058,
+        "fixed_hand": 1605,
+        "teacher_final": 1058,
+        "random_selected_generation1": 1058,
+        "random_selected_generation2": 1058,
+        "unchanged_parent_generation2": 1058
+      },
+      "teacher_improvement_over_root_percent": 0.0,
+      "teacher_genome": {
+        "gain_num": 1,
+        "gain_den": 1,
+        "deadband": 0,
+        "bias": 0,
+        "cap_low": 2,
+        "cap_high": 2
+      }
+    }
+  ],
+  "crossover_teacher_costs": [
+    {
+      "seed": 171,
+      "selected_for": "quiet",
+      "evaluated_on": "quiet",
+      "cost": 1216
+    },
+    {
+      "seed": 171,
+      "selected_for": "quiet",
+      "evaluated_on": "urgent",
+      "cost": 3128
+    },
+    {
+      "seed": 171,
+      "selected_for": "urgent",
+      "evaluated_on": "quiet",
+      "cost": 2104
+    },
+    {
+      "seed": 171,
+      "selected_for": "urgent",
+      "evaluated_on": "urgent",
+      "cost": 1813
+    },
+    {
+      "seed": 293,
+      "selected_for": "quiet",
+      "evaluated_on": "quiet",
+      "cost": 949
+    },
+    {
+      "seed": 293,
+      "selected_for": "quiet",
+      "evaluated_on": "urgent",
+      "cost": 2184
+    },
+    {
+      "seed": 293,
+      "selected_for": "urgent",
+      "evaluated_on": "quiet",
+      "cost": 1830
+    },
+    {
+      "seed": 293,
+      "selected_for": "urgent",
+      "evaluated_on": "urgent",
+      "cost": 1058
+    }
+  ],
+  "opportunities": 8,
+  "returned_teacher_children": 32,
+  "eligible_teacher_children": 32,
+  "duplicate_teacher_children": 0,
+  "selections_changed": 4,
+  "selection_history": [
+    {
+      "seed": 171,
+      "branch": "quiet",
+      "generation": 1,
+      "selected_index": 1,
+      "parent_cost": 698,
+      "selected_cost": 409,
+      "genome": {
+        "gain_num": 1,
+        "gain_den": 1,
+        "deadband": 1,
+        "bias": 0,
+        "cap_low": 1,
+        "cap_high": 1
+      }
+    },
+    {
+      "seed": 171,
+      "branch": "quiet",
+      "generation": 2,
+      "selected_index": 2,
+      "parent_cost": 409,
+      "selected_cost": 401,
+      "genome": {
+        "gain_num": 1,
+        "gain_den": 1,
+        "deadband": 1,
+        "bias": 1,
+        "cap_low": 1,
+        "cap_high": 1
+      }
+    },
+    {
+      "seed": 171,
+      "branch": "urgent",
+      "generation": 1,
+      "selected_index": null,
+      "parent_cost": 498,
+      "selected_cost": 498,
+      "genome": {
+        "gain_num": 1,
+        "gain_den": 1,
+        "deadband": 0,
+        "bias": 0,
+        "cap_low": 2,
+        "cap_high": 2
+      }
+    },
+    {
+      "seed": 171,
+      "branch": "urgent",
+      "generation": 2,
+      "selected_index": null,
+      "parent_cost": 498,
+      "selected_cost": 498,
+      "genome": {
+        "gain_num": 1,
+        "gain_den": 1,
+        "deadband": 0,
+        "bias": 0,
+        "cap_low": 2,
+        "cap_high": 2
+      }
+    },
+    {
+      "seed": 293,
+      "branch": "quiet",
+      "generation": 1,
+      "selected_index": 0,
+      "parent_cost": 706,
+      "selected_cost": 466,
+      "genome": {
+        "gain_num": 1,
+        "gain_den": 1,
+        "deadband": 1,
+        "bias": 0,
+        "cap_low": 1,
+        "cap_high": 1
+      }
+    },
+    {
+      "seed": 293,
+      "branch": "quiet",
+      "generation": 2,
+      "selected_index": 0,
+      "parent_cost": 466,
+      "selected_cost": 438,
+      "genome": {
+        "gain_num": 1,
+        "gain_den": 1,
+        "deadband": 1,
+        "bias": -1,
+        "cap_low": 1,
+        "cap_high": 1
+      }
+    },
+    {
+      "seed": 293,
+      "branch": "urgent",
+      "generation": 1,
+      "selected_index": null,
+      "parent_cost": 437,
+      "selected_cost": 437,
+      "genome": {
+        "gain_num": 1,
+        "gain_den": 1,
+        "deadband": 0,
+        "bias": 0,
+        "cap_low": 2,
+        "cap_high": 2
+      }
+    },
+    {
+      "seed": 293,
+      "branch": "urgent",
+      "generation": 2,
+      "selected_index": null,
+      "parent_cost": 437,
+      "selected_cost": 437,
+      "genome": {
+        "gain_num": 1,
+        "gain_den": 1,
+        "deadband": 0,
+        "bias": 0,
+        "cap_low": 2,
+        "cap_high": 2
+      }
+    }
+  ],
+  "colonies": [
+    {
+      "seed": 171,
+      "copy_counts": {
+        "quiet": 3,
+        "urgent": 0
+      },
+      "total_cells": 4,
+      "root_preserved": true
+    },
+    {
+      "seed": 293,
+      "copy_counts": {
+        "quiet": 3,
+        "urgent": 0
+      },
+      "total_cells": 4,
+      "root_preserved": true
+    }
+  ],
+  "api_responses": 8,
+  "usage": {
+    "input_tokens": 11045,
+    "output_tokens": 4259,
+    "cached_input_tokens": 0,
+    "cache_write_tokens": 11021,
+    "reasoning_output_tokens": 2688
+  },
+  "api_rate_estimate": {
+    "usd": 0.3509525,
+    "source": "https://developers.openai.com/api/docs/models/gpt-6-astra",
+    "rates_per_million": {
+      "uncached_input": 10,
+      "cache_read": 1,
+      "default_cache_write": 12.5,
+      "output_including_reasoning": 50
+    },
+    "scope": "Estimate from returned token usage and standard short-context/default-cache rates, not an invoice; excludes Codex/subagent work."
+  },
+  "proof_records": 178,
+  "accepted_proofs": 178,
+  "proofs_with_empty_axioms": 178
+}

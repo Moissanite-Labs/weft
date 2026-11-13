@@ -1,0 +1,47 @@
+{
+  "attempt": 5,
+  "request_file": "seed-171.quiet.generation-2.json",
+  "request_sha256": "2d27a8e4bc99a9789e693ce12590de8f5d38f11fdeb4e583bc72b7fbc116962a",
+  "reservation_usd": 0.552575,
+  "cumulative_reserved_usd": 2.6449000000000003,
+  "http_status": 200,
+  "response": {
+    "id": "resp_0819508008290b5b016af67cbf4fb887d1a6cee0ce9f19f95f",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 1537,
+      "input_tokens_details": {
+        "cache_write_tokens": 1534,
+        "cached_tokens": 0
+      },
+      "output_tokens": 345,
+      "output_tokens_details": {
+        "reasoning_tokens": 154
+      },
+      "total_tokens": 1882
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794538687,
+    "service_tier": "default",
+    "output": [
+      {
+        "id": "msg_0819508008290b5b016af67cc55fb887d186e499c8fb6e72cb",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"hypothesis\":\"Preserve unit-step caps while testing urgency-only action to reduce movement costs and small directional biases to shift the quiet region.\",\"children\":[{\"label\":\"urgent quiet\",\"genome\":{\"gain_num\":1,\"gain_den\":1,\"deadband\":1,\"bias\":0,\"cap_low\":0,\"cap_high\":1}},{\"label\":\"urgent wider quiet\",\"genome\":{\"gain_num\":1,\"gain_den\":1,\"deadband\":2,\"bias\":0,\"cap_low\":0,\"cap_high\":1}},{\"label\":\"positive bias\",\"genome\":{\"gain_num\":1,\"gain_den\":1,\"deadband\":1,\"bias\":1,\"cap_low\":1,\"cap_high\":1}},{\"label\":\"negative bias\",\"genome\":{\"gain_num\":1,\"gain_den\":1,\"deadband\":1,\"bias\":-1,\"cap_low\":1,\"cap_high\":1}}]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  },
+  "elapsed_seconds": 8.968475624918938
+}

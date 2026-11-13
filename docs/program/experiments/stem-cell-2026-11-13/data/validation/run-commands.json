@@ -1,0 +1,49 @@
+[
+  {
+    "label": "g2-advance",
+    "command": [
+      "python3",
+      "run_experiment.py",
+      "advance",
+      "--out",
+      "data"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 67.42964099999517
+  },
+  {
+    "label": "finish",
+    "command": [
+      "python3",
+      "run_experiment.py",
+      "finish",
+      "--out",
+      "data"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 172.52386875008233
+  },
+  {
+    "label": "replay",
+    "command": [
+      "python3",
+      "run_experiment.py",
+      "replay",
+      "--out",
+      "data"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 0.5655812912154943
+  },
+  {
+    "label": "analysis",
+    "command": [
+      "python3",
+      "analyze_results.py",
+      "--out",
+      "data"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 0.14189529209397733
+  }
+]

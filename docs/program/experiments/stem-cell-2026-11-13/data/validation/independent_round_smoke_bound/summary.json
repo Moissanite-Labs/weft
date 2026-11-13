@@ -1,0 +1,21 @@
+{
+  "scope": "One synthetic four-child round through real Lean gates, not a paid model experiment. Temporary artifact root; archived separately under validation.",
+  "elapsed_seconds": 17.179037416819483,
+  "teacher_candidates": 4,
+  "teacher_valid": 4,
+  "selected_index": 1,
+  "selected_genome": {
+    "gain_num": 1,
+    "gain_den": 2,
+    "deadband": 1,
+    "bias": 0,
+    "cap_low": 1,
+    "cap_high": 2
+  },
+  "selected_validation_cost": 494,
+  "parent_validation_cost": 698,
+  "selection_certificates_empty_axioms": true,
+  "selection_reuse_identical": true,
+  "remaining_requests": 4,
+  "paid_calls": 0
+}

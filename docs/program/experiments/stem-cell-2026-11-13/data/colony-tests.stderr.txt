@@ -1,0 +1,19 @@
+test_caps_cannot_loosen_and_strict_types (test_colony.ColonyTests.test_caps_cannot_loosen_and_strict_types) ... ok
+test_exact_sign_magnitude_floor (test_colony.ColonyTests.test_exact_sign_magnitude_floor) ... ok
+test_full_offline_two_generation_workflow_and_pressure_pause (test_colony.ColonyTests.test_full_offline_two_generation_workflow_and_pressure_pause) ... ok
+test_paired_demands_only_change_cost (test_colony.ColonyTests.test_paired_demands_only_change_cost) ... ok
+test_parent_wins_tie_and_stable_child_ties (test_colony.ColonyTests.test_parent_wins_tie_and_stable_child_ties) ... ok
+test_proof_tampering_fails_closed (test_colony.ColonyTests.test_proof_tampering_fails_closed) ... ok
+test_real_lean_trace_matches_independent_simulator (test_colony.ColonyTests.test_real_lean_trace_matches_independent_simulator) ... ok
+test_registered_validation_and_test_data_cannot_change (test_colony.ColonyTests.test_registered_validation_and_test_data_cannot_change) ... ok
+test_request_has_no_test_or_heldout_and_small (test_colony.ColonyTests.test_request_has_no_test_or_heldout_and_small) ... ok
+test_scheduler_all_fixture_states (test_colony.ColonyTests.test_scheduler_all_fixture_states) ... ok
+test_selection_and_retained_proof_tampering (test_colony.ColonyTests.test_selection_and_retained_proof_tampering) ... ok
+test_simulation_invariants (test_colony.ColonyTests.test_simulation_invariants) ... ok
+test_stem_reserve_and_bounded_clone_allocation (test_colony.ColonyTests.test_stem_reserve_and_bounded_clone_allocation) ... ok
+test_wire_response_and_registration_bindings (test_colony.ColonyTests.test_wire_response_and_registration_bindings) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 2.192s
+
+OK

@@ -1,0 +1,1 @@
+{"costs":[10,10],"eligible":[true,true],"genomes":[{"bias":0,"cap_high":2,"cap_low":2,"deadband":0,"gain_den":1,"gain_num":1},{"bias":0,"cap_high":2,"cap_low":1,"deadband":1,"gain_den":2,"gain_num":1}],"kind":"selection","winner_index":1}

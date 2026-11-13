@@ -1,0 +1,10 @@
+{
+  "fixture": "normal",
+  "cpu_workers_max": 2,
+  "platform": "darwin",
+  "free_percent": null,
+  "paused": false,
+  "workers": 2,
+  "level": "normal",
+  "source": "deterministic fixture"
+}

@@ -1,0 +1,13 @@
+{
+  "fixture": null,
+  "cpu_workers_max": 2,
+  "platform": "darwin",
+  "free_percent": 74,
+  "paused": false,
+  "workers": 2,
+  "level": "normal",
+  "source": "memory_pressure -Q",
+  "returncode": 0,
+  "stdout": "The system has 68719476736 (4194304 pages with a page size of 16384).\nSystem-wide memory free percentage: 74%\n",
+  "stderr": ""
+}

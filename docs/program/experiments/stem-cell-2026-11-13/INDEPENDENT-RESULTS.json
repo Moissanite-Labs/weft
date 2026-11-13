@@ -1,0 +1,288 @@
+{
+  "results_sha256": "652e3fc854361593286d49930493c538ef7e316276a7c8007840692e294d6cd5",
+  "scope": "Independent arithmetic recomputation from sealed traces; no solver imports, API calls or new kernel replay. Proof artifacts/hashes/logs checked, not recompilation. Source unit n=2.",
+  "checks": {
+    "heldout_controllers": 48,
+    "dispatch_episodes": 32,
+    "exact_steps": 6656,
+    "frozen_or_anchor_violations": 0,
+    "local_or_root_norm_violations": 0
+  },
+  "proof_classes": {
+    "proofs": {
+      "count": 80,
+      "accepted": 80,
+      "empty_axioms": 80,
+      "artifact_bindings_valid": 80
+    },
+    "lifecycle_proofs": {
+      "count": 18,
+      "accepted": 18,
+      "empty_axioms": 18,
+      "artifact_bindings_valid": 18
+    },
+    "heldout_proofs": {
+      "count": 48,
+      "accepted": 48,
+      "empty_axioms": 48,
+      "artifact_bindings_valid": 48
+    },
+    "colony_proofs": {
+      "count": 32,
+      "accepted": 32,
+      "empty_axioms": 32,
+      "artifact_bindings_valid": 32
+    }
+  },
+  "comparisons": [
+    {
+      "seed": 171,
+      "demand": "quiet",
+      "heldout_costs": {
+        "root_stem": 2104,
+        "fixed_hand": 1307,
+        "teacher_final": 1216,
+        "random_selected_generation1": 1184,
+        "random_selected_generation2": 1149,
+        "unchanged_parent_generation2": 1149
+      },
+      "g2_minus_g1_cost": 67,
+      "g2_minus_g1_percent": 5.831157528285465,
+      "final_gain_vs_root_percent": 42.20532319391635
+    },
+    {
+      "seed": 171,
+      "demand": "urgent",
+      "heldout_costs": {
+        "root_stem": 1813,
+        "fixed_hand": 2376,
+        "teacher_final": 1813,
+        "random_selected_generation1": 1813,
+        "random_selected_generation2": 1813,
+        "unchanged_parent_generation2": 1813
+      },
+      "g2_minus_g1_cost": 0,
+      "g2_minus_g1_percent": 0.0,
+      "final_gain_vs_root_percent": 0.0
+    },
+    {
+      "seed": 293,
+      "demand": "quiet",
+      "heldout_costs": {
+        "root_stem": 1830,
+        "fixed_hand": 998,
+        "teacher_final": 949,
+        "random_selected_generation1": 1142,
+        "random_selected_generation2": 884,
+        "unchanged_parent_generation2": 884
+      },
+      "g2_minus_g1_cost": 65,
+      "g2_minus_g1_percent": 7.352941176470588,
+      "final_gain_vs_root_percent": 48.14207650273224
+    },
+    {
+      "seed": 293,
+      "demand": "urgent",
+      "heldout_costs": {
+        "root_stem": 1058,
+        "fixed_hand": 1605,
+        "teacher_final": 1058,
+        "random_selected_generation1": 1058,
+        "random_selected_generation2": 1058,
+        "unchanged_parent_generation2": 1058
+      },
+      "g2_minus_g1_cost": 0,
+      "g2_minus_g1_percent": 0.0,
+      "final_gain_vs_root_percent": 0.0
+    }
+  ],
+  "crossover": [
+    {
+      "seed": 171,
+      "quiet_policy_quiet_cost": 1216,
+      "urgent_policy_quiet_cost": 2104,
+      "quiet_policy_urgent_cost": 3128,
+      "urgent_policy_urgent_cost": 1813,
+      "matched_advantage_quiet": 888,
+      "matched_advantage_urgent": 1315
+    },
+    {
+      "seed": 293,
+      "quiet_policy_quiet_cost": 949,
+      "urgent_policy_quiet_cost": 1830,
+      "quiet_policy_urgent_cost": 2184,
+      "urgent_policy_urgent_cost": 1058,
+      "matched_advantage_quiet": 881,
+      "matched_advantage_urgent": 1126
+    }
+  ],
+  "selection_history": [
+    {
+      "seed": 171,
+      "branch": "quiet",
+      "generation": 1,
+      "selected_index": 1,
+      "parent_cost": 698,
+      "selected_cost": 409,
+      "genome": {
+        "gain_num": 1,
+        "gain_den": 1,
+        "deadband": 1,
+        "bias": 0,
+        "cap_low": 1,
+        "cap_high": 1
+      },
+      "random_selected_index": 1
+    },
+    {
+      "seed": 171,
+      "branch": "quiet",
+      "generation": 2,
+      "selected_index": 2,
+      "parent_cost": 409,
+      "selected_cost": 401,
+      "genome": {
+        "gain_num": 1,
+        "gain_den": 1,
+        "deadband": 1,
+        "bias": 1,
+        "cap_low": 1,
+        "cap_high": 1
+      },
+      "random_selected_index": null
+    },
+    {
+      "seed": 171,
+      "branch": "urgent",
+      "generation": 1,
+      "selected_index": null,
+      "parent_cost": 498,
+      "selected_cost": 498,
+      "genome": {
+        "gain_num": 1,
+        "gain_den": 1,
+        "deadband": 0,
+        "bias": 0,
+        "cap_low": 2,
+        "cap_high": 2
+      },
+      "random_selected_index": null
+    },
+    {
+      "seed": 171,
+      "branch": "urgent",
+      "generation": 2,
+      "selected_index": null,
+      "parent_cost": 498,
+      "selected_cost": 498,
+      "genome": {
+        "gain_num": 1,
+        "gain_den": 1,
+        "deadband": 0,
+        "bias": 0,
+        "cap_low": 2,
+        "cap_high": 2
+      },
+      "random_selected_index": null
+    },
+    {
+      "seed": 293,
+      "branch": "quiet",
+      "generation": 1,
+      "selected_index": 0,
+      "parent_cost": 706,
+      "selected_cost": 466,
+      "genome": {
+        "gain_num": 1,
+        "gain_den": 1,
+        "deadband": 1,
+        "bias": 0,
+        "cap_low": 1,
+        "cap_high": 1
+      },
+      "random_selected_index": 1
+    },
+    {
+      "seed": 293,
+      "branch": "quiet",
+      "generation": 2,
+      "selected_index": 0,
+      "parent_cost": 466,
+      "selected_cost": 438,
+      "genome": {
+        "gain_num": 1,
+        "gain_den": 1,
+        "deadband": 1,
+        "bias": -1,
+        "cap_low": 1,
+        "cap_high": 1
+      },
+      "random_selected_index": null
+    },
+    {
+      "seed": 293,
+      "branch": "urgent",
+      "generation": 1,
+      "selected_index": null,
+      "parent_cost": 437,
+      "selected_cost": 437,
+      "genome": {
+        "gain_num": 1,
+        "gain_den": 1,
+        "deadband": 0,
+        "bias": 0,
+        "cap_low": 2,
+        "cap_high": 2
+      },
+      "random_selected_index": null
+    },
+    {
+      "seed": 293,
+      "branch": "urgent",
+      "generation": 2,
+      "selected_index": null,
+      "parent_cost": 437,
+      "selected_cost": 437,
+      "genome": {
+        "gain_num": 1,
+        "gain_den": 1,
+        "deadband": 0,
+        "bias": 0,
+        "cap_low": 2,
+        "cap_high": 2
+      },
+      "random_selected_index": null
+    }
+  ],
+  "teacher_children": {
+    "count": 32,
+    "eligible": 32,
+    "duplicates": 0
+  },
+  "allocation": [
+    {
+      "seed": 171,
+      "counts": {
+        "quiet": 3,
+        "urgent": 0
+      },
+      "benefits": {
+        "quiet": 297,
+        "urgent": 0
+      },
+      "root_preserved": true
+    },
+    {
+      "seed": 293,
+      "counts": {
+        "quiet": 3,
+        "urgent": 0
+      },
+      "benefits": {
+        "quiet": 268,
+        "urgent": 0
+      },
+      "root_preserved": true
+    }
+  ]
+}

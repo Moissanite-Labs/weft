@@ -1,0 +1,223 @@
+{
+  "accepted": true,
+  "kernel_checked": true,
+  "axioms": [],
+  "contract_valid": true,
+  "episode_results": [
+    {
+      "initial_x": 3,
+      "steps": [
+        {
+          "target": 4,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 3,
+          "k": 1,
+          "x_after": 4,
+          "cost": 1
+        },
+        {
+          "target": 4,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 4,
+          "k": 0,
+          "x_after": 4,
+          "cost": 0
+        },
+        {
+          "target": 4,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 4,
+          "k": 0,
+          "x_after": 4,
+          "cost": 0
+        },
+        {
+          "target": 4,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 4,
+          "k": 0,
+          "x_after": 4,
+          "cost": 0
+        },
+        {
+          "target": 4,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 4,
+          "k": 0,
+          "x_after": 4,
+          "cost": 0
+        },
+        {
+          "target": 4,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 4,
+          "k": 0,
+          "x_after": 4,
+          "cost": 0
+        },
+        {
+          "target": 6,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 4,
+          "k": 2,
+          "x_after": 6,
+          "cost": 4
+        },
+        {
+          "target": 6,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 6,
+          "k": 0,
+          "x_after": 6,
+          "cost": 0
+        },
+        {
+          "target": 6,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 6,
+          "k": 0,
+          "x_after": 6,
+          "cost": 0
+        },
+        {
+          "target": 4,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 6,
+          "k": -2,
+          "x_after": 4,
+          "cost": 4
+        },
+        {
+          "target": 4,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 4,
+          "k": 0,
+          "x_after": 4,
+          "cost": 0
+        },
+        {
+          "target": 4,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 4,
+          "k": 0,
+          "x_after": 4,
+          "cost": 0
+        },
+        {
+          "target": 3,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 4,
+          "k": -1,
+          "x_after": 3,
+          "cost": 1
+        },
+        {
+          "target": 3,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 3,
+          "k": 0,
+          "x_after": 3,
+          "cost": 0
+        },
+        {
+          "target": 3,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 3,
+          "k": 0,
+          "x_after": 3,
+          "cost": 0
+        },
+        {
+          "target": 6,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 3,
+          "k": 2,
+          "x_after": 5,
+          "cost": 8
+        }
+      ],
+      "final_x": 5,
+      "total_cost": 18
+    }
+  ],
+  "total_cost": 18,
+  "theorem": "StemCellConcrete.certificate",
+  "toolchain": "leanprover/lean4:v4.35.0",
+  "request_sha256": "a8d376730752b2d31f7a4acd6b46a5aba51f7b2598f57f24d98bcd9829906973",
+  "proof_sha256": "4cf83934e6f680504fbf0c1f46d9f36a2323c64e0a06d08322ca15542e4feed3",
+  "spec_sha256": "abc1cde4b14fd63d2ffa6a55f01b91001828a2e0456ce488ad6b4e0d3b2ccd89",
+  "verifier_sha256": "0ced22da415e00215e28ca663ab2e34a39b7d49c6f352079b4c19f1c1f67201d",
+  "parent_caps": {
+    "cap_low": 2,
+    "cap_high": 2
+  },
+  "genome": {
+    "gain_num": 1,
+    "gain_den": 1,
+    "deadband": 0,
+    "bias": 0,
+    "cap_low": 2,
+    "cap_high": 2
+  },
+  "compilerlogs": [
+    {
+      "command": [
+        "--version"
+      ],
+      "returncode": 0,
+      "stdout": "Lean (version 4.35.0, arm64-apple-darwin24.6.0, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "-o",
+        "Core.olean",
+        "Core.lean"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "Certificate.lean"
+      ],
+      "returncode": 0,
+      "stdout": "StemCellConcrete.certificate :\n  validGenome 2 2 policy = true \u2227\n    simulate policy 3 inputs0 = rows0 \u2227\n      allSafe policy inputs0 rows0 = true \u2227 totalCost rows0 = 18 \u2227 3 = 3 \u2227 Option.map Row.after rows0.getLast? = some 5\n'StemCellConcrete.certificate' does not depend on any axioms\n",
+      "stderr": ""
+    }
+  ],
+  "scope": "Concrete exact integer policy, rollout, score and inherited local/root constraints; Python/OS/compiler runtime trusted."
+}

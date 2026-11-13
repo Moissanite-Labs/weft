@@ -1,0 +1,14 @@
+[
+  {
+    "label": "g2-advance",
+    "command": [
+      "python3",
+      "run_experiment.py",
+      "advance",
+      "--out",
+      "data"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 67.42964099999517
+  }
+]

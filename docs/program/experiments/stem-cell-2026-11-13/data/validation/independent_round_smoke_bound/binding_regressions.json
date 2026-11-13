@@ -1,0 +1,22 @@
+{
+  "wrong_response_filename": {
+    "rejected": true,
+    "reason": "Response request filename mismatch"
+  },
+  "wrong_wire_hash": {
+    "rejected": true,
+    "reason": "Response wire digest mismatch"
+  },
+  "changed_selection": {
+    "rejected": true,
+    "reason": "Retained selection differs from journal"
+  },
+  "changed_certificate": {
+    "rejected": true,
+    "reason": "Retained certificate artifact changed: proofs/seed-171.quiet.generation-1/unchanged-parent/Certificate.lean"
+  },
+  "changed_code_pins": {
+    "rejected": true,
+    "reason": "Registered code changed"
+  }
+}

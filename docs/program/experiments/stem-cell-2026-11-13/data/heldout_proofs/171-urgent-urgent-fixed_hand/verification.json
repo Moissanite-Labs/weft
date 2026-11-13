@@ -1,0 +1,1392 @@
+{
+  "accepted": true,
+  "kernel_checked": true,
+  "axioms": [],
+  "contract_valid": true,
+  "episode_results": [
+    {
+      "initial_x": 3,
+      "steps": [
+        {
+          "target": 4,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 3,
+          "k": 0,
+          "x_after": 3,
+          "cost": 4
+        },
+        {
+          "target": 4,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 3,
+          "k": 0,
+          "x_after": 3,
+          "cost": 4
+        },
+        {
+          "target": 4,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 3,
+          "k": 0,
+          "x_after": 3,
+          "cost": 4
+        },
+        {
+          "target": 4,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 3,
+          "k": 0,
+          "x_after": 3,
+          "cost": 4
+        },
+        {
+          "target": 4,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 3,
+          "k": 0,
+          "x_after": 3,
+          "cost": 4
+        },
+        {
+          "target": 4,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 3,
+          "k": 0,
+          "x_after": 3,
+          "cost": 4
+        },
+        {
+          "target": 6,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 3,
+          "k": 1,
+          "x_after": 4,
+          "cost": 17
+        },
+        {
+          "target": 6,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 4,
+          "k": 1,
+          "x_after": 5,
+          "cost": 5
+        },
+        {
+          "target": 6,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 5,
+          "k": 0,
+          "x_after": 5,
+          "cost": 4
+        },
+        {
+          "target": 4,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 5,
+          "k": 0,
+          "x_after": 5,
+          "cost": 4
+        },
+        {
+          "target": 4,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 5,
+          "k": 0,
+          "x_after": 5,
+          "cost": 4
+        },
+        {
+          "target": 4,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 5,
+          "k": 0,
+          "x_after": 5,
+          "cost": 4
+        },
+        {
+          "target": 3,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 5,
+          "k": -1,
+          "x_after": 4,
+          "cost": 5
+        },
+        {
+          "target": 3,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 4,
+          "k": 0,
+          "x_after": 4,
+          "cost": 4
+        },
+        {
+          "target": 3,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 4,
+          "k": 0,
+          "x_after": 4,
+          "cost": 4
+        },
+        {
+          "target": 6,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 4,
+          "k": 1,
+          "x_after": 5,
+          "cost": 5
+        }
+      ],
+      "final_x": 5,
+      "total_cost": 80
+    },
+    {
+      "initial_x": 3,
+      "steps": [
+        {
+          "target": 8,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 3,
+          "k": 2,
+          "x_after": 5,
+          "cost": 40
+        },
+        {
+          "target": 8,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 5,
+          "k": 1,
+          "x_after": 6,
+          "cost": 17
+        },
+        {
+          "target": 8,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 6,
+          "k": 1,
+          "x_after": 7,
+          "cost": 5
+        },
+        {
+          "target": 6,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 7,
+          "k": 0,
+          "x_after": 7,
+          "cost": 4
+        },
+        {
+          "target": 6,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 7,
+          "k": 0,
+          "x_after": 7,
+          "cost": 4
+        },
+        {
+          "target": 6,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 7,
+          "k": 0,
+          "x_after": 7,
+          "cost": 4
+        },
+        {
+          "target": 6,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 7,
+          "k": 0,
+          "x_after": 7,
+          "cost": 4
+        },
+        {
+          "target": 6,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 7,
+          "k": 0,
+          "x_after": 7,
+          "cost": 4
+        },
+        {
+          "target": 6,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 7,
+          "k": 0,
+          "x_after": 7,
+          "cost": 4
+        },
+        {
+          "target": 6,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 7,
+          "k": 0,
+          "x_after": 7,
+          "cost": 4
+        },
+        {
+          "target": 6,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 7,
+          "k": 0,
+          "x_after": 7,
+          "cost": 4
+        },
+        {
+          "target": 6,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 7,
+          "k": 0,
+          "x_after": 7,
+          "cost": 4
+        },
+        {
+          "target": -2,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 7,
+          "k": -1,
+          "x_after": 6,
+          "cost": 257
+        },
+        {
+          "target": -2,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 6,
+          "k": -2,
+          "x_after": 4,
+          "cost": 148
+        },
+        {
+          "target": -2,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 4,
+          "k": -1,
+          "x_after": 3,
+          "cost": 101
+        },
+        {
+          "target": 8,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 3,
+          "k": 2,
+          "x_after": 5,
+          "cost": 40
+        }
+      ],
+      "final_x": 5,
+      "total_cost": 644
+    },
+    {
+      "initial_x": 3,
+      "steps": [
+        {
+          "target": 4,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 3,
+          "k": 0,
+          "x_after": 3,
+          "cost": 4
+        },
+        {
+          "target": 4,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 3,
+          "k": 0,
+          "x_after": 3,
+          "cost": 4
+        },
+        {
+          "target": 4,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 3,
+          "k": 0,
+          "x_after": 3,
+          "cost": 4
+        },
+        {
+          "target": 5,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 3,
+          "k": 1,
+          "x_after": 4,
+          "cost": 5
+        },
+        {
+          "target": 5,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 4,
+          "k": 0,
+          "x_after": 4,
+          "cost": 4
+        },
+        {
+          "target": 5,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 4,
+          "k": 0,
+          "x_after": 4,
+          "cost": 4
+        },
+        {
+          "target": 5,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 4,
+          "k": 0,
+          "x_after": 4,
+          "cost": 4
+        },
+        {
+          "target": 5,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 4,
+          "k": 0,
+          "x_after": 4,
+          "cost": 4
+        },
+        {
+          "target": 5,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 4,
+          "k": 0,
+          "x_after": 4,
+          "cost": 4
+        },
+        {
+          "target": 5,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 4,
+          "k": 0,
+          "x_after": 4,
+          "cost": 4
+        },
+        {
+          "target": 5,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 4,
+          "k": 0,
+          "x_after": 4,
+          "cost": 4
+        },
+        {
+          "target": 5,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 4,
+          "k": 0,
+          "x_after": 4,
+          "cost": 4
+        },
+        {
+          "target": 1,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 4,
+          "k": -1,
+          "x_after": 3,
+          "cost": 17
+        },
+        {
+          "target": 1,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 3,
+          "k": -1,
+          "x_after": 2,
+          "cost": 5
+        },
+        {
+          "target": 1,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 2,
+          "k": 0,
+          "x_after": 2,
+          "cost": 4
+        },
+        {
+          "target": 0,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 2,
+          "k": -1,
+          "x_after": 1,
+          "cost": 5
+        }
+      ],
+      "final_x": 1,
+      "total_cost": 80
+    },
+    {
+      "initial_x": 3,
+      "steps": [
+        {
+          "target": 1,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 3,
+          "k": -1,
+          "x_after": 2,
+          "cost": 5
+        },
+        {
+          "target": 1,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 2,
+          "k": 0,
+          "x_after": 2,
+          "cost": 4
+        },
+        {
+          "target": 1,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 2,
+          "k": 0,
+          "x_after": 2,
+          "cost": 4
+        },
+        {
+          "target": -2,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 2,
+          "k": -2,
+          "x_after": 0,
+          "cost": 20
+        },
+        {
+          "target": -2,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 0,
+          "k": -1,
+          "x_after": -1,
+          "cost": 5
+        },
+        {
+          "target": -2,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": -1,
+          "k": 0,
+          "x_after": -1,
+          "cost": 4
+        },
+        {
+          "target": -1,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": -1,
+          "k": 0,
+          "x_after": -1,
+          "cost": 0
+        },
+        {
+          "target": -1,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": -1,
+          "k": 0,
+          "x_after": -1,
+          "cost": 0
+        },
+        {
+          "target": -1,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": -1,
+          "k": 0,
+          "x_after": -1,
+          "cost": 0
+        },
+        {
+          "target": -1,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": -1,
+          "k": 0,
+          "x_after": -1,
+          "cost": 0
+        },
+        {
+          "target": -1,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": -1,
+          "k": 0,
+          "x_after": -1,
+          "cost": 0
+        },
+        {
+          "target": -1,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": -1,
+          "k": 0,
+          "x_after": -1,
+          "cost": 0
+        },
+        {
+          "target": 8,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": -1,
+          "k": 2,
+          "x_after": 1,
+          "cost": 200
+        },
+        {
+          "target": 8,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 1,
+          "k": 2,
+          "x_after": 3,
+          "cost": 104
+        },
+        {
+          "target": 8,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 3,
+          "k": 1,
+          "x_after": 4,
+          "cost": 65
+        },
+        {
+          "target": 2,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 4,
+          "k": -1,
+          "x_after": 3,
+          "cost": 5
+        }
+      ],
+      "final_x": 3,
+      "total_cost": 416
+    },
+    {
+      "initial_x": 3,
+      "steps": [
+        {
+          "target": 0,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 3,
+          "k": -1,
+          "x_after": 2,
+          "cost": 17
+        },
+        {
+          "target": 0,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 2,
+          "k": -1,
+          "x_after": 1,
+          "cost": 5
+        },
+        {
+          "target": 0,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 1,
+          "k": 0,
+          "x_after": 1,
+          "cost": 4
+        },
+        {
+          "target": -1,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 1,
+          "k": -1,
+          "x_after": 0,
+          "cost": 5
+        },
+        {
+          "target": -1,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 0,
+          "k": 0,
+          "x_after": 0,
+          "cost": 4
+        },
+        {
+          "target": -1,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 0,
+          "k": 0,
+          "x_after": 0,
+          "cost": 4
+        },
+        {
+          "target": 5,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 0,
+          "k": 1,
+          "x_after": 1,
+          "cost": 65
+        },
+        {
+          "target": 5,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 1,
+          "k": 2,
+          "x_after": 3,
+          "cost": 20
+        },
+        {
+          "target": 5,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 3,
+          "k": 1,
+          "x_after": 4,
+          "cost": 5
+        },
+        {
+          "target": 5,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 4,
+          "k": 0,
+          "x_after": 4,
+          "cost": 4
+        },
+        {
+          "target": 5,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 4,
+          "k": 0,
+          "x_after": 4,
+          "cost": 4
+        },
+        {
+          "target": 5,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 4,
+          "k": 0,
+          "x_after": 4,
+          "cost": 4
+        },
+        {
+          "target": -1,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 4,
+          "k": -2,
+          "x_after": 2,
+          "cost": 40
+        },
+        {
+          "target": -1,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 2,
+          "k": -1,
+          "x_after": 1,
+          "cost": 17
+        },
+        {
+          "target": -1,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 1,
+          "k": -1,
+          "x_after": 0,
+          "cost": 5
+        },
+        {
+          "target": 3,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 0,
+          "k": 1,
+          "x_after": 1,
+          "cost": 17
+        }
+      ],
+      "final_x": 1,
+      "total_cost": 220
+    },
+    {
+      "initial_x": 3,
+      "steps": [
+        {
+          "target": 3,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 3,
+          "k": 0,
+          "x_after": 3,
+          "cost": 0
+        },
+        {
+          "target": 3,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 3,
+          "k": 0,
+          "x_after": 3,
+          "cost": 0
+        },
+        {
+          "target": 3,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 3,
+          "k": 0,
+          "x_after": 3,
+          "cost": 0
+        },
+        {
+          "target": 3,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 3,
+          "k": 0,
+          "x_after": 3,
+          "cost": 0
+        },
+        {
+          "target": 3,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 3,
+          "k": 0,
+          "x_after": 3,
+          "cost": 0
+        },
+        {
+          "target": 3,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 3,
+          "k": 0,
+          "x_after": 3,
+          "cost": 0
+        },
+        {
+          "target": 3,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 3,
+          "k": 0,
+          "x_after": 3,
+          "cost": 0
+        },
+        {
+          "target": 3,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 3,
+          "k": 0,
+          "x_after": 3,
+          "cost": 0
+        },
+        {
+          "target": 3,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 3,
+          "k": 0,
+          "x_after": 3,
+          "cost": 0
+        },
+        {
+          "target": 0,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 3,
+          "k": -1,
+          "x_after": 2,
+          "cost": 17
+        },
+        {
+          "target": 0,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 2,
+          "k": -1,
+          "x_after": 1,
+          "cost": 5
+        },
+        {
+          "target": 0,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 1,
+          "k": 0,
+          "x_after": 1,
+          "cost": 4
+        },
+        {
+          "target": 0,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 1,
+          "k": 0,
+          "x_after": 1,
+          "cost": 4
+        },
+        {
+          "target": 0,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 1,
+          "k": 0,
+          "x_after": 1,
+          "cost": 4
+        },
+        {
+          "target": 0,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 1,
+          "k": 0,
+          "x_after": 1,
+          "cost": 4
+        },
+        {
+          "target": 2,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 1,
+          "k": 0,
+          "x_after": 1,
+          "cost": 4
+        }
+      ],
+      "final_x": 1,
+      "total_cost": 42
+    },
+    {
+      "initial_x": 3,
+      "steps": [
+        {
+          "target": 7,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 3,
+          "k": 2,
+          "x_after": 5,
+          "cost": 20
+        },
+        {
+          "target": 7,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 5,
+          "k": 1,
+          "x_after": 6,
+          "cost": 5
+        },
+        {
+          "target": 7,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 6,
+          "k": 0,
+          "x_after": 6,
+          "cost": 4
+        },
+        {
+          "target": -1,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 6,
+          "k": -1,
+          "x_after": 5,
+          "cost": 145
+        },
+        {
+          "target": -1,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 5,
+          "k": -2,
+          "x_after": 3,
+          "cost": 68
+        },
+        {
+          "target": -1,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 3,
+          "k": -1,
+          "x_after": 2,
+          "cost": 37
+        },
+        {
+          "target": 5,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 2,
+          "k": 1,
+          "x_after": 3,
+          "cost": 17
+        },
+        {
+          "target": 5,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 3,
+          "k": 1,
+          "x_after": 4,
+          "cost": 5
+        },
+        {
+          "target": 5,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 4,
+          "k": 0,
+          "x_after": 4,
+          "cost": 4
+        },
+        {
+          "target": -2,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 4,
+          "k": -1,
+          "x_after": 3,
+          "cost": 101
+        },
+        {
+          "target": -2,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 3,
+          "k": -1,
+          "x_after": 2,
+          "cost": 65
+        },
+        {
+          "target": -2,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 2,
+          "k": -1,
+          "x_after": 1,
+          "cost": 37
+        },
+        {
+          "target": 1,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 1,
+          "k": 0,
+          "x_after": 1,
+          "cost": 0
+        },
+        {
+          "target": 1,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 1,
+          "k": 0,
+          "x_after": 1,
+          "cost": 0
+        },
+        {
+          "target": 1,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 1,
+          "k": 0,
+          "x_after": 1,
+          "cost": 0
+        },
+        {
+          "target": 1,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 1,
+          "k": 0,
+          "x_after": 1,
+          "cost": 0
+        }
+      ],
+      "final_x": 1,
+      "total_cost": 508
+    },
+    {
+      "initial_x": 3,
+      "steps": [
+        {
+          "target": 7,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 3,
+          "k": 2,
+          "x_after": 5,
+          "cost": 20
+        },
+        {
+          "target": 7,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 5,
+          "k": 1,
+          "x_after": 6,
+          "cost": 5
+        },
+        {
+          "target": 7,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 6,
+          "k": 0,
+          "x_after": 6,
+          "cost": 4
+        },
+        {
+          "target": 2,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 6,
+          "k": -1,
+          "x_after": 5,
+          "cost": 37
+        },
+        {
+          "target": 2,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 5,
+          "k": -1,
+          "x_after": 4,
+          "cost": 17
+        },
+        {
+          "target": 2,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 4,
+          "k": -1,
+          "x_after": 3,
+          "cost": 5
+        },
+        {
+          "target": 5,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 3,
+          "k": 1,
+          "x_after": 4,
+          "cost": 5
+        },
+        {
+          "target": 5,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 4,
+          "k": 0,
+          "x_after": 4,
+          "cost": 4
+        },
+        {
+          "target": 5,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 4,
+          "k": 0,
+          "x_after": 4,
+          "cost": 4
+        },
+        {
+          "target": -2,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 4,
+          "k": -1,
+          "x_after": 3,
+          "cost": 101
+        },
+        {
+          "target": -2,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 3,
+          "k": -2,
+          "x_after": 1,
+          "cost": 40
+        },
+        {
+          "target": -2,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 1,
+          "k": -1,
+          "x_after": 0,
+          "cost": 17
+        },
+        {
+          "target": 3,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 0,
+          "k": 1,
+          "x_after": 1,
+          "cost": 17
+        },
+        {
+          "target": 3,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 1,
+          "k": 1,
+          "x_after": 2,
+          "cost": 5
+        },
+        {
+          "target": 3,
+          "urgent": true,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 2,
+          "k": 0,
+          "x_after": 2,
+          "cost": 4
+        },
+        {
+          "target": 8,
+          "urgent": false,
+          "error_weight": 4,
+          "action_weight": 1,
+          "x_before": 2,
+          "k": 1,
+          "x_after": 3,
+          "cost": 101
+        }
+      ],
+      "final_x": 3,
+      "total_cost": 386
+    }
+  ],
+  "total_cost": 2376,
+  "theorem": "StemCellConcrete.certificate",
+  "toolchain": "leanprover/lean4:v4.35.0",
+  "request_sha256": "4ed9d7f5044283168d59f7ab8fdbc06e696d0c44ba5adf9a1dcd5e3c8cccd3df",
+  "proof_sha256": "ebad7d5c45decc2605c4725578c4fd1b364584ef4c3d0bd14d7567f00ec4f942",
+  "spec_sha256": "abc1cde4b14fd63d2ffa6a55f01b91001828a2e0456ce488ad6b4e0d3b2ccd89",
+  "verifier_sha256": "0ced22da415e00215e28ca663ab2e34a39b7d49c6f352079b4c19f1c1f67201d",
+  "parent_caps": {
+    "cap_low": 2,
+    "cap_high": 2
+  },
+  "genome": {
+    "gain_num": 1,
+    "gain_den": 2,
+    "deadband": 1,
+    "bias": 0,
+    "cap_low": 1,
+    "cap_high": 2
+  },
+  "compilerlogs": [
+    {
+      "command": [
+        "--version"
+      ],
+      "returncode": 0,
+      "stdout": "Lean (version 4.35.0, arm64-apple-darwin24.6.0, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "-o",
+        "Core.olean",
+        "Core.lean"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "Certificate.lean"
+      ],
+      "returncode": 0,
+      "stdout": "StemCellConcrete.certificate :\n  validGenome 2 2 policy = true \u2227\n    simulate policy 3 inputs0 = rows0 \u2227\n      allSafe policy inputs0 rows0 = true \u2227\n        totalCost rows0 = 80 \u2227\n          3 = 3 \u2227\n            Option.map Row.after rows0.getLast? = some 5 \u2227\n              simulate policy 3 inputs1 = rows1 \u2227\n                allSafe policy inputs1 rows1 = true \u2227\n                  totalCost rows1 = 644 \u2227\n                    3 = 3 \u2227\n                      Option.map Row.after rows1.getLast? = some 5 \u2227\n                        simulate policy 3 inputs2 = rows2 \u2227\n                          allSafe policy inputs2 rows2 = true \u2227\n                            totalCost rows2 = 80 \u2227\n                              3 = 3 \u2227\n                                Option.map Row.after rows2.getLast? = some 1 \u2227\n                                  simulate policy 3 inputs3 = rows3 \u2227\n                                    allSafe policy inputs3 rows3 = true \u2227\n                                      totalCost rows3 = 416 \u2227\n                                        3 = 3 \u2227\n                                          Option.map Row.after rows3.getLast? = some 3 \u2227\n                                            simulate policy 3 inputs4 = rows4 \u2227\n                                              allSafe policy inputs4 rows4 = true \u2227\n                                                totalCost rows4 = 220 \u2227\n                                                  3 = 3 \u2227\n                                                    Option.map Row.after rows4.getLast? = some 1 \u2227\n                                                      simulate policy 3 inputs5 = rows5 \u2227\n                                                        allSafe policy inputs5 rows5 = true \u2227\n                                                          totalCost rows5 = 42 \u2227\n                                                            3 = 3 \u2227\n                                                              Option.map Row.after rows5.getLast? = some 1 \u2227\n                                                                simulate policy 3 inputs6 = rows6 \u2227\n                                                                  allSafe policy inputs6 rows6 = true \u2227\n                                                                    totalCost rows6 = 508 \u2227\n                                                                      3 = 3 \u2227\n                                                                        Option.map Row.after rows6.getLast? = some 1 \u2227\n                                                                          simulate policy 3 inputs7 = rows7 \u2227\n                                                                            allSafe policy inputs7 rows7 = true \u2227\n                                                                              totalCost rows7 = 386 \u2227\n                                                                                3 = 3 \u2227\n                                                                                  Option.map Row.after rows7.getLast? =\n                                                                                    some 3\n'StemCellConcrete.certificate' does not depend on any axioms\n",
+      "stderr": ""
+    }
+  ],
+  "scope": "Concrete exact integer policy, rollout, score and inherited local/root constraints; Python/OS/compiler runtime trusted."
+}

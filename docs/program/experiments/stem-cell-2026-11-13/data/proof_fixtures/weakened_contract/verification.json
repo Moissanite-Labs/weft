@@ -1,0 +1,83 @@
+{
+  "accepted": false,
+  "kernel_checked": true,
+  "axioms": [],
+  "contract_valid": false,
+  "episode_results": [
+    {
+      "initial_x": 3,
+      "steps": [
+        {
+          "target": 0,
+          "urgent": true,
+          "error_weight": 2,
+          "action_weight": 1,
+          "x_before": 3,
+          "k": -1,
+          "x_after": 2,
+          "cost": 9
+        },
+        {
+          "target": 7,
+          "urgent": false,
+          "error_weight": 1,
+          "action_weight": 2,
+          "x_before": 2,
+          "k": 1,
+          "x_after": 3,
+          "cost": 18
+        }
+      ],
+      "final_x": 3,
+      "total_cost": 27
+    }
+  ],
+  "total_cost": 27,
+  "theorem": "StemCellConcrete.certificate",
+  "toolchain": "leanprover/lean4:v4.35.0",
+  "request_sha256": "2319886ee3bd60df758b8f721c8ec58e6c756513ad4e790c6c113831a22e6f45",
+  "proof_sha256": "926957f8ad98e4f1cbc5f3b1814607a490ef5e56c623c11e43a078ade2c3e3e6",
+  "spec_sha256": "abc1cde4b14fd63d2ffa6a55f01b91001828a2e0456ce488ad6b4e0d3b2ccd89",
+  "verifier_sha256": "0ced22da415e00215e28ca663ab2e34a39b7d49c6f352079b4c19f1c1f67201d",
+  "parent_caps": {
+    "cap_low": 0,
+    "cap_high": 2
+  },
+  "genome": {
+    "gain_num": 1,
+    "gain_den": 2,
+    "bias": 0,
+    "deadband": 0,
+    "cap_low": 1,
+    "cap_high": 2
+  },
+  "compilerlogs": [
+    {
+      "command": [
+        "--version"
+      ],
+      "returncode": 0,
+      "stdout": "Lean (version 4.35.0, arm64-apple-darwin24.6.0, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "-o",
+        "Core.olean",
+        "Core.lean"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "Certificate.lean"
+      ],
+      "returncode": 0,
+      "stdout": "StemCellConcrete.certificate :\n  validGenome 0 2 policy = false \u2227\n    simulate policy 3 inputs0 = rows0 \u2227\n      allSafe policy inputs0 rows0 = true \u2227 totalCost rows0 = 27 \u2227 3 = 3 \u2227 Option.map Row.after rows0.getLast? = some 3\n'StemCellConcrete.certificate' does not depend on any axioms\n",
+      "stderr": ""
+    }
+  ],
+  "scope": "Concrete exact integer policy, rollout, score and inherited local/root constraints; Python/OS/compiler runtime trusted."
+}

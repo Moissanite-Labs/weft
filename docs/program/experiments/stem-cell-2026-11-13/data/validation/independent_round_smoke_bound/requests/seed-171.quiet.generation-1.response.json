@@ -1,0 +1,19 @@
+{
+  "synthetic_offline_control": true,
+  "request_file": "seed-171.quiet.generation-1.json",
+  "request_sha256": "454e230b93e0ac59de8c9f7e63425b3bee02fe9b6c7f12e84b50d7b8a0dac591",
+  "response": {
+    "status": "completed",
+    "output": [
+      {
+        "type": "message",
+        "content": [
+          {
+            "type": "output_text",
+            "text": "{\"hypothesis\": \"Synthetic offline integration control, not an Astra response.\", \"children\": [{\"label\": \"0\", \"genome\": {\"gain_num\": 1, \"gain_den\": 1, \"deadband\": 0, \"bias\": 0, \"cap_low\": 2, \"cap_high\": 2}}, {\"label\": \"1\", \"genome\": {\"gain_num\": 1, \"gain_den\": 2, \"deadband\": 1, \"bias\": 0, \"cap_low\": 1, \"cap_high\": 2}}, {\"label\": \"2\", \"genome\": {\"gain_num\": 0, \"gain_den\": 1, \"deadband\": 0, \"bias\": 0, \"cap_low\": 2, \"cap_high\": 2}}, {\"label\": \"3\", \"genome\": {\"gain_num\": 1, \"gain_den\": 1, \"deadband\": 0, \"bias\": 1, \"cap_low\": 2, \"cap_high\": 2}}]}"
+          }
+        ]
+      }
+    ]
+  }
+}

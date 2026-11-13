@@ -1,0 +1,6 @@
+
+# PR160 source-SHA metadata false positives, verified in the stem-cell scan record.
+f2a72fdc0fa8b859df6ccc98e41d0420e86cddbf:docs/program/experiments/stem-cell-2026-11-13/data/validation/root-final-tests.json:generic-api-key:16
+f2a72fdc0fa8b859df6ccc98e41d0420e86cddbf:docs/program/experiments/stem-cell-2026-11-13/data/validation/root-final-tests.json:generic-api-key:20
+f2a72fdc0fa8b859df6ccc98e41d0420e86cddbf:docs/program/experiments/stem-cell-2026-11-13/data/validation/root-tests.json:generic-api-key:15
+f2a72fdc0fa8b859df6ccc98e41d0420e86cddbf:docs/program/experiments/stem-cell-2026-11-13/data/validation/root-tests.json:generic-api-key:19

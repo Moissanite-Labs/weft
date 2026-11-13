@@ -1,0 +1,47 @@
+{
+  "attempt": 1,
+  "request_file": "seed-171.quiet.generation-1.json",
+  "request_sha256": "454e230b93e0ac59de8c9f7e63425b3bee02fe9b6c7f12e84b50d7b8a0dac591",
+  "reservation_usd": 0.522925,
+  "cumulative_reserved_usd": 0.522925,
+  "http_status": 200,
+  "response": {
+    "id": "resp_08d0498ed1d94d91016af67c1f896c87d1be0445602da14427",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 1221,
+      "input_tokens_details": {
+        "cache_write_tokens": 1218,
+        "cached_tokens": 0
+      },
+      "output_tokens": 936,
+      "output_tokens_details": {
+        "reasoning_tokens": 742
+      },
+      "total_tokens": 2157
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794538527,
+    "service_tier": "default",
+    "output": [
+      {
+        "id": "msg_08d0498ed1d94d91016af67c33e36c87d1a348085a2be8e272",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"hypothesis\":\"High action costs favor unit steps and deadbands; compare exact tracking, two quiet thresholds, and a fractional-gain alternative for larger errors.\",\"children\":[{\"label\":\"unit_tracking\",\"genome\":{\"gain_num\":1,\"gain_den\":1,\"deadband\":0,\"bias\":0,\"cap_low\":1,\"cap_high\":1}},{\"label\":\"quiet_one\",\"genome\":{\"gain_num\":1,\"gain_den\":1,\"deadband\":1,\"bias\":0,\"cap_low\":1,\"cap_high\":1}},{\"label\":\"quiet_two\",\"genome\":{\"gain_num\":1,\"gain_den\":1,\"deadband\":2,\"bias\":0,\"cap_low\":1,\"cap_high\":1}},{\"label\":\"soft_urgent\",\"genome\":{\"gain_num\":1,\"gain_den\":3,\"deadband\":2,\"bias\":0,\"cap_low\":1,\"cap_high\":2}}]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  },
+  "elapsed_seconds": 23.167057333979756
+}

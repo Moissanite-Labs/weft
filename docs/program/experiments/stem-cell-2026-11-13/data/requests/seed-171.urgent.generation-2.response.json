@@ -1,0 +1,47 @@
+{
+  "attempt": 6,
+  "request_file": "seed-171.urgent.generation-2.json",
+  "request_sha256": "a0acfde6b0066014c45085a55c6756f0420c373d304d3d9ee9a387ec49388ced",
+  "reservation_usd": 0.55375,
+  "cumulative_reserved_usd": 3.19865,
+  "http_status": 200,
+  "response": {
+    "id": "resp_03c66df5474c520d016af67cc834b087d1b9033aef6e781adb",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 1541,
+      "input_tokens_details": {
+        "cache_write_tokens": 1538,
+        "cached_tokens": 0
+      },
+      "output_tokens": 702,
+      "output_tokens_details": {
+        "reasoning_tokens": 499
+      },
+      "total_tokens": 2243
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794538696,
+    "service_tier": "default",
+    "output": [
+      {
+        "id": "msg_03c66df5474c520d016af67cd6669c87d18b92b7fdc62177f0",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"hypothesis\":\"Prior validation disfavors tighter nonurgent caps and negative bias. Retain both caps while testing bias-compensated fractional gains, stronger damping, and a small deadband.\",\"children\":[{\"label\":\"biased fractional\",\"genome\":{\"gain_num\":3,\"gain_den\":4,\"deadband\":0,\"bias\":1,\"cap_low\":2,\"cap_high\":2}},{\"label\":\"biased half gain\",\"genome\":{\"gain_num\":1,\"gain_den\":2,\"deadband\":0,\"bias\":1,\"cap_low\":2,\"cap_high\":2}},{\"label\":\"symmetric half gain\",\"genome\":{\"gain_num\":1,\"gain_den\":2,\"deadband\":0,\"bias\":0,\"cap_low\":2,\"cap_high\":2}},{\"label\":\"unit deadband\",\"genome\":{\"gain_num\":1,\"gain_den\":1,\"deadband\":1,\"bias\":0,\"cap_low\":2,\"cap_high\":2}}]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  },
+  "elapsed_seconds": 16.642696541035548
+}

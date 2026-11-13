@@ -1,0 +1,26 @@
+{
+  "positive": {
+    "accepted": true,
+    "kernel_checked": true,
+    "axioms": [],
+    "total_cost": 27
+  },
+  "false_action": {
+    "accepted": false,
+    "kernel_checked": false,
+    "axioms": null,
+    "total_cost": 27
+  },
+  "false_score": {
+    "accepted": false,
+    "kernel_checked": false,
+    "axioms": null,
+    "total_cost": 28
+  },
+  "weakened_contract": {
+    "accepted": false,
+    "kernel_checked": true,
+    "axioms": [],
+    "total_cost": 27
+  }
+}

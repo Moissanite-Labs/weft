@@ -1,0 +1,13 @@
+{
+  "command": [
+    "python3",
+    "-m",
+    "unittest",
+    "-v",
+    "test_colony.ColonyTests.test_registered_validation_and_test_data_cannot_change",
+    "test_colony.ColonyTests.test_wire_response_and_registration_bindings"
+  ],
+  "returncode": 0,
+  "stdout": "",
+  "stderr": "test_registered_validation_and_test_data_cannot_change (test_colony.ColonyTests.test_registered_validation_and_test_data_cannot_change) ... ok\ntest_wire_response_and_registration_bindings (test_colony.ColonyTests.test_wire_response_and_registration_bindings) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.015s\n\nOK\n"
+}

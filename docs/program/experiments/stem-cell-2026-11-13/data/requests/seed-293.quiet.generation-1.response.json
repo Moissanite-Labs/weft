@@ -1,0 +1,47 @@
+{
+  "attempt": 3,
+  "request_file": "seed-293.quiet.generation-1.json",
+  "request_sha256": "15eec9c92a0a1e667415369d52d09a4ad784fafaa2d35f8ecd8ef6efebe9f421",
+  "reservation_usd": 0.523225,
+  "cumulative_reserved_usd": 1.5691000000000002,
+  "http_status": 200,
+  "response": {
+    "id": "resp_0ae2c8ed5c1e3ea1016af67c47459087d1bdb7bbd01adff0ad",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 1224,
+      "input_tokens_details": {
+        "cache_write_tokens": 1221,
+        "cached_tokens": 0
+      },
+      "output_tokens": 410,
+      "output_tokens_details": {
+        "reasoning_tokens": 216
+      },
+      "total_tokens": 1634
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794538567,
+    "service_tier": "default",
+    "output": [
+      {
+        "id": "msg_0ae2c8ed5c1e3ea1016af67c4f02c487d1a1e7687cb49aee3d",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"hypothesis\":\"High action costs favor suppressing small errors and limiting step size; test deadbands, reduced gain, and unit caps against responsiveness.\",\"children\":[{\"label\":\"quiet_unit_steps\",\"genome\":{\"gain_num\":1,\"gain_den\":1,\"deadband\":1,\"bias\":0,\"cap_low\":1,\"cap_high\":1}},{\"label\":\"half_gain\",\"genome\":{\"gain_num\":1,\"gain_den\":2,\"deadband\":0,\"bias\":0,\"cap_low\":2,\"cap_high\":2}},{\"label\":\"wide_deadband\",\"genome\":{\"gain_num\":1,\"gain_den\":1,\"deadband\":2,\"bias\":0,\"cap_low\":1,\"cap_high\":1}},{\"label\":\"responsive_unit_steps\",\"genome\":{\"gain_num\":1,\"gain_den\":1,\"deadband\":0,\"bias\":0,\"cap_low\":1,\"cap_high\":1}}]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  },
+  "elapsed_seconds": 10.351870583137497
+}

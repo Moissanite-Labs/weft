@@ -1,0 +1,1 @@
+{"replayed_selections": 8, "artifact_hashes_verified": true, "paid_calls": 0}

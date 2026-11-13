@@ -1,0 +1,29 @@
+test_ambiguous_timeout_reserves_and_stops_without_retry (test_api_worker.WorkerTests.test_ambiguous_timeout_reserves_and_stops_without_retry) ... ok
+test_budget_prevents_request_before_network (test_api_worker.WorkerTests.test_budget_prevents_request_before_network) ... ok
+test_existing_ledger_cannot_reset_spend (test_api_worker.WorkerTests.test_existing_ledger_cannot_reset_spend) ... ok
+test_provider_echo_is_redacted_in_artifacts_and_stdout (test_api_worker.WorkerTests.test_provider_echo_is_redacted_in_artifacts_and_stdout) ... ok
+test_caps_cannot_loosen_and_strict_types (test_colony.ColonyTests.test_caps_cannot_loosen_and_strict_types) ... ok
+test_exact_sign_magnitude_floor (test_colony.ColonyTests.test_exact_sign_magnitude_floor) ... ok
+test_full_offline_two_generation_workflow_and_pressure_pause (test_colony.ColonyTests.test_full_offline_two_generation_workflow_and_pressure_pause) ... ok
+test_paired_demands_only_change_cost (test_colony.ColonyTests.test_paired_demands_only_change_cost) ... ok
+test_parent_wins_tie_and_stable_child_ties (test_colony.ColonyTests.test_parent_wins_tie_and_stable_child_ties) ... ok
+test_proof_tampering_fails_closed (test_colony.ColonyTests.test_proof_tampering_fails_closed) ... ok
+test_real_lean_trace_matches_independent_simulator (test_colony.ColonyTests.test_real_lean_trace_matches_independent_simulator) ... ok
+test_request_has_no_test_or_heldout_and_small (test_colony.ColonyTests.test_request_has_no_test_or_heldout_and_small) ... ok
+test_scheduler_all_fixture_states (test_colony.ColonyTests.test_scheduler_all_fixture_states) ... ok
+test_selection_and_retained_proof_tampering (test_colony.ColonyTests.test_selection_and_retained_proof_tampering) ... ok
+test_simulation_invariants (test_colony.ColonyTests.test_simulation_invariants) ... ok
+test_stem_reserve_and_bounded_clone_allocation (test_colony.ColonyTests.test_stem_reserve_and_bounded_clone_allocation) ... ok
+test_wire_response_and_registration_bindings (test_colony.ColonyTests.test_wire_response_and_registration_bindings) ... ok
+test_empty_compiler_output_fails_closed (test_proof_gate.ProofGateTests.test_empty_compiler_output_fails_closed) ... ok
+test_exact_input_validation (test_proof_gate.ProofGateTests.test_exact_input_validation) ... ok
+test_exact_policy_trace_cost_empty_axioms (test_proof_gate.ProofGateTests.test_exact_policy_trace_cost_empty_axioms) ... ok
+test_fabricated_action_state_and_score_fail_kernel (test_proof_gate.ProofGateTests.test_fabricated_action_state_and_score_fail_kernel) ... ok
+test_inherited_cap_cannot_weaken (test_proof_gate.ProofGateTests.test_inherited_cap_cannot_weaken) ... ok
+test_exact_root_and_clones (test_lifecycle_gate.LifecycleTests.test_exact_root_and_clones) ... ok
+test_stable_minimum (test_lifecycle_gate.LifecycleTests.test_stable_minimum) ... ok
+
+----------------------------------------------------------------------
+Ran 24 tests in 23.948s
+
+OK
