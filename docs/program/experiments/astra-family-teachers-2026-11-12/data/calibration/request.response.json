@@ -1,0 +1,41 @@
+{
+  "request_file": "request.json",
+  "elapsed_seconds": 13.674601707840338,
+  "response": {
+    "id": "resp_0c80b8ae32e833be016af65d7444fc87d1b29e9023d86b1a34",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 3938,
+      "input_tokens_details": {
+        "cache_write_tokens": 3935,
+        "cached_tokens": 0
+      },
+      "output_tokens": 926,
+      "output_tokens_details": {
+        "reasoning_tokens": 66
+      },
+      "total_tokens": 4864
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794530676,
+    "output": [
+      {
+        "id": "msg_0c80b8ae32e833be016af65d78aed487d1b872a6bf0025c994",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\n  \"hypothesis\": \"Negating both output logits reverses every non-tied binary decision while preserving the first layer. Exact ties retain the argmax tie-break behavior.\",\n  \"edits\": [\n    {\"tensor\":\"w2\",\"index\":[0,0],\"delta\":5.934035306794221},\n    {\"tensor\":\"w2\",\"index\":[0,1],\"delta\":3.39146057616099},\n    {\"tensor\":\"w2\",\"index\":[0,2],\"delta\":-2.9376014267502786},\n    {\"tensor\":\"w2\",\"index\":[0,3],\"delta\":3.4556858897239034},\n    {\"tensor\":\"w2\",\"index\":[0,4],\"delta\":5.400521184402768},\n    {\"tensor\":\"w2\",\"index\":[0,5],\"delta\":3.7388183042316486},\n    {\"tensor\":\"w2\",\"index\":[0,6],\"delta\":-3.837142526678764},\n    {\"tensor\":\"w2\",\"index\":[0,7],\"delta\":-2.8270690085833596},\n    {\"tensor\":\"w2\",\"index\":[0,8],\"delta\":6.719872200913402},\n    {\"tensor\":\"w2\",\"index\":[0,9],\"delta\":2.4297829514797438},\n    {\"tensor\":\"w2\",\"index\":[0,10],\"delta\":-9.734376920721488},\n    {\"tensor\":\"w2\",\"index\":[0,11],\"delta\":3.272493605521213},\n    {\"tensor\":\"w2\",\"index\":[0,12],\"delta\":3.6719671444070076},\n    {\"tensor\":\"w2\",\"index\":[0,13],\"delta\":3.094107495256056},\n    {\"tensor\":\"w2\",\"index\":[0,14],\"delta\":3.3317634150109568},\n    {\"tensor\":\"w2\",\"index\":[0,15],\"delta\":-8.416915869199778},\n    {\"tensor\":\"w2\",\"index\":[1,0],\"delta\":-6.75255060189142},\n    {\"tensor\":\"w2\",\"index\":[1,1],\"delta\":-3.538288103438957},\n    {\"tensor\":\"w2\",\"index\":[1,2],\"delta\":2.498870385986411},\n    {\"tensor\":\"w2\",\"index\":[1,3],\"delta\":-3.8814741297225152},\n    {\"tensor\":\"w2\",\"index\":[1,4],\"delta\":-5.185479788600155},\n    {\"tensor\":\"w2\",\"index\":[1,5],\"delta\":-3.989378271794786},\n    {\"tensor\":\"w2\",\"index\":[1,6],\"delta\":4.483054081249918},\n    {\"tensor\":\"w2\",\"index\":[1,7],\"delta\":1.9392578225835824},\n    {\"tensor\":\"w2\",\"index\":[1,8],\"delta\":-6.245779180587252},\n    {\"tensor\":\"w2\",\"index\":[1,9],\"delta\":-2.5933886713234218},\n    {\"tensor\":\"w2\",\"index\":[1,10],\"delta\":9.788728107758157},\n    {\"tensor\":\"w2\",\"index\":[1,11],\"delta\":-2.9093022052687446},\n    {\"tensor\":\"w2\",\"index\":[1,12],\"delta\":-4.264778930855504},\n    {\"tensor\":\"w2\",\"index\":[1,13],\"delta\":-2.7862884716642818},\n    {\"tensor\":\"w2\",\"index\":[1,14],\"delta\":-2.573850787434656},\n    {\"tensor\":\"w2\",\"index\":[1,15],\"delta\":8.092608359593274},\n    {\"tensor\":\"b2\",\"index\":[0],\"delta\":-0.46282771825958314},\n    {\"tensor\":\"b2\",\"index\":[1],\"delta\":0.4628277182595858}\n  ]\n}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  }
+}
