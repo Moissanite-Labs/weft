@@ -1,6 +1,6 @@
 # Experiment run log
 
-The study is in progress. This checkpoint reports the completed calibration only. Family held-out outcomes have not been inspected for this note.
+The first study is complete. Follow-up studies are in progress. Earlier checkpoints below retain their original timing and claim boundaries.
 
 | Checkpoint | Record |
 | --- | --- |
@@ -35,3 +35,11 @@ All nine first-round responses and candidate evaluations are archived. Every pro
 | scrambled_weights | 3/3 | 2/3 |
 
 These are validation decisions, with family held-out outcomes still sealed. Later weight-visible and behavior-only rounds remain in progress. A preliminary statement that the first two scrambled proposals were rejected was corrected after the second was scored. The archived second scrambled proposal was accepted.
+
+## Completed first study
+
+All 21 family proposals were valid. Nineteen passed validation gates and two were rejected. One final arm selected the unchanged cell. The weight-visible arm reduced IID active-context error by 19.107%, 21.860% and 20.768%. Two source seeds passed the combined improvement and retention criterion. All three missed retention on shifted observations.
+
+Behavior-only passed the primary criterion on zero of three seeds. Scrambled weights passed on one of three, seed 43. Truthful hidden activations accompanied numerical weights, so these results cannot isolate their respective contributions. Follow-up experiments test this confound.
+
+Family and calibration replay matched exactly after completion, and the API worker stopped. The archive contains 22 responses including calibration, with estimated API cost $6.2913975 at the recorded rates. This is not an invoice. The separate TLS failure remains archived even though the analysis response-file suffix does not count it in its failure total.

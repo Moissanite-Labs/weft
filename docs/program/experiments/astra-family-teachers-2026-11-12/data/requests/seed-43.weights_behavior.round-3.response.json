@@ -1,0 +1,41 @@
+{
+  "request_file": "seed-43.weights_behavior.round-3.json",
+  "elapsed_seconds": 11.50797504116781,
+  "response": {
+    "id": "resp_0d3e9b4fa3f505cf016af65f06f97887d1b1591a7796a527b1",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 26929,
+      "input_tokens_details": {
+        "cache_write_tokens": 26926,
+        "cached_tokens": 0
+      },
+      "output_tokens": 320,
+      "output_tokens_details": {
+        "reasoning_tokens": 116
+      },
+      "total_tokens": 27249
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794531079,
+    "output": [
+      {
+        "id": "msg_0d3e9b4fa3f505cf016af65f0edd4887d185e7274906c1969f",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"hypothesis\":\"Increase the validated second proposal by 2.5% to further improve movement MSE while retaining a small margin under the low-urgency drift budget; quadratic scaling predicts drift near 0.000491. This remains an approximation rather than explicit urgency gating. Unchanged hidden parameters and hazard readout preserve hazard predictions exactly. All deltas are cumulative relative to the original source.\",\"edits\":[{\"tensor\":\"w2\",\"index\":[0,9],\"delta\":-0.0907125},{\"tensor\":\"w2\",\"index\":[0,1],\"delta\":-0.02419},{\"tensor\":\"b2\",\"index\":[0],\"delta\":-0.0689415},{\"tensor\":\"w2\",\"index\":[1,5],\"delta\":-0.089503},{\"tensor\":\"w2\",\"index\":[1,8],\"delta\":0.0253995},{\"tensor\":\"b2\",\"index\":[1],\"delta\":-0.0384621}]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  }
+}
