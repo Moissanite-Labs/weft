@@ -1,8 +1,24 @@
-# Closure Note for Issue #158 & PR #151 (`run_all_55_flex_burn_v2.py` Hardening)
+# Closure Note for Issue #158 (`run_all_55_flex_burn_v2.py`)
 
-Addresses the concrete peer-review findings recorded in [`Moissanite-Labs/weft#158`](https://github.com/Moissanite-Labs/weft/issues/158) and [`PR #151`](https://github.com/Moissanite-Labs/weft/pull/151):
+This directory holds the hardened Flex orchestrator and this note. It records how the revision treats the findings in [`Moissanite-Labs/weft#158`](https://github.com/Moissanite-Labs/weft/issues/158) about `run_all_55_flex_burn.py`.
 
-1. **Removed Unsourced Model Row & Clarified Reservation vs. Settled Billing:** Removed the unused `gpt-5.6-sol` row from `MODEL_PRICING_STD_PER_MTOK`, grounded rates to [`https://developers.openai.com/api/docs/pricing`](https://developers.openai.com/api/docs/pricing), and documented pre-call token estimates (`len(raw)//3 + 96` + `max_output_tokens`) strictly as conservative per-call upper-bound holds reconciled against exact settled `usage` fields on `200 OK`.
-2. **Explicit `SSL_CERT_FILE` Resolution:** Bound `ssl.create_default_context(cafile=...)` to honor `SSL_CERT_FILE` with automatic `/etc/ssl/cert.pem` host fallback on sandboxed macOS/POSIX hosts.
-3. **Async Exception Isolation (`return_exceptions=True`):** Added `return_exceptions=True` to `asyncio.gather` so a single failing track never leaves sibling child processes orphaned or unwinds with raw unhandled tracebacks.
-4. **Credential-Redacting Log Sanitizer (`redact_secrets_in_text`):** Added regex scrubbing for `sk-...` and `Bearer ...` patterns prior to log persistence so accidental child `stdout` key echoes cannot leak into `MASTER_SHA256SUMS` artifacts.
+`--selftest` step 1 runs four sibling harness scripts from `--harnesses-dir` (default: this directory):
+
+- `weft_111_flex_harness.py`
+- `lean4_astra_proof_harness.py`
+- `scry_abios_equal_compute_eval.py`
+- `rigid_realizations_880_certifier.py`
+
+Those scripts live outside this slice. When they are missing, `--selftest` prints the missing names and exits 1.
+
+The orchestrator:
+
+1. **Pricing.** Rates follow the public OpenAI pricing table, including cache-write (30-minute and 12-hour) and long-context (input above 272K tokens) columns. A model without a row is rejected; billing does not fall back to another model's rate.
+2. **Reservation and settlement.** Prior spend is reloaded from `master_api_ledger.jsonl`, so a later process inherits the remaining cap. A settlement cannot exceed its reservation. Transport errors and unparsable `200` responses keep the reservation. The reserved `max_output_tokens` is written onto the forwarded payload.
+3. **Live spend gate.** A billed upstream call requires both `OPENAI_API_KEY` and `--confirm-live-spend`. Defaults are four concurrent tracks at `$53.50`.
+4. **Child isolation.** `asyncio.gather(..., return_exceptions=True)` turns a failed track into exit code 1. The run `finally` kills child process groups. A selftest `Popen` that exceeds the 90s `communicate` timeout is terminated.
+5. **Log sanitization.** `redact_secrets_in_text` runs on child output before the log is written and hashed into `MASTER_SHA256SUMS`.
+6. **Proxy credential and token bounds.** A non-positive `max_output_tokens` is rejected. The loopback proxy has its own token; children receive that token, and the upstream handler uses the process `OPENAI_API_KEY`.
+7. **TLS.** `ssl.create_default_context(cafile=...)` honors `SSL_CERT_FILE`, with a `/etc/ssl/cert.pem` fallback when that path exists.
+
+[PR 151](https://github.com/Moissanite-Labs/weft/pull/151) reviews `supplied-harness.py.txt`. That file is outside this diff; the list above is the work on this orchestrator.
