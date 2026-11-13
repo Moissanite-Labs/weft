@@ -1,22 +1,26 @@
 #!/usr/bin/env python3
 """
 e13_geodesic_plasmid.py — Experiment E13: Gauge-Aligned Geodesic Neural Plasmid
-Splicing Across Independently Trained, Gauge-Scrambled Multi-Layer Organisms.
+Splicing Across Independently Trained Multi-Layer Organisms.
 
-Directly tests and resolves the four open frontier falsifiers in Moissanite-Labs/weft:
+Related to four frontier falsifiers in Moissanite-Labs/weft:
   - Issue #149 ("Breaking through"): Gauge symmetry across independently trained multi-layer
     non-linear networks (24 -> 96 -> 96 -> 8 GELU, 12,488 float32 parameters = 49,952 B).
   - PR #159 (E12, 10/12 shifted retention & <0.30 alignment):
       * Falsifier 1: Second-order nonlinear GELU curvature drift under flat tangent steps,
-        resolved via Gauss-Newton Geodesic Fiber Retraction.
+        addressed here with Gauss-Newton Geodesic Fiber Retraction.
       * Falsifier 2: Readout nullity collapse when preservation anchors exceed hidden width
-        (N_keep = 160 > M2 = 96 -> 0 exact readout nullity), resolved via Fisher Dormant-Slot
-        Recycling + Spectral Fisher Trust-Subspace Projection.
+        (N_keep = 160 > M2 = 96 -> 0 exact readout nullity), addressed here with Fisher
+        Dormant-Slot Recycling + Spectral Fisher Trust-Subspace Projection.
       * Falsifier 3: Cross-seed hidden activation alignment via unlabeled Whitened Ridge /
-        Procrustes transport T_1, T_2 (>0.92 held-out correlation vs <0.20 raw coordinates).
+        Procrustes transport T_1, T_2, measured only (not applied in the splice).
       * Falsifier 4: Held-out retention & transferred skill efficacy under OOD covariate shift.
-  - PR #160 (2nd-generation validation overfitting): Resolved across a 3-generation horizontal
-    plasmid cascade (G0 -> G1 -> G2 -> G3 across 5 skills) via a Split-Shift + Fisher-MDL Gate.
+  - PR #160 (Astra/Lean second-generation overfitting pilot): this script does not rerun that
+    pilot. It records a related 12,488-parameter synthetic cascade (G0 -> G1 -> G2 -> G3
+    across 5 skills) under a split-shift gate (shifted MSE + 0.012 * Frobenius + 3 * keep MSE).
+
+This plasmid-grafting series id E13 follows PR #159's E12 and is distinct from the
+experiment-cards.md E13 protocol and the razi-cells E13 assay.
 
 License: Apache-2.0
 AI-assisted research & execution via Gemini task agent per CONTRIBUTING.md.
@@ -37,7 +41,7 @@ import numpy as np
 
 
 # =============================================================================
-# 1. State-Exact C2 Invariants Gate (`weft_invariants.h` Patched Mirror)
+# 1. Local Python C2 invariant gate (r_invariant=120 default)
 # =============================================================================
 
 def verify_weft_invariant_gate(
@@ -47,6 +51,7 @@ def verify_weft_invariant_gate(
     budget_f32: float,
     cost_f32: float,
 ) -> Tuple[bool, float, float, str]:
+    """Local Python mirror of the r_invariant=120 default. Does not call weft_invariants.h."""
     b32 = float(np.float32(budget_f32))
     c32 = float(np.float32(cost_f32))
     if not (math.isfinite(b32) and b32 > 0.0):
@@ -259,15 +264,15 @@ def eval_skill_r2(org: MultiLayerOrganism, X: np.ndarray, Y: np.ndarray) -> floa
 @dataclass
 class NeuralPlasmidPacket:
     """
-    Compact 3-layer GELU Neural Plasmid (`r1 = 10` Layer-1 receptors -> `r2 = 12` Layer-2
+    Compact 3-layer GELU Neural Plasmid (`r1 = 14` Layer-1 receptors -> `r2 = 16` Layer-2
     hidden GELU units -> `8` outputs) extracted purely from Donor D_k's black-box functional
     differential on `probe_seed` unlabeled inputs and serialized in IEEE-754 float16 (`BCPP`).
-      - W1_p: (10, 24) fp16 = 480 B
-      - b1_p: (10,)    fp16 =  20 B
-      - W2_p: (12, 10) fp16 = 240 B
-      - b2_p: (12,)    fp16 =  24 B
-      - W3_p: (8, 12)  fp16 = 192 B
-      - Header (12 B) + SHA-256-64 footer (8 B) = 976 bytes total (51.18x wire compression vs 49,952 B!).
+      - W1_p: (14, 24) fp16 = 672 B
+      - b1_p: (14,)    fp16 =  28 B
+      - W2_p: (16, 14) fp16 = 448 B
+      - b2_p: (16,)    fp16 =  32 B
+      - W3_p: (8, 16)  fp16 = 256 B
+      - Header (12 B) + SHA-256-64 footer (8 B) = 1456 bytes total (34.31x wire compression vs 49,952 B).
     """
     raw_bytes: bytes
     skill_idx: int
@@ -288,7 +293,7 @@ def extract_neural_plasmid_from_donor(
 ) -> NeuralPlasmidPacket:
     """
     Distills Donor D_k's learned neural behavior on `skill_idx` into a compact, gauge-canonical
-    (r1=10, r2=12) 3-layer GELU neural plasmid using ONLY unlabeled probes generated from
+    (r1=14, r2=16 at the executed defaults) 3-layer GELU neural plasmid using ONLY unlabeled probes generated from
     `probe_seed` (zero access to Host H, zero task-specific formulas!).
     Crucially, trains the compact neural plasmid with a quiet-off-gate penalty so its hidden
     units stay quiescent when `skill_idx` is inactive while matching `donor.predict(X)` when active!
@@ -496,13 +501,13 @@ def splice_gfpt_neural_plasmid(
 ) -> Tuple[MultiLayerOrganism, Dict]:
     """
     GFPT (Gauge-Aligned Geodesic Neural Plasmid Splicing):
-      1. Fisher Dormant-Neuron Recycling (Resolves Falsifier 2 Capacity Exhaustion):
-         Selects the `r1 = 10` Layer-1 neurons and `r2 = 12` Layer-2 neurons with lowest
-         empirical Fisher sensitivity on `X_keep` (excluding any previously grafted slots),
+      1. Fisher Dormant-Neuron Recycling (Falsifier 2 Capacity Exhaustion):
+         Selects the `r1` Layer-1 neurons and `r2` Layer-2 neurons (defaults 14 and 16) with
+         lowest empirical Fisher sensitivity on `X_keep` (excluding any previously grafted slots),
          splicing the compact 3-layer GELU neural plasmid cleanly into decoupled block channels
-         (`W2[slot_m2, non_slot_m1] = 0`, `W2[non_slot_m2, slot_m1] = 0`)!
+         (`W2[slot_m2, non_slot_m1] = 0`, `W2[non_slot_m2, slot_m1] = 0`).
       2. First-Order Tangent vs Non-Linear Curvature Drift (Falsifier 1):
-         Replacing those `10 + 12` low-Fisher neurons deletes their small but non-zero native
+         Replacing those `r1 + r2` low-Fisher neurons deletes their small but non-zero native
          nonlinear contributions across `GELU(W2 h1 + b2)` AND adds finite plasmid cross-activation
          on `X_keep`. Without nonlinear fiber retraction (`geodesic_retraction_steps = 0`, or naive
          first-order linearization around `theta_0`), nonlinear residual drift degrades native skills!
@@ -531,7 +536,9 @@ def splice_gfpt_neural_plasmid(
     native_m1 = [i for i in range(M1) if i not in slot_m1]
     native_m2 = [i for i in range(M2) if i not in slot_m2]
 
-    # Measure Spectral Fisher effective rank on native_m2 (shows >60 effective null dims even at 160 anchors!)
+    # Spectral nullity reported as M2 minus the 99.5% energy rank of H2 (Layer-2
+    # activations on X_keep) for this splice. The graft overwrites the lowest
+    # Fisher-score neurons in slot_m1 and slot_m2.
     _, s2_k, _ = np.linalg.svd(H2_k, full_matrices=False)
     cum_e2 = np.cumsum(s2_k ** 2) / (np.sum(s2_k ** 2) + 1e-12)
     r_fisher_eff = int(np.searchsorted(cum_e2, 0.995)) + 1
@@ -658,6 +665,7 @@ def run_e13_suite(n_seeds: int = 12) -> Dict:
     nullities_a1, nullities_gfpt = [], []
     retraction_factors = []
     invariant_checks_passed = 0
+    invariant_pass = []
 
     multigen_ungated_shifted_r2 = {g: [] for g in range(4)}
     multigen_gated_shifted_r2 = {g: [] for g in range(4)}
@@ -669,11 +677,14 @@ def run_e13_suite(n_seeds: int = 12) -> Dict:
         rng_d3 = np.random.default_rng(4000 + seed)
         rng_ev = np.random.default_rng(8000 + seed)
 
+        # Host stays in trained coordinates (unscrambled). PREREG item 1 says organisms
+        # are permutation-scrambled; this run applies that scramble only to donors.
         host = init_organism(rng_h)
         train_organism_adam(host, env, [0, 1], rng_h, steps=280)
 
         donor1 = init_organism(rng_d1)
         train_organism_adam(donor1, env, [0, 1, 2], rng_d1, steps=290)
+        # Post-training hidden-unit permutation; donor.predict is unchanged (exact symmetry).
         donor1 = scramble_organism_hidden_gauge(donor1, rng_d1)
 
         rc, ac = measure_cross_seed_hidden_alignment(host, donor1, env, rng_ev)
@@ -704,6 +715,8 @@ def run_e13_suite(n_seeds: int = 12) -> Dict:
         org_a1, null_a1 = splice_arm_a1_hard_readout_nullspace(host, pkt1, X_keep, X_synth)
         nullities_a1.append(null_a1)
 
+        # A2: shunt on, flat tangent (no geodesic retraction). A3: shunt off, geodesic on.
+        # A4: shunt on, geodesic on.
         org_a2, _ = splice_gfpt_neural_plasmid(host, pkt1, X_keep, X_synth, geodesic_retraction_steps=0, lateral_shunting=True)
         org_a3, _ = splice_gfpt_neural_plasmid(host, pkt1, X_keep, X_synth, geodesic_retraction_steps=4, lateral_shunting=False)
         org_a4, meta_a4 = splice_gfpt_neural_plasmid(host, pkt1, X_keep, X_synth, geodesic_retraction_steps=4, lateral_shunting=True)
@@ -713,6 +726,7 @@ def run_e13_suite(n_seeds: int = 12) -> Dict:
         ok_inv, _, _, _ = verify_weft_invariant_gate(
             host.flat_params(), org_a4.flat_params(), r_invariant=120.0, budget_f32=100.0, cost_f32=1.0
         )
+        invariant_pass.append(int(ok_inv))
         if ok_inv:
             invariant_checks_passed += 1
 
@@ -734,7 +748,8 @@ def run_e13_suite(n_seeds: int = 12) -> Dict:
 
         # ---------------------------------------------------------------------
         # Multi-Generation Cascade: G0 [0,1] -> G1 [0,1,2] -> G2 [0,1,2,3] -> G3 [0,1,2,3,4]
-        # Tests PR #160 failure mode (unsplit validation overfitting in G2/G3) vs Split-Shift MDL Gate!
+        # Related to PR #160: unsplit noisy-validation overfitting versus a split-shift gate.
+        # This cascade is a synthetic analogue; it does not rerun the Astra/Lean pilot.
         # ---------------------------------------------------------------------
         donor2 = init_organism(rng_d2)
         train_organism_adam(donor2, env, [0, 1, 3], rng_d2, steps=290)
@@ -789,17 +804,17 @@ def run_e13_suite(n_seeds: int = 12) -> Dict:
             used_m1_u.extend(meta_u["slot_m1"])
             used_m2_u.extend(meta_u["slot_m2"])
 
-            # Split-Shift + Fisher-MDL Generalization Gate (E13 closure of #160):
+            # Split-shift generalization gate: shifted MSE + 0.012 * Frobenius + 3 * keep MSE.
             X_val_sh, Y_val_sh = env.sample_batch(rng_ev, active_skills + [sk_id], n_per_skill=24, shifted=True)
             parent_flat = cur_gated.flat_params().astype(np.float64)
 
-            def mdl_gate_loss(c_org: MultiLayerOrganism) -> float:
+            def split_shift_gate_loss(c_org: MultiLayerOrganism) -> float:
                 sh_mse = float(np.mean((c_org.predict(X_val_sh) - Y_val_sh) ** 2))
                 frob = float(np.linalg.norm(c_org.flat_params().astype(np.float64) - parent_flat))
                 k_drift = float(np.mean((c_org.predict(X_k_g) - cur_gated.predict(X_k_g)) ** 2))
                 return sh_mse + 0.012 * frob + 3.0 * k_drift
 
-            cur_gated = cand_clean_g if mdl_gate_loss(cand_clean_g) <= mdl_gate_loss(cand_ov_g) else cand_ov_g
+            cur_gated = cand_clean_g if split_shift_gate_loss(cand_clean_g) <= split_shift_gate_loss(cand_ov_g) else cand_ov_g
             used_m1_g.extend(meta_g["slot_m1"])
             used_m2_g.extend(meta_g["slot_m2"])
 
@@ -837,6 +852,13 @@ def run_e13_suite(n_seeds: int = 12) -> Dict:
         if multigen_ungated_shifted_r2[0][s] < multigen_ungated_shifted_r2[1][s] < multigen_ungated_shifted_r2[2][s] < multigen_ungated_shifted_r2[3][s]
     )
 
+    def _fseq(xs):
+        return [float(x) for x in xs]
+
+    # Two-sided fair-coin p is stored only when every A4 seed passes, so a
+    # preregistered 11/12 bar emits no p-value.
+    sign_p = round(2.0 * (2.0 ** (-n_seeds)), 7) if sum(a3_joint) == n_seeds else None
+
     return {
         "experiment": "E13_Gauge_Aligned_Geodesic_Neural_Plasmid_Splicing",
         "n_seeds": n_seeds,
@@ -851,6 +873,10 @@ def run_e13_suite(n_seeds: int = 12) -> Dict:
         "falsifier_2_nullity_at_160_anchors": {
             "A1_exact_readout_nullity_mean": round(float(np.mean(nullities_a1)), 2),
             "A3_spectral_fisher_nullity_mean": round(float(np.mean(nullities_gfpt)), 2),
+            "A3_spectral_fisher_nullity_definition": (
+                "M2 (96) minus the 99.5% energy rank of H2 on the A4 splice; "
+                "the graft overwrites the lowest Fisher-score neurons"
+            ),
         },
         "falsifier_1_curvature_retraction": {
             "drift_rms_flat_tangent_mean": summary_arms["A2_gfpt_flat_no_retraction"]["keep_drift_rms_mean"],
@@ -859,13 +885,36 @@ def run_e13_suite(n_seeds: int = 12) -> Dict:
             "retraction_beats_flat_seeds": f"{retraction_wins}/{n_seeds}",
         },
         "c2_invariant_gate_passes": f"{invariant_checks_passed}/{n_seeds}",
+        "c2_invariant_gate_implementation": "local Python mirror at r_invariant=120; not a call to weft_invariants.h",
         "single_graft_arms": summary_arms,
-        "sign_test_two_sided_p": round(2.0 * (2.0 ** (-n_seeds)), 7) if sum(a3_joint) == n_seeds else None,
+        "sign_test_two_sided_p": sign_p,
         "multigen_5skill_cascade_g0_to_g3_shifted_r2": {
             "ungated_local_val_teacher_160_baseline": u_curve,
-            "gated_split_shift_fisher_mdl": g_curve,
+            "gated_split_shift": g_curve,
             "strictly_monotonic_g0_g1_g2_g3_seeds_ungated": f"{monotonic_seeds_ungated}/{n_seeds}",
             "strictly_monotonic_g0_g1_g2_g3_seeds_gated": f"{monotonic_seeds_gated}/{n_seeds}",
+        },
+        "per_seed": {
+            "seed": list(range(n_seeds)),
+            "donor_shifted_novel_r2": _fseq(donor_nov_r2s),
+            "unaligned_cross_seed_hidden_corr": _fseq(raw_corrs),
+            "whitened_procrustes_aligned_corr": _fseq(aligned_corrs),
+            "plasmid_wire_bytes": [int(b) for b in plasmid_bytes_list],
+            "A1_exact_readout_nullity": [int(v) for v in nullities_a1],
+            "A4_spectral_fisher_nullity": [int(v) for v in nullities_gfpt],
+            "drift_reduction_factor": _fseq(retraction_factors),
+            "c2_invariant_gate_pass": [int(v) for v in invariant_pass],
+            "arms": {
+                a: {
+                    "shifted_native_r2": _fseq(records[a]["shifted_native_r2"]),
+                    "shifted_novel_r2": _fseq(records[a]["shifted_novel_r2"]),
+                    "keep_drift_rms": _fseq(records[a]["keep_drift_rms"]),
+                    "joint_pass": [int(v) for v in records[a]["joint_pass"]],
+                }
+                for a in arms
+            },
+            "multigen_ungated_shifted_r2": {str(g): _fseq(multigen_ungated_shifted_r2[g]) for g in range(4)},
+            "multigen_gated_shifted_r2": {str(g): _fseq(multigen_gated_shifted_r2[g]) for g in range(4)},
         },
         "wall_seconds": round(time.time() - t0, 2),
     }
