@@ -51,3 +51,9 @@ All 40 factorial proposals were valid. Thirty-four passed validation gates and s
 Each information-bearing arm met the combined IID improvement and retention criterion on only one of five seeds. None did so under the shifted distribution. These are target-error gains with weak preservation, without evidence of robust success. Follow-up conditional experiments are running separately.
 
 The factorial replay matched exactly. Its 40 response artifacts have an estimated API cost of $5.230925 at the recorded rates, separate from the first-study estimate and without an invoice claim.
+
+## Completed numerical fidelity probes
+
+All 22 paid probes returned valid answers and exact replay completed. Sparse planted-row readout was correct on 12/12 probes, mechanical row edits on 6/6 and planted equivalence judgments on 2/2. The two numerical threshold rules agreed with their paired classifier on 99.8046875% and 99.90234375% of 2,048 fresh inputs. No binary threshold-inference pass criterion was registered.
+
+These are sparse readout, arithmetic editing and approximate numerical inference results. They do not establish dense-weight precision or broader policy improvement. The local classifier is separate from the original checkpoint in the peer archive linked from phase4_fidelity/RESULTS.md.

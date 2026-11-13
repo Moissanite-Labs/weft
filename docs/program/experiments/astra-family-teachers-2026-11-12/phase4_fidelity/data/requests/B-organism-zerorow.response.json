@@ -1,0 +1,44 @@
+{
+  "request_file": "B-organism-zerorow.json",
+  "request_sha256": "12c900734649a61fabbfa2c2d007ef973ca4e8cec6e34ef66ac873a62dcc5df0",
+  "response": {
+    "id": "resp_0b055c85bf8d72bd016af66320191c87d1baeb6e4a149ac992",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 1287,
+      "input_tokens_details": {
+        "cache_write_tokens": 1284,
+        "cached_tokens": 0
+      },
+      "output_tokens": 24,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1311
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794532128,
+    "output": [
+      {
+        "id": "msg_0b055c85bf8d72bd016af66322570887d1a1d54e115c71d22b",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"edited_row\":[0,0,0,0,0,0,0,0]}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  },
+  "elapsed_seconds": 2.835861959028989,
+  "estimated_usd": 0.01728,
+  "estimate_kind": "reported tokens"
+}

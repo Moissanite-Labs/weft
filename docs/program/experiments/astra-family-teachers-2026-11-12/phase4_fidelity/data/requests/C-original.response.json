@@ -1,0 +1,44 @@
+{
+  "request_file": "C-original.json",
+  "request_sha256": "ab1fcb8f31ef3e2e3a0cff845cd6828f3a2aa69dc09fcd516762859f1910f0dc",
+  "response": {
+    "id": "resp_0d3aecd02852a92d016af66320cf6887d1950a68dd188c3d57",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 1201,
+      "input_tokens_details": {
+        "cache_write_tokens": 1198,
+        "cached_tokens": 0
+      },
+      "output_tokens": 524,
+      "output_tokens_details": {
+        "reasoning_tokens": 491
+      },
+      "total_tokens": 1725
+    },
+    "error": null,
+    "incomplete_details": null,
+    "created_at": 1794532128,
+    "output": [
+      {
+        "id": "msg_0d3aecd02852a92d016af66336876487d189d8a9492321e759",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"dominant_input_index\":0,\"threshold\":0.29743,\"class_above\":1,\"class_below\":0}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ]
+  },
+  "elapsed_seconds": 22.54027787502855,
+  "estimated_usd": 0.041205,
+  "estimate_kind": "reported tokens"
+}
