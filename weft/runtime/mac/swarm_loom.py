@@ -18,10 +18,10 @@ Implements the Apple Silicon micro-swarm architecture:
      - "hgt_foraging": Zero-order subspace mutation + HGT with static multi-niche
        foraging, basal upkeep, and apoptosis re-colonization.
      - "dissipative_chemostat": E14 convergence arm with PR #118 L2 laws.
-     - "graded_chemostat": E15 repaired L2 chemostat with uninverted unsolved-gap
-       multiplier, mass-conserving tile pools, niche-clean Soma/Spore inheritance
-       under configurable `spore_fraction`, and optional zero-order homeostatic
-       step-scale cooling (`adaptive_step`).
+     - "graded_chemostat": E15 L2 chemostat with the unsolved-gap allocation
+       rule `(unsolved_gap / mean)^2`, mass-conserving tile pools, niche-clean
+       Soma/Spore inheritance under configurable `spore_fraction`, and optional
+       zero-order homeostatic step-scale cooling (`adaptive_step`).
 """
 
 from __future__ import annotations
@@ -881,7 +881,7 @@ class VectorizedPlasmColony:
                     self.step_scale[~improved] * 0.90, min=0.0010
                 )
 
-            # 2. Repaired Law 2b (Unsolved-Gap Multiplier & Mass-Conserving Pool) + Law 2a
+            # 2. Unsolved-gap allocation rule and mass-conserving pool + Law 2a
             post_errors = self.evaluate_all_tiles()
             min_errs = post_errors.min(dim=0).values
             self.best_tile_error = torch.minimum(self.best_tile_error, min_errs)
