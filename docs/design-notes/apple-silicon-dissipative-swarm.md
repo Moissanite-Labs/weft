@@ -147,16 +147,16 @@ Combining PR #118's three causal laws (`Law 2a`, `Law 2b`, `Law 2c`) with `E14`'
 
 ---
 
-## 5. Concrete Roadmap: From `E14` and `L2` to the Composed Organism (`E15` and `E16`)
+## 5. Concrete Roadmap: From `E14` and `L2` to the Composed Organism (`E15`, `E16`, and `E17`)
 
-Every step below builds directly on committed files in `Moissanite-Labs/weft` so any seat can pick up the next stage without re-deriving prior work:
+Every step below builds directly on committed files in `Moissanite-Labs/weft` so any seat can pick up the next stage without re-deriving prior work. Experiment E16 is the endogenous recurrent Markov-blanket cell record in `https://github.com/Moissanite-Labs/weft-loom/blob/main/experiments/endogenous-cells-e16-2026-11/`. The Hybrid Organelle Loom, previously listed in this table as E16, is staged as E17 so this section has a single E16.
 
 | Stage | Target Files | What It Tests | Acceptance Criteria |
 |---|---|---|---|
 | **1. `E14` (Done, 3 of 5 held, see section 6)** | `weft/runtime/mac/swarm_loom.py`, `https://github.com/Moissanite-Labs/weft-loom/blob/main/experiments/apple-silicon-swarm-2026-11/` | Vectorized `[N, D, D]` MPS swarm, `hgt_beta` vs `paper1_blind`, competitive niche foraging across $M=8$ tiles | `H-S1` (`>=5x` MPS speedup), `H-S2` (`hgt_beta > 50%` win share vs `<5%` blind, `>=3x` error drop), `H-S3` (`8/8` niches, entropy `>=2.5` bits), `H-S4` (`0%` coasting), `H-S5` (`0` C2/watermark violations) |
 | **2. `L2` (PR #118, ready to run)** | `https://github.com/Moissanite-Labs/weft-loom/blob/main/experiments/razi-cells-laws-2026-11/code/cells/{metab,lineage}.py`, `run/run_l2.sh` | Agent-layer Weismann soma (`--weismann`), Chemostat flux (`--chemostat`), Gap-pay (`--gap-pay`), Soma+Spore (`--spore`) | `L2-a` (`0` overdrafts), `L2-b` (`<20%` soma coasting vs `93%` in `L1`), `L2-c` (spore basin jump), `L2-e` (`O1` reach `>= h + 0.10`), `L2-f` (`>=6/12` post-gen-0 germline replacements) |
 | **3. `E15` (Recorded 2026-11-11: graded tiles run, eight clauses, four held)** | `weft/runtime/mac/swarm_loom.py` (`mode="graded_chemostat"`) and `https://github.com/Moissanite-Labs/weft-loom/blob/main/experiments/graded-chemostat-e15-2026-11/` | Graded-difficulty tiles, a spore-fraction sweep, and the `graded_chemostat` allocation rule `(unsolved_gap / mean)^2`, with optional zero-order step cooling | The preregistered `>=2x` worst-tile bar of `dissipative_chemostat` over `hgt_foraging` was missed: worst-tile reduction was `0.0928` versus `0.0983`. `graded_chemostat_cooled` reached `0.1742` (`1.77x` over `hgt_foraging`). Full eight-clause verdicts are in the E15 record |
-| **4. `E16` (Hybrid Organelle Loom)** | `weft/runtime/mac/organelle_loom.py` + `weft/runtime/ic/ic_vm.py` | Couples each cell's MPS routing/adapter head `[N, D, r]` to a composable DAG of `C3` / bytecode organelles executed on the 8 P-cores and scored by deterministic step counts (`ITRS`) | Zero `.bench.lock`, 100% bit-reproducible fitness, horizontal transfer of discrete organelles between spore lineages, and multi-stage task compounding |
+| **4. `E17` (Hybrid Organelle Loom)** | `weft/runtime/mac/organelle_loom.py` + `weft/runtime/ic/ic_vm.py` | Couples each cell's MPS routing/adapter head `[N, D, r]` to a composable DAG of `C3` / bytecode organelles executed on the 8 P-cores and scored by deterministic step counts (`ITRS`) | Zero `.bench.lock`, 100% bit-reproducible fitness, horizontal transfer of discrete organelles between spore lineages, and multi-stage task compounding |
 
 ---
 
