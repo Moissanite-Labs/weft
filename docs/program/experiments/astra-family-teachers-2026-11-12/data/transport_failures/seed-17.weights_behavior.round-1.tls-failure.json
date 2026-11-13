@@ -1,0 +1,7 @@
+{
+  "request_file": "seed-17.weights_behavior.round-1.json",
+  "elapsed_seconds": 0.1141929579898715,
+  "error": {
+    "type": "URLError"
+  }
+}

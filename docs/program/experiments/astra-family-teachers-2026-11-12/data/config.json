@@ -1,0 +1,21 @@
+{
+  "rounds": 3,
+  "rounds_by_arm": {
+    "weights_behavior": 3,
+    "behavior_only": 3,
+    "scrambled_weights": 1
+  },
+  "random_draws": 32,
+  "rollout_seeds": [
+    701,
+    702,
+    703
+  ],
+  "hazard_relative_tolerance": 0.02,
+  "hazard_absolute_tolerance": 0.0002,
+  "low_urgency_drift_mse_budget": 0.0005,
+  "target_min_improvement": 1e-08,
+  "selection_metric": "movement_mse",
+  "teacher_model": "gpt-6-astra",
+  "random_distribution": "posthoc, never selected"
+}
