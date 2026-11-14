@@ -194,8 +194,8 @@ p { margin: 0 0 1em; }
 .hero canvas {
   position: absolute; inset: 0; width: 100%; height: 100%;
   opacity: 0.85;
-  -webkit-mask-image: linear-gradient(90deg, transparent 0 42%, rgb(0.0 0.0 0.0 / 0.5) 62%, #000000 88%);
-          mask-image: linear-gradient(90deg, transparent 0 42%, rgb(0.0 0.0 0.0 / 0.5) 62%, #000000 88%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0 54%, rgb(0 0 0 / 0.5) 70%, #000 90%);
+          mask-image: linear-gradient(90deg, transparent 0 54%, rgb(0 0 0 / 0.5) 70%, #000 90%);
   /* Pin live loom colours under A tokens */
   --bg: #090d0f;
   --thread-weft: #8abeb8;
@@ -398,7 +398,17 @@ section.alt { background: var(--bg-2); }
 .widget-card h3 { font-size: 1.1rem; margin-bottom: 6px; }
 .widget-card p { font-size: 0.92rem; margin: 0 0 8px; }
 @media (max-width: 700px) {
-  .hero canvas { opacity: 0.22; -webkit-mask-image: none; mask-image: none; }
+  .hero {
+    --band: clamp(150px, 42vw, 200px);
+    view-timeline-name: --hero; view-timeline-axis: block;
+  }
+  .hero canvas {
+    inset: 0 0 auto 0; height: var(--band); opacity: 0.85;
+    -webkit-mask-image: linear-gradient(180deg, #000 0 58%, transparent 100%);
+            mask-image: linear-gradient(180deg, #000 0 58%, transparent 100%);
+  }
+  .hero .wrap { padding-top: calc(var(--band) + 4px); padding-bottom: 48px; }
+  .hero-meta { font-size: 1rem; gap: 6px 16px; }
 }
 .card h3 a { color: var(--ink); text-decoration: none; }
 .card h3 a:hover { color: var(--ink); text-decoration: underline; text-decoration-color: var(--gold-flat); }
@@ -512,6 +522,23 @@ html.attn-off .attn-block.attn-read::before { display: none; }
 @media (prefers-reduced-motion: reduce) {
   .attn-warn, .attn-point-x .attn-x { animation: none; }
   .attn-tip, .attn-meter span { transition: none; }
+}
+/* On phones, keep the reading panel off-screen while the hero is still in view. */
+@media (max-width: 700px) {
+  html { timeline-scope: --hero; }
+  .attn-ui {
+    transform: translateY(calc(100% + 32px)); opacity: 0; visibility: hidden;
+    animation-name: attn-ui-after-hero; animation-duration: 1ms;
+    animation-timing-function: linear; animation-fill-mode: both;
+    animation-timeline: --hero; animation-range: exit 72% exit 82%;
+  }
+}
+@keyframes attn-ui-after-hero {
+  from { transform: translateY(calc(100% + 32px)); opacity: 0; visibility: hidden; }
+  to { transform: none; opacity: 1; visibility: visible; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .attn-ui { animation-range: exit 72% exit 73%; }
 }
 @media print {
   .attn-ui, .attn-overlay { display: none !important; }
