@@ -35,9 +35,15 @@ These rules matter more here than style does:
 
 ## Where things live
 
+- **Research records** are in [Moissanite-Labs/weft-loom](https://github.com/Moissanite-Labs/weft-loom): experiment
+  records, audits, incident write-ups and design notes. This repository takes code, CI, the site, the papers and the
+  program documents in `docs/program/`. A pull request that adds files under `docs/program/experiments/`,
+  `docs/program/audit/`, `experiments/`, `audit/`, `incidents/`, `notes/` or a new file in `docs/design-notes/` fails
+  the lane check in CI (`scripts/check_lanes.py`). Open it in weft-loom instead. [REVIEWING.md](REVIEWING.md) says how
+  changes here are reviewed.
 - **The design corpus** is in [Moissanite-Labs/weft-corpus](https://github.com/Moissanite-Labs/weft-corpus). It is a
-  verbatim, read-only archive. Put corrections, analysis and repairs here instead, in `docs/` (for example
-  `docs/corpus/` or `docs/design-notes/`) or in code under `weft/runtime/`, and cite the source by path and line,
+  verbatim, read-only archive. Put corrections, analysis and repairs in this repository's `docs/corpus/`, in a
+  weft-loom design note, or in code under `weft/runtime/`, and cite the source by path and line,
   such as `weft/mac.md:50-100`. `scripts/corpus_audit.py` (now in [weft-loom](https://github.com/Moissanite-Labs/weft-loom)) keeps the evidence ledger tied to the commit the corpus was
   read at.
 - **The design language** (Eido) is in [Moissanite-Labs/weft-eido](https://github.com/Moissanite-Labs/weft-eido).

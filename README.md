@@ -32,7 +32,9 @@ Weft starts from three ideas:
 
 Weft began as a long design conversation. That corpus is kept word for word in
 [Moissanite-Labs/weft-corpus](https://github.com/Moissanite-Labs/weft-corpus), and this repository turns
-it into code that runs, tests that can fail, and documents that say plainly which is which.
+it into code that runs, tests that can fail, and documents that say plainly which is which. Experiment records, audits
+and design notes are kept in [Moissanite-Labs/weft-loom](https://github.com/Moissanite-Labs/weft-loom); this repository
+holds the software, the site and the papers.
 
 > [!IMPORTANT]
 > **No token. No sale. Nothing on-chain.** Weft has no coin or token and nothing deployed to any blockchain. The Solidity
@@ -96,7 +98,7 @@ weft/runtime/        Code: the C1–C7 components and the Mac harness, each with
 site/                The w3ft.org website: static, deployed by wrangler.jsonc (site/papers/ is generated)
 papers/              The paper series: Markdown sources, experiments, figures and the HTML/PDF templates
 docs/                Documentation: mission, roadmap, glossary, interface specs, design notes, the build program
-docs/program/        Build program, convergence plan, experiment cards and a file-by-file evidence ledger
+docs/program/        Build program, convergence plan and experiment cards (the records themselves are in weft-loom)
 docs/corpus/         Claims register, safety index and digests of the source material
 scripts/             Corpus audit, site sync and browser tests
 ```
@@ -128,6 +130,7 @@ itself to a few rules:
 
 | Repository | What it holds |
 |---|---|
+| [weft-loom](https://github.com/Moissanite-Labs/weft-loom) | The research side: experiment records with preregistrations and results, audits with their evidence, incident write-ups and design notes. Code here may cite a record there, but does not copy it. |
 | [weft-eido](https://github.com/Moissanite-Labs/weft-eido) | Eido, the design language: philosophy and dependency-free modules. `site/` vendors four of them. |
 | [weft-corpus](https://github.com/Moissanite-Labs/weft-corpus) | The original discovery sessions, verbatim. Corpus paths cited in code and docs here (for example `weft/design/craft.md:136`) refer to that repository. |
 | [abios](https://github.com/Moissanite-Labs/abios) | Weft's agent-messaging protocol (SYM-2P). The telemetry line here is an earlier dialect; moving it onto abios is [#67](https://github.com/Moissanite-Labs/weft/issues/67). |

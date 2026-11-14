@@ -25,6 +25,10 @@ jobs:
         with:
           node-version: "20"
 
+      - name: Lane check (experiment records, audits and design notes belong in weft-loom)
+        run: |
+          python3 -m unittest discover -s scripts -p test_check_lanes.py
+          python3 scripts/check_lanes.py
       - name: Install Python runtime dependencies (numpy + CPU torch, matplotlib for paper figures)
         run: |
           python3 -m pip install --upgrade pip
