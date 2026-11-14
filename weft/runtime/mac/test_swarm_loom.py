@@ -26,6 +26,7 @@ from weft.runtime.mac.swarm_loom import (
     VectorizedPlasmColony,
     compute_swarm_arena_size,
     run_swarm_loom_cycle,
+    within_shard_midrank_pool,
 )
 
 
@@ -207,6 +208,57 @@ class TestMpsHardwareAcceleration(unittest.TestCase):
             self.assertGreater(report["elapsed_ms"], 0.0)
         finally:
             colony.close()
+
+
+class TestWithinShardMidrankPool(unittest.TestCase):
+    """Cross-shard pooling by within-shard mid-rank percentile."""
+
+    SHARDS = [
+        [(0, 5.00), (1, 5.20), (2, 4.80)],
+        [(0, 5.10), (1, 5.30), (2, 4.90)],
+        [(1, -4.80), (2, -5.20)],
+    ]
+
+    def test_raw_mean_misorders_but_midrank_keeps_dominance(self) -> None:
+        # Cell 1 beats cell 0 and cell 2 on every shard it shares with them,
+        # but cell 0 only appears on the two high-baseline shards.
+        raw = {}
+        for shard in self.SHARDS:
+            for cid, s in shard:
+                raw.setdefault(cid, []).append(s)
+        raw_mean = {cid: sum(v) / len(v) for cid, v in raw.items()}
+        self.assertGreater(raw_mean[0], raw_mean[1])
+        pooled = within_shard_midrank_pool(self.SHARDS)
+        self.assertGreater(pooled[1], pooled[0])
+        self.assertGreater(pooled[0], pooled[2])
+
+    def test_invariant_under_per_shard_monotone_rescaling(self) -> None:
+        base = within_shard_midrank_pool(self.SHARDS)
+        shifted = [
+            [(cid, 3.0 * s + 100.0) for cid, s in self.SHARDS[0]],
+            [(cid, s - 7.5) for cid, s in self.SHARDS[1]],
+            [(cid, 0.25 * s + 1e6) for cid, s in self.SHARDS[2]],
+        ]
+        self.assertEqual(within_shard_midrank_pool(shifted), base)
+
+    def test_ties_take_the_midrank(self) -> None:
+        pooled = within_shard_midrank_pool([[(0, 1.0), (1, 1.0), (2, 2.0), (3, 0.0)]])
+        self.assertEqual(pooled[0], 0.5)
+        self.assertEqual(pooled[1], 0.5)
+        self.assertEqual(pooled[2], 0.875)
+        self.assertEqual(pooled[3], 0.125)
+
+    def test_empty_shards_are_skipped(self) -> None:
+        self.assertEqual(within_shard_midrank_pool([[], [(4, 2.0)]]), {4: 0.5})
+        self.assertEqual(within_shard_midrank_pool([]), {})
+
+    def test_rejects_non_finite_scores_and_duplicate_cells(self) -> None:
+        with self.assertRaises(ValueError):
+            within_shard_midrank_pool([[(0, float("nan")), (1, 1.0)]])
+        with self.assertRaises(ValueError):
+            within_shard_midrank_pool([[(0, float("inf")), (1, 1.0)]])
+        with self.assertRaises(ValueError):
+            within_shard_midrank_pool([[(0, 1.0), (0, 2.0)]])
 
 
 if __name__ == "__main__":

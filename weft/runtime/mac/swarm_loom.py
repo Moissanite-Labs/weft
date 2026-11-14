@@ -1137,3 +1137,41 @@ def run_swarm_loom_cycle(
     finally:
         arena.close(unlink=True)
     return report
+
+
+def within_shard_midrank_pool(
+    shard_cell_scores: Sequence[Sequence[Tuple[int, float]]],
+) -> Dict[int, float]:
+    """Pool per-shard cell scores as within-shard mid-rank percentiles.
+
+    Each shard is a sequence of ``(cell_id, score)`` pairs. Inside a shard, a
+    score becomes ``(below + 0.5 * tied) / n``, where ``below`` counts strictly
+    lower scores, ``tied`` counts equal scores including itself, and ``n`` is
+    the shard size. A cell's pooled value is the mean of its percentiles over
+    the shards it appears in.
+
+    The percentiles depend only on the order of scores within each shard, so a
+    per-shard baseline shift or any strictly increasing rescaling of one shard
+    leaves the pooled values unchanged. Raw pooling does not have this
+    property: a cell routed to shards with a high baseline can outrank a cell
+    that beats it on every shard they share.
+
+    Raises ``ValueError`` on a non-finite score or a cell listed twice in one
+    shard. Empty shards are skipped.
+    """
+    accum: Dict[int, list] = {}
+    for shard_index, shard in enumerate(shard_cell_scores):
+        n = len(shard)
+        if n == 0:
+            continue
+        ids = [cid for cid, _ in shard]
+        if len(set(ids)) != n:
+            raise ValueError(f"shard {shard_index} lists a cell more than once")
+        scores = [float(s) for _, s in shard]
+        if not all(math.isfinite(s) for s in scores):
+            raise ValueError(f"shard {shard_index} has a non-finite score")
+        for cid, s in zip(ids, scores):
+            below = sum(1 for v in scores if v < s)
+            tied = sum(1 for v in scores if v == s)
+            accum.setdefault(cid, []).append((below + 0.5 * tied) / n)
+    return {cid: sum(ps) / len(ps) for cid, ps in accum.items()}
