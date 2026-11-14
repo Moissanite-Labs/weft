@@ -52,6 +52,54 @@ class TestPipeSafeSplit(unittest.TestCase):
         self.assertEqual(cells, ["`x | y |"])
 
 
+    def test_double_backtick_span_stays_one_cell(self) -> None:
+        # Review 5907258856 item 3: a run of backticks opens a span that only
+        # a run of the same length closes.
+        self.assertEqual(
+            split_markdown_table_row_pipe_safe("| a | ``|x|`` | b |"),
+            ["a", "``|x|``", "b"],
+        )
+
+    def test_double_backtick_span_holds_single_backtick(self) -> None:
+        self.assertEqual(
+            split_markdown_table_row_pipe_safe("| a | `` `|` `` | b |"),
+            ["a", "`` `|` ``", "b"],
+        )
+
+    def test_backslash_kept_inside_code_span(self) -> None:
+        self.assertEqual(
+            split_markdown_table_row_pipe_safe("| a | `\\|` | b |"),
+            ["a", "`\\|`", "b"],
+        )
+
+    def test_escape_outside_code_span_still_applies(self) -> None:
+        self.assertEqual(
+            split_markdown_table_row_pipe_safe("| a \\| b | c |"),
+            ["a | b", "c"],
+        )
+
+
+def _seal(cert: dict) -> dict:
+    cert = dict(cert)
+    cert["certificate_sha256"] = canonical_json_sha256(cert)
+    return cert
+
+
+def _claim_only_verifier(cert: dict) -> bool:
+    """Checks the hash and `claim_ok`, ignores the input flag `active`."""
+    if canonical_json_sha256(cert) != cert.get("certificate_sha256"):
+        return False
+    return cert.get("claim_ok") is True
+
+
+def _nested_claim_verifier(cert: dict) -> bool:
+    """Checks the hash and a verdict nested under `witness`."""
+    if canonical_json_sha256(cert) != cert.get("certificate_sha256"):
+        return False
+    witness = cert.get("witness")
+    return isinstance(witness, dict) and witness.get("claim_ok") is True
+
+
 class TestTwoTierTamperProbe(unittest.TestCase):
     def test_strict_verifier_passes_both_probes(self) -> None:
         res = probe_json_certificate_tamper_in_memory(_sample_cert(), _strict_verifier)
@@ -67,6 +115,63 @@ class TestTwoTierTamperProbe(unittest.TestCase):
         bad["claim_ok"] = False
         res = probe_json_certificate_tamper_in_memory(bad, _strict_verifier)
         self.assertEqual(res["reason"], "baseline_certificate_rejected")
+
+    def test_input_flag_ahead_of_verdict_is_not_hash_only(self) -> None:
+        # Review 5907258856 item 1: `active` sorts before `claim_ok`. A checker
+        # that enforces `claim_ok` and ignores `active` is not hash-only.
+        cert = _seal({"active": True, "claim_ok": True})
+        res = probe_json_certificate_tamper_in_memory(cert, _claim_only_verifier)
+        self.assertTrue(res["ok"], res)
+        self.assertEqual(res["rejected_path"], ["claim_ok"])
+
+    def test_nested_verdict_is_visited(self) -> None:
+        cert = _seal({"version": 1, "witness": {"claim_ok": True}})
+        res = probe_json_certificate_tamper_in_memory(cert, _nested_claim_verifier)
+        self.assertTrue(res["ok"], res)
+        self.assertEqual(res["rejected_path"], ["witness", "claim_ok"])
+
+    def test_nested_hash_only_reports_every_mutated_path(self) -> None:
+        cert = _seal({"version": 1, "witness": {"claim_ok": True}})
+        res = probe_json_certificate_tamper_in_memory(cert, _lazy_hash_only_verifier)
+        self.assertFalse(res["ok"])
+        self.assertEqual(res["reason"], "rehashed_semantic_tamper_accepted")
+        self.assertIn(["witness", "claim_ok"], res["mutated_paths"])
+        self.assertIn(["version"], res["mutated_paths"])
+
+    def test_float_only_bound_hash_only_is_caught(self) -> None:
+        cert = _seal({"eps_bound": 0.25})
+        res = probe_json_certificate_tamper_in_memory(cert, _lazy_hash_only_verifier)
+        self.assertFalse(res["ok"])
+        self.assertEqual(res["reason"], "rehashed_semantic_tamper_accepted")
+        self.assertEqual(res["mutated_paths"], [["eps_bound"]])
+
+    def test_named_verdict_paths_must_each_be_enforced(self) -> None:
+        cert = _seal({"active": True, "claim_ok": True})
+        res = probe_json_certificate_tamper_in_memory(
+            cert, _claim_only_verifier, verdict_paths=[["claim_ok"], ["active"]]
+        )
+        self.assertFalse(res["ok"])
+        self.assertEqual(res["reason"], "rehashed_semantic_tamper_accepted")
+        self.assertEqual(res["mutated_path"], ["active"])
+
+    def test_missing_digest_returns_reason(self) -> None:
+        # Review 5907258856 item 2.
+        res = probe_json_certificate_tamper_in_memory(
+            {"claim_ok": True}, lambda c: c.get("claim_ok") is True
+        )
+        self.assertEqual(res, {"ok": False, "reason": "digest_missing"})
+
+    def test_empty_digest_returns_reason(self) -> None:
+        res = probe_json_certificate_tamper_in_memory(
+            {"claim_ok": True, "certificate_sha256": ""}, lambda c: c.get("claim_ok") is True
+        )
+        self.assertEqual(res, {"ok": False, "reason": "digest_empty"})
+
+    def test_non_string_digest_returns_reason(self) -> None:
+        res = probe_json_certificate_tamper_in_memory(
+            {"claim_ok": True, "certificate_sha256": 7}, lambda c: c.get("claim_ok") is True
+        )
+        self.assertEqual(res, {"ok": False, "reason": "digest_not_a_string"})
 
 
 if __name__ == "__main__":
