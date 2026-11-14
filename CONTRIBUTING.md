@@ -38,7 +38,7 @@ These rules matter more here than style does:
 - **The design corpus** is in [Moissanite-Labs/weft-corpus](https://github.com/Moissanite-Labs/weft-corpus). It is a
   verbatim, read-only archive. Put corrections, analysis and repairs here instead, in `docs/` (for example
   `docs/corpus/` or `docs/design-notes/`) or in code under `weft/runtime/`, and cite the source by path and line,
-  such as `weft/mac.md:50-100`. `scripts/corpus_audit.py` keeps the evidence ledger tied to the commit the corpus was
+  such as `weft/mac.md:50-100`. `scripts/corpus_audit.py` (now in [weft-loom](https://github.com/Moissanite-Labs/weft-loom)) keeps the evidence ledger tied to the commit the corpus was
   read at.
 - **The design language** (Eido) is in [Moissanite-Labs/weft-eido](https://github.com/Moissanite-Labs/weft-eido).
   `site/assets/js/{aesthetic-mixer,simplex-pad,cell-layout,glyph-font}.js` and `site/widgets/*.{html,jsx}` are
@@ -59,14 +59,20 @@ pip install numpy torch
 CI runs the commands in the [README quick start](README.md#quick-start), plus:
 
 ```bash
-python3 -m unittest discover -s scripts -p test_corpus_audit.py
-python3 scripts/corpus_audit.py check
 python3 weft/runtime/aywa/weft_daemon.py --self-test
 python3 weft/runtime/mac/darwin_sysctl.py
 python3 weft/runtime/mac/metal_loom.py
 pip install -r scripts/requirements-browser.txt && python3 -m playwright install chromium
 python3 scripts/test_telemetry_browser.py
 git status --porcelain   # must be empty: tests may not rewrite tracked files
+```
+
+The evidence-ledger tooling (`corpus_audit.py`, its tests) lives in [weft-loom](https://github.com/Moissanite-Labs/weft-loom), with the reading ledger and a path map in that repository's `MIGRATION.md`. To validate the ledger:
+
+```bash
+git clone https://github.com/Moissanite-Labs/weft-loom.git && cd weft-loom
+python3 -m unittest discover -s scripts -p test_corpus_audit.py
+python3 scripts/corpus_audit.py check --repo /path/to/weft
 ```
 
 ### Working on the website

@@ -13,7 +13,7 @@ Weft is the final-form architecture for Moissanite Labs. This program turns the 
 
 For the current proposed sequence following Discussion #11 and the 2026-11-08 owner follow-up, see [the convergence plan](convergence-plan.md), [use-now guide](use-now.md), and [variant register](variants.md) (#39). They distinguish six tracks, present evidence, hardware/resource gates, and implementation lineages. The phase lists below preserve the original program; their historical status is not evidence that a task is still pending or that a later capability is complete.
 
-The complete source review (#49) extends this into a [component-by-component phased build program](build-program.md), [experiment portfolio](experiment-cards.md), [file evidence ledger](audit/README.md) and [persistent handoff](resume.md). Use those for current sequencing while preserving this original charter and source lineage.
+The complete source review (#49) extends this into a [component-by-component phased build program](build-program.md), [experiment portfolio](experiment-cards.md), [file evidence ledger](https://github.com/Moissanite-Labs/weft-loom/blob/main/audit/README.md) and [persistent handoff](resume.md). Use those for current sequencing while preserving this original charter and source lineage.
 
 The other repositories remain bridges while hardware and society catch up. This program does not dissolve them, replace them, or apply Weft to them immediately. An organization around Weft may come later. It is not part of this phase.
 
