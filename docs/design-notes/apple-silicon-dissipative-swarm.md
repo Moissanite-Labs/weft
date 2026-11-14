@@ -149,7 +149,7 @@ Combining PR #118's three causal laws (`Law 2a`, `Law 2b`, `Law 2c`) with `E14`'
 
 ## 5. Concrete Roadmap: From `E14` and `L2` to the Composed Organism (`E15`, `E16`, and `E17`)
 
-Every step below builds directly on committed files in `Moissanite-Labs/weft` so any seat can pick up the next stage without re-deriving prior work. Experiment E16 is the endogenous recurrent Markov-blanket cell record in `https://github.com/Moissanite-Labs/weft-loom/blob/main/experiments/endogenous-cells-e16-2026-11/`. The Hybrid Organelle Loom, previously listed in this table as E16, is staged as E17 so this section has a single E16.
+Every step below builds directly on committed files, code in `Moissanite-Labs/weft` and experiment records in `Moissanite-Labs/weft-loom`, so any seat can pick up the next stage without re-deriving prior work. Experiment E16 is the endogenous recurrent Markov-blanket cell record in `https://github.com/Moissanite-Labs/weft-loom/blob/main/experiments/endogenous-cells-e16-2026-11/`. The Hybrid Organelle Loom, previously listed in this table as E16, is staged as E17 so this section has a single E16.
 
 | Stage | Target Files | What It Tests | Acceptance Criteria |
 |---|---|---|---|
