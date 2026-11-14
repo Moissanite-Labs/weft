@@ -4,25 +4,25 @@ Asma -> Weft Cross-Pollination: Multi-Probe Divergence Gate, Exact Farkas
 Probe Identifiability, & Helly-Swept Shift-Robust Synaptic Corridors
 (`weft/runtime/plasm/identifiability_gate.py`)
 =========================================================================
-Cross-pollinates three mathematical primitives proven in `Foundation-0/project-asma`
-(Theorems P01 & P02; PR #78 & PR #80) directly into `Moissanite-Labs/weft`:
+Three primitives adapted from `Foundation-0/project-asma`
+(https://github.com/Foundation-0/project-asma, Theorems P01 & P02; PR #78 & PR #80).
+Those proofs are not re-verified here; only the tests in
+`test_identifiability_gate.py` are checked in this repository.
 
-  1. Multi-Probe Divergence Index (`MPDI`) Gate (from Asma Monograph 01 / P02):
-     Eliminates Weft's "Scalar Loss Blind Spot" (identical to falling serum CA-125
-     masking 28.1:1 oligosecretory serosal progression). When a candidate HGT plasmid
-     or mitotic step improves dominant niche loss (`delta_dom < 0`) while silently
-     degrading low-amplitude tail/OOD anchor loss (`delta_tail > 0`), scalar loss
-     `w_dom * delta_dom + w_tail * delta_tail < 0` falsely commits the regression.
-     `evaluate_multi_probe_divergence_gate` computes an exact `Fraction` divergence
-     certificate and blocks false-reassurance commits fail-closed.
+  1. Multi-Probe Divergence Index (`MPDI`) Gate (adapted from Asma Monograph 01 / P02):
+     Computes a weighted scalar delta `w_dom * delta_dom + w_tail * delta_tail` and a
+     normalised positive-regression score for the tail/OOD anchor loss, and commits a
+     candidate only if both pass. This catches the case where a candidate improves
+     dominant loss (`delta_dom < 0`) while degrading tail loss (`delta_tail > 0`) and
+     the scalar delta alone would still commit it. No calibration evidence yet.
 
-  2. Exact Rational Farkas Probe-Identifiability & Probe Mitosis (from Asma P02 / PR #78):
+  2. Exact Rational Farkas Probe-Identifiability & Probe Mitosis (adapted from Asma P02 / PR #78):
      Applies the exact closed-form rational LP/Farkas dual (`L1_norm(lambda) <= 1/2`)
      to certify whether Weft's evaluation probes separate genuine skill adaptation
      from bounded affine covariate bias `abs(b) <= B_0` at noise tolerance `eps_target`,
      triggering orthogonal probe expansion when `eps_star <= eps_target`.
 
-  3. Helly-Swept Shift-Robust Synaptic Corridor Routing (from Asma P01):
+  3. Helly-Swept Shift-Robust Synaptic Corridor Routing (adapted from Asma P01):
      Extends `synaptic_flow.allocate_disjoint_synaptic_corridors` from a single static
      Fisher snapshot to a continuous covariate-shift interval `b in [-beta, +beta]`:
      sweeps exact rational 1-D Helly interval endpoints AND every open segment between
@@ -31,7 +31,7 @@ Cross-pollinates three mathematical primitives proven in `Foundation-0/project-a
      not enough: eligible rows can vanish strictly inside an open segment, so the
      worst-case flow is reported over knots AND segments.
 
-License: Apache-2.0. Mandate: No token. No sale. Nothing on-chain.
+License: Apache-2.0.
 Disclosure: AI-assisted research & execution via Gemini task agent per CONTRIBUTING.md.
 """
 

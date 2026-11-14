@@ -1,10 +1,16 @@
 #!/usr/bin/env python3
 """
-Independent Clean-Room Verifier for Paper 3 / Experiment E15
+Self-consistency checker for the recorded E15 run
 (`papers/03-certified-morphogenesis/verify_e15.py`)
-Imports nothing from `weft/` or `scripts/`; checks canonical SHA-256, exact aggregate
-counts across all 12 seeds, zero frozen-core drift, rational budget non-negativity,
-and boundary audit invariants. Fails closed (exit 1) on any tamper.
+Imports nothing from `weft/` or `scripts/`; checks the canonical SHA-256 over the
+file's own body, exact aggregate counts across all 12 seeds, zero frozen-core drift,
+rational budget non-negativity, and boundary audit invariants. Exits 1 if any of
+these checks fail.
+
+This is internal consistency of the JSON, not tamper evidence and not an
+independent re-derivation: the digest recipe is public, so an edited file with a
+recomputed `certificate_sha256` passes. Re-deriving the results needs
+`scripts/e15_dual_morphogenesis.py --check` in a pinned environment.
 """
 
 from __future__ import annotations
