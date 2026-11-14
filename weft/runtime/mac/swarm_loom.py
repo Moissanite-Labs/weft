@@ -1150,11 +1150,20 @@ def within_shard_midrank_pool(
     the shard size. A cell's pooled value is the mean of its percentiles over
     the shards it appears in.
 
-    The percentiles depend only on the order of scores within each shard, so a
-    per-shard baseline shift or any strictly increasing rescaling of one shard
-    leaves the pooled values unchanged. Raw pooling does not have this
-    property: a cell routed to shards with a high baseline can outrank a cell
-    that beats it on every shard they share.
+    The percentiles depend only on the strict order and the ties of the
+    float64 values compared within each shard. A per-shard shift or rescaling
+    leaves the pooled values unchanged when it preserves that order and those
+    ties on the float64 values. A map that is increasing on the reals can
+    still merge distinct floats: adding ``1e16`` to the scores ``0.0`` and
+    ``1.0`` rounds both to ``1e16``, so their pooled values move from
+    ``0.25`` and ``0.75`` to ``0.5`` and ``0.5``. Integer scores are converted
+    with ``float()`` first, so ``10**16`` and ``10**16 + 1`` tie as well.
+
+    Raw pooling also depends on each shard's baseline, so a cell routed to
+    shards with a high baseline can outrank a cell that beats it on every
+    shard they share. The pooled value is an unweighted mean over the shards a
+    cell appears in, so when two cells appear on different sets of shards,
+    the mean can still rank a cell below one it beats on every shared shard.
 
     Raises ``ValueError`` on a non-finite score or a cell listed twice in one
     shard. Empty shards are skipped.
