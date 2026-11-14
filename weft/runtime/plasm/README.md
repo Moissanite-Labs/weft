@@ -35,3 +35,12 @@ attached raw consumer mapping.
 ```bash
 python3 -m unittest discover -s weft/runtime/plasm -p 'test_*.py'
 ```
+
+## Anchored assay gate
+
+[`assay_gate.py`](assay_gate.py) separates a true capability gain from proxy-reward bleed in an A/B assay, the
+measurement question raised in the colony review (#111, finding F1). Two mixtures alone cannot tell the two apart:
+bleed `alpha` and conversion `c = alpha` give the same observed scores. Given `alpha` from an anchor batch that holds
+no item able to truly convert, the gate recovers the selection gain `r` and conversion rate `c` exactly, in
+`fractions.Fraction` arithmetic. It is a standalone helper; no harness calls it yet. Tests:
+[`test_assay_gate.py`](test_assay_gate.py).
