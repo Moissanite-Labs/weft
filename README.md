@@ -6,7 +6,7 @@
 
 <p align="center">
   <em>Become the weaver.</em><br>
-  Open research on adaptive models that change themselves within bounds you can check.<br>
+  Open research on adding and transferring capabilities in trained networks under bounds we can check.<br>
   A <strong>Moissanite Labs</strong> project · <a href="https://w3ft.org">w3ft.org</a>
 </p>
 
@@ -19,7 +19,20 @@
 
 ---
 
-Weft starts from three ideas:
+We study how to add a capability to a trained network, or transfer one into an independently trained sibling, without
+degrading what it already does off the distribution of the tasks we mean to keep.
+
+Our working hypothesis: commit weight edits only inside the null space of the kept capabilities' input–output Jacobian,
+and express transferable skills in permutation-free coordinates rather than raw weight indices. We have not shown that
+hypothesis holds. The **C2** gate in this repository still enforces baseline Frobenius drift (`‖W − W₀‖_F ≤ R`) and
+metabolic budget; Jacobian null-space projection is the direction in
+[#149](https://github.com/Moissanite-Labs/weft/issues/149).
+
+The first toy transfer run, E11 in [#150](https://github.com/Moissanite-Labs/weft/pull/150), was judged confounded on
+independent review: the recipient had already solved task 2 before transfer. A matched-transfer rerun is preregistered in
+[weft-loom](https://github.com/Moissanite-Labs/weft-loom).
+
+This repository holds the software we use to run those falsifiers, alongside three structural commitments:
 
 - **Models as cells.** Each model is treated as a cell in a shared memory arena. A cell proposes a cautious and an
   exploratory update, keeps whichever does better on its target, and leaves a frozen core untouched while the edges adapt.
@@ -155,8 +168,8 @@ Please follow the [Code of Conduct](CODE_OF_CONDUCT.md). Report security issues 
 ## Citing
 
 GitHub's *Cite this repository* button reads [CITATION.cff](CITATION.cff). Each paper's page on
-[w3ft.org/papers](https://w3ft.org/papers/) has its own citation. Zenodo DOIs will be added once the repository is
-public and archived ([releasing](docs/program/releasing.md)).
+[w3ft.org/papers](https://w3ft.org/papers/) has its own citation. We archive software releases and papers on Zenodo as
+they are published ([releasing](docs/program/releasing.md)).
 
 ## License
 
