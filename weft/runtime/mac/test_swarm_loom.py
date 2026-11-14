@@ -222,6 +222,12 @@ class TestWithinShardMidrankPool(unittest.TestCase):
     def test_raw_mean_misorders_but_midrank_keeps_dominance(self) -> None:
         # Cell 1 beats cell 0 and cell 2 on every shard it shares with them,
         # but cell 0 only appears on the two high-baseline shards.
+        # This fixture is one case where the pool keeps the shared-shard
+        # order. It is a single example, not a general guarantee: the pool is
+        # an unweighted mean over each cell's own shards, so once the shard
+        # sets differ a cell can lose to one it beats on every shared shard.
+        # test_unweighted_mean_can_drop_shared_shard_dominance pins a witness
+        # (pools 0.25 vs 0.19125).
         raw = {}
         for shard in self.SHARDS:
             for cid, s in shard:
@@ -240,6 +246,33 @@ class TestWithinShardMidrankPool(unittest.TestCase):
             [(cid, 0.25 * s + 1e6) for cid, s in self.SHARDS[2]],
         ]
         self.assertEqual(within_shard_midrank_pool(shifted), base)
+
+    def test_unweighted_mean_can_drop_shared_shard_dominance(self) -> None:
+        # Cell 1 beats cell 0 on the only shard they share, then is the
+        # unique minimum of three 100-cell shards that cell 0 is absent from.
+        shared = [(0, 1.0), (1, 2.0)]
+        extra = [[(1, 0.0)] + [(cid, 1.0 + cid) for cid in range(100, 199)]
+                 for _ in range(3)]
+        pooled = within_shard_midrank_pool([shared] + extra)
+        self.assertEqual(pooled[0], 0.25)
+        self.assertAlmostEqual(pooled[1], 0.19125, places=12)
+        self.assertGreater(pooled[0], pooled[1])
+
+    def test_invariance_needs_order_and_ties_preserved_in_float64(self) -> None:
+        base = within_shard_midrank_pool([[(0, 0.0), (1, 1.0)]])
+        self.assertEqual(base, {0: 0.25, 1: 0.75})
+        # Adding 1e16 is increasing on the reals but rounds both scores to
+        # the same float64, so the two cells tie.
+        self.assertEqual(0.0 + 1e16, 1.0 + 1e16)
+        shifted = within_shard_midrank_pool([[(0, 0.0 + 1e16), (1, 1.0 + 1e16)]])
+        self.assertEqual(shifted, {0: 0.5, 1: 0.5})
+        # Integers go through float() first and tie the same way.
+        ints = within_shard_midrank_pool([[(0, 10**16), (1, 10**16 + 1)]])
+        self.assertEqual(ints, {0: 0.5, 1: 0.5})
+        # A shift that keeps the float64 order and ties leaves the pool alone.
+        self.assertEqual(
+            within_shard_midrank_pool([[(0, 0.0 + 1e6), (1, 1.0 + 1e6)]]), base
+        )
 
     def test_ties_take_the_midrank(self) -> None:
         pooled = within_shard_midrank_pool([[(0, 1.0), (1, 1.0), (2, 2.0), (3, 0.0)]])
