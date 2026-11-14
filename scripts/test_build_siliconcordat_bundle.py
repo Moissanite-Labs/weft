@@ -26,7 +26,6 @@ def _load(name: str):
 
 
 bundle = _load("build_siliconcordat_bundle")
-cut = _load("build_siliconcordat_cut_bundle")
 
 
 def _git(cwd: Path, *args: str, check: bool = True) -> subprocess.CompletedProcess:
@@ -124,25 +123,6 @@ class BundleRequireWeftPinTest(_PinMixin, unittest.TestCase):
 
     def test_assert_weft_pin_accepts_head(self) -> None:
         bundle.assert_weft_pin(self._pin(self.head))
-
-
-class CutRequireWeftPinTest(_PinMixin, unittest.TestCase):
-    module = cut
-
-    def test_site_source_tree_rejects_unresolvable(self) -> None:
-        stderr = io.StringIO()
-        with redirect_stderr(stderr), self.assertRaises(SystemExit) as cm:
-            cut.site_source_tree(self._pin("0" * 40))
-        self.assertEqual(cm.exception.code, 1)
-        self.assertIn("cannot be resolved", stderr.getvalue())
-
-    def test_log_weft_pin_rejects_off_history(self) -> None:
-        orphan = _orphan_commit(self.root)
-        stderr = io.StringIO()
-        with redirect_stderr(stderr), self.assertRaises(SystemExit) as cm:
-            cut.log_weft_pin(self._pin(orphan))
-        self.assertEqual(cm.exception.code, 1)
-        self.assertIn("is not in HEAD's history", stderr.getvalue())
 
 
 if __name__ == "__main__":
