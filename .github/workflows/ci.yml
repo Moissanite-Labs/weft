@@ -29,6 +29,8 @@ jobs:
         run: |
           python3 -m unittest discover -s scripts -p test_check_lanes.py
           python3 scripts/check_lanes.py
+      - name: tools/ (pipe-safe splitter and certificate tamper probe)
+        run: python3 -m unittest discover -s tools -p 'test_*.py' -v
       - name: Install Python runtime dependencies (numpy + CPU torch, matplotlib for paper figures)
         run: |
           python3 -m pip install --upgrade pip
