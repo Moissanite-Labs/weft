@@ -46,6 +46,17 @@ jobs:
 
       - name: C2 invariants (Python + C11 header conformance)
         run: python3 -m unittest discover -s weft/runtime/invariants -p 'test_*.py'
+      - name: C11 conformance test in the Gemini-carbon experiment folder (#185)
+        # The C test needs the 2,048 vectors the engine generates, and the
+        # engine writes its report into the folder it runs in. Run it in a
+        # temp copy so the tree stays clean for the check at the end of
+        # this job. gcc comes with the ubuntu runner image.
+        run: |
+          tmp_dir="$RUNNER_TEMP/gemini-carbon-c11"
+          mkdir -p "$tmp_dir"
+          cp docs/program/experiments/weft-v2-gemini-carbon-2026-11/test_weft_v2_c11.c docs/program/experiments/weft-v2-gemini-carbon-2026-11/weft_v2_invariants.h docs/program/experiments/weft-v2-gemini-carbon-2026-11/weft_v2_engine.py "$tmp_dir"
+          cd "$tmp_dir"
+          python3 -c "import sys; from pathlib import Path; sys.path.insert(0, '.'); import weft_v2_engine; weft_v2_engine.build_and_run_c11_conformance(Path('.').resolve())"
       - name: C1 plasm (shared memory, A/B mitosis)
         run: python3 -m unittest discover -s weft/runtime/plasm -p 'test_*.py'
       - name: C3 interaction-combinator VM and BCP codec
