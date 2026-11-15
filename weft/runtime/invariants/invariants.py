@@ -131,7 +131,11 @@ def verify_weight_update_safety_ex(
             return False, float("inf"), b_val, "shape_mismatch"
         if not bool(torch.isfinite(baseline_w).all().item() and torch.isfinite(candidate_w).all().item()):
             return False, float("inf"), b_val, "non_finite_weights"
-        dist = float(torch.linalg.norm(candidate_w - baseline_w).item())
+        # Subtract and accumulate in float64, as the list path does. In float32 the
+        # norm can round a move that is over the radius down to an accept (#213).
+        # On CPU, because MPS tensors cannot convert to float64.
+        diff = candidate_w.detach().cpu().to(torch.float64) - baseline_w.detach().cpu().to(torch.float64)
+        dist = float(torch.linalg.norm(diff).item())
         if not math.isfinite(dist):
             return False, float("inf"), b_val, "non_finite_weights"
         if dist > r_val:
@@ -169,7 +173,7 @@ def verify_weight_update_safety_ex(
 def _frobenius_norm(arr: Any) -> float:
     if hasattr(arr, "detach"):
         import torch
-        return float(torch.linalg.norm(arr).item())
+        return float(torch.linalg.norm(arr.detach().cpu().to(torch.float64)).item())
     vals = list(_flatten_floats(arr))
     return math.sqrt(sum(v * v for v in vals))
 
