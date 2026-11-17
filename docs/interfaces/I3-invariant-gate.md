@@ -14,10 +14,11 @@ with the shared JSON conformance corpus in
 [`weft/runtime/invariants/vectors.json`](../../weft/runtime/invariants/vectors.json).
 
 All three implementations are tested directly against `vectors.json` in CI:
-Python and C11 execute all 27 cases (15 weight-update, 8 tension, 4 royalty).
+Python and C11 execute all 28 cases (16 weight-update, 8 tension, 4 royalty).
 The browser port defers `reject_pre_cast_radius_boundary`,
 `accept_huge_scale_weight_move`, `reject_locked_mask_ulp_tamper`,
-`accept_locked_mask_negzero_normalize`, and `reject_negative_cost`.
+`accept_locked_mask_negzero_normalize`, `reject_locked_value_beyond_f32`,
+and `reject_negative_cost`.
 `reject_negative_cost` is deferred pending a `site/` update of the published
 gate (see issue #168). The browser run covers the remaining weight-update
 cases, including `reject_zero_cost`.
