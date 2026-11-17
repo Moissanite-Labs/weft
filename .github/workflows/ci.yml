@@ -38,6 +38,8 @@ jobs:
 
       - name: C2 invariants (Python + C11 header conformance)
         run: python3 -m unittest discover -s weft/runtime/invariants -p 'test_*.py'
+      - name: C2 evaluation harness reproduces the committed table
+        run: python3 weft/runtime/invariants/eval_harness.py --check
       - name: C1 plasm (shared memory, A/B mitosis)
         run: python3 -m unittest discover -s weft/runtime/plasm -p 'test_*.py'
       - name: C3 interaction-combinator VM and BCP codec

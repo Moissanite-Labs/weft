@@ -47,7 +47,10 @@ class TestWeftInvariants(unittest.TestCase):
                     self.assertTrue(math.isinf(dist))
                 else:
                     self.assertAlmostEqual(dist, float(vec["expected_distance"]), places=6)
-                self.assertAlmostEqual(rem, float(vec["expected_remaining_budget"]), places=6)
+                if vec["expected_remaining_budget"] == "NaN":
+                    self.assertTrue(math.isnan(rem))
+                else:
+                    self.assertAlmostEqual(rem, float(vec["expected_remaining_budget"]), places=6)
 
     def test_weight_update_vectors_torch_fast_path(self) -> None:
         try:
@@ -78,7 +81,10 @@ class TestWeftInvariants(unittest.TestCase):
                     self.assertAlmostEqual(
                         dist, expected_dist, delta=max(1e-5, abs(expected_dist) * 1e-6)
                     )
-                self.assertAlmostEqual(rem, float(vec["expected_remaining_budget"]), places=5)
+                if vec["expected_remaining_budget"] == "NaN":
+                    self.assertTrue(math.isnan(rem))
+                else:
+                    self.assertAlmostEqual(rem, float(vec["expected_remaining_budget"]), places=5)
 
     def test_torch_path_rejects_move_between_f32_norm_and_exact_distance(self) -> None:
         # Regression for #213: with the radius set between the float32 norm and
