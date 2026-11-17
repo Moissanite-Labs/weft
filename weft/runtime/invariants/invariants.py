@@ -68,7 +68,15 @@ def _masked_frobenius_distance_f64(
             return False, float("inf")
         if locked_mask is not None and int(locked_mask[i]) != 0:
             if not (b == 0.0 and c == 0.0):
-                if _f32_bits(b) != _f32_bits(c):
+                try:
+                    bits_match = _f32_bits(b) == _f32_bits(c)
+                except OverflowError:
+                    # A locked value beyond the float32 range cannot be
+                    # compared in the gate's float32 world, so refuse it
+                    # instead of throwing. The C11 path takes float
+                    # arrays, so the same value refuses there too.
+                    return False, float("inf")
+                if not bits_match:
                     return False, float("inf")
             continue
         abs_diff = abs(float(c) - float(b))
