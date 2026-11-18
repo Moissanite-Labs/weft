@@ -452,6 +452,10 @@ static size_t run_royalty_vectors(JsonCursor *c) {
                 exp_up = parse_u64(c);
             } else if (strcmp(key, "expected_weaver_wei") == 0) {
                 exp_wv = parse_u64(c);
+            } else if (strcmp(key, "python_error") == 0) {
+                /* Marker for the Python test (it raises where C clamps). */
+                char ignored[MAX_STR_LEN];
+                parse_string(c, ignored, sizeof(ignored));
             } else {
                 fail_at(c, "unexpected key in royalty_vectors");
             }
