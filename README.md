@@ -123,6 +123,7 @@ itself to a few rules:
 - [Constitution vs. contract](docs/design-notes/constitution-vs-contract.md): where the stated governance and the example contracts disagree
 - [I4 shared-memory interface](docs/interfaces/I4-shared-memory.md)
 - [Build program](docs/program/build-program.md), [convergence plan](docs/program/convergence-plan.md), [experiment cards](docs/program/experiment-cards.md) and [evidence ledger](https://github.com/Moissanite-Labs/weft-loom/blob/main/audit/README.md)
+- [Research directions](docs/research/README.md) (program-level theses; experiment records stay in weft-loom)
 - [Program charter](docs/program/charter.md): the original charter, kept for history
 - [Releasing](docs/program/releasing.md): GitHub releases and Zenodo records for the software and papers
 
