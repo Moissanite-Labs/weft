@@ -169,8 +169,9 @@ Please follow the [Code of Conduct](CODE_OF_CONDUCT.md). Report security issues 
 ## Citing
 
 GitHub's *Cite this repository* button reads [CITATION.cff](CITATION.cff). Each paper's page on
-[w3ft.org/papers](https://w3ft.org/papers/) has its own citation. We archive software releases and papers on Zenodo as
-they are published ([releasing](docs/program/releasing.md)).
+[w3ft.org/papers](https://w3ft.org/papers/) has its own citation. Software releases and paper preprints will be
+archived on Zenodo once the owner cuts the first GitHub release and publishes the records
+([releasing](docs/program/releasing.md)).
 
 ## License
 
