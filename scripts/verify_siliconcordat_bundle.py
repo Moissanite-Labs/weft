@@ -6,6 +6,7 @@ from __future__ import annotations
 import re
 import sys
 from pathlib import Path
+from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
 DIST = ROOT / "dist"
@@ -74,6 +75,17 @@ def check_headers_catchall() -> None:
         fail("_headers missing /weft/* catch-all")
 
 
+def weft_href_ok(href: str) -> bool:
+    """True when href points at w3ft.org over https.
+
+    The host is parsed, not matched as text, so a look-alike host such as
+    w3ft.org.evil.com does not pass. urlparse lowercases the scheme and
+    hostname strips any port, so casing and ports do not matter.
+    """
+    parsed = urlparse(href)
+    return parsed.scheme == "https" and parsed.hostname == "w3ft.org"
+
+
 def lab_files() -> list[Path]:
     paths = [DIST / "index.html", DIST / "styles.css", DIST / "ml" / "index.html"]
     return [p for p in paths if p.is_file()]
@@ -91,7 +103,7 @@ def check_lab_pages() -> None:
         text = path.read_text(encoding="utf-8")
         weft_hrefs = re.findall(r'href="([^"]*w3ft[^"]*)"', text, re.I)
         for href in weft_hrefs:
-            if not href.startswith("https://w3ft.org"):
+            if not weft_href_ok(href):
                 fail(f"non-w3ft.org Weft href {href!r} in {path.name}")
         if 'href="/weft' in text or "siliconcordat.com/weft" in text.lower():
             if "siliconcordat.com/weft is planned" not in text:
