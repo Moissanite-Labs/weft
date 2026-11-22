@@ -17,7 +17,8 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def _load(name: str):
     spec = importlib.util.spec_from_file_location(name, ROOT / "scripts" / f"{name}.py")
-    assert spec and spec.loader
+    if spec is None or spec.loader is None:
+        raise RuntimeError(f"failed to load module spec for {name}")
     module = importlib.util.module_from_spec(spec)
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)
@@ -33,7 +34,11 @@ class WeftHrefOkTest(unittest.TestCase):
             "https://w3ft.org/papers/",
             "https://w3ft.org",
             "https://W3FT.ORG/papers/",
+            "HTTPS://w3ft.org/papers/",
             "https://w3ft.org:443/papers/",
+            "https://w3ft.org/!",
+            "https://w3ft.org/~",
+            "https://w3ft.org/caf\u00e9",
         ):
             with self.subTest(href=href):
                 self.assertTrue(verify.weft_href_ok(href))
@@ -43,15 +48,71 @@ class WeftHrefOkTest(unittest.TestCase):
             "https://w3ft.org.evil.com/x",
             "https://evil-w3ft.org/x",
             "https://evil.com/w3ft.org/x",
+            "https://w3ft.org./x",
+            "https://w3ft.org%2f.evil.com/x",
+            "https://evil.com%40w3ft.org/x",
         ):
             with self.subTest(href=href):
                 self.assertFalse(verify.weft_href_ok(href))
 
     def test_rejects_wrong_scheme_or_missing_scheme(self) -> None:
         for href in (
+            "",
             "http://w3ft.org/x",
+            "javascript://w3ft.org/%0aalert(1)",
             "w3ft.org/x",
             "//w3ft.org/x",
+            "https:w3ft.org/x",
+            "https:///w3ft.org/x",
+        ):
+            with self.subTest(href=href):
+                self.assertFalse(verify.weft_href_ok(href))
+
+    def test_rejects_backslash_and_userinfo_authority_confusion(self) -> None:
+        for href in (
+            "https://evil.com\\@w3ft.org/x",
+            "https://w3ft.org\\@evil.com/x",
+            "https://w3ft.org/papers\\x",
+            "https:\\\\w3ft.org/x",
+            "https://user:pass@w3ft.org/x",
+            "https://user@w3ft.org/x",
+            "https://:pass@w3ft.org/x",
+            "https://@w3ft.org/x",
+            "https://:@w3ft.org/x",
+            "https://evil.com:443@w3ft.org/x",
+        ):
+            with self.subTest(href=href):
+                self.assertFalse(verify.weft_href_ok(href))
+
+    def test_rejects_malformed_or_non_443_ports_and_ipv6_literals(self) -> None:
+        for href in (
+            "https://w3ft.org:80/x",
+            "https://w3ft.org:442/x",
+            "https://w3ft.org:444/x",
+            "https://w3ft.org:8443/x",
+            "https://w3ft.org:0/x",
+            "https://w3ft.org:abc/x",
+            "https://w3ft.org:99999/x",
+            "https://w3ft.org:-1/x",
+            "https://[w3ft.org]/x",
+            "https://[::1]/x",
+            "https://[::1]:443/x",
+            "https://[::1/x",
+        ):
+            with self.subTest(href=href):
+                self.assertFalse(verify.weft_href_ok(href))
+
+    def test_rejects_whitespace_and_control_characters(self) -> None:
+        for href in (
+            " https://w3ft.org/x",
+            "https://w3ft.org/x ",
+            "https://w3ft.org/a b",
+            "https://w3\tft.org/x",
+            "https://w3\nft.org/x",
+            "https://w3\rft.org/x",
+            "\x00https://w3ft.org/x",
+            "\x1fhttps://w3ft.org/x",
+            "https://w3ft.org/\x7f",
         ):
             with self.subTest(href=href):
                 self.assertFalse(verify.weft_href_ok(href))
@@ -83,18 +144,27 @@ class CheckLabPagesTest(unittest.TestCase):
             self.addCleanup(patch.stop)
         verify.check_lab_pages()
 
-    def test_look_alike_host_fails_and_names_the_href(self) -> None:
-        bad = "https://w3ft.org.evil.com/x"
-        dist = self._dist(f'<a href="{bad}">papers</a>\n')
-        patches = self._patched(dist)
-        for patch in patches:
-            patch.start()
-            self.addCleanup(patch.stop)
-        stderr = io.StringIO()
-        with redirect_stderr(stderr), self.assertRaises(SystemExit) as cm:
-            verify.check_lab_pages()
-        self.assertEqual(cm.exception.code, 1)
-        self.assertIn(bad, stderr.getvalue())
+    def test_bad_w3ft_hrefs_fail_closed_and_name_the_href(self) -> None:
+        for bad in (
+            "https://w3ft.org.evil.com/x",
+            "https://evil.com\\@w3ft.org/x",
+            "https://user:pass@w3ft.org/x",
+            "https://[w3ft.org]/x",
+            "https://w3ft.org:abc/x",
+            "https://w3ft.org:99999/x",
+        ):
+            with self.subTest(bad=bad):
+                dist = self._dist(f'<a href="{bad}">papers</a>\n')
+                stderr = io.StringIO()
+                with (
+                    mock.patch.object(verify, "DIST", dist),
+                    mock.patch.object(verify, "WEFT", dist / "weft"),
+                    redirect_stderr(stderr),
+                    self.assertRaises(SystemExit) as cm,
+                ):
+                    verify.check_lab_pages()
+                self.assertEqual(cm.exception.code, 1)
+                self.assertIn(repr(bad), stderr.getvalue())
 
 
 if __name__ == "__main__":

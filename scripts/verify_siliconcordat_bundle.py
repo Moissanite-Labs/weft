@@ -76,14 +76,29 @@ def check_headers_catchall() -> None:
 
 
 def weft_href_ok(href: str) -> bool:
-    """True when href points at w3ft.org over https.
+    """True when href points cleanly at w3ft.org over https.
 
-    The host is parsed, not matched as text, so a look-alike host such as
-    w3ft.org.evil.com does not pass. urlparse lowercases the scheme and
-    hostname strips any port, so casing and ports do not matter.
+    Rejects backslashes, ASCII control/whitespace characters, userinfo
+    (username/password), non-443 or malformed ports, bracketed/IPv6 hosts,
+    and look-alike hosts.
     """
-    parsed = urlparse(href)
-    return parsed.scheme == "https" and parsed.hostname == "w3ft.org"
+    if any(ch == "\\" or ord(ch) <= 0x20 or ord(ch) == 0x7F for ch in href):
+        return False
+    try:
+        parsed = urlparse(href)
+        port = parsed.port
+    except ValueError:
+        return False
+    if parsed.scheme != "https":
+        return False
+    if parsed.hostname != "w3ft.org":
+        return False
+    # urlparse sets username ("" if omitted) whenever userinfo (user[:pass]@) is present.
+    if parsed.username is not None:
+        return False
+    if port not in (None, 443):
+        return False
+    return True
 
 
 def lab_files() -> list[Path]:
