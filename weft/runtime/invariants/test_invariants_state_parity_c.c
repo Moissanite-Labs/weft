@@ -38,7 +38,7 @@ int main(void) {
     const vector_case_t cases[8] = {
         {"wu_valid_01", 2, 2, {0.0f, 0.0f}, {0.1f, 0.2f}, 10.0f, 1.0f, 1.0f, true, 9.0f, false},
         {"wu_invalid_dist_exceeded", 2, 2, {0.0f, 0.0f}, {1.0f, 1.0f}, 10.0f, 1.0f, 1.0f, false, 10.0f, false},
-        {"wu_invalid_budget_insufficient", 1, 1, {0.0f}, {0.1f}, 0.5f, 1.0f, 1.0f, false, -0.5f, false},
+        {"wu_invalid_budget_insufficient", 1, 1, {0.0f}, {0.1f}, 0.5f, 1.0f, 1.0f, false, 0.5f, false},
         {"wu_invalid_negative_cost", 1, 1, {0.0f}, {0.1f}, 10.0f, -1.0f, 1.0f, false, 10.0f, false},
         {"wu_invalid_nan_weight", 2, 2, {0.0f, nan_f}, {0.1f, 0.2f}, 10.0f, 1.0f, 1.0f, false, 10.0f, false},
         {"wu_invalid_inf_weight", 1, 1, {0.0f}, {inf_f}, 10.0f, 1.0f, 1.0f, false, 10.0f, false},

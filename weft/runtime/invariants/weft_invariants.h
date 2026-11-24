@@ -132,12 +132,10 @@ static inline bool weft_verify_weight_update_safety_masked(
         return false;
     }
     if (*metabolic_budget <= 0.0f || r_invariant < 0.0f) {
-        *metabolic_budget -= step_cost;
         if (out_distance != NULL) *out_distance = INFINITY;
         return false;
     }
     if (*metabolic_budget < step_cost) {
-        *metabolic_budget -= step_cost;
         if (out_distance != NULL) *out_distance = INFINITY;
         return false;
     }
