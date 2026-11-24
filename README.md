@@ -6,7 +6,7 @@
 
 <p align="center">
   <em>Become the weaver.</em><br>
-  Open research on adaptive models that change themselves within bounds you can check.<br>
+  Open research on adding and transferring capabilities in trained networks under bounds we can check.<br>
   A <strong>Moissanite Labs</strong> project · <a href="https://w3ft.org">w3ft.org</a>
 </p>
 
@@ -19,14 +19,28 @@
 
 ---
 
-Weft starts from three ideas:
+We study how to add a capability to a trained network, or transfer one into an independently trained sibling, without
+degrading what it already does off the distribution of the tasks we mean to keep.
+
+Our working hypothesis: commit weight edits only inside the null space of the kept capabilities' input–output Jacobian,
+and express transferable skills in permutation-free coordinates rather than raw weight indices. We have not shown that
+hypothesis holds. The **C2** gate in this repository still enforces baseline Frobenius drift (`‖W − W₀‖_F ≤ R`) and
+metabolic budget; Jacobian null-space projection is the direction in
+[#149](https://github.com/Moissanite-Labs/weft/issues/149).
+
+The first toy transfer run, E11 in [#150](https://github.com/Moissanite-Labs/weft/pull/150), was judged confounded on
+independent review: the recipient had already solved task 2 before transfer. A matched-transfer rerun is preregistered in
+[weft-loom](https://github.com/Moissanite-Labs/weft-loom).
+
+This repository holds the software we use to run those falsifiers, alongside three structural commitments:
 
 - **Models as cells.** Each model is treated as a cell in a shared memory arena. A cell proposes a cautious and an
   exploratory update, keeps whichever does better on its target, and leaves a frozen core untouched while the edges adapt.
 - **Bounds you can check.** A weight update is committed only if it stays within a fixed distance of a saved baseline,
   `‖W − W₀‖_F ≤ R`, and fits its resource budget, `budget ≥ cost > 0`. The same predicate is implemented in Python, C11 and
-  JavaScript. Python and JavaScript are tested against one shared vector file, and C11 against hand-written copies of
-  the same cases ([#42](https://github.com/Moissanite-Labs/weft/issues/42) unifies them).
+  JavaScript. Python and C11 are tested against one shared vector file with 27 cases: 15 weight-update, 8 tension and
+  4 royalty. The JavaScript gate covers weight updates only and runs 10 of those 15 cases, with the other 5 listed
+  as deferred in its test.
 - **Interfaces as fields.** [*Eido*](https://github.com/Moissanite-Labs/weft-eido), Weft's design language (internal name *Aywa*), treats visual style as a point in a continuous space and feeds
   the screen small hash-checked lines instead of loose JSON.
 
@@ -45,7 +59,7 @@ holds the software, the site and the papers.
 | Component | Path | What it is | Status |
 |---|---|---|---|
 | C1 · Plasm | [`weft/runtime/plasm`](weft/runtime/plasm) | Shared-memory arena, A/B candidate updates, frozen-core mask, provenance watermark checks | ✅ runs · tested |
-| C2 · Invariants | [`weft/runtime/invariants`](weft/runtime/invariants) | The safety gate in Python, C11 and [JS](site/assets/js/invariant-gate.js). Python is tested against all 12 shared conformance vectors, JS against the 6 weight-update vectors; the C11 test uses hand-written copies of 10 of the cases | ✅ runs · tested |
+| C2 · Invariants | [`weft/runtime/invariants`](weft/runtime/invariants) | The safety gate in Python, C11 and [JS](site/assets/js/invariant-gate.js), tested against one shared file of 27 conformance vectors (JS has the weight-update gate only and runs 10 of its 15 vectors) | ✅ runs · tested |
 | C3 · IC | [`weft/runtime/ic`](weft/runtime/ic) | Interaction-combinator reducer, binary serializer, graph-committed execution record | ✅ runs · tested |
 | C4 · Ledger | [`weft/runtime/ledger`](weft/runtime/ledger) | Solidity drafts for provenance, metering and disputes | 📝 draft · not compiled in CI, never deployed |
 | C5 · Gateway | [`weft/runtime/gateway`](weft/runtime/gateway) | Offline contract simulator, pure-Python Keccak-256, ABI topic checks | 🧪 simulation only |
@@ -123,6 +137,7 @@ itself to a few rules:
 - [Constitution vs. contract](docs/design-notes/constitution-vs-contract.md): where the stated governance and the example contracts disagree
 - [I4 shared-memory interface](docs/interfaces/I4-shared-memory.md)
 - [Build program](docs/program/build-program.md), [convergence plan](docs/program/convergence-plan.md), [experiment cards](docs/program/experiment-cards.md) and [evidence ledger](https://github.com/Moissanite-Labs/weft-loom/blob/main/audit/README.md)
+- [Research directions](docs/research/README.md) (program-level theses; experiment records stay in weft-loom)
 - [Program charter](docs/program/charter.md): the original charter, kept for history
 - [Releasing](docs/program/releasing.md): GitHub releases and Zenodo records for the software and papers
 
@@ -142,7 +157,6 @@ Update them with `python3 scripts/vendor.py --eido ../weft-eido --corpus ../weft
 
 Contributions that make a claim testable, or show that one is wrong, are the most valuable thing you can send.
 Start with [CONTRIBUTING.md](CONTRIBUTING.md). Every commit needs a DCO sign-off (`git commit -s`). Good places to begin:
-[#42](https://github.com/Moissanite-Labs/weft/issues/42),
 [#43](https://github.com/Moissanite-Labs/weft/issues/43),
 [#44](https://github.com/Moissanite-Labs/weft/issues/44),
 [#45](https://github.com/Moissanite-Labs/weft/issues/45),
@@ -155,8 +169,9 @@ Please follow the [Code of Conduct](CODE_OF_CONDUCT.md). Report security issues 
 ## Citing
 
 GitHub's *Cite this repository* button reads [CITATION.cff](CITATION.cff). Each paper's page on
-[w3ft.org/papers](https://w3ft.org/papers/) has its own citation. Zenodo DOIs will be added once the repository is
-public and archived ([releasing](docs/program/releasing.md)).
+[w3ft.org/papers](https://w3ft.org/papers/) has its own citation. Software releases and paper preprints will be
+archived on Zenodo once the owner cuts the first GitHub release and publishes the records
+([releasing](docs/program/releasing.md)).
 
 ## License
 
