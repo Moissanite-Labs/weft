@@ -354,6 +354,182 @@
       "expected_distance": "Inf",
       "expected_remaining_budget": 10.0,
       "expected_reason": "non_finite_weights"
+    },
+    {
+      "name": "reject_nan_cost",
+      "baseline": [
+        1.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "candidate": [
+        1.05,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "r_invariant": 0.5,
+      "budget": 10.0,
+      "cost": "NaN",
+      "expected_accepted": false,
+      "expected_distance": "Inf",
+      "expected_remaining_budget": 10.0,
+      "expected_reason": "non_finite_parameters"
+    },
+    {
+      "name": "reject_inf_cost",
+      "baseline": [
+        1.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "candidate": [
+        1.05,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "r_invariant": 0.5,
+      "budget": 10.0,
+      "cost": "Inf",
+      "expected_accepted": false,
+      "expected_distance": "Inf",
+      "expected_remaining_budget": 10.0,
+      "expected_reason": "non_finite_parameters"
+    },
+    {
+      "name": "reject_nan_budget",
+      "baseline": [
+        1.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "candidate": [
+        1.05,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "r_invariant": 0.5,
+      "budget": "NaN",
+      "cost": 1.0,
+      "expected_accepted": false,
+      "expected_distance": "Inf",
+      "expected_remaining_budget": "NaN",
+      "expected_reason": "non_finite_parameters"
+    },
+    {
+      "name": "reject_inf_budget",
+      "baseline": [
+        1.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "candidate": [
+        1.05,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "r_invariant": 0.5,
+      "budget": "Inf",
+      "cost": 1.0,
+      "expected_accepted": false,
+      "expected_distance": "Inf",
+      "expected_remaining_budget": "Inf",
+      "expected_reason": "non_finite_parameters"
+    },
+    {
+      "name": "reject_nan_radius",
+      "baseline": [
+        1.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "candidate": [
+        1.05,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "r_invariant": "NaN",
+      "budget": 10.0,
+      "cost": 1.0,
+      "expected_accepted": false,
+      "expected_distance": "Inf",
+      "expected_remaining_budget": 10.0,
+      "expected_reason": "non_finite_parameters"
+    },
+    {
+      "name": "reject_inf_radius",
+      "baseline": [
+        1.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "candidate": [
+        1.05,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "r_invariant": "Inf",
+      "budget": 10.0,
+      "cost": 1.0,
+      "expected_accepted": false,
+      "expected_distance": "Inf",
+      "expected_remaining_budget": 10.0,
+      "expected_reason": "non_finite_parameters"
+    },
+    {
+      "name": "reject_nan_baseline",
+      "baseline": [
+        "NaN",
+        0.0,
+        0.0,
+        1.0
+      ],
+      "candidate": [
+        1.05,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "r_invariant": 0.5,
+      "budget": 10.0,
+      "cost": 1.0,
+      "expected_accepted": false,
+      "expected_distance": "Inf",
+      "expected_remaining_budget": 10.0,
+      "expected_reason": "non_finite_weights"
+    },
+    {
+      "name": "reject_inf_baseline",
+      "baseline": [
+        "Inf",
+        0.0,
+        0.0,
+        1.0
+      ],
+      "candidate": [
+        1.05,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "r_invariant": 0.5,
+      "budget": 10.0,
+      "cost": 1.0,
+      "expected_accepted": false,
+      "expected_distance": "Inf",
+      "expected_remaining_budget": 10.0,
+      "expected_reason": "non_finite_weights"
     }
   ],
   "tension_vectors": [
