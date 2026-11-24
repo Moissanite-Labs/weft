@@ -63,7 +63,8 @@ def run_weight_safety_checks():
         "status": "PASS" if not nan_res["accepted"] else "FAIL",
     })
 
-    # 3) Remaining budget 1 must not accept an update costing 2.5 (no success with budget -1.5).
+    # 3) Remaining budget 1 must not accept an update costing 2.5.
+    # A rejected call leaves the budget at 1.0 (#210).
     underflow = verify_weight_update_safety(
         baseline, current, candidate, remaining_budget=1.0, update_cost=2.5, max_baseline_distance=500.0
     )
@@ -72,7 +73,7 @@ def run_weight_safety_checks():
         "accepted": underflow["accepted"],
         "remaining_budget": underflow.get("remaining_budget"),
         "status": "PASS"
-        if (not underflow["accepted"] and underflow.get("remaining_budget") == -1.5)
+        if (not underflow["accepted"] and underflow.get("remaining_budget") == 1.0)
         else "FAIL",
     })
 
