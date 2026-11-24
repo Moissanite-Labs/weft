@@ -14,7 +14,7 @@ with the shared JSON conformance corpus in
 [`weft/runtime/invariants/vectors.json`](../../weft/runtime/invariants/vectors.json).
 
 All three implementations are tested directly against `vectors.json` in CI:
-Python and C11 execute all 28 cases (16 weight-update, 8 tension, 4 royalty).
+Python and C11 execute all 36 cases (24 weight-update, 8 tension, 4 royalty).
 The browser port defers `reject_pre_cast_radius_boundary`,
 `accept_huge_scale_weight_move`, `reject_locked_mask_ulp_tamper`,
 `accept_locked_mask_negzero_normalize`, `reject_locked_value_beyond_f32`,
@@ -41,7 +41,8 @@ radius $R$, remaining metabolic budget $b$, and step cost $c$, evaluation
 proceeds in strict precondition order:
 
 1. **Parameter finiteness (`non_finite_parameters`)**: if any of $b, c, R$ is
-   `NaN` or `±Inf`, reject with `distance = +Inf`.
+   `NaN` or `±Inf`, reject with `distance = +Inf`, preserving remaining budget
+   $b$ unchanged.
 2. **Sign preconditions (`non_positive_budget_or_cost`)**: if $c \le 0$, reject
    with `distance = +Inf` and remaining budget $b$ (the caller's budget is
    unchanged). If $b \le 0$ or $R < 0$ with a positive cost, reject with

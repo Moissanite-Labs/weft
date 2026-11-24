@@ -124,7 +124,7 @@ def verify_weight_update_safety_ex(
     r_val = float(r_invariant)
 
     if not (math.isfinite(b_val) and math.isfinite(c_val) and math.isfinite(r_val)):
-        return False, float("inf"), float("nan"), "non_finite_parameters"
+        return False, float("inf"), b_val, "non_finite_parameters"
     if c_val <= 0.0:
         return False, float("inf"), b_val, "non_positive_budget_or_cost"
     if b_val <= 0.0 or r_val < 0.0:
