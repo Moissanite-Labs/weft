@@ -134,6 +134,11 @@ class TestWeftInvariants(unittest.TestCase):
     def test_royalty_vectors(self) -> None:
         for vec in self.vectors["royalty_vectors"]:
             with self.subTest(vec=vec["name"]):
+                if vec.get("python_error") == "ValueError":
+                    # The C port clamps bps above 10000; Python raises instead.
+                    with self.assertRaises(ValueError):
+                        compute_royalty_split(vec["gross_wei"], vec["upstream_bps"])
+                    continue
                 split = compute_royalty_split(vec["gross_wei"], vec["upstream_bps"])
                 self.assertEqual(split["upstream_wei"], vec["expected_upstream_wei"])
                 self.assertEqual(split["weaver_wei"], vec["expected_weaver_wei"])
