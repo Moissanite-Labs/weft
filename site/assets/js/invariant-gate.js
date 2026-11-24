@@ -20,7 +20,7 @@ export function verifyWeightUpdateSafety(baseline, candidate, rInvariant, budget
   const reject = (distance, remainingBudget, reason) => ({ accepted: false, distance, remainingBudget, reason });
 
   if (!(Number.isFinite(b) && Number.isFinite(c) && Number.isFinite(r))) {
-    return reject(Infinity, NaN, "non_finite_parameters");
+    return reject(Infinity, b, "non_finite_parameters");
   }
   if (b <= 0 || c <= 0 || r < 0) return reject(Infinity, b - c, "non_positive_budget_or_cost");
   if (b < c) return reject(Infinity, b - c, "insufficient_metabolic_budget");
