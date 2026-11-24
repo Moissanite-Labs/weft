@@ -42,12 +42,12 @@ proceeds in strict precondition order:
 
 1. **Parameter finiteness (`non_finite_parameters`)**: if any of $b, c, R$ is
    `NaN` or `±Inf`, reject with `distance = +Inf`.
-2. **Sign preconditions (`non_positive_budget_or_cost`)**: if $c \le 0$, reject
-   with `distance = +Inf` and remaining budget $b$ (the caller's budget is
-   unchanged). If $b \le 0$ or $R < 0$ with a positive cost, reject with
-   `distance = +Inf` and deficit budget $b - c`.
+2. **Sign preconditions (`non_positive_budget_or_cost`)**: if $c \le 0$, $b \le 0$,
+   or $R < 0$, reject with `distance = +Inf` and remaining budget $b$ (the
+   caller's budget is unchanged).
 3. **Budget sufficiency (`insufficient_metabolic_budget`)**: if $b < c$, reject
-   with `distance = +Inf` and deficit budget $b - c$.
+   with `distance = +Inf` and remaining budget $b$ (the caller's budget is
+   unchanged).
 4. **Shape and non-empty check (`shape_mismatch`)**: if lengths differ or length
    is `0` (or a pointer is `NULL` in C11), reject with `distance = +Inf` and
    unchanged budget $b$.

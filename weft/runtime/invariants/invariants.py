@@ -112,12 +112,10 @@ def verify_weight_update_safety_ex(
     Evaluate the baseline-relative Frobenius distance and metabolic budget gate.
 
     Returns `(accepted, baseline_distance, remaining_budget, reason)`.
-    Notice that on rejection due to weight safety, non-finite values, or a
-    non-positive step_cost, the caller's budget is not consumed
-    (`remaining_budget == current_budget`). A negative cost therefore cannot
-    mint budget. On a non-positive current_budget, a negative radius, or a
-    budget underflow, remaining_budget reports `current_budget - step_cost`
-    so callers can inspect the deficit.
+    Notice that on rejection the caller's budget is not consumed
+    (`remaining_budget == current_budget`), on every reject path. A negative
+    cost therefore cannot mint budget, and a rejected call cannot drive the
+    budget negative.
     """
     b_val = float(current_budget)
     c_val = float(step_cost)
@@ -128,9 +126,9 @@ def verify_weight_update_safety_ex(
     if c_val <= 0.0:
         return False, float("inf"), b_val, "non_positive_budget_or_cost"
     if b_val <= 0.0 or r_val < 0.0:
-        return False, float("inf"), b_val - c_val, "non_positive_budget_or_cost"
+        return False, float("inf"), b_val, "non_positive_budget_or_cost"
     if b_val < c_val:
-        return False, float("inf"), b_val - c_val, "insufficient_metabolic_budget"
+        return False, float("inf"), b_val, "insufficient_metabolic_budget"
 
     # Fast path for torch tensors when available (unmasked only; shared JSON mask cases use lists)
     if locked_mask is None and hasattr(baseline_w, "detach") and hasattr(candidate_w, "detach"):
