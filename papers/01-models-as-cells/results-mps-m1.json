@@ -1268,7 +1268,7 @@
     "weight_update_vectors": 16,
     "python_agrees": 16,
     "tension_vectors": 8,
-    "royalty_vectors": 4,
+    "royalty_vectors": 6,
     "implementations": [
       "Python (invariants.py)",
       "C11 (weft_invariants.h)",
