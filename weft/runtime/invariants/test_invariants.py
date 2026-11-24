@@ -288,7 +288,7 @@ class TestWeftInvariants(unittest.TestCase):
         if cost_f32 <= 0.0:
             return False, math.inf, bud_f32
         if bud_f32 <= 0.0 or r_inv_f32 < 0.0 or bud_f32 < cost_f32:
-            return False, math.inf, cls._f32(bud_f32 - cost_f32)
+            return False, math.inf, bud_f32
 
         scale = 0.0
         ssq = 1.0
