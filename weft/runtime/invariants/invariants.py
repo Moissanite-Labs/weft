@@ -100,6 +100,27 @@ def _masked_frobenius_distance_f64(
     return True, dist
 
 
+def _deduct_budget_monotone(b_val: float, c_val: float) -> float:
+    """Deduct positive `c_val <= b_val` with a 1-ULP monotone floor matching C11 `nextafterf`."""
+    next_budget = b_val - c_val
+    if next_budget >= b_val:
+        next_budget = math.nextafter(b_val, -math.inf)
+    return next_budget
+
+
+def _torch_frobenius_norm_f64(tensor: Any) -> float:
+    """Overflow/underflow-safe float64 Frobenius norm for torch tensors on CPU."""
+    import torch
+
+    flat = tensor.detach().cpu().to(torch.float64).reshape(-1)
+    if flat.numel() == 0:
+        return 0.0
+    scale = float(torch.max(torch.abs(flat)).item())
+    if not math.isfinite(scale) or scale == 0.0:
+        return scale
+    return scale * float(torch.linalg.norm(flat / scale).item())
+
+
 def verify_weight_update_safety_ex(
     baseline_w: Any,
     candidate_w: Any,
@@ -143,12 +164,12 @@ def verify_weight_update_safety_ex(
         # norm can round a move that is over the radius down to an accept (#213).
         # On CPU, because MPS tensors cannot convert to float64.
         diff = candidate_w.detach().cpu().to(torch.float64) - baseline_w.detach().cpu().to(torch.float64)
-        dist = float(torch.linalg.norm(diff).item())
+        dist = _torch_frobenius_norm_f64(diff)
         if not math.isfinite(dist):
             return False, float("inf"), b_val, "non_finite_weights"
         if dist > r_val:
             return False, dist, b_val, "baseline_distance_exceeded"
-        return True, dist, b_val - c_val, "ok"
+        return True, dist, _deduct_budget_monotone(b_val, c_val), "ok"
 
     base_flat = list(_flatten_floats(baseline_w))
     cand_flat = list(_flatten_floats(candidate_w))
@@ -157,17 +178,7 @@ def verify_weight_update_safety_ex(
     if locked_mask is not None and len(locked_mask) != len(base_flat):
         return False, float("inf"), b_val, "shape_mismatch"
 
-    if locked_mask is None:
-        sq_sum = 0.0
-        for b_elem, c_elem in zip(base_flat, cand_flat):
-            if not (math.isfinite(b_elem) and math.isfinite(c_elem)):
-                return False, float("inf"), b_val, "non_finite_weights"
-            diff = c_elem - b_elem
-            sq_sum += diff * diff
-        dist = math.sqrt(sq_sum)
-        dist_ok = math.isfinite(dist)
-    else:
-        dist_ok, dist = _masked_frobenius_distance_f64(base_flat, cand_flat, locked_mask)
+    dist_ok, dist = _masked_frobenius_distance_f64(base_flat, cand_flat, locked_mask)
 
     if not dist_ok:
         return False, float("inf"), b_val, "non_finite_weights"
@@ -175,15 +186,16 @@ def verify_weight_update_safety_ex(
     if dist > float(r_val):
         return False, dist_out, b_val, "baseline_distance_exceeded"
 
-    return True, dist_out, b_val - c_val, "ok"
+    return True, dist_out, _deduct_budget_monotone(b_val, c_val), "ok"
 
 
 def _frobenius_norm(arr: Any) -> float:
     if hasattr(arr, "detach"):
-        import torch
-        return float(torch.linalg.norm(arr.detach().cpu().to(torch.float64)).item())
+        return _torch_frobenius_norm_f64(arr)
     vals = list(_flatten_floats(arr))
-    return math.sqrt(sum(v * v for v in vals))
+    if any(math.isnan(v) for v in vals):
+        return float("nan")
+    return math.hypot(*vals)
 
 
 def verify_weight_update_safety(
