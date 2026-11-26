@@ -190,10 +190,16 @@ class TestWeftGeospherePi16Spec8LeanR5(unittest.TestCase):
                 bridge.pack_pi_t0_16b(bad_val)  # type: ignore[arg-type]
             self.assertEqual(ctx.exception.code, "PI_T0_NONFINITE")
 
-        # Unit-norm boundary: (1.0, 0.125, 0, 0) has exact n2 = 1 + 1/64 = 1.015625 (accepted); zero & non-unit rejected!
-        edge_raw = bridge.pack_pi_t0_16b((1.0, 0.125, 0.0, 0.0))
-        self.assertEqual(bridge.unpack_pi_t0_16b(edge_raw), (1.0, 0.125, 0.0, 0.0))
-        for bad_unit in ((0.0, 0.0, 0.0, 0.0), (1.0, 0.25, 0.0, 0.0), (2.0, 0.0, 0.0, 0.0)):
+        # L3 tight dyadic unit-norm boundary: (1.0, 1/32, 0, 0) has exact n2 = 1 + 1/1024 = 1.0009765625 (accepted);
+        # (1.0, 1/16, 0, 0), (1.0, 1/8, 0, 0), zero, and (2, 0, 0, 0) are rejected!
+        edge_raw = bridge.pack_pi_t0_16b((1.0, 0.03125, 0.0, 0.0))
+        self.assertEqual(bridge.unpack_pi_t0_16b(edge_raw), (1.0, 0.03125, 0.0, 0.0))
+        for bad_unit in (
+            (0.0, 0.0, 0.0, 0.0),
+            (1.0, 0.0625, 0.0, 0.0),
+            (1.0, 0.125, 0.0, 0.0),
+            (2.0, 0.0, 0.0, 0.0),
+        ):
             with self.assertRaises(bridge.WeftHolonomyError) as ctx:
                 bridge.pack_pi_t0_16b(bad_unit)
             self.assertEqual(ctx.exception.code, "PI_T0_NOT_UNIT_SPINOR")
@@ -223,6 +229,9 @@ class TestWeftGeospherePi16Spec8LeanR5(unittest.TestCase):
         self.assertEqual(h8192["weft_pi_t0_full_12l_bytes"], 12_288)
         self.assertEqual(h8192["compression_vs_spinor_x"], 12_582_912.0)
         self.assertEqual(h8192["compression_vs_full_12l_x"], 16_384.0)
+        # L4 regression: no unmeasured GPU latency constants baked into CPU preflight/savings payload
+        self.assertNotIn("spec8_sm86_us_per_branch", savings)
+        self.assertNotIn("spec8_sm86_commit_us", savings)
 
         # Exact upper ceiling boundary (kv_bytes == 1 << 60 and holonomy_bytes == 1 << 60)
         at_limit = bridge.compute_state_bytes_saved(
@@ -521,6 +530,32 @@ class TestWeftGeospherePi16Spec8LeanR5(unittest.TestCase):
         self.assertEqual(ctx.exception.code, "CKPT_SHA_MISMATCH")
         self.assertEqual(eng.state_sha256(), sha_before)
 
+        # M1 / Control-C4 regression: divergent-payload rollback_16b SHA-mismatch MUST check BEFORE assigning!
+        ckpt_old = eng.checkpoint_16b()
+        eng.commit_winning_branch(arena, b_win=0, win_len=2)
+        sha_live = eng.state_sha256()
+        u_live = list(eng.u_holonomy)
+        s_live = [list(row) for row in eng.s_prefix]
+        self.assertNotEqual(sha_live, ckpt_old.state_sha256)
+        divergent_bad_sha = bridge.Spec8Checkpoint(
+            step_id=ckpt_old.step_id,
+            pi_t0_bytes_list=ckpt_old.pi_t0_bytes_list,
+            s_prefix_snapshot=ckpt_old.s_prefix_snapshot,
+            state_sha256="f" * 64,
+        )
+        with self.assertRaises(bridge.WeftHolonomyError) as ctx:
+            eng.rollback_16b(divergent_bad_sha)
+        self.assertEqual(ctx.exception.code, "CKPT_SHA_MISMATCH")
+        self.assertEqual(eng.state_sha256(), sha_live)
+        self.assertEqual(eng.u_holonomy, u_live)
+        self.assertEqual(eng.s_prefix, s_live)
+
+        # L2 regression: speculative_perturb_and_rollback_16b measures post-rollback drift against pre-perturbation state
+        # (rolling back to ckpt_old from divergent live state yields non-zero drift vs pre-perturbation live state!)
+        rb_to_old = eng.speculative_perturb_and_rollback_16b(ckpt_old, arena)
+        self.assertEqual(rb_to_old["post_state_sha256"], ckpt_old.state_sha256)
+        self.assertGreater(rb_to_old["post_rollback_s_drift"], 0.0)
+
     def test_r13b_all_18_static_rules_stripper_and_axiom_parser(self) -> None:
         rule_samples = [
             ("R01_LITERAL_OR_GUILLEMET", 'def s := "hi"'),
@@ -773,6 +808,26 @@ class TestWeftGeospherePi16Spec8LeanR5(unittest.TestCase):
             )
             self.assertTrue(r_ok["accepted"])
             self.assertEqual(r_ok["stage"], "VERIFIED_PURE_INIT")
+
+            # L5 regression: verify_branch_candidate wraps OSError & TimeoutExpired into LEAN_EXEC_ERROR
+            broken_oracle = bridge.Lean4R12SandboxOracle(lean_bin=mock_bin, base_env={"PATH": "/usr/bin:/bin"})
+            broken_oracle.lean_bin = os.fspath(tmp_path / "vanished_lean_bin")
+            with self.assertRaises(bridge.WeftHolonomyError) as ctx:
+                broken_oracle.verify_branch_candidate(
+                    branch_idx=0, theorem_name="t_ok", theorem_decl=": True", tactic_body="  rfl"
+                )
+            self.assertEqual(ctx.exception.code, "LEAN_EXEC_ERROR")
+
+            with mock.patch.object(
+                bridge.subprocess,
+                "run",
+                side_effect=bridge.subprocess.TimeoutExpired(cmd=[mock_bin, "--stdin"], timeout=1),
+            ):
+                with self.assertRaises(bridge.WeftHolonomyError) as ctx:
+                    oracle.verify_branch_candidate(
+                        branch_idx=0, theorem_name="t_ok", theorem_decl=": True", tactic_body="  rfl"
+                    )
+            self.assertEqual(ctx.exception.code, "LEAN_EXEC_ERROR")
 
             with self.assertRaises(bridge.WeftHolonomyError) as ctx:
                 oracle.verify_8_branches_parallel(
