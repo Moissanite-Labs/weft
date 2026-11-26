@@ -591,7 +591,7 @@ def e6_line() -> dict:
 
 # ---------------------------------------------------------------- E7 frame
 def e7_frame() -> dict:
-    t = 1762560000.0  # the fixture's system_time
+    t = 1762560000.0  # the fixture's captured_at_unix_s; fixture slot 2 is 0.0
     stored = FRAME64_STRUCT.unpack(FRAME64_STRUCT.pack(*([0.0] * 2 + [t] + [0.0] * 13)))[2]
     return {"frame_bytes": FRAME64_STRUCT.size, "unix_time": t, "float32_spacing_seconds": float(np.spacing(np.float32(t))),
             "stored_value": stored, "rounding_error_seconds": stored - t}
