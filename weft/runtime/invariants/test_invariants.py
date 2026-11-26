@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 """Unit and cross-language C conformance tests for Codebase C2 (`weft/runtime/invariants`)."""
 
+import json
 import math
+import random
 import shutil
+import struct
 import subprocess
 import tempfile
 import unittest
@@ -36,6 +39,7 @@ class TestWeftInvariants(unittest.TestCase):
                     vec["r_invariant"],
                     vec["budget"],
                     vec["cost"],
+                    vec.get("locked_mask"),
                 )
                 self.assertEqual(ok, vec["expected_accepted"])
                 self.assertEqual(reason, vec["expected_reason"])
@@ -44,6 +48,80 @@ class TestWeftInvariants(unittest.TestCase):
                 else:
                     self.assertAlmostEqual(dist, float(vec["expected_distance"]), places=6)
                 self.assertAlmostEqual(rem, float(vec["expected_remaining_budget"]), places=6)
+
+    def test_weight_update_vectors_torch_fast_path(self) -> None:
+        try:
+            import torch
+        except ImportError:
+            self.skipTest("torch not installed")
+        dec = lambda x: float(x) if isinstance(x, str) else x  # noqa: E731
+        for vec in self.vectors["weight_update_vectors"]:
+            with self.subTest(vec=vec["name"]):
+                b_t = torch.tensor([dec(x) for x in vec["baseline"]], dtype=torch.float32)
+                c_t = torch.tensor([dec(x) for x in vec["candidate"]], dtype=torch.float32)
+                ok, dist, rem, reason = verify_weight_update_safety_ex(
+                    b_t,
+                    c_t,
+                    vec["r_invariant"],
+                    vec["budget"],
+                    vec["cost"],
+                    vec.get("locked_mask"),
+                )
+                self.assertEqual(ok, vec["expected_accepted"])
+                self.assertEqual(reason, vec["expected_reason"])
+                if vec["expected_distance"] == "Inf":
+                    self.assertTrue(math.isinf(dist))
+                else:
+                    # The float32 inputs quantize the exact distance, so the
+                    # tolerance is relative (float32 epsilon is about 1.2e-7).
+                    expected_dist = float(vec["expected_distance"])
+                    self.assertAlmostEqual(
+                        dist, expected_dist, delta=max(1e-5, abs(expected_dist) * 1e-6)
+                    )
+                self.assertAlmostEqual(rem, float(vec["expected_remaining_budget"]), places=5)
+
+    def test_torch_path_rejects_move_between_f32_norm_and_exact_distance(self) -> None:
+        # Regression for #213: with the radius set between the float32 norm and
+        # the exact distance, the move is over the radius and must be rejected.
+        try:
+            import torch
+        except ImportError:
+            self.skipTest("torch not installed")
+        from fractions import Fraction
+
+        rng = random.Random(20261115)
+        case = None
+        for _ in range(400):
+            n = rng.choice([16, 257, 4096])
+            base = [self._f32(rng.gauss(0.0, 1.0)) for _ in range(n)]
+            cand = [self._f32(b + rng.gauss(0.0, 0.05)) for b in base]
+            exact_sq = sum((Fraction(c) - Fraction(b)) ** 2 for b, c in zip(base, cand))
+            exact = math.sqrt(exact_sq)
+            b_t = torch.tensor(base, dtype=torch.float32)
+            c_t = torch.tensor(cand, dtype=torch.float32)
+            d32 = float(torch.linalg.norm(c_t - b_t).item())
+            if d32 >= exact:
+                continue
+            radius = (d32 + exact) / 2.0
+            if not Fraction(radius) ** 2 < exact_sq:
+                continue
+            case = (b_t, c_t, base, cand, radius)
+            break
+        self.assertIsNotNone(case, "no f32-norm-below-exact case found in 400 draws")
+        b_t, c_t, base, cand, radius = case
+        ok_t, _, _, reason_t = verify_weight_update_safety_ex(b_t, c_t, radius, 10.0, 1.0)
+        ok_l, _, _, reason_l = verify_weight_update_safety_ex(base, cand, radius, 10.0, 1.0)
+        self.assertFalse(ok_l)
+        self.assertFalse(ok_t)
+        self.assertEqual(reason_t, "baseline_distance_exceeded")
+        self.assertEqual(reason_t, reason_l)
+        if torch.backends.mps.is_available():
+            # MPS has no float64; the gate must still give the same answer there.
+            ok_m, _, _, reason_m = verify_weight_update_safety_ex(
+                b_t.to("mps"), c_t.to("mps"), radius, 10.0, 1.0
+            )
+            self.assertFalse(ok_m)
+            self.assertEqual(reason_m, "baseline_distance_exceeded")
 
     def test_tension_vectors(self) -> None:
         for vec in self.vectors["tension_vectors"]:
@@ -98,17 +176,193 @@ class TestWeftInvariants(unittest.TestCase):
         self.assertIsNotNone(cc, "C compiler (cc/clang/gcc) is required to verify weft_invariants.h")
         here = Path(__file__).resolve().parent
         c_src = here / "test_invariants_c.c"
+        vectors_path = here / "vectors.json"
+        expected_total = (
+            len(self.vectors["weight_update_vectors"])
+            + len(self.vectors["tension_vectors"])
+            + len(self.vectors["royalty_vectors"])
+        )
         with tempfile.TemporaryDirectory() as tmp:
             bin_path = Path(tmp) / "test_invariants_c"
             r_compile = subprocess.run(
-                [cc, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", str(c_src), "-lm", "-o", str(bin_path)],
+                [cc, "-std=c11", "-O2", "-ffp-contract=off", "-Wall", "-Wextra", "-Werror", str(c_src), "-lm", "-o", str(bin_path)],
                 capture_output=True,
                 text=True,
             )
             self.assertEqual(r_compile.returncode, 0, f"C compile failed: {r_compile.stderr}")
-            r_run = subprocess.run([str(bin_path)], capture_output=True, text=True)
+            r_run = subprocess.run([str(bin_path), str(vectors_path)], capture_output=True, text=True)
             self.assertEqual(r_run.returncode, 0, f"C vector test failed: {r_run.stderr}")
-            self.assertIn("C_INVARIANTS_VECTORS_PASS", r_run.stdout)
+            self.assertIn(f"total={expected_total}", r_run.stdout)
+
+            parity_src = here / "test_invariants_state_parity_c.c"
+            parity_bin = Path(tmp) / "test_invariants_state_parity_c"
+            r_parity_cc = subprocess.run(
+                [cc, "-O3", "-std=c11", "-Wall", "-Wextra", "-Werror", str(parity_src), "-lm", "-o", str(parity_bin)],
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(r_parity_cc.returncode, 0, f"state-parity C compile failed: {r_parity_cc.stderr}")
+            r_parity = subprocess.run([str(parity_bin)], capture_output=True, text=True)
+            self.assertEqual(r_parity.returncode, 0, f"state-parity C test failed: {r_parity.stderr}\n{r_parity.stdout}")
+            self.assertIn("negative-cost minting blocked", r_parity.stdout)
+
+            # Mutation check: prove the compiled C runner reads the JSON file dynamically.
+            tampered = json.loads(vectors_path.read_text(encoding="utf-8"))
+            tampered["royalty_vectors"][0]["expected_weaver_wei"] = 999
+            tampered_path = Path(tmp) / "tampered_vectors.json"
+            tampered_path.write_text(json.dumps(tampered), encoding="utf-8")
+            r_bad = subprocess.run([str(bin_path), str(tampered_path)], capture_output=True, text=True)
+            self.assertNotEqual(r_bad.returncode, 0, "C runner accepted tampered vectors.json")
+
+            # Differential C11-vs-Python stream (256 vectors incl. Zeno sub-ULP, N=65,536 boundary, locked_mask)
+            vec_bin = Path(tmp) / "diff_vectors.bin"
+            self._write_differential_vectors(vec_bin, count=256)
+            r_diff = subprocess.run([str(bin_path), str(vec_bin)], capture_output=True, text=True)
+            self.assertEqual(r_diff.returncode, 0, f"C differential test failed: {r_diff.stderr}")
+            self.assertIn("C_DIFFERENTIAL_PASS count=256", r_diff.stdout)
+
+    @staticmethod
+    def _f32(val: float) -> float:
+        return struct.unpack("<f", struct.pack("<f", val))[0]
+
+    @classmethod
+    def _nextafter_neg_inf_f32(cls, val: float) -> float:
+        f = cls._f32(val)
+        if math.isnan(f) or f == -math.inf:
+            return f
+        if f == 0.0:
+            return struct.unpack("<f", struct.pack("<I", 0x80000001))[0]
+        bits = struct.unpack("<I", struct.pack("<f", f))[0]
+        bits = (bits - 1) if f > 0.0 else (bits + 1)
+        return struct.unpack("<f", struct.pack("<I", bits))[0]
+
+    @classmethod
+    def _ref_gate_f32_py(
+        cls,
+        bw: list[float],
+        cw: list[float],
+        mask: list[int] | None,
+        r_inv_f32: float,
+        bud_f32: float,
+        cost_f32: float,
+    ) -> tuple[bool, float, float]:
+        if not bw or not (math.isfinite(bud_f32) and math.isfinite(cost_f32) and math.isfinite(r_inv_f32)):
+            return False, math.inf, bud_f32
+        if cost_f32 <= 0.0:
+            return False, math.inf, bud_f32
+        if bud_f32 <= 0.0 or r_inv_f32 < 0.0 or bud_f32 < cost_f32:
+            return False, math.inf, cls._f32(bud_f32 - cost_f32)
+
+        scale = 0.0
+        ssq = 1.0
+        comp = 0.0
+        for i, (b, c) in enumerate(zip(bw, cw)):
+            if not (math.isfinite(b) and math.isfinite(c)):
+                return False, math.inf, bud_f32
+            if mask is not None and mask[i] != 0:
+                if not (b == 0.0 and c == 0.0):
+                    if struct.pack("<f", b) != struct.pack("<f", c):
+                        return False, math.inf, bud_f32
+                continue
+            ad = abs(float(c) - float(b))
+            if ad == 0.0:
+                continue
+            if scale < ad:
+                r = scale / ad
+                rsq = r * r
+                ssq = 1.0 + ssq * rsq
+                comp = comp * rsq
+                scale = ad
+            else:
+                r = ad / scale
+                term = r * r
+                t = ssq + term
+                comp += ((ssq - t) + term) if abs(ssq) >= term else ((term - t) + ssq)
+                ssq = t
+
+        dist_d = 0.0 if scale == 0.0 else (scale * math.sqrt(ssq + comp))
+        if not math.isfinite(dist_d) or dist_d > float(r_inv_f32):
+            return False, dist_d, bud_f32
+
+        nxt = cls._f32(float(bud_f32) - float(cost_f32))
+        if nxt >= bud_f32:
+            nxt = cls._nextafter_neg_inf_f32(bud_f32)
+        if not math.isfinite(nxt) or nxt < 0.0:
+            return False, dist_d, bud_f32
+        return True, dist_d, nxt
+
+    @classmethod
+    def _write_differential_vectors(cls, out_path: Path, count: int = 256) -> None:
+        rng = random.Random(20261111)
+        with out_path.open("wb") as fp:
+            fp.write(struct.pack("<I", count))
+            for vid in range(count):
+                has_mask = 0
+                mask: list[int] | None = None
+                if vid < 32:
+                    # Zeno sub-ULP budget deduction cases
+                    n = 16
+                    bw = [cls._f32(rng.gauss(0.0, 1.0)) for _ in range(n)]
+                    cw = [cls._f32(b + rng.gauss(0.0, 0.1)) for b in bw]
+                    r_inv = cls._f32(120.0)
+                    bud = cls._f32(rng.uniform(50.0, 4000.0))
+                    ulp = abs(bud - cls._nextafter_neg_inf_f32(bud))
+                    cost = cls._f32(ulp * rng.uniform(0.05, 0.45))
+                elif vid < 48:
+                    # N=65,536 StratifiedMemoryArena razor-edge boundary around R=120.0
+                    n = 65536
+                    bw = [0.0] * n
+                    target = 120.0 + (3.0e-6 if (vid % 2 == 0) else -3.0e-6)
+                    v0 = cls._f32(target / math.sqrt(n))
+                    cw = [v0] * n
+                    rem_sq = (target * target) - (n - 1) * (float(v0) ** 2)
+                    if rem_sq > 0.0:
+                        cw[-1] = cls._f32(math.sqrt(rem_sq))
+                    r_inv = cls._f32(120.0)
+                    bud = cls._f32(100.0)
+                    cost = cls._f32(1.0)
+                else:
+                    n = rng.choice([4, 16, 64, 256])
+                    bw = [cls._f32(rng.gauss(0.0, 2.0)) for _ in range(n)]
+                    step_s = rng.choice([0.1, 1.0, 10.0, 30.0])
+                    cw = [cls._f32(b + rng.gauss(0.0, step_s / math.sqrt(n))) for b in bw]
+                    r_inv = cls._f32(rng.choice([2.0, 15.0, 120.0]))
+                    bud = cls._f32(rng.uniform(0.1, 200.0))
+                    cost = cls._f32(rng.choice([0.05, 1.0, 25.0]))
+                    if vid == 48:
+                        # At least one non-positive cost in the 256-vector stream.
+                        cost = cls._f32(-1.0)
+                    if vid % 4 == 0:
+                        has_mask = 1
+                        mask = [1 if rng.random() < 0.3 else 0 for _ in range(n)]
+                        if vid % 8 == 0:
+                            cw = [bw[i] if mask[i] else cw[i] for i in range(n)]
+                        elif any(mask):
+                            idx0 = mask.index(1)
+                            cw[idx0] = cls._f32(bw[idx0] + max(1e-6, abs(bw[idx0]) * 1e-6))
+                    if vid % 29 == 0:
+                        cw[0] = float("nan") if (vid % 2 == 0) else float("inf")
+
+                ok, dist_d, b_out = cls._ref_gate_f32_py(bw, cw, mask, r_inv, bud, cost)
+                hdr = struct.pack(
+                    "<IIfffBBHdfI",
+                    vid,
+                    n,
+                    r_inv,
+                    bud,
+                    cost,
+                    has_mask,
+                    1 if ok else 0,
+                    0,
+                    dist_d if (ok and math.isfinite(dist_d)) else 0.0,
+                    b_out if math.isfinite(b_out) else 0.0,
+                    0,
+                )
+                fp.write(hdr)
+                fp.write(struct.pack(f"<{n}f", *bw))
+                fp.write(struct.pack(f"<{n}f", *cw))
+                if has_mask and mask is not None:
+                    fp.write(struct.pack(f"<{n}B", *mask))
 
 
 if __name__ == "__main__":

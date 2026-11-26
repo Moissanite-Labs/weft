@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check condensed.json still matches the overview paper page.
+"""Check each paper's condensed.json still matches its page.
 
 Recomputes the passage keys the browser computes at runtime and fails
 when a condensed.json entry matches no passage on the page.
@@ -13,14 +13,18 @@ The browser rules, from site/assets/js/attention.js and condense.js:
   to one space and the ends trimmed;
 - sections are `article.paper section` elements, keyed by id (or
   "abstract" for the section with that class), each needing 5 headings,
-  one TL;DR line and one ELI5 line.
+  one TL;DR line and one ELI5 line. condense.js folds only sections with
+  a direct <h2> (`:scope > h2`), so entries for <h3> subsections would
+  never be shown; they are an error here, and their results belong in
+  the parent section's lines.
 
 Passages with no condensed.json entry are allowed: back matter is not
 condensed by design. The other direction is the failure: a JSON entry
 with no passage means the paper changed and the file did not, so that
 passage silently stops condensing.
 
-Usage: python3 scripts/check_condensed.py [--page PATH] [--data PATH]
+Usage: python3 scripts/check_condensed.py              # every site/papers/*/condensed.json
+       python3 scripts/check_condensed.py --page PATH --data PATH
 """
 
 import argparse
@@ -148,6 +152,22 @@ def passage_keys(root):
     return keys, blocks
 
 
+def foldable_section_ids(root):
+    """Section ids condense.js can fold: those with a direct <h2> child."""
+    ids = []
+    for article in walk(root):
+        if article.tag != "article" or "paper" not in article.classes:
+            continue
+        for section in walk(article):
+            if section.tag != "section" or section is article:
+                continue
+            sid = section.attrs.get("id") or (
+                "abstract" if "abstract" in section.classes else "")
+            if sid and any(c.tag == "h2" for c in section.children):
+                ids.append(sid)
+    return ids
+
+
 def section_ids(root):
     ids = []
     for article in walk(root):
@@ -163,15 +183,12 @@ def section_ids(root):
     return ids
 
 
-def main():
-    ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--page", default="site/papers/overview/index.html")
-    ap.add_argument("--data", default="site/papers/overview/condensed.json")
-    args = ap.parse_args()
-    data = json.loads(Path(args.data).read_text(encoding="utf-8"))
-    root = parse_page(args.page)
+def check_one(page, data_path):
+    data = json.loads(Path(data_path).read_text(encoding="utf-8"))
+    root = parse_page(page)
     page_keys, n_blocks = passage_keys(root)
     page_sections = section_ids(root)
+    foldable = set(foldable_section_ids(root))
 
     errors = []
     blocks = data.get("blocks", {})
@@ -185,6 +202,8 @@ def main():
         got = set(data.get(group, {}))
         for sid in sorted(got - want):
             errors.append(f"{group} has {sid}, no such section on the page")
+        for sid in sorted((got & want) - foldable):
+            errors.append(f"{group} has {sid}, a section with no direct <h2>: condense.js never shows it")
         # A page section with no entry is allowed: back matter sections
         # such as cite and references have no condensed form by design.
     for sid, heads in data.get("headings", {}).items():
@@ -195,13 +214,38 @@ def main():
             if not isinstance(line, str) or not line.strip():
                 errors.append(f"{group} for {sid} is not a line of text")
 
-    print(f"condensed.json: {len(blocks)} blocks, {len(page_keys)} passage keys "
+    try:
+        shown = Path(data_path).resolve().relative_to(Path.cwd())
+    except ValueError:
+        shown = data_path
+    print(f"{shown}: {len(blocks)} blocks, {len(page_keys)} passage keys "
           f"from {n_blocks} page blocks, {len(page_sections)} sections")
-    if errors:
-        for e in errors:
-            print(f"FAIL: {e}")
+    for e in errors:
+        print(f"FAIL: {e}")
+    return not errors
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--page", help="one paper page (with --data)")
+    ap.add_argument("--data", help="its condensed.json (with --page)")
+    args = ap.parse_args()
+    if bool(args.page) != bool(args.data):
+        ap.error("--page and --data go together")
+    if args.page:
+        pairs = [(args.page, args.data)]
+    else:
+        root = Path(__file__).resolve().parent.parent / "site" / "papers"
+        pairs = [(d / "index.html", d / "condensed.json")
+                 for d in sorted(root.iterdir())
+                 if (d / "condensed.json").is_file() and (d / "index.html").is_file()]
+        if not pairs:
+            print("FAIL: no site/papers/*/condensed.json found")
+            return 1
+    ok = all([check_one(page, data) for page, data in pairs])
+    if not ok:
         return 1
-    print("OK: every condensed.json entry matches the page")
+    print(f"OK: every condensed.json entry matches its page ({len(pairs)} paper{'s' if len(pairs) != 1 else ''})")
     return 0
 
 

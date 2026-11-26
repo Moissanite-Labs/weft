@@ -6,6 +6,7 @@ from __future__ import annotations
 import re
 import sys
 from pathlib import Path
+from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
 DIST = ROOT / "dist"
@@ -74,6 +75,32 @@ def check_headers_catchall() -> None:
         fail("_headers missing /weft/* catch-all")
 
 
+def weft_href_ok(href: str) -> bool:
+    """True when href points cleanly at w3ft.org over https.
+
+    Rejects backslashes, ASCII control/whitespace characters, userinfo
+    (username/password), non-443 or malformed ports, bracketed/IPv6 hosts,
+    and look-alike hosts.
+    """
+    if any(ch == "\\" or ord(ch) <= 0x20 or ord(ch) == 0x7F for ch in href):
+        return False
+    try:
+        parsed = urlparse(href)
+        port = parsed.port
+    except ValueError:
+        return False
+    if parsed.scheme != "https":
+        return False
+    if parsed.hostname != "w3ft.org":
+        return False
+    # urlparse sets username ("" if omitted) whenever userinfo (user[:pass]@) is present.
+    if parsed.username is not None:
+        return False
+    if port not in (None, 443):
+        return False
+    return True
+
+
 def lab_files() -> list[Path]:
     paths = [DIST / "index.html", DIST / "styles.css", DIST / "ml" / "index.html"]
     return [p for p in paths if p.is_file()]
@@ -91,7 +118,7 @@ def check_lab_pages() -> None:
         text = path.read_text(encoding="utf-8")
         weft_hrefs = re.findall(r'href="([^"]*w3ft[^"]*)"', text, re.I)
         for href in weft_hrefs:
-            if not href.startswith("https://w3ft.org"):
+            if not weft_href_ok(href):
                 fail(f"non-w3ft.org Weft href {href!r} in {path.name}")
         if 'href="/weft' in text or "siliconcordat.com/weft" in text.lower():
             if "siliconcordat.com/weft is planned" not in text:

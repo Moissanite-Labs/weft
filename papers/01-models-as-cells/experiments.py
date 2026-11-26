@@ -289,12 +289,12 @@ def e4_conformance(device: torch.device = torch.device("cpu")) -> dict:
             b = torch.tensor([dec(x) for x in vec["baseline"]], dtype=torch.float32, device=device)
             c = torch.tensor([dec(x) for x in vec["candidate"]], dtype=torch.float32, device=device)
             ok, dist, rem, reason = verify_weight_update_safety_ex(
-                b, c, vec["r_invariant"], vec["budget"], vec["cost"]
+                b, c, vec["r_invariant"], vec["budget"], vec["cost"], vec.get("locked_mask")
             )
         else:
             ok, dist, rem, reason = verify_weight_update_safety_ex(
                 [dec(x) for x in vec["baseline"]], [dec(x) for x in vec["candidate"]],
-                vec["r_invariant"], vec["budget"], vec["cost"]
+                vec["r_invariant"], vec["budget"], vec["cost"], vec.get("locked_mask")
             )
         agree += ok == vec["expected_accepted"] and reason == vec["expected_reason"]
     return {"weight_update_vectors": len(v["weight_update_vectors"]), "python_agrees": agree,

@@ -5,8 +5,10 @@ This repository is dual-licensed by content type:
 
   * Source code is licensed under the Apache License, Version 2.0 (LICENSE).
     This covers weft/runtime/, scripts/, site/, workers/, siliconcordat/,
-    siliconcordat-cut/, .github/, the wrangler*.jsonc files, and the code and
-    templates in papers/ (experiments, reference semantics and build templates).
+    .github/, the wrangler*.jsonc files, and the code and templates in
+    papers/ (experiments, reference semantics and build templates). The
+    siliconcordat-cut bundle pipeline moved to Moissanite-Labs/weft-loom
+    (see that repository's NOTICE).
 
   * Documentation and prose are licensed under the Creative Commons
     Attribution 4.0 International License (LICENSE-docs). This covers docs/ and
@@ -33,9 +35,9 @@ Third-party material:
   * site/assets/js/{aesthetic-mixer,simplex-pad,cell-layout,glyph-font}.js are
     copied from Moissanite-Labs/weft-eido (Apache-2.0), and site/widgets/ from
     Moissanite-Labs/weft-corpus. See site/VENDORED.json.
-  * The fonts in siliconcordat-cut/assets/fonts/ (Source Serif 4, IBM Plex Sans,
-    IBM Plex Mono) are licensed under the SIL Open Font License 1.1. Their
-    licence texts are beside them (LICENSE-*-OFL.txt).
+  * The siliconcordat-cut bundle pipeline moved to Moissanite-Labs/weft-loom.
+    Its fonts (Source Serif 4, IBM Plex Sans, IBM Plex Mono, SIL Open Font
+    License 1.1) are attributed there.
   * The exported widgets in site/widgets/ were produced with a Google AI tool.
     At runtime they import JavaScript modules (React and UI libraries) from
     widgetlibs.static.usercontent.goog and load fonts, styles and images from

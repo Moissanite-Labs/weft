@@ -9,7 +9,6 @@ abstract: >-
 authors:
   - family-names: Arifuddin
     given-names: Ahraz
-    affiliation: Moissanite Labs
 repository-code: "https://github.com/Moissanite-Labs/weft"
 url: "https://w3ft.org"
 license: Apache-2.0

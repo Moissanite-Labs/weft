@@ -1,0 +1,429 @@
+{
+ "version": 1,
+ "levels": [
+  "Full prose",
+  "Concise",
+  "Terse",
+  "Caveman"
+ ],
+ "blocks": {
+  "897ef0d7": [
+   "A model adapting after deployment needs a drift limit a program can check. ML Weft treats each model as a <em>cell</em> proposing weight updates, committed only if Frobenius distance from a <strong>saved baseline</strong> is within radius R, a budget covers the step, and a provenance watermark in a frozen core is intact. The paper states this gate, argues for fixed-baseline distance over size comparison or per-step bounds, and runs experiments on tested code. A norm-preserving move passes a size comparison at all 37 angles tried; the gate rejects 34. Over 10 seeds and 12 generations, a 256×256 cell cuts target error 72%, with exactly zero core drift and full watermark retention. Sweeping R trades adaptation for proximity, as intended. Limits: at the default radius the gate never binds; one of two lineages always wins; a rank-1 watermark overwrite passes the distance gate, caught only by the watermark check. Findings, not footnotes.",
+   "Adapting model needs checkable drift limit. Model = <em>cell</em>: commit update only if Frobenius distance from <strong>saved baseline</strong> ≤ R, budget covers step, frozen-core watermark intact. Fixed-baseline distance beats size comparison, per-step bounds. Tested-code experiments: size check passes norm-preserving move at all 37 angles, gate rejects 34. 10 seeds × 12 generations: 256×256 cell cuts error 72%, zero core drift, full watermark retention. Smaller R = less adaptation, as intended. Limits: default radius never binds; one lineage always wins; rank-1 watermark overwrite passes gate, caught only by watermark check.",
+   "Model keep change after ship. Need limit code can check. Model = <em>cell</em>. Keep change only if near saved model, budget left, mark still there. Size check say yes all 37; gate say no 34. Test cell get better, core not move. But default gate never say no, one lineage always win, small mark overwrite pass gate. Only mark check catch it."
+  ],
+  "364106f2": [
+   "Most deployed models are frozen, changing only when someone retrains or fine-tunes them, rarely within program-checked bounds. Online adaptation (to a user, device or task) is attractive but asks: <em>how far may the model move, and who checks?</em>",
+   "Deployed models mostly frozen; change = retrain or fine-tune, rarely bounded by program checks. Online adaptation (user, device, task) attractive. Question: <em>how far may it move, who checks?</em>",
+   "Most model frozen. Want ones that keep change. <em>How far go? Who check?</em>"
+  ],
+  "80a18663": [
+   "Weft’s answer: metaphor, then predicate. The metaphor: a model is a <strong>cell</strong> with a boundary, protected core and limited metabolic budget, reproducing by trying variants and keeping one that fits. The predicate makes it accountable: commit candidate W′ only if",
+   "Metaphor → predicate. Metaphor: model = <strong>cell</strong> (boundary, protected core, metabolic budget, tries variants, keeps fit one). Predicate makes it accountable. Commit W′ only if",
+   "Idea: model like <strong>cell</strong>. Rule make idea honest. Keep change only if:"
+  ],
+  "a4942eea": [
+   "‖W′−W₀‖F ≤ R and b ≥ c > 0,",
+   "‖W′−W₀‖F ≤ R; b ≥ c > 0",
+   "near saved model, budget left."
+  ],
+  "3fb8458b": [
+   "W₀ is a <strong>saved baseline</strong>, R a fixed radius, b remaining budget, c step cost. Python, C11 and JavaScript implement it. Python (all twelve cases) and JavaScript (the six weight-update cases) test against one JSON conformance file; C11 against hand-written copies of most (§5.5).",
+   "W₀ = <strong>saved baseline</strong>, R = radius, b = budget, c = cost. Python, C11, JS. Python (all 12) and JS (6 weight-update) share vectors; C11 hand-copied, most cases (§5.5).",
+   "W₀ = saved model. R = how far. Same rule, three language. C test hand copy, not all."
+  ],
+  "78141d93": [
+   "Four contributions here:",
+   "Four contributions:",
+   "Four:"
+  ],
+  "95a49889": [
+   "<strong>A precise cell contract</strong>: what a cell may change, how candidates are chosen, when one is committed (§2–3).",
+   "<strong>Cell contract</strong>: changes, candidate choice, commit conditions (§2–3).",
+   "<strong>Cell rule.</strong> What change, when keep."
+  ],
+  "ab07fcac": [
+   "<strong>Distance from a fixed baseline</strong> over size comparison or per-step bounds, plus a construction that exactly defeats size comparison (§4).",
+   "<strong>Baseline distance</strong> > size check or step bounds; construction beats size check exactly (§4).",
+   "<strong>Why measure from saved model.</strong> Size check fooled."
+  ],
+  "2ed2eabc": [
+   "<strong>Experiments on the tested implementation</strong> (§5): size-comparison trap, full cell cycle, watermark threat sweep, radius sweep, cross-language conformance.",
+   "<strong>Experiments, tested code</strong> (§5): size trap, cell cycle, watermark threats, radius sweep, conformance.",
+   "<strong>Experiments.</strong> Run tested code."
+  ],
+  "9ff5525f": [
+   "<strong>What the experiments do not show</strong> (§6), including three places the implementation falls short of the design.",
+   "<strong>What is not shown</strong> (§6): three code-vs-design gaps.",
+   "<strong>What not shown.</strong> Three gap."
+  ],
+  "7a3e0946": [
+   "Biological names (cell, mitosis, core, membrane, homeostasis) are vision language: behaviour aimed for. Each is tied here to the mechanism implementing it today and claims no more than it does.",
+   "Bio names (cell, mitosis, core, membrane, homeostasis) = aims. Each tied to today’s mechanism; claims no more.",
+   "Cell words = wish. Each claim only what code do."
+  ],
+  "a7ee962a": [
+   "A cell owns one weight matrix W ∈ ℝᵈˣᵈ in a fixed shared-memory arena; <code>weft/runtime/plasm</code> sets d = 256, arena 540,688 bytes:",
+   "One weight matrix W ∈ ℝᵈˣᵈ, fixed shared-memory arena. d = 256; arena 540,688 bytes:",
+   "Cell own one matrix in fixed memory box:"
+  ],
+  "31261d9f": [
+   "Layout: interface I4. Mapped CPU views share bytes; tensor reads copy, so “zero-copy” means the mapping, not the experiment.",
+   "Layout I4. Views share; tensor reads copy. “Zero-copy” = mapping only.",
+   "Map share byte. Read copy. Zero-copy only map."
+  ],
+  "216f9ef3": [
+   "<strong>Core and periphery.</strong> The first 64 rows (d/4) of W form the frozen <strong>core</strong>. Mask M is zero on core rows, in (0,1) on periphery rows, smaller for large-magnitude columns. Every update is W′ = W + η(M⊙Δ), so core rows cannot change.",
+   "<strong>Core/periphery.</strong> First 64 rows = frozen <strong>core</strong>. Mask M: 0 on core, (0,1) on periphery, damped for large columns. W′=W+η(M⊙Δ) → core can’t change.",
+   "<strong>Core.</strong> Top quarter rows locked. Mask stop change there."
+  ],
+  "16d49aa2": [
+   "<strong>Provenance watermark.</strong> Unit trigger vector t on core rows only; target response y with norm 3; both derived deterministically from a seed. A rank-1 correction embeds Wᵀt = y:",
+   "<strong>Watermark.</strong> Trigger t (core rows), response y (norm 3), seeded. Rank-1 embed, Wᵀt = y:",
+   "<strong>Mark.</strong> Put test pattern in core:"
+  ],
+  "edaa3ac1": [
+   "W₀ ← W + t(y − Wᵀt)ᵀ.",
+   "W₀ ← W + t(y−Wᵀt)ᵀ",
+   "Set mark."
+  ],
+  "1f92eef9": [
+   "Retention is checked on every candidate: its response W′ᵀt needs cosine similarity ≥ 0.85 with y, and relative drift from the baseline response, ‖W′ᵀt − W₀ᵀt‖ / ‖W₀ᵀt‖, at most 0.35.",
+   "Checked every candidate: cosine(W′ᵀt, y) ≥ 0.85; relative response drift ≤ 0.35.",
+   "Each change: mark still answer right? Else no."
+  ],
+  "9fea794e": [
+   "<strong>Proposition 1 (periphery updates cannot move the mark).</strong> If t is supported on core rows and ΔW=M⊙Δ is zero there, then (W+ΔW)ᵀt = Wᵀt.",
+   "<strong>Prop. 1: periphery can’t move mark.</strong> t on core, ΔW zero there ⇒ (W+ΔW)ᵀt = Wᵀt.",
+   "<strong>Fact 1.</strong> Edge change no touch mark."
+  ],
+  "83c77d61": [
+   "<em>Proof.</em> (ΔW)ᵀt = Σᵢ tᵢ ΔWᵢ,:. Each term vanishes: tᵢ = 0 off the core, ΔWᵢ,: = 0 on it. ∎",
+   "<em>Proof.</em> Each tᵢ ΔWᵢ,: is zero: t zero off core, ΔW zero on it. ∎",
+   "<em>Proof.</em> Each part zero. ∎"
+  ],
+  "944ef71a": [
+   "Under the cell’s own rule, retention holds by construction. The check guards against <em>other</em> writes: mask-skipping updates, deliberate overwrites (§5.3).",
+   "Own updates: retention by construction. Check guards <em>other</em> writes: unmasked, overwrites (§5.3).",
+   "Own change safe. Check catch <em>other</em> write."
+  ],
+  "6679311b": [
+   "Each generation: two candidates (“lineages”), keep at most one.",
+   "Per generation: 2 lineages, ≤1 kept.",
+   "Try two. Keep ≤ one."
+  ],
+  "8e964e00": [
+   "<strong>Propose.</strong> From inputs X and targets Y⋆, residual direction G = Xᵀ(Y⋆−XW)/n. Cautious lineage α moves along 0.85G+0.15εα, exploratory β along 0.5G−0.5εβ, with ε Gaussian noise of scale σ. Both masked, scaled by η = 0.35.",
+   "<strong>Propose.</strong> G = Xᵀ(Y⋆−XW)/n. α (cautious): 0.85G+0.15εα; β (exploratory): 0.5G−0.5εβ; ε Gaussian, scale σ. Masked, η = 0.35.",
+   "<strong>Propose.</strong> One careful try, one bold try."
+  ],
+  "3d69e07e": [
+   "<strong>Score the exact candidates.</strong> 1/(‖XW′−Y⋆‖F + 10⁻⁴) plus 0.05 × normalised novelty from the hippocampal lattice, computed on the very matrix to be committed, not a proxy.",
+   "<strong>Score exact candidates.</strong> 1/(error + 10⁻⁴) + 0.05 × novelty (hippocampal lattice). Scored on the committed matrix itself, no proxy.",
+   "<strong>Score.</strong> Grade the real thing."
+  ],
+  "58e2f261": [
+   "distance gate accepts (‖W′−W₀‖F ≤ R, b ≥ c > 0);",
+   "distance ≤ R, b ≥ c > 0;",
+   "near, budget left;"
+  ],
+  "18f9312f": [
+   "watermark is retained;",
+   "watermark retained;",
+   "mark-kept;"
+  ],
+  "d6224445": [
+   "tension bound holds;",
+   "tension bounded;",
+   "tension-ok;"
+  ],
+  "4f873b63": [
+   "error no worse than parent’s.",
+   "error ≤ parent’s.",
+   "not worse."
+  ],
+  "16dba5f6": [
+   "<strong>Regulate.</strong> A feedback rule adjusts σ: above the tension band [15, 35], σ shrinks 25%; below it, σ grows 10%.",
+   "<strong>Regulate.</strong> Tension above [15, 35]: σ −25%; below: σ +10%.",
+   "<strong>Regulate.</strong> Tension high: less noise. Low: more."
+  ],
+  "86b060cc": [
+   "In current code “tension” is not measured: it is defined as 20 + 2.5‖W′−W₀‖F, and the bound requires ≤ 85. So tension adds a second distance cap, (85−20)/2.5 = 26, independent of R: the effective radius is min(R, 26), not R.",
+   "“Tension” not measured: 20 + 2.5 × distance; bound ≤ 85 → second cap 26, independent of R. Effective radius = min(R, 26).",
+   "Tension not measured. Just distance again. Real limit = smaller of R, 26."
+  ],
+  "6e9c996d": [
+   "Three natural ways to bound model change:",
+   "Three ways to bound change:",
+   "Three way:"
+  ],
+  "f97a3411": [
+   "<strong>Compare sizes:</strong> |‖W′‖−‖W₀‖| ≤ R. Original design notes did this.",
+   "<strong>Compare sizes:</strong> |‖W′‖−‖W₀‖| ≤ R (original notes).",
+   "<strong>Size same?</strong> Old way."
+  ],
+  "10315f5c": [
+   "<strong>Bound each step:</strong> ‖W′−W‖ ≤ r, relative to <em>current</em> weights.",
+   "<strong>Bound step:</strong> ‖W′−W‖ ≤ r.",
+   "<strong>Small step.</strong>"
+  ],
+  "e3de099b": [
+   "<strong>Bound distance from a saved baseline:</strong> ‖W′−W₀‖ ≤ R. Weft’s gate.",
+   "<strong>Baseline distance:</strong> ‖W′−W₀‖ ≤ R. Weft.",
+   "<strong>Near saved model.</strong> Weft way."
+  ],
+  "82735404": [
+   "<strong>Comparing sizes does not bound change.</strong> Equal-norm matrices can be arbitrarily far apart.",
+   "<strong>Size ≠ change.</strong> Equal norms, arbitrarily far apart.",
+   "<strong>Size not limit.</strong> Same size, far apart."
+  ],
+  "f4a81513": [
+   "<strong>Proposition 2.</strong> Let ⟨W₀,Q⟩F = 0, ‖Q‖F = ‖W₀‖F, and Wθ = cosθ W₀ + sinθ Q. Then ‖Wθ‖F = ‖W₀‖F for all θ, and ‖Wθ−W₀‖F = 2sin(θ/2)‖W₀‖F.",
+   "<strong>Prop. 2.</strong> Rotate W₀ toward orthogonal, equal-norm Q: norm unchanged, distance = 2sin(θ/2)‖W₀‖F.",
+   "<strong>Fact 2.</strong> Turn matrix: size same, distance grow."
+  ],
+  "420201ef": [
+   "<em>Proof.</em> Expand using ⟨W₀,Q⟩F = 0 and equal norms: cos²θ+sin²θ = 1 times ‖W₀‖², and (1−cosθ)²+sin²θ = 4sin²(θ/2) times ‖W₀‖². ∎",
+   "<em>Proof.</em> Expand with ⟨W₀,Q⟩F = 0: cos²θ+sin²θ = 1; (1−cosθ)²+sin²θ = 4sin²(θ/2). ∎",
+   "<em>Proof.</em> Do the math. ∎"
+  ],
+  "3e7a1b83": [
+   "θ = π gives −W₀, furthest on the sphere; size comparison still reports zero change. E1 runs this construction.",
+   "θ = π: −W₀, furthest point, size change zero. E1.",
+   "Flip sign, size check say same."
+  ],
+  "44ef710a": [
+   "<strong>Per-step bounds compound.</strong> Steps limited to r each: after n accepted steps, up to nr from the start; random steps typically √n r, still growing without limit. From a fixed W₀, <em>every</em> committed state stays in B(W₀, R), however many steps.",
+   "<strong>Step bounds compound.</strong> n steps of r → up to nr (random: √n r), unbounded. Fixed W₀: <em>every</em> committed state in B(W₀, R), any step count.",
+   "<strong>Small steps add up.</strong> Measure from saved model: never past limit."
+  ],
+  "78085cc9": [
+   "<strong>Proposition 3.</strong> If every commit has ‖W′−W₀‖F ≤ R, every reachable committed state lies in B(W₀,R), and ≤ ⌊b₀/c⌋ updates are ever committed.",
+   "<strong>Prop. 3.</strong> All commits within R ⇒ all states in B(W₀, R); ≤ ⌊b₀/c⌋ commits.",
+   "<strong>Fact 3.</strong> Stay in ball. Budget cap count."
+  ],
+  "c3e0df98": [
+   "<em>Proof.</em> First claim: the acceptance condition, per commit. Only commits spend budget, exactly c each; b ≥ c halts them at empty. ∎",
+   "<em>Proof.</em> Acceptance per commit; each commit costs c; b ≥ c stops at empty. ∎",
+   "<em>Proof.</em> Gate each time. Budget run out, stop. ∎"
+  ],
+  "361460ed": [
+   "The price: protect the baseline, since a rewritable W₀ voids the bound. Weft holds it outside the update path, watermark in the frozen core of both W₀ and W.",
+   "Baseline must be protected; rewritable W₀ = no bound. Held outside update path; watermark in frozen core of both.",
+   "Saved model must be safe. Kept apart."
+  ],
+  "d0a07a99": [
+   "Results come from <code>papers/01-models-as-cells/experiments.py</code>, which imports the tested <code>weft/runtime/plasm</code> and <code>weft/runtime/invariants</code> modules and writes <code>results.json</code> and figures. Commit <code>a18fc40</code>, x86-64 Linux CPU, Python 3.13, PyTorch 2.15 (CPU build). Seeded and CPU-forced, so reproducible. Apple MPS results are <strong>not</strong> measured or claimed.",
+   "Script imports tested modules. Commit <code>a18fc40</code>, x86-64 Linux CPU, Python 3.13, PyTorch 2.15. Seeded, reproducible. MPS <strong>not</strong> measured or claimed.",
+   "One script, tested code. Same number each run. Apple GPU <strong>not</strong> tested."
+  ],
+  "973ddc53": [
+   "W₀ ∈ ℝ²⁵⁶ˣ²⁵⁶ with ‖W₀‖F = 12.81; Q as in Proposition 2; θ = 0°, 5°, …, 180° (37 cases); R = 0.25‖W₀‖F = 3.20.",
+   "256×256 W₀, ‖W₀‖F = 12.81; θ 0°–180° by 5° (37 cases); R = 3.20.",
+   "Turn matrix 37 ways."
+  ],
+  "1c56fcef": [
+   "Size change never exceeded 3.4×10⁻¹⁴, floating-point noise. Measured distance matched the closed form within 7.5×10⁻¹⁴.",
+   "Size change ≤ 3.4×10⁻¹⁴ (noise); distance = closed form within 7.5×10⁻¹⁴.",
+   "Size not change. Math match."
+  ],
+  "55b08ff3": [
+   "Gate first rejects at θ = 15°: 2sin(7.5°)×12.81 = 3.34 > 3.20. Same case as the w3ft.org demo’s <em>Flip signs</em> button.",
+   "First rejection: θ = 15° (3.34 > 3.20). Demo: <em>Flip signs</em>.",
+   "Gate say no from 15°."
+  ],
+  "e11c066f": [
+   "Full cycle, 12 generations, on each of 10 seeds, default settings (R = 120).",
+   "12 generations × 10 seeds, R = 120.",
+   "Run cell 12 step, 10 time."
+  ],
+  "93b4c965": [
+   "The cell adapts steadily; core and watermark behave exactly as Proposition 1 predicts. Untested here: the gate never rejected, the feedback rule never acted, the exploratory lineage never won. Its update (0.5G−0.5ε) is strictly worse than α’s under this score, so lineage selection is not exercised.",
+   "Steady adaptation; core, watermark exactly per Prop. 1. Not tested: gate never rejected, feedback never acted, β never won (strictly worse direction), so no selection.",
+   "Cell get better. Core, mark safe. But gate never say no, β never win. Not test those."
+  ],
+  "0122b4b9": [
+   "Watermark a fresh matrix; apply perturbations of growing ‖ΔW‖F, masked (periphery only) or to all rows.",
+   "Growing ‖ΔW‖F: masked (periphery) vs all rows.",
+   "Push matrix harder, harder."
+  ],
+  "6ed8b1b4": [
+   "Periphery-only: drift exactly 0 up to ‖ΔW‖F = 32, as Proposition 1 requires. Unmasked: retained up to 12 (cosine 0.964, drift 0.281), flagged at 16 (drift 0.375). The drift check fires first; cosine first fails at 32 (0.813).",
+   "Masked: drift 0 up to 32. Unmasked: kept to 12, flagged at 16 (drift 0.375); cosine fails at 32.",
+   "Edge push: mark fine. Full push: caught at 16."
+  ],
+  "4d16d00d": [
+   "<strong>Targeted rank-1 overwrite.</strong> An attacker who knows the trigger can swap in a response of their choosing. The watermark check catches it: cosine drops to −0.04. But the overwrite moves weights only ‖W′−W₀‖F = 4.32, so <strong>the distance gate at default R = 120 accepts it.</strong> Distance limits <em>how much</em> a model changes, not <em>which directions</em>. Provenance needs its own check; Weft runs both.",
+   "<strong>Rank-1 overwrite.</strong> Attacker knowing trigger swaps response. Watermark check catches it (cosine −0.04); distance only 4.32, so <strong>gate at R = 120 accepts it.</strong> Distance bounds how much, not which direction. Provenance needs own check; Weft runs both.",
+   "<strong>Sneak edit.</strong> Small change swap mark. Gate say yes! Mark check catch it. Need both check."
+  ],
+  "f4380606": [
+   "Smaller radii so the gate binds; error reported for weights the cell actually <em>holds</em> at the end.",
+   "E2 at smaller R; error of <em>held</em> weights.",
+   "Tight limit. Check kept weight."
+  ],
+  "9c0e2016": [
+   "Committed distances all stay below R (Proposition 3). A rejection leaves weights and residual unchanged, so the cell stops at the boundary.",
+   "All commits below R (Prop. 3). Rejection → same start next time → cell halts at boundary.",
+   "Never pass limit. Stop at edge."
+  ],
+  "167cdd6d": [
+   "<strong>Reporting defect found here.</strong> <code>run_weft_plasm_cycle</code> took <code>final_target_error</code> from the last <em>candidate</em>, committed or not: at R = 0.05 it reported 0.880, a 12% improvement, with no update committed. With full acceptance the two agree; the table uses held weights. <a href=\"https://github.com/Moissanite-Labs/weft/issues/63\">Issue #63</a>, fixed since version 1.0: generations record <code>committed</code> and <code>held_target_error</code>; <code>final_target_error</code> and status use held weights. The script checks the library figure equals held error every run, keeping the candidate ratio only to measure the old behaviour.",
+   "<strong>Reporting defect.</strong> Library reported last <em>candidate’s</em> error, committed or not: 0.880 (12% gain) at R = 0.05 with zero commits. Table uses held weights. <a href=\"https://github.com/Moissanite-Labs/weft/issues/63\">Issue #63</a>, fixed since v1.0: held error recorded and used; script checks every run.",
+   "<strong>Bug found.</strong> Report say better when nothing kept. Fixed (<a href=\"https://github.com/Moissanite-Labs/weft/issues/63\">#63</a>). Script check."
+  ],
+  "e053e08e": [
+   "Conformance vectors (<code>weft/runtime/invariants/vectors.json</code>): 6 weight-update, 4 tension, 2 metering cases, incl. matching-sizes trap, non-finite candidates, budget and cost preconditions. CI checks all three implementations each change:",
+   "<code>vectors.json</code>: 6 weight-update, 4 tension, 2 metering cases (size trap, non-finite, budget/cost). CI tests all three per change:",
+   "Shared test. Robot check three code each change:"
+  ],
+  "7a72b2e0": [
+   "All three agree wherever tested. C does not yet read the JSON file or cover the non-positive-budget case; one Python/C corpus is tracked as <a href=\"https://github.com/Moissanite-Labs/weft/issues/42\">issue #42</a>.",
+   "Agree where tested. C: no JSON, no non-positive-budget case yet (<a href=\"https://github.com/Moissanite-Labs/weft/issues/42\">#42</a>).",
+   "All agree where test. C not use shared test yet."
+  ],
+  "cb9419c8": [
+   "<strong>Scale.</strong> One 256×256 linear map, synthetic target. Not shown: behaviour on a trained network, language model or real task.",
+   "<strong>Scale.</strong> One synthetic 256×256 map. Not shown: trained nets, language models, real tasks.",
+   "<strong>Scale.</strong> Tiny test. No real model or task."
+  ],
+  "d9464302": [
+   "<strong>Calibration.</strong> Default R = 120 is about 260 times larger than any distance the default cycle reaches; the tension cap (26), 56 times. A useful R must be task-relative (a fraction of ‖W₀‖, or a held-out tolerance). Not done yet.",
+   "<strong>Calibration.</strong> R = 120 ≈ 260× reached distances; cap 26 = 56×. Task-relative R needed. Not done yet.",
+   "<strong>Calibration.</strong> Limit way too loose. Not tuned yet."
+  ],
+  "3f7428e7": [
+   "<strong>Selection.</strong> One lineage dominates by construction, so A/B is plumbing, not evidence of selection. A real test needs data-dependent lineage merit.",
+   "<strong>Selection.</strong> One lineage always wins by construction: plumbing, not selection evidence.",
+   "<strong>Selection.</strong> One always win. No real pick."
+  ],
+  "b437a41d": [
+   "<strong>Tension.</strong> Just a function of distance, not an independent measurement; the feedback rule never acted in E2.",
+   "<strong>Tension.</strong> = distance function; feedback idle in E2.",
+   "<strong>Tension.</strong> Not real measure."
+  ],
+  "229e69d5": [
+   "<strong>Adversaries.</strong> Watermark = integrity check vs own updates and simple overwrites, not robust ownership vs an adversary controlling training. Gate does not stop small targeted edits (§5.3).",
+   "<strong>Adversaries.</strong> Integrity check only, not robust ownership vs training-level attacker. Gate doesn’t stop small targeted edits.",
+   "<strong>Attackers.</strong> Mark not strong. Small sneak edit pass gate."
+  ],
+  "115d09d3": [
+   "<strong>Isolation.</strong> Shared memory gives a fixed byte boundary, not process isolation. Nothing stops another process with the mapping from writing to it.",
+   "<strong>Isolation.</strong> Byte boundary, not process isolation; mapped processes can write.",
+   "<strong>Isolation.</strong> Wall, not lock. Others can write."
+  ],
+  "65f0bfa8": [
+   "<strong>Hardware.</strong> No Apple MPS, Metal or other accelerator results; Mac entry points wrap this CPU path.",
+   "<strong>Hardware.</strong> No MPS, Metal or accelerator results; Mac entry points = CPU wrappers.",
+   "<strong>Hardware.</strong> CPU only. No GPU test."
+  ],
+  "af3873ed": [
+   "<strong>Calibrate R</strong> to task tolerance on a small trained network; accuracy vs distance.",
+   "<strong>Calibrate R</strong> to task; accuracy vs distance.",
+   "<strong>Tune limit</strong> to task."
+  ],
+  "5a8b0721": [
+   "<strong>Real periphery.</strong> Low-rank adapters as periphery, pretrained model as core; gate bounds adapter drift.",
+   "<strong>Real periphery.</strong> Low-rank adapters + pretrained core.",
+   "<strong>Real edge.</strong> Add-on only move."
+  ],
+  "38e97849": [
+   "<strong>Meaningful lineages.</strong> Two rules whose ranking shifts with data; measure selection.",
+   "<strong>Real lineages.</strong> Data-dependent ranking; measure selection.",
+   "<strong>Fair race.</strong> Either can win."
+  ],
+  "bf995251": [
+   "<strong>Measured tension.</strong> From validation loss or another independent signal; does feedback keep it in band?",
+   "<strong>Measured tension.</strong> Independent signal; test feedback band.",
+   "<strong>Real tension.</strong> Measure it."
+  ],
+  "705361e2": [
+   "<strong>Mechanised proof.</strong> Propositions 2, 3, precondition order in Lean, checked against vectors.",
+   "<strong>Mechanised proof.</strong> Props 2, 3, precondition order; Lean.",
+   "<strong>Machine proof.</strong> Computer check math."
+  ],
+  "0b613968": [
+   "<strong>MPS runs.</strong> E2, E4 on Apple Silicon; log device, versions, tolerances.",
+   "<strong>MPS runs.</strong> E2, E4 on Apple Silicon.",
+   "<strong>Mac runs.</strong> Test Mac chip."
+  ]
+ },
+ "headings": {
+  "abstract": [
+   "Summary",
+   "Gist",
+   "Big idea",
+   "TL;DR",
+   "What’s this about?"
+  ],
+  "introduction": [
+   "1. Introduction",
+   "1. Intro",
+   "Why cells",
+   "Intro",
+   "What’s the question?"
+  ],
+  "the-cell": [
+   "2. The cell",
+   "2. Cell",
+   "Cell parts",
+   "Cell",
+   "What is the cell?"
+  ],
+  "one-generation": [
+   "3. One generation",
+   "3. Generation",
+   "One step",
+   "Cycle",
+   "What happens each step?"
+  ],
+  "why-measure-distance-from-a-fixed-baseline": [
+   "4. Why a fixed baseline",
+   "4. Fixed baseline",
+   "Why baseline",
+   "Baseline",
+   "Why measure from a saved copy?"
+  ],
+  "experiments": [
+   "5. Experiments",
+   "5. Tests",
+   "Tests",
+   "Tests run",
+   "How was it tested?"
+  ],
+  "what-this-does-not-show": [
+   "6. Not shown",
+   "6. Limits",
+   "Not shown",
+   "Limits",
+   "What isn’t shown?"
+  ],
+  "next-experiments": [
+   "7. Next experiments",
+   "7. Next",
+   "Next",
+   "Next tests",
+   "What comes next?"
+  ]
+ },
+ "tldr": {
+  "abstract": "A gate commits a change only within R of a saved baseline, with budget left and the watermark intact; small tests show where it binds and where it doesn't.",
+  "introduction": "The cell is a metaphor; the checked part is a predicate bounding distance from a saved baseline.",
+  "the-cell": "One 256×256 matrix in fixed memory; a frozen core holds a watermark that periphery updates cannot move.",
+  "one-generation": "Two candidates, scored exactly, at most one committed; “tension” is just distance, not a measurement.",
+  "why-measure-distance-from-a-fixed-baseline": "Size checks miss large moves and per-step bounds add up; distance from a fixed baseline does neither.",
+  "experiments": "Gate rejected 34 of 37 size-preserving moves; error fell to 0.278 of its start with zero core drift, but the default gate never bound; a rank-1 overwrite passes the gate, caught only by the watermark.",
+  "what-this-does-not-show": "Not shown: scale, calibration, real selection, measured tension, adversaries, isolation or hardware.",
+  "next-experiments": "Planned, not done: calibrate R, adapters as periphery, real lineages, measured tension, Lean proofs, MPS runs."
+ },
+ "eli5": {
+  "abstract": "Some programs keep changing after people start using them. Weft lets a change through only if the program stays close to a saved copy, like a dog on a leash, has budget left, and still carries its hidden name tag. Tests on one small example behave as planned, and the paper lists what they did not test.",
+  "introduction": "Weft compares a program to a living cell, but that is only a picture to explain the goal. What really counts is a simple rule the computer checks every time: do not wander too far from the saved copy, and do not spend more than you have.",
+  "the-cell": "The program’s numbers live in a fixed box of memory. The top quarter is locked, and a hidden name tag lives there, so normal changes can never rub it out. A separate check watches for anyone who tries to scribble on it another way.",
+  "one-generation": "Each round, the program tries two small changes, one careful and one bolder. It keeps the better one only if it passes every check, or keeps neither. The thing called <em>tension</em> sounds like a feeling, but right now it is just another way of measuring distance.",
+  "why-measure-distance-from-a-fixed-baseline": "Checking a kite only by its string length would miss it swinging to the other side of the sky. Checking each little step is not enough either, because steps add up. Weft measures distance from one saved spot, so as long as that spot is kept safe, the program never gets far away.",
+  "experiments": "A size-only check said yes to every tricky change, but Weft’s distance check said no to the ones that went too far. The program got better at its practice task without its locked part moving, though the leash was too long to ever pull tight. A small sneaky edit got past the distance check, and only the name-tag check caught it. Rerunning the script gives the same numbers, except for timings.",
+  "what-this-does-not-show": "This was one tiny practice example, not a real AI system. The leash was set far too long to matter, the bolder try never had a fair chance, <em>tension</em> is not really measured, and the name tag would not hold up against someone who controls the training. Nothing here was tested on real models or special chips.",
+  "next-experiments": "Next, the team plans to try this on a small real network, set the leash to fit the task, give both tries a fair race, and have a computer check the proofs. These are plans, not results."
+ }
+}

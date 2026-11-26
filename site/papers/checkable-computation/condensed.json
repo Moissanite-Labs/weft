@@ -1,0 +1,453 @@
+{
+ "version": 1,
+ "levels": [
+  "Full prose",
+  "Concise",
+  "Terse",
+  "Caveman"
+ ],
+ "blocks": {
+  "e42f104d": [
+   "A self-changing system should show what it computed. ML Weft has three small pieces: a reducer for <em>interaction combinators</em> (graph rewriting, one local node pair per step), a canonical binary graph format, and an execution record committing to the initial graph, every step and the final graph with SHA-256. A hashed telemetry line carries live state. All four are tested against an independent reference semantics. The rules agree in all 11 single-rule cases and, across 600 random nets, never diverged while storage was readable as a graph. But storage records which node each port points to, not which port: two different nets store as the same 132 bytes, and a third of runs starting unambiguous reach such a state within a few steps. The reducer also accepts non-active pairs and mishandles loop-back wires; its self-test record cannot be replayed. Records made entirely through the reducer replay exactly, 60 of 60. The decoder survived 20,280 mutated packets without a crash. The telemetry hash covers the payload, not the header, and, unkeyed, detects accidents, not tampering. Each limitation is measured, with fixes that would make the pipeline checkable.",
+   "Self-changing system should show what it computed. Three pieces: <em>interaction combinators</em> reducer (one local pair rewrite per step); canonical binary graph format; execution record committing initial graph, every step, final graph with SHA-256. Plus hashed telemetry line. Tested vs independent reference semantics. 11/11 single-rule cases agree; no divergence across 600 random nets while storage readable. But storage keeps node, not port: two different nets = same 132 bytes; a third of unambiguous runs turn ambiguous within a few steps. Reducer accepts non-active pairs, mishandles loop-back wires; self-test record not replayable. Reducer-only records replay 60/60. Decoder: 20,280 mutated packets, no crash. Telemetry hash covers payload, not header; unkeyed = catches accidents, not tampering. Limits measured, fixes described.",
+   "Weft want computer show what it compute. Graph game, one small step at time. Start, steps, end locked with SHA-256. Test against simple second version. Basic rules match. But storage forget which port, so two different graph look same. Reducer take bad pair, break loop wire. Self-test record cannot replay. Decoder no crash. Line hash catch accident, not thief. Paper say each problem and fix."
+  ],
+  "a2ce61e8": [
+   "Paper 1 bounds <em>how far</em> a model may change. This paper asks: <em>what did the system compute, and can someone else check it?</em> Unaccountable computation is hard to audit, however well updates are bounded.",
+   "Paper 1: <em>how far</em> a model may change. Here: <em>what did it compute, can others check?</em> Unaccounted computation = hard to audit.",
+   "Paper 1: how far model change. Here: what model compute? Other can check?"
+  ],
+  "3c5577ca": [
+   "Three parts, plus a channel reporting on them:",
+   "Answer: three parts + channel:",
+   "Three part, one line:"
+  ],
+  "367a8769": [
+   "<strong>Local steps.</strong> Interaction combinators (Lafont, 1997) rewrite one pair of connected nodes at a time: small, local, no hidden state, so a natural unit to record and re-check.",
+   "<strong>Local steps.</strong> Interaction combinators (Lafont): rewrite one connected node pair at a time. No hidden state → record, re-check.",
+   "<strong>Small steps.</strong> Graph change one pair at time. Easy check."
+  ],
+  "4bbe0d63": [
+   "<strong>A canonical binary format</strong> (BCP): same graph, same bytes, always.",
+   "<strong>Binary format</strong> (BCP): same graph = same bytes.",
+   "<strong>Same graph, same byte.</strong>"
+  ],
+  "bd0448e6": [
+   "<strong>A committed execution record:</strong> initial graph, steps and final graph under one SHA-256 digest.",
+   "<strong>Execution record</strong>: start, steps, end under one SHA-256.",
+   "<strong>Record.</strong> One hash lock start, step, end."
+  ],
+  "b8edbc56": [
+   "<strong>A telemetry line</strong> with payload SHA-256, carrying live state to the browser.",
+   "<strong>Telemetry line</strong>: live state → browser, payload hashed.",
+   "<strong>Line</strong> send state, with hash."
+  ],
+  "57ecf6e7": [
+   "The code exists and has tests; what does it guarantee? Main tool: a <strong>reference semantics</strong>, a separate, deliberately simple implementation storing every wire as a pair of <em>ports</em>, run side by side with the reducer. Four groups of findings:",
+   "Code exists, tested. Question: what does it guarantee? Tool: <strong>reference semantics</strong>, simple separate implementation, wire = pair of <em>ports</em>. Run side by side. Four findings:",
+   "Code run, has test. But what it promise? Build second, simple version. Compare. Four finding:"
+  ],
+  "349f4db4": [
+   "<strong>The rules are right:</strong> they match the reference on all built cases and all random runs while storage stayed readable (§6.1–6.3).",
+   "<strong>Rules right.</strong> Match reference on built cases and while storage readable (§6.1–6.3).",
+   "<strong>Rule good.</strong> Match second version while storage readable."
+  ],
+  "7184c4b3": [
+   "<strong>The representation is not.</strong> It can’t tell apart nets needing different rewrites: #52’s first falsifier, exhibited.",
+   "<strong>Representation not.</strong> Confuses nets needing different rewrites (#52 falsifier 1).",
+   "<strong>Storage bad.</strong> Two different graph look same."
+  ],
+  "65b469e8": [
+   "<strong>The interface is too permissive.</strong> It reduces non-active pairs, mishandles loop-back wires, lets records omit between-step mutations. Records replay only if every change goes through the reducer (§6.4).",
+   "<strong>Interface too loose.</strong> Non-active pairs reduced, loop-backs mishandled, off-record mutations allowed. Replay needs all changes via reducer (§6.4).",
+   "<strong>Too loose.</strong> Take bad pair, break loop wire. Change outside record, no replay."
+  ],
+  "968a7326": [
+   "<strong>Formats robust but limited.</strong> The decoder never crashes but checks storage, not structure; the telemetry hash skips the header, authenticates no one (§6.5–6.6).",
+   "<strong>Formats robust, limited.</strong> Decoder: no crash, storage-only checks. Hash: skips header, no authentication.",
+   "<strong>Format tough.</strong> No crash. Hash skip header, not say who."
+  ],
+  "3c29db21": [
+   "As in Paper 1, biological words are vision language: here mainly the “metabolic valve” node, tied to what code does.",
+   "Bio words = vision (Paper 1). Here: “metabolic valve” node, tied to actual code.",
+   "“Valve” fancy word. Mean wish. Code simple."
+  ],
+  "922db5d3": [
+   "An <strong>interaction net</strong> is a graph of <em>agents</em>, each with one <strong>principal port</strong> (port 0) and a fixed number of <strong>auxiliary ports</strong>, every port wired to exactly one other. Agents joined principal to principal form an <strong>active pair</strong>; computing rewrites them. Lafont’s <em>interaction combinators</em>: ERA (no auxiliary ports), CON, DUP (two each). Three rule shapes:",
+   "<strong>Interaction net</strong> = graph of <em>agents</em>: 1 <strong>principal port</strong> (0) + fixed <strong>auxiliary ports</strong>, each wired to one other port. Principal–principal = <strong>active pair</strong>, rewritten. Kinds: ERA (0 aux), CON, DUP (2 aux). Three rules:",
+   "Graph of agent. Two main port touch, rewrite them. That is compute. Three kind, three rule:"
+  ],
+  "3e6db91e": [
+   "<strong>Annihilation.</strong> Two same-kind agents vanish; auxiliary ports join pairwise, 1 to 1, 2 to 2.",
+   "<strong>Annihilation.</strong> Same kind → both vanish, aux ports joined 1–1, 2–2.",
+   "<strong>Same kind:</strong> both gone, wires join."
+  ],
+  "2f53a187": [
+   "<strong>Commutation.</strong> Different kinds pass through each other: each copied twice, copies cross-wired.",
+   "<strong>Commutation.</strong> Different kinds: copy each twice, cross-wire.",
+   "<strong>Different kind:</strong> copy, cross."
+  ],
+  "bfdf86ac": [
+   "<strong>Erasure.</strong> ERA deletes a binary agent, sending fresh ERAs down its auxiliary wires.",
+   "<strong>Erasure.</strong> ERA deletes binary agent, spreads ERAs.",
+   "<strong>ERA:</strong> erase, pass on."
+  ],
+  "02c8ee2f": [
+   "Rules touch only their two agents, and active pairs never share one, so order doesn’t change the result: interaction nets are <em>strongly confluent</em> (Lafont, 1990).",
+   "Rules local, active pairs share no agent → order doesn’t matter. <em>Strongly confluent</em> (Lafont 1990).",
+   "Plain net: pair not share, order not matter."
+  ],
+  "8193859b": [
+   "<strong>Weft’s extensions:</strong> labels, three agent kinds.",
+   "<strong>Extensions:</strong> labels, 3 kinds.",
+   "<strong>Weft add:</strong>"
+  ],
+  "aea56806": [
+   "<strong>Labelled DUPs</strong> (symmetric combinators; Mazza, 2007): annihilate only if labels match, else commute.",
+   "<strong>Labelled DUPs</strong> (Mazza 2007): same label annihilate, else commute.",
+   "<strong>DUP label:</strong> same vanish, else copy."
+  ],
+  "7a45112b": [
+   "<strong>SUP</strong>: labelled superposition node; annihilates with same-label DUP or SUP.",
+   "<strong>SUP</strong>: superposition; annihilates same-label DUP/SUP.",
+   "<strong>SUP:</strong> same label, vanish."
+  ],
+  "fc240ce8": [
+   "<strong>VLV</strong>, a <em>metabolic valve</em>: forwards if supplied tension is within the C2 bound (0–85) and supplied budget positive; else becomes excision marker <strong>FRC</strong>, erasing its neighbour.",
+   "<strong>VLV</strong> (<em>metabolic valve</em>): supplied tension 0–85, budget &gt; 0 → forward; else <strong>FRC</strong>, erase neighbour.",
+   "<strong>VLV valve:</strong> two number OK, pass. Not OK, cut neighbour."
+  ],
+  "b2f3f09a": [
+   "The valve is vision language: today a predicate on two caller-supplied numbers. It debits nothing; the budget is a permission signal, not an account. Extended-system confluence is not established; the valve makes results depend on per-step inputs.",
+   "Valve = vision word: predicate on two caller numbers; no debit; budget = permission, not account. Extended confluence not established; per-step inputs decide.",
+   "Valve just check two number. No real budget. Not proven: order not matter."
+  ],
+  "f1ad6bf3": [
+   "<code>weft/runtime/ic</code>: three flat preallocated arrays, indexed by <strong>slot</strong>:",
+   "Three flat arrays by <strong>slot</strong>:",
+   "Net in three list:"
+  ],
+  "d9adbd19": [
+   "<code>tags</code> (u8): kind; 255 = free slot;",
+   "<code>tags</code>: kind, 255 = free;",
+   "kind, or empty;"
+  ],
+  "68b44fb8": [
+   "<code>aux_tags</code> (i16): label;",
+   "<code>aux_tags</code>: label;",
+   "label;"
+  ],
+  "85d1bda8": [
+   "<code>ports</code> (i32 × 3): per port, the <strong>neighbouring node’s slot</strong>, or −1.",
+   "<code>ports</code>: <strong>neighbour node</strong> per port, or −1.",
+   "<strong>which node</strong> each port touch."
+  ],
+  "762b1a36": [
+   "The caller drives: <code>interact(a, b)</code> applies the rule for their kinds and logs a step to the trace. Before mutating, a rule checks for the free slots it needs (erasure 2, commutation 4, excising valve 1). Exhaustion raises <code>MemoryError</code>, VM unchanged; tests cover every allocating rule.",
+   "Caller drives: <code>interact(a, b)</code> applies rule, logs step to trace. Free slots checked first (erasure 2, commutation 4, excising valve 1). Shortfall → <code>MemoryError</code>, VM unchanged; tested for every allocating rule.",
+   "Caller pick pair, reducer apply rule, write step. Check space first. No space? Error, nothing change."
+  ],
+  "09326531": [
+   "Two design properties matter for what follows:",
+   "Two key properties:",
+   "Two thing:"
+  ],
+  "74695381": [
+   "<strong>Ports store a node, not a port.</strong> If X’s port 1 points to Y, storage doesn’t say <em>which</em> port of Y. One wire to Y: recoverable from which Y port points back. Two wires to Y, or a wire to itself: not recoverable (Figure 1).",
+   "<strong>Ports store node, not port.</strong> X→Y omits <em>which</em> Y port. Single wire: recover from back-pointer. Double wire or self-loop: ambiguous (Fig. 1).",
+   "<strong>Port remember node, not port.</strong> One wire, can guess. Two wire, cannot."
+  ],
+  "da1b5d99": [
+   "<strong><code>interact</code> trusts its caller.</strong> It checks neither that <code>a</code> and <code>b</code> meet principal to principal, nor whether an auxiliary neighbour is one of them.",
+   "<strong><code>interact</code> trusts caller.</strong> Doesn’t check active pair or detect loop-back neighbours.",
+   "<strong>Trust caller.</strong> Not check pair, not see loop."
+  ],
+  "d784727f": [
+   "BCP packet: 12-byte header, then one 20-byte record per occupied slot, ascending, little-endian:",
+   "BCP = 12-byte header + 20-byte record per occupied slot:",
+   "Head, then row per node:"
+  ],
+  "957cf5e3": [
+   "The decoder checks magic, version, flags, exact length, slot order, tags, reserved bytes, port ranges and a configurable capacity limit (default 1,048,576 slots), all <strong>before</strong> allocating: a 12-byte packet can’t force gigabytes.",
+   "Decoder checks header, length, order, tags, reserved bytes, ports, capacity (default 1,048,576 slots), <strong>before</strong> allocating.",
+   "Check packet first, then make room. Small packet can’t eat big memory."
+  ],
+  "56d0dce8": [
+   "Slot order and one valid encoding per field give each graph state exactly one encoding: encode, decode, re-encode yields the same bytes. A packet is a <em>storage snapshot</em>, not a checkpoint: no allocator cursor, no trace, no reciprocity check.",
+   "Slot order + one encoding per field → one encoding per state; round trip byte-exact. <em>Storage snapshot</em>, not checkpoint: no cursor, no trace, no reciprocity check.",
+   "One graph, one byte form. But only snapshot: no history, no wire check."
+  ],
+  "456182f3": [
+   "First reduction: the VM snapshots the graph as BCP bytes <em>I</em>. After the run, <code>compute_execution_commitment</code> serialises final graph <em>F</em> and steps <em>S</em> as sorted-key JSON, returning",
+   "Start snapshot <em>I</em> (BCP); final graph <em>F</em> and steps <em>S</em> as sorted JSON. Then:",
+   "Save start. Save steps, end. Then hash:"
+  ],
+  "896640bf": [
+   "C = SHA-256(WEFT-IC-EXEC-V1: ‖ I ‖ :STEPS: ‖ S ‖ :FINAL: ‖ F).",
+   "C = SHA-256 over prefix, I, S, F.",
+   "One hash, all three."
+  ],
+  "ec6272e5": [
+   "<strong>Proposition 1 (unambiguous encoding).</strong> Different (<em>I</em>, <em>S</em>, <em>F</em>) → different hashed strings (valid BCP, JSON arrays).",
+   "<strong>Prop. 1:</strong> hashed string injective in (<em>I</em>, <em>S</em>, <em>F</em>).",
+   "<strong>Prop 1:</strong> different record, different string."
+  ],
+  "f9e02917": [
+   "<em>Proof.</em> The prefix is fixed. <em>I</em>’s header gives its length (12 + 20·count), so :STEPS: sits at a known offset. JSON arrays self-delimit, so a closing bracket ends <em>S</em>. After :FINAL:, the rest is <em>F</em>. Each part is recoverable. ∎",
+   "<em>Proof.</em> Fixed prefix; <em>I</em> length from header (12 + 20·count); JSON array self-delimits <em>S</em>; rest after :FINAL: = <em>F</em>. All recoverable. ∎",
+   "<em>Proof.</em> Each part show where it end. So string split back. ∎"
+  ],
+  "500253d3": [
+   "Two records sharing a commitment would need a SHA-256 collision. It is <strong>binding</strong>, pinning exactly one (<em>I</em>, <em>S</em>, <em>F</em>), but no proof the record is <em>true</em>. That needs a <strong>replay</strong>: decode <em>I</em>, apply <em>S</em> in order, compare with <em>F</em>; strict replay also checks active pairs. The library has no replay verifier yet; the experiments built one.",
+   "Same commitment, different records → SHA-256 collision. <strong>Binding</strong> ≠ <em>true</em>. Truth needs <strong>replay</strong>: decode <em>I</em>, apply <em>S</em>, compare <em>F</em>; strict = active pairs only. Library: no verifier yet (experiments built one).",
+   "Hash pin record. Not prove record true. Need replay. Library no have replay yet. Paper build one for test."
+  ],
+  "7c0e1ae2": [
+   "Results come from <code>experiments.py</code>, running the tested reducer, codec and telemetry modules and the browser parser (under Node) against <code>reference.py</code> (about 200 lines; port-pair wires; rewrites contract paths through removed ports). Seeded; CI re-checks the numbers. Self-check first (E0): on 300 random nets the reference stayed valid through all 7,648 reductions, and different orders reached the same normal form.",
+   "Source: <code>experiments.py</code>; tested modules + browser parser (Node) vs <code>reference.py</code> (about 200 lines, port-pair wires). Seeded; CI re-checks numbers. E0 self-check: 300 nets, 7,648 reductions, always valid; orders agree on normal form.",
+   "One script make all number, same every time. Robot rerun it. Second version test self first: 300 net, all good."
+  ],
+  "f615766a": [
+   "One minimal closed net per rule (free ends capped by ERA), compared with the reference up to isomorphism.",
+   "Minimal closed net per rule, ERA-capped; compare up to isomorphism.",
+   "Small test graph for each rule. Compare."
+  ],
+  "c9fa18ec": [
+   "Loop-back failures: erasure with self-looped DUP; commutation with self-looped CON; commutation with one wire across the pair. New nodes point to a slot the rule then frees. Annihilation passes all its loop-back cases. A rule defect, separate from representation: <a href=\"https://github.com/Moissanite-Labs/weft/issues/66\">issue #66</a>.",
+   "Failures: erasure (self-looped DUP), commutation (self-looped CON; wire across pair). New nodes → slot then freed. Annihilation fine. Rule bug, not representation: <a href=\"https://github.com/Moissanite-Labs/weft/issues/66\">#66</a>.",
+   "Loop wire: three case break. Point at empty spot. Bug in rule, <a href=\"https://github.com/Moissanite-Labs/weft/issues/66\">#66</a>."
+  ],
+  "014770ff": [
+   "<strong>Falsifier 1 (#52).</strong> Figure 1’s nets serialise to the <strong>same 132 bytes</strong> but reduce to non-isomorphic results. The reducer gets the parallel one right and the crossed one wrong, unavoidably.",
+   "<strong>#52 falsifier 1.</strong> Two nets, <strong>same 132 bytes</strong>, different results. Reducer: parallel right, crossed wrong, unavoidably.",
+   "<strong>Two graph, same 132 byte.</strong> Answer differ. Reducer must get one wrong."
+  ],
+  "1cffdcfe": [
+   "600 random closed nets of 4–10 agents (CON, DUP and SUP with two labels, and ERA). The 300 <strong>simple</strong> nets start without self-loops or double wires, so storage is readable; the 300 <strong>general</strong> nets are unrestricted. Reducer and reference ran in lockstep on the same active pair; after each step the reducer’s storage, as a port graph, was checked isomorphic to the reference.",
+   "600 random closed nets, 4–10 agents (CON, DUP, SUP with two labels, ERA). 300 <strong>simple</strong> (no self-loops or double wires at start → readable); 300 <strong>general</strong> (unrestricted). Lockstep, same active pair; storage → port graph, isomorphism-checked each step.",
+   "600 random graph. Half start clean, half any. Run both version, same pair each step. Check match."
+  ],
+  "a309d793": [
+   "Simple nets: two thirds clean, a third ambiguous after a median two steps (ordinary reductions repeat wires). Most general nets can’t be stored faithfully.",
+   "Simple: two thirds clean, a third ambiguous by step 2 (median). General: mostly unstorable.",
+   "Easy graph: third get mixed fast. Hard graph: mostly can’t store."
+  ],
+  "febfeef5": [
+   "92 simple nets reaching a normal form within 40 steps: the reference, in 5 random orders each, always reached the same one, as strong confluence predicts. The reducer, in 3 random orders per net (276 runs), matched in 189, went unreadable in 87, and <strong>never reached a different readable normal form</strong>. No confluence result covers SUP and VLV; VLV depends on per-step inputs by design.",
+   "92 simple nets (normal form within 40 steps). Reference: 5 orders each, always same normal form. Reducer: 276 runs; 189 match, 87 unreadable, <strong>none a different readable result</strong>. SUP/VLV: no confluence result; VLV input-dependent.",
+   "Second version: order change, answer same. Reducer: same answer or lost, never other answer. SUP, VLV: order not proven."
+  ],
+  "a38d1f8d": [
+   "The self-test snapshots a 4-node graph, then <strong>allocates nodes between steps</strong> off-trace; <strong>2 of its 3 recorded steps are not active pairs</strong>. Its record binds but can’t be replayed: no verifier could derive the final graph from the initial one. On 198 non-active pairs, <code>interact</code> mutated the net every time, always leaving invalid storage. #52’s second falsifier, confirmed; see also #66.",
+   "Self-test: 4-node snapshot, then <strong>off-trace allocations</strong>; <strong>2 of 3 steps not active pairs</strong>. Binding, not replayable. 198 non-active pairs → net mutated and left invalid every time. #52 falsifier 2 confirmed (also #66).",
+   "Self-test add node off record, use bad pair. Record locked but can’t replay. Feed bad pair: graph break every time."
+  ],
+  "308514b6": [
+   "Lesson: records are checkable only if every post-snapshot change goes through the recorded interface, which refuses invalid steps.",
+   "Checkable only if every change logged via interface that refuses bad steps.",
+   "Must: all change one door, door stop bad."
+  ],
+  "9d68e34c": [
+   "20,280 corrupted packets from 40 graphs: every single-bit flip at every byte (twice, random bits), every truncation.",
+   "20,280 corrupted packets: per-byte bit flips + truncations.",
+   "Break packet 20,280 way."
+  ],
+  "56246a15": [
+   "Robust and canonical, the decoder does what its documentation says, no more: it checks storage, not structure. Two thirds of accepted corrupt packets aren’t valid nets; a structural checker (#52) is needed.",
+   "Robust, canonical; checks storage, not structure. Two thirds of accepted corrupt packets invalid → structural checker needed (#52).",
+   "No crash. But bad graph get in. Need shape check."
+  ],
+  "0d0e1740": [
+   "Browser lines read <code>:RR:AA:SSSS[s-exp …]&lt;sha256&gt;</code>: role, action, sequence number, s-expression payload, payload SHA-256, an early dialect from Weft’s design sessions. The messaging protocol is now published as <a href=\"https://github.com/Moissanite-Labs/abios\">abios</a>: normative SYM-2P/1.0 is one canonical JSON object per line with a typed validator; the v2 draft, a positional |-separated line. Weft’s line is neither, nor an abios packet.",
+   "Line: role, action, sequence, s-expression payload, payload SHA-256. Early design-session dialect. <a href=\"https://github.com/Moissanite-Labs/abios\">abios</a> (now published): SYM-2P/1.0 = canonical JSON per line + validator; v2 draft = positional line. Weft’s line: neither, not abios.",
+   "Line = head, message, hash. Old style from early design. Real protocol now abios. Line not abios."
+  ],
+  "6ce78168": [
+   "<strong>Size.</strong> “101 bytes where the JSON took 481”, sometimes quoted for Weft, comes from the abios v2 draft (its brief packet vs the v1 JSON template). Weft’s fixture line measures <strong>131 bytes</strong>: 11-byte header, 56-byte payload, 64-character hash. As compact JSON: <strong>177 bytes</strong>. Mostly hash.",
+   "<strong>Size.</strong> 101-vs-481 figure = abios v2 draft’s own comparison. Weft fixture line: <strong>131 bytes</strong> (11 header, 56 payload, 64 hash) vs <strong>177</strong> as JSON. Mostly hash.",
+   "<strong>Size.</strong> Line 131 byte. JSON 177. Most is hash. 101 number from abios draft."
+  ],
+  "bb553746": [
+   "<strong>What the hash catches.</strong> Five one-character edits at each position.",
+   "<strong>Hash test:</strong> 5 swaps per position.",
+   "<strong>Test:</strong> change each spot."
+  ],
+  "cdfabf92": [
+   "Python and the browser both accept a forged header, and a changed payload with a <strong>recomputed</strong> hash. The unkeyed hash detects accidental corruption, not tampering. abios states the same limit (transport signing: open item O-1) but enforces header fields, outside its hash by design, at publication; Weft’s line doesn’t. Tracked as <a href=\"https://github.com/Moissanite-Labs/weft/issues/67\">issue #67</a>.",
+   "Forged header: accepted (Python + browser). Changed payload + recomputed hash: accepted. Unkeyed hash = catches accidents, not tampering. abios: same limit (O-1 open), but enforces headers at publication; Weft doesn’t. <a href=\"https://github.com/Moissanite-Labs/weft/issues/67\">#67</a>.",
+   "Fake head pass. Fake message with new hash pass. Hash catch accident, not thief. <a href=\"https://github.com/Moissanite-Labs/weft/issues/67\">#67</a>."
+  ],
+  "8a5a1678": [
+   "<strong>Parity.</strong> On 965 lines (valid, mutant, random, malformed), the Python codec and browser parser, run as the worker uses them, agree on every acceptance, metric and header field.",
+   "<strong>Parity:</strong> 965 lines; Python and browser agree on every decision, metric, header field.",
+   "<strong>Same answer:</strong> Python and browser, all 965 line."
+  ],
+  "56062ba6": [
+   "The shader’s frame packs sixteen <code>float32</code> values, one a Unix timestamp. At the fixture’s time (1.76 × 10⁹ s), adjacent <code>float32</code> values are <strong>128 seconds</strong> apart: nothing finer than about two minutes. The worker substitutes a page-relative clock, fine for animation; don’t read the slot as wall-clock time.",
+   "Frame: sixteen float32s, one a Unix timestamp. At 1.76 × 10⁹ s, float32 step = <strong>128 s</strong> → about 2-minute resolution. Worker swaps in page clock: OK for animation, not wall-clock.",
+   "Time number too big for small float. Only good to about two minute. Fine for picture, not for clock."
+  ],
+  "2f308016": [
+   "<strong>Extended-system correctness.</strong> SUP and VLV confluence, termination and semantics: open. The reference mirrors the reducer’s DUP–SUP annihilation choice without justifying it.",
+   "<strong>Extended system.</strong> SUP/VLV confluence, termination, semantics: open. DUP–SUP choice copied, not justified.",
+   "<strong>SUP, VLV: not proven.</strong> Still open."
+  ],
+  "e21db953": [
+   "<strong>Execution validity.</strong> Binding isn’t following the rules. Until non-active pairs are rejected and a replay verifier ships, a record proves only that someone wrote it.",
+   "<strong>Validity.</strong> Binding ≠ rule-following. Until pair checks + verifier ship: record shows only someone wrote it.",
+   "<strong>Record locked, not proven right.</strong> Only show someone write it."
+  ],
+  "58db6481": [
+   "<strong>Scale or performance.</strong> Small CPU nets only; no GPU reduction, parallelism or allocation-free execution.",
+   "<strong>Scale.</strong> Small CPU nets only; no GPU or parallel.",
+   "<strong>Small only.</strong> CPU. No GPU test."
+  ],
+  "76c4739c": [
+   "<strong>Universality.</strong> Universal in Lafont’s sense; given the defects, that says nothing of this implementation.",
+   "<strong>Universality.</strong> Theory’s, not this implementation’s (defects).",
+   "<strong>Theory strong, code not shown.</strong>"
+  ],
+  "95f470c8": [
+   "<strong>Authentication.</strong> Nothing establishes who produced a graph, record or line.",
+   "<strong>Authentication.</strong> None: producer identity not established.",
+   "<strong>Who made it? Not shown.</strong>"
+  ],
+  "d802d284": [
+   "<strong>The reference is not a proof:</strong> a simpler independent implementation, matching known theory where tested, resting on review and those checks.",
+   "<strong>Reference ≠ proof.</strong> Simpler independent code, matches theory where tested; rests on review + checks.",
+   "<strong>Second version not proof.</strong> Only checked by review, test."
+  ],
+  "b769bebf": [
+   "The findings suggest these changes, in order:",
+   "Fixes, in order:",
+   "Fix list:"
+  ],
+  "527736d0": [
+   "<strong>Port-indexed wires.</strong> Store peers as (node, port), e.g. 4·node + port in the existing i32; BCP version 2, explicit migration (#52).",
+   "<strong>Port-indexed wires:</strong> peer = (node, port); BCP v2 + migration (#52).",
+   "<strong>Save which port too.</strong> New format version."
+  ],
+  "20162f0e": [
+   "<strong>A checked interface.</strong> <code>interact</code> rejects non-principal–principal pairs; reference-style path contraction handles loop-back wires (#66).",
+   "<strong>Checked interface:</strong> reject non-active pairs; path-contraction rewiring for loop-backs (#66).",
+   "<strong>Say no to bad pair.</strong> Fix loop wire."
+  ],
+  "95aba817": [
+   "<strong>Records covering every mutation.</strong> Post-snapshot changes only via <code>interact</code>, or allocations logged as steps. Ship a library <code>verify_execution</code> the self-test must pass.",
+   "<strong>Full records:</strong> all changes via <code>interact</code> or logged; ship verifier; self-test must pass.",
+   "<strong>Record every change.</strong> Ship replay check. Self-test must pass."
+  ],
+  "8da98e0c": [
+   "<strong>Canonical steps across languages.</strong> Specify the step encoding (e.g. RFC 8785) so other-language verifiers reproduce <em>S</em> exactly.",
+   "<strong>Canonical steps:</strong> fixed encoding (RFC 8785) → same bytes in any language.",
+   "<strong>Same step bytes, any language.</strong>"
+  ],
+  "082e0cf0": [
+   "<strong>Structural checker:</strong> reciprocal wires, arity, no dangling ports.",
+   "<strong>Structural checker:</strong> wires, arity, dangling.",
+   "<strong>Check graph shape.</strong>"
+  ],
+  "62180c48": [
+   "<strong>Telemetry on abios.</strong> Use an abios packet, or at least hash the whole line; keyed MAC or signature across machines (#67).",
+   "<strong>Telemetry → abios</strong>, or hash whole line; MAC/signature across machines (#67).",
+   "<strong>Use abios.</strong> Hash whole line. Key it between machine."
+  ],
+  "34a49cca": [
+   "<strong>Then, proofs.</strong> Mechanise rules on the port-indexed representation; prove replay-verified records match valid reductions.",
+   "<strong>Then proofs:</strong> mechanised rules; replay-verified ⇒ valid reduction.",
+   "<strong>Then prove rules, by machine.</strong>"
+  ],
+  "e90dbf4d": [
+   "<strong>Since version 1.0.</strong> Items 1, 2, 3 and 5 are now in the runtime (C3 version 2). The peer port uses version 1’s reserved byte, so records stay 20 bytes; version 1 packets decode where peer ports are inferable. Lowest-free-slot allocation lets a graph alone fix every later step. The new reducer matches the reference after every step on the six loop-back cases and 300 random closed nets with self-loops and double wires; every record replays. §6 still measures the studied version. Items 4, 6, 7 remain open (#77, #67).",
+   "<strong>Since v1.0:</strong> items 1, 2, 3, 5 in runtime (C3 v2). Peer port in reserved byte; records still 20 bytes; v1 packets decode if inferable. Lowest-free-slot allocation. Matches reference every step: 6 loop-back cases, 300 random nets (self-loops, double wires); all records replay. §6 = studied version. 4, 6, 7 open.",
+   "<strong>Since v1.0:</strong> four fix now in code. New reducer match second version in test; record replay. Paper test still on old code. Three fix still open."
+  ]
+ },
+ "headings": {
+  "abstract": [
+   "Summary",
+   "Gist",
+   "Big idea",
+   "TL;DR",
+   "What’s this about?"
+  ],
+  "introduction": [
+   "1. Introduction",
+   "1. Intro",
+   "The question",
+   "Intro",
+   "What’s being asked?"
+  ],
+  "interaction-combinators-in-brief": [
+   "2. Interaction combinators",
+   "2. Combinators",
+   "Graph rules",
+   "Combinators",
+   "How does the graph compute?"
+  ],
+  "the-c3-reducer": [
+   "3. The C3 reducer",
+   "3. Reducer",
+   "The engine",
+   "Reducer",
+   "How is a net stored?"
+  ],
+  "the-binary-graph-format": [
+   "4. Binary graph format",
+   "4. Format",
+   "Bytes",
+   "BCP format",
+   "How is a graph saved?"
+  ],
+  "committed-execution-records": [
+   "5. Execution records",
+   "5. Records",
+   "Receipts",
+   "Records",
+   "What does a record prove?"
+  ],
+  "experiments": [
+   "6. Experiments",
+   "6. Tests",
+   "What we tried",
+   "Tests",
+   "What did the tests find?"
+  ],
+  "what-this-does-not-show": [
+   "7. What this does not show",
+   "7. Not shown",
+   "Not shown",
+   "Limits",
+   "What isn’t proven?"
+  ],
+  "toward-a-checkable-pipeline": [
+   "8. Toward a checkable pipeline",
+   "8. Next steps",
+   "Fixes",
+   "Fix list",
+   "What gets fixed?"
+  ]
+ },
+ "tldr": {
+  "abstract": "Reducer, format and records tested against a reference: rules agree, but measured gaps remain.",
+  "introduction": "Can others check what was computed? Rules right; representation, interface and formats limited.",
+  "interaction-combinators-in-brief": "Graphs compute by rewriting node pairs; Weft’s added nodes have no confluence proof.",
+  "the-c3-reducer": "Storage records which node each port touches, not which port; the reducer trusts its caller.",
+  "the-binary-graph-format": "One exact byte encoding per graph, checked before allocation; structure is not checked.",
+  "committed-execution-records": "One SHA-256 commitment binds a record; only a replay shows it is true.",
+  "experiments": "Basic rules agree; storage gets ambiguous, loop-backs fail, self-test can’t replay, hash misses tampering.",
+  "what-this-does-not-show": "Not shown: extended-rule correctness, valid executions, scale, universality, authentication; reference is no proof.",
+  "toward-a-checkable-pipeline": "Seven fixes: four now in C3 version 2; three open, including proofs."
+ },
+ "eli5": {
+  "abstract": "Weft wants a computer to keep a receipt of every step, so others can check its work. Tests against a simpler second version found the basic moves right, but storage mix-ups, and a seal that catches accidents, not cheaters.",
+  "introduction": "Paper 1 asked how far a program may change. This one asks whether someone can check what it worked out. The team compared it with a simple second version, like checking a sum twice. Some parts held up; some didn’t.",
+  "interaction-combinators-in-brief": "Imagine dots joined by strings. When two meet head to head, you swap them for a small new drawing. In the basic game, swap order never changes the answer. For Weft’s new pieces, nobody has shown that yet.",
+  "the-c3-reducer": "The program notes which dot each string is tied to, but not which hook, like knowing a friend’s house but not the door. Two strings to one dot can get mixed up. It also does whatever it’s told, unchecked.",
+  "the-binary-graph-format": "Each drawing is written as bytes in exactly one way, like one agreed spelling per word. The reader checks a packet before making room, so tiny packets can’t grab huge memory. It checks spelling, not whether the drawing makes sense.",
+  "committed-execution-records": "The program seals start, steps and end into one fingerprint, so a swapped record would show. But a seal shows what was written, not that it’s true. Checking means redoing the steps, which the library can’t do yet.",
+  "experiments": "Repeatable tests found the basic moves right, but stored drawings often got muddled, some tricky moves broke, and the program’s own receipt couldn’t be redone. The seal on live messages catches accidents, not deliberate cheating.",
+  "what-this-does-not-show": "Things this paper does not prove: that Weft’s new pieces work, that a receipt is honest, that it scales, or who made anything. The second version is a careful double-check, not a proof.",
+  "toward-a-checkable-pipeline": "Seven fixes are listed. Four are in a newer version and pass the same double-checks, but this paper tested the old one. Three are still to do, including the final proofs."
+ }
+}

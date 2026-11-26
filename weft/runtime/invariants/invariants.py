@@ -19,7 +19,7 @@ from __future__ import annotations
 import json
 import math
 from pathlib import Path
-from typing import Any, Dict, Iterable, Sequence, Tuple
+from typing import Any, Dict, Iterable, Optional, Sequence, Tuple
 
 R_INVARIANT: float = 120.0
 TENSION_MAX: float = 85.0
@@ -49,20 +49,95 @@ def _flatten_floats(arr: Any) -> Iterable[float]:
         yield float(arr)
 
 
+def _f32_bits(val: float) -> int:
+    import struct
+    return struct.unpack("<I", struct.pack("<f", float(val)))[0]
+
+
+def _masked_frobenius_distance_f64(
+    baseline_w: Sequence[float],
+    candidate_w: Sequence[float],
+    locked_mask: Optional[Sequence[int]],
+) -> Tuple[bool, float]:
+    """Neumaier scaled binary64 accumulation matching `weft_frobenius_distance_masked_f64`."""
+    scale = 0.0
+    ssq = 1.0
+    comp = 0.0
+    for i, (b, c) in enumerate(zip(baseline_w, candidate_w)):
+        if not (math.isfinite(b) and math.isfinite(c)):
+            return False, float("inf")
+        if locked_mask is not None and int(locked_mask[i]) != 0:
+            if not (b == 0.0 and c == 0.0):
+                try:
+                    bits_match = _f32_bits(b) == _f32_bits(c)
+                except OverflowError:
+                    # A locked value beyond the float32 range cannot be
+                    # compared in the gate's float32 world, so refuse it
+                    # instead of throwing. The C11 path takes float
+                    # arrays, so the same value refuses there too.
+                    return False, float("inf")
+                if not bits_match:
+                    return False, float("inf")
+            continue
+        abs_diff = abs(float(c) - float(b))
+        if abs_diff == 0.0:
+            continue
+        if scale < abs_diff:
+            ratio = scale / abs_diff
+            ratio_sq = ratio * ratio
+            ssq = 1.0 + ssq * ratio_sq
+            comp = comp * ratio_sq
+            scale = abs_diff
+        else:
+            ratio = abs_diff / scale
+            term = ratio * ratio
+            t = ssq + term
+            comp += (ssq - t) + term if abs(ssq) >= term else (term - t) + ssq
+            ssq = t
+    dist = 0.0 if scale == 0.0 else scale * math.sqrt(ssq + comp)
+    if not math.isfinite(dist):
+        return False, float("inf")
+    return True, dist
+
+
+def _deduct_budget_monotone(b_val: float, c_val: float) -> float:
+    """Deduct positive `c_val <= b_val` with a 1-ULP monotone floor matching C11 `nextafterf`."""
+    next_budget = b_val - c_val
+    if next_budget >= b_val:
+        next_budget = math.nextafter(b_val, -math.inf)
+    return next_budget
+
+
+def _torch_frobenius_norm_f64(tensor: Any) -> float:
+    """Overflow/underflow-safe float64 Frobenius norm for torch tensors on CPU."""
+    import torch
+
+    flat = tensor.detach().cpu().to(torch.float64).reshape(-1)
+    if flat.numel() == 0:
+        return 0.0
+    scale = float(torch.max(torch.abs(flat)).item())
+    if not math.isfinite(scale) or scale == 0.0:
+        return scale
+    return scale * float(torch.linalg.norm(flat / scale).item())
+
+
 def verify_weight_update_safety_ex(
     baseline_w: Any,
     candidate_w: Any,
     r_invariant: float,
     current_budget: float,
     step_cost: float,
+    locked_mask: Optional[Sequence[int]] = None,
 ) -> Tuple[bool, float, float, str]:
     """
     Evaluate the baseline-relative Frobenius distance and metabolic budget gate.
 
     Returns `(accepted, baseline_distance, remaining_budget, reason)`.
-    Notice that on rejection due to weight safety or non-finite values, the
-    caller's budget is not consumed (`remaining_budget == current_budget`), whereas
-    on budget precondition failure `remaining_budget` reports `current_budget - step_cost`
+    Notice that on rejection due to weight safety, non-finite values, or a
+    non-positive step_cost, the caller's budget is not consumed
+    (`remaining_budget == current_budget`). A negative cost therefore cannot
+    mint budget. On a non-positive current_budget, a negative radius, or a
+    budget underflow, remaining_budget reports `current_budget - step_cost`
     so callers can inspect the deficit.
     """
     b_val = float(current_budget)
@@ -71,52 +146,56 @@ def verify_weight_update_safety_ex(
 
     if not (math.isfinite(b_val) and math.isfinite(c_val) and math.isfinite(r_val)):
         return False, float("inf"), float("nan"), "non_finite_parameters"
-    if b_val <= 0.0 or c_val <= 0.0 or r_val < 0.0:
+    if c_val <= 0.0:
+        return False, float("inf"), b_val, "non_positive_budget_or_cost"
+    if b_val <= 0.0 or r_val < 0.0:
         return False, float("inf"), b_val - c_val, "non_positive_budget_or_cost"
     if b_val < c_val:
         return False, float("inf"), b_val - c_val, "insufficient_metabolic_budget"
 
-    # Fast path for torch tensors when available
-    if hasattr(baseline_w, "detach") and hasattr(candidate_w, "detach"):
+    # Fast path for torch tensors when available (unmasked only; shared JSON mask cases use lists)
+    if locked_mask is None and hasattr(baseline_w, "detach") and hasattr(candidate_w, "detach"):
         import torch
-        if baseline_w.shape != candidate_w.shape:
+        if baseline_w.shape != candidate_w.shape or baseline_w.numel() == 0:
             return False, float("inf"), b_val, "shape_mismatch"
         if not bool(torch.isfinite(baseline_w).all().item() and torch.isfinite(candidate_w).all().item()):
             return False, float("inf"), b_val, "non_finite_weights"
-        dist = float(torch.linalg.norm(candidate_w - baseline_w).item())
+        # Subtract and accumulate in float64, as the list path does. In float32 the
+        # norm can round a move that is over the radius down to an accept (#213).
+        # On CPU, because MPS tensors cannot convert to float64.
+        diff = candidate_w.detach().cpu().to(torch.float64) - baseline_w.detach().cpu().to(torch.float64)
+        dist = _torch_frobenius_norm_f64(diff)
         if not math.isfinite(dist):
             return False, float("inf"), b_val, "non_finite_weights"
         if dist > r_val:
             return False, dist, b_val, "baseline_distance_exceeded"
-        return True, dist, b_val - c_val, "ok"
+        return True, dist, _deduct_budget_monotone(b_val, c_val), "ok"
 
     base_flat = list(_flatten_floats(baseline_w))
     cand_flat = list(_flatten_floats(candidate_w))
     if len(base_flat) != len(cand_flat) or len(base_flat) == 0:
         return False, float("inf"), b_val, "shape_mismatch"
+    if locked_mask is not None and len(locked_mask) != len(base_flat):
+        return False, float("inf"), b_val, "shape_mismatch"
 
-    sq_sum = 0.0
-    for b_elem, c_elem in zip(base_flat, cand_flat):
-        if not (math.isfinite(b_elem) and math.isfinite(c_elem)):
-            return False, float("inf"), b_val, "non_finite_weights"
-        diff = c_elem - b_elem
-        sq_sum += diff * diff
+    dist_ok, dist = _masked_frobenius_distance_f64(base_flat, cand_flat, locked_mask)
 
-    dist = math.sqrt(sq_sum)
-    if not math.isfinite(dist):
+    if not dist_ok:
         return False, float("inf"), b_val, "non_finite_weights"
-    if dist > r_val:
-        return False, dist, b_val, "baseline_distance_exceeded"
+    dist_out = float(dist)
+    if dist > float(r_val):
+        return False, dist_out, b_val, "baseline_distance_exceeded"
 
-    return True, dist, b_val - c_val, "ok"
+    return True, dist_out, _deduct_budget_monotone(b_val, c_val), "ok"
 
 
 def _frobenius_norm(arr: Any) -> float:
     if hasattr(arr, "detach"):
-        import torch
-        return float(torch.linalg.norm(arr).item())
+        return _torch_frobenius_norm_f64(arr)
     vals = list(_flatten_floats(arr))
-    return math.sqrt(sum(v * v for v in vals))
+    if any(math.isnan(v) for v in vals):
+        return float("nan")
+    return math.hypot(*vals)
 
 
 def verify_weight_update_safety(

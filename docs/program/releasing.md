@@ -12,7 +12,7 @@ There are two kinds of record:
 | **Papers 0–2** | Each paper's PDF, one record per paper | CC BY 4.0 | Uploaded as a *preprint*. Metadata from `scripts/zenodo_metadata.py papers`. |
 
 Each record gets a *concept DOI* (all versions) and a *version DOI* (this version). Cite the concept DOI unless a
-specific version matters. The creator on every record is Ahraz Arifuddin (Moissanite Labs). The creator list lives
+specific version matters. The creator on every record is Ahraz Arifuddin. The creator list lives
 in `.zenodo.json` and `CITATION.cff`, and CI checks that the two agree (`python3 scripts/zenodo_metadata.py --check`).
 
 ## What the archive holds
