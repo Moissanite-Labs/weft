@@ -1,11 +1,10 @@
 {
   "title": "ML Weft",
   "upload_type": "software",
-  "description": "<p>ML Weft is an open research program from Moissanite Labs on models that keep adapting after deployment, under limits that a program can verify. This archive is the source repository: the runtime (Plasm cells, invariants, the interaction-combinator VM and BCP codec, telemetry, the ledger simulator and gateway, Aywa), its tests, the design documents, and the sources and editions of the ML Weft papers.</p><p>Source code is licensed under Apache-2.0. Documentation and the papers are licensed under CC BY 4.0; see NOTICE in the archive. The exported widgets in site/widgets/ load third-party modules and fonts from Google hosts at runtime; those resources are not part of this archive.</p>",
+  "description": "<p>ML Weft is an open research program from Moissanite Labs on adaptive models that change themselves within bounds that a program can check. This archive is the source repository: the runtime (Plasm cells, invariants, the interaction-combinator VM and BCP codec, telemetry, the ledger simulator and gateway, Aywa), its tests, the design documents, and the sources and editions of the ML Weft papers.</p><p>Source code is licensed under Apache-2.0. Documentation and the papers are licensed under CC BY 4.0; see NOTICE in the archive. The exported widgets in site/widgets/ load third-party modules and fonts from Google hosts at runtime; those resources are not part of this archive.</p><p>Status: early research. Weft has no coin or token and nothing deployed to any blockchain.</p><p>Directed by Ahraz Arifuddin</p><p>Researched and verified by different model families across Gemini, Claude, Grok, OpenAI, and Muse</p>",
   "creators": [
     {
-      "name": "Arifuddin, Ahraz",
-      "affiliation": "Moissanite Labs"
+      "name": "Arifuddin, Ahraz"
     }
   ],
   "license": "Apache-2.0",
@@ -19,7 +18,9 @@
     "interaction combinators",
     "interaction nets",
     "shared memory",
-    "design systems"
+    "design systems",
+    "machine learning",
+    "WebGPU"
   ],
   "related_identifiers": [
     {

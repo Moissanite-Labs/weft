@@ -62,6 +62,56 @@ def ensure_commit(sha: str) -> bool:
     return verify.returncode == 0
 
 
+def is_shallow_repository() -> bool:
+    probe = subprocess.run(
+        ["git", "rev-parse", "--is-shallow-repository"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+    )
+    return probe.returncode == 0 and probe.stdout.strip() == "true"
+
+
+def pin_is_in_head_history(sha: str) -> bool:
+    check = subprocess.run(
+        ["git", "merge-base", "--is-ancestor", sha, "HEAD"],
+        cwd=ROOT,
+        capture_output=True,
+    )
+    if check.returncode == 0:
+        return True
+    if not is_shallow_repository():
+        return False
+    unshallow = subprocess.run(
+        ["git", "fetch", "--unshallow"],
+        cwd=ROOT,
+        capture_output=True,
+    )
+    if unshallow.returncode != 0:
+        return False
+    retry = subprocess.run(
+        ["git", "merge-base", "--is-ancestor", sha, "HEAD"],
+        cwd=ROOT,
+        capture_output=True,
+    )
+    return retry.returncode == 0
+
+
+def require_weft_pin(pinned: str) -> None:
+    if not ensure_commit(pinned):
+        print(
+            f"error: pinned weft commit {pinned} cannot be resolved",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    if not pin_is_in_head_history(pinned):
+        print(
+            f"error: pinned weft commit {pinned} is not in HEAD's history",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+
 def site_tree_at(rev: str) -> str:
     return subprocess.check_output(
         ["git", "rev-parse", f"{rev}:site"],
@@ -72,12 +122,7 @@ def site_tree_at(rev: str) -> str:
 
 def assert_weft_pin(manifest: dict) -> None:
     pinned = manifest["weft"]["sha"]
-    if not ensure_commit(pinned):
-        print(
-            f"note: pinned weft commit {pinned[:12]} unreachable; using HEAD",
-            file=sys.stderr,
-        )
-        return
+    require_weft_pin(pinned)
     try:
         head_site = site_tree_at("HEAD")
         pin_site = site_tree_at(pinned)

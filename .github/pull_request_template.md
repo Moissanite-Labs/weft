@@ -1,3 +1,5 @@
+<!-- This repository takes build changes: code, CI, site, papers and program docs. Experiment records, audits and design notes go to https://github.com/Moissanite-Labs/weft-loom. See REVIEWING.md. -->
+
 ## What changes
 
 <!-- One or two sentences on the behaviour change. Link the issue: Fixes #123 -->
