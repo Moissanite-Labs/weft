@@ -332,6 +332,28 @@
       "expected_distance": 0.5,
       "expected_remaining_budget": 9.0,
       "expected_reason": "ok"
+    },
+    {
+      "name": "reject_locked_value_beyond_f32",
+      "baseline": [
+        1e39,
+        0.0
+      ],
+      "candidate": [
+        1e39,
+        0.5
+      ],
+      "locked_mask": [
+        1,
+        0
+      ],
+      "r_invariant": 1.0,
+      "budget": 10.0,
+      "cost": 1.0,
+      "expected_accepted": false,
+      "expected_distance": "Inf",
+      "expected_remaining_budget": 10.0,
+      "expected_reason": "non_finite_weights"
     }
   ],
   "tension_vectors": [

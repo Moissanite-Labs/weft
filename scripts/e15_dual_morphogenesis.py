@@ -2,19 +2,25 @@
 """
 Experiment E15: Closed-Loop Dual Sensory-Synaptic Morphogenesis
 ===============================================================
-Evaluates 4 self-modification regimes across 12 deterministic seeds (`0..11`) on a
+Runs 4 self-modification regimes across 12 deterministic seeds (`0..11`) on a
 5-wave sequential skill curriculum (`W1..W5`) with:
   - Frozen watermarked core (`core_rows = 4`, initial `dim = 20` -> `16` plastic rows,
     while `5` waves x `4` rows/wave = `20` rows total demand -> `4`-row capacity deficit on Wave 5!),
   - Covariate bias shift `abs(b) <= 1/20` on evaluation probes (unidentifiable on a 1-point
     scalar probe, `eps* = 0 <= 1/60`),
-  - Two adversarial `25:1` null-space poisoned HGT proposals per wave (`10` per seed, `120` total)
-    that strictly improve dominant task loss while spiking orthogonal OOD tail error,
+  - Two adversarial `25:1` null-space poisoned HGT proposals per wave (`10` per seed, `120` total),
   - Plus two explicit boundary measurements (§7 of Paper 3):
       (B1) Residual unprobed subspace vulnerability when an attacker targets
            `null([X_skill; X_ood_tail])` (`rank < dim - core_rows`), and
       (B2) Exact `Fraction` numerator/denominator bit-length growth over 250 steps
            with vs. without canonical micro-unit quantization.
+
+Status: the regime comparison is under review. The review on #180 found that
+the setup and scoring build in most of the M3 advantage (constant
+identifiability inputs, index-order corridor rows aligned with the teacher,
+mismatched dominant-loss baseline, per-wave readout for M1-M3). Read the
+recorded numbers as a demonstration of the certificate formats until that is
+fixed.
 """
 
 from __future__ import annotations
