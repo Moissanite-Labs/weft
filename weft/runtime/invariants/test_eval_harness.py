@@ -56,15 +56,14 @@ class TestEvalHarness(unittest.TestCase):
                 self.assertAlmostEqual(row["remaining_budget"], budget - 1.0)
                 budget = row["remaining_budget"]
                 self.assertGreaterEqual(row["remaining_budget"], 0.0)
-            elif row["reason"] in ("non_positive_budget_or_cost", "insufficient_metabolic_budget"):
-                self.assertAlmostEqual(row["remaining_budget"], budget - 1.0)
             else:
+                # Reject paths leave the caller's budget unchanged (#210 / #235).
                 self.assertAlmostEqual(row["remaining_budget"], budget)
                 self.assertGreaterEqual(row["remaining_budget"], 0.0)
         self.assertAlmostEqual(budget, 0.0)
         self.assertFalse(rows[-1]["accepted"])
         self.assertEqual(rows[-1]["reason"], "non_positive_budget_or_cost")
-        self.assertAlmostEqual(rows[-1]["remaining_budget"], -1.0)
+        self.assertAlmostEqual(rows[-1]["remaining_budget"], 0.0)
 
     def test_eval_is_deterministic(self) -> None:
         first = run_eval()
