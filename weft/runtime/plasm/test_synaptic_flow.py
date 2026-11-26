@@ -27,11 +27,13 @@ if str(_THIS_DIR) not in sys.path:
 
 try:
     from weft.runtime.plasm.synaptic_flow import (
+        FIXED_RADIX_DENOM,
         FractionDualCertificate,
         MinCutMitosisCertificate,
         _exact_nonneg_fraction,
         fraction_dual_certificate_digest,
         min_cut_certificate_digest,
+        quantize_fixed_radix_q,
         DinicSynapticFlowKernel,
         allocate_disjoint_synaptic_corridors,
         build_reproducible_plasm_report,
@@ -45,11 +47,13 @@ try:
     )
 except ImportError:
     from synaptic_flow import (  # type: ignore
+        FIXED_RADIX_DENOM,
         FractionDualCertificate,
         MinCutMitosisCertificate,
         _exact_nonneg_fraction,
         fraction_dual_certificate_digest,
         min_cut_certificate_digest,
+        quantize_fixed_radix_q,
         DinicSynapticFlowKernel,
         allocate_disjoint_synaptic_corridors,
         build_reproducible_plasm_report,
@@ -573,6 +577,67 @@ class TestFarkasAndFractionHardening(unittest.TestCase):
                         proposed_candidate_metrics={"mse": bad}, committed=False,
                         committed_state_metrics={"mse": 0.4},
                     )
+
+
+class TestV11FixedRadixBoundaryQuantizer(unittest.TestCase):
+    """v1.1 review item 3: the quantizer is conservative and never leaks into certificates."""
+
+    def test_exact_nonneg_fraction_stays_exact_from_float(self) -> None:
+        # `_exact_nonneg_fraction` must NOT round floats to the nearest 1e-6:
+        # it stays exact (`Fraction.from_float`), as on main.
+        self.assertEqual(_exact_nonneg_fraction(0.1), Fraction.from_float(0.1))
+        self.assertEqual(_exact_nonneg_fraction(0.1), Fraction(3602879701896397, 36028797018963968))
+        self.assertGreater(_exact_nonneg_fraction(0.1).denominator.bit_length(), 20)
+
+    def test_quantize_fixed_radix_q_directions_are_conservative(self) -> None:
+        exact = Fraction.from_float(0.1234565)
+        # A cost quantizes UP.
+        up = quantize_fixed_radix_q(0.1234565, direction="up")
+        self.assertEqual(up, Fraction(123457, 10**6))
+        self.assertGreater(up, exact)
+        # A budget quantizes DOWN.
+        down = quantize_fixed_radix_q(0.1234565, direction="down")
+        self.assertEqual(down, Fraction(123456, 10**6))
+        self.assertLess(down, exact)
+        # "nearest" stays within half a tick.
+        nearest = quantize_fixed_radix_q(0.1234565, direction="nearest")
+        self.assertLessEqual(abs(nearest - exact), Fraction(1, 2 * 10**6))
+        # Exact inputs pass through unchanged; validation is fail-closed.
+        self.assertEqual(quantize_fixed_radix_q(Fraction(3, 7), direction="up"), Fraction(3, 7))
+        self.assertEqual(quantize_fixed_radix_q(5, direction="down"), Fraction(5, 1))
+        self.assertEqual(quantize_fixed_radix_q("2/3", direction="nearest"), Fraction(2, 3))
+        with self.assertRaises(ValueError):
+            quantize_fixed_radix_q(0.5, direction="sideways")
+        with self.assertRaises(ValueError):
+            quantize_fixed_radix_q(True, direction="up")
+        with self.assertRaises(ValueError):
+            quantize_fixed_radix_q(float("inf"), direction="down")
+
+    def test_fixed_radix_accumulator_caps_denominator_at_20_bits_by_construction(self) -> None:
+        acc = Fraction(0, 1)
+        for k in range(1, 2501):
+            val = 0.0137 + 0.0001 * float(np.sin(k))
+            acc += quantize_fixed_radix_q(val, direction="up")
+        self.assertEqual(FIXED_RADIX_DENOM.bit_length(), 20)
+        self.assertLessEqual(acc.denominator.bit_length(), 20)
+        self.assertEqual(FIXED_RADIX_DENOM % acc.denominator, 0)
+
+    def test_certificate_path_does_not_silently_quantize(self) -> None:
+        # The cost-partitioned dual keeps exact IEEE-754 conversions for floats:
+        # no 1e-6 rounding inside certificates (review item 3).
+        cert = certify_cost_partitioned_dual(
+            initial_budget=20.0,
+            step_costs=[0.1234565],
+            quotient_drifts=[0.1],
+            drift_cap=0.1,
+        )
+        self.assertTrue(verify_fraction_dual_certificate(cert)["ok"])
+        cost_exact = Fraction.from_float(0.1234565)
+        self.assertEqual(cert.step_costs_q[0], f"{cost_exact.numerator}/{cost_exact.denominator}")
+        self.assertNotIn(cert.step_costs_q[0], ("123456/1000000", "123457/1000000"))
+        cap_exact = Fraction.from_float(0.1)
+        self.assertEqual(cert.drift_cap_q, f"{cap_exact.numerator}/{cap_exact.denominator}")
+        self.assertNotEqual(cert.drift_cap_q, "100000/1000000")
 
 
 if __name__ == "__main__":

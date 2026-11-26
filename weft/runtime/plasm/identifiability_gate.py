@@ -31,6 +31,30 @@ Those proofs are not re-verified here; only the tests in
      not enough: eligible rows can vanish strictly inside an open segment, so the
      worst-case flow is reported over knots AND segments.
 
+  4. Fixed-Radix `10^-6` Boundary Quantizer & Fiat-Shamir Haar Probe Refresh (v1.1):
+     `quantize_fixed_radix_q` maps floats onto the common-denominator lattice
+     `(1/10^6) * Z`, so boundary audits can bound rational denominators BY
+     CONSTRUCTION (`10^6` has a 20-bit denominator). It takes a REQUIRED
+     `direction` keyword (`"up"` for costs/drifts, `"down"` for budgets/scales,
+     `"nearest"` otherwise) and is used only in boundary audits, never inside
+     certificates: `_to_q` below keeps its exact conversion, so receipt and
+     certificate quantities never round in the optimistic direction.
+     `evaluate_haar_refreshed_mpdi_gate` samples a Mezzadri-Haar orthonormal
+     probe basis inside `null(observed_probes)` from a SHA-256 Fiat-Shamir
+     transcript `(colony_seed, epoch, quantized delta, verifier_nonce)` and
+     feeds the probe energy into the MPDI gate as a second opposing probe.
+
+Honest limits (v1.1). In full-complement mode (`max_haar_rows=None`) the Haar
+probe spans the whole unobserved null space, so its energy equals the plain
+null-space projection norm for every challenge seed: the randomisation is in
+name only there (a deterministic projection; measured in the benchmark's
+boundary audit). The transcript is NOT a cryptographic commitment: every input
+except `verifier_nonce` is known to the proposer, so with a public or fixed
+nonce a proposer can grind the challenge by re-rolling the delta. The binding
+holds only when the verifier draws a fresh nonce AFTER the proposer commits to
+the delta and the nonce is unknown to the proposer beforehand, in which case
+each committed delta faces one fresh challenge. Nothing here is cryptographic.
+
 License: Apache-2.0.
 Disclosure: AI-assisted research & execution via Gemini task agent per CONTRIBUTING.md.
 """
@@ -42,9 +66,63 @@ from dataclasses import asdict, dataclass
 from fractions import Fraction
 import hashlib
 import json
+import math
+import struct
 from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 
+import numpy as np
+
 RationalInput = Union[int, float, str, Fraction]
+
+FIXED_RADIX_DENOM: int = 1_000_000  # 10^-6 micro-units; bit_length() == 20 by construction
+
+
+def quantize_fixed_radix_q(
+    val: RationalInput,
+    *,
+    denom: int = FIXED_RADIX_DENOM,
+    direction: str,
+) -> Fraction:
+    """
+    Boundary quantizer: maps a float onto the fixed-radix lattice
+    `Fraction(ticks, denom)` (`denom = 10^6` default), so arbitrary sums of
+    quantized values keep a denominator dividing `denom` (<= 20 bits for
+    `denom = 10^6`, by construction). `direction` is REQUIRED and selects the
+    rounding applied to the exact binary value of the float:
+      - "up":      ceil   (conservative for costs and drifts, which must not round down)
+      - "down":    floor  (conservative for budgets and scales, which must not round up)
+      - "nearest": round-half-even on the exact rational value
+    Exact `Fraction`, `int`, and `"p/q"` `str` inputs pass through unchanged, so
+    an already-exact quantity is never silently rewritten. Used only where
+    bounded denominators are the stated goal (boundary audits); certificate
+    paths keep using `_to_q` and stay exact.
+    """
+    if direction not in ("up", "down", "nearest"):
+        raise ValueError(f"direction must be one of 'up', 'down', 'nearest', got {direction!r}")
+    if isinstance(val, (bool, np.bool_)):
+        raise ValueError("Boolean is not a valid rational input")
+    if isinstance(denom, (bool, np.bool_)) or not isinstance(denom, (int, np.integer)) or int(denom) <= 0:
+        raise ValueError("denom must be a positive integer")
+    denom = int(denom)
+    if isinstance(val, Fraction):
+        return val
+    if isinstance(val, (int, np.integer)):
+        return Fraction(int(val), 1)
+    if isinstance(val, str):
+        return Fraction(val)
+    if isinstance(val, (float, np.floating)):
+        fv = float(val)
+        if not math.isfinite(fv):
+            raise ValueError(f"Non-finite float {fv!r}")
+        scaled = Fraction.from_float(fv) * denom
+        if direction == "up":
+            ticks = math.ceil(scaled)
+        elif direction == "down":
+            ticks = math.floor(scaled)
+        else:
+            ticks = round(scaled)  # exact round-half-even on the Fraction
+        return Fraction(ticks, denom)
+    raise TypeError(f"Unsupported rational input: {type(val)!r}")
 
 
 def _to_q(val: RationalInput) -> Fraction:
@@ -184,7 +262,262 @@ def verify_multi_probe_divergence_receipt(rec: MultiProbeDivergenceReceipt) -> D
 
 
 # -----------------------------------------------------------------------------
-# 2. Exact Rational Farkas Probe-Identifiability & Probe Mitosis (Asma P02)
+# 2. Fiat-Shamir Mezzadri-Haar Orthogonal Probe Refresh (v1.1)
+# -----------------------------------------------------------------------------
+
+@dataclass(frozen=True)
+class HaarProbeRefreshReceipt:
+    peripheral_dim: int
+    prior_probe_rank: int
+    prior_unobserved_nullity: int
+    haar_rows_drawn: int
+    post_refresh_nullity: int
+    verifier_nonce_hex: str
+    fiat_shamir_challenge_sha256: str
+    haar_probe_energy_q: str
+    haar_scale_q: str
+    mpdi_receipt: MultiProbeDivergenceReceipt
+    certificate_sha256: str
+
+
+def fiat_shamir_probe_seed(
+    colony_seed: int,
+    epoch: int,
+    candidate_delta: np.ndarray,
+    *,
+    verifier_nonce: bytes,
+) -> Tuple[int, str]:
+    """
+    Derives a deterministic 64-bit RNG seed and its SHA-256 transcript hex over
+    `(colony_seed, epoch, shape, candidate_delta quantized to 10^-6 micro-units
+    as a fixed-width encoding, verifier_nonce)`.
+
+    Honest model: this is a Fiat-Shamir-style transcript, NOT a cryptographic
+    commitment. Every input except `verifier_nonce` is known to the proposer,
+    so with a public or fixed nonce a proposer can grind the challenge by
+    re-rolling `candidate_delta` until the sampled probe misses it. The
+    binding holds only when the verifier draws a fresh `verifier_nonce` AFTER
+    the proposer commits to `candidate_delta` and the nonce is unknown to the
+    proposer beforehand; then each committed delta faces one fresh challenge.
+    """
+    if not isinstance(verifier_nonce, (bytes, bytearray)):
+        raise TypeError(f"verifier_nonce must be bytes, got {type(verifier_nonce)!r}")
+    nonce = bytes(verifier_nonce)
+    arr = np.asarray(candidate_delta, dtype=np.float64)
+    if arr.ndim == 0 or arr.size == 0 or not bool(np.all(np.isfinite(arr))):
+        raise ValueError("candidate_delta must be a non-empty finite array")
+    micro = np.rint(arr * FIXED_RADIX_DENOM)
+    if bool(np.any(np.abs(micro) >= (1 << 62))):
+        raise ValueError("candidate_delta entries exceed the int64 micro-unit transcript range")
+    quant_i64 = micro.astype("<i8", copy=False)
+    h = hashlib.sha256()
+    h.update(struct.pack("<qq", int(colony_seed), int(epoch)))
+    h.update(struct.pack("<qq", int(arr.ndim), int(arr.size)))
+    h.update(quant_i64.tobytes())
+    h.update(struct.pack("<Q", len(nonce)))
+    h.update(nonce)
+    hex_digest = h.hexdigest()
+    seed_u64 = int.from_bytes(bytes.fromhex(hex_digest[:16]), "little")
+    return seed_u64, hex_digest
+
+
+def sample_haar_orthogonal_probe(
+    observed_probes: np.ndarray,
+    *,
+    challenge_seed: int,
+    max_haar_rows: Optional[int] = None,
+    svd_tol: float = 1e-10,
+) -> Tuple[np.ndarray, Dict[str, int]]:
+    """
+    Constructs a Mezzadri (2007) QR Haar-distributed orthonormal probe matrix
+    `Q_haar` inside `null(observed_probes)`:
+      1. Extracts an orthonormal basis `N_comp` (`d_blind x d_periph`) of
+         `null(observed_probes)` via SVD.
+      2. Draws `G ~ N(0, I_{d_blind})` from `default_rng(challenge_seed)` and
+         computes `Q, R = qr(G)` with diagonal-sign canonicalization
+         `Q <- Q * sign(diag(R))` (exact uniform Haar on O(d_blind)).
+      3. Returns `Q_haar = Q[:k_haar, :] @ N_comp` of shape `(k_haar, d_periph)`,
+         reducing the unobserved nullity from `d_blind` to `d_blind - k_haar`
+         (`== 0` when `max_haar_rows is None`).
+
+    Honest limit: in full-complement mode (`max_haar_rows is None`, `k_haar ==
+    d_blind`) `Q_haar` spans the entire null space, so the probe energy
+    `||Q_haar @ delta||` equals the plain null-space projection norm
+    `||N_comp @ delta||` for EVERY challenge seed — the Haar randomisation is
+    in name only there (a deterministic projection). Sub-sampled mode
+    (`max_haar_rows < d_blind`) is genuinely seed-dependent.
+    """
+    obs = np.asarray(observed_probes, dtype=np.float64)
+    if obs.ndim != 2:
+        raise ValueError("observed_probes must be 2-D (n_samples, d_periph)")
+    d_periph = int(obs.shape[1])
+    _, s_vals, vh = np.linalg.svd(obs, full_matrices=True)
+    r_obs = int(np.sum(s_vals > svd_tol))
+    d_blind = max(0, d_periph - r_obs)
+
+    if d_blind == 0:
+        return np.zeros((0, d_periph), dtype=np.float64), {
+            "peripheral_dim": d_periph,
+            "prior_probe_rank": r_obs,
+            "prior_unobserved_nullity": 0,
+            "haar_rows_drawn": 0,
+            "post_refresh_nullity": 0,
+        }
+
+    n_comp = vh[r_obs:, :]  # (d_blind, d_periph), orthonormal rows
+    if max_haar_rows is None:
+        k_haar = d_blind
+    else:
+        k_haar = min(d_blind, max(1, int(max_haar_rows)))
+
+    rng = np.random.default_rng(int(challenge_seed) & 0xFFFFFFFFFFFFFFFF)
+    g_mat = rng.standard_normal((d_blind, d_blind))
+    q_orth, r_up = np.linalg.qr(g_mat)
+    diag_signs = np.sign(np.diag(r_up))
+    diag_signs[diag_signs == 0.0] = 1.0
+    q_haar_local = q_orth * diag_signs[None, :]  # Mezzadri exact Haar on O(d_blind)
+
+    q_haar = q_haar_local[:k_haar, :] @ n_comp  # (k_haar, d_periph)
+    return q_haar, {
+        "peripheral_dim": d_periph,
+        "prior_probe_rank": r_obs,
+        "prior_unobserved_nullity": d_blind,
+        "haar_rows_drawn": k_haar,
+        "post_refresh_nullity": d_blind - k_haar,
+    }
+
+
+def evaluate_haar_refreshed_mpdi_gate(
+    *,
+    observed_peripheral_probes: np.ndarray,
+    candidate_peripheral_delta: np.ndarray,
+    delta_dominant: RationalInput,
+    static_tail_delta: RationalInput,
+    static_tail_scale: RationalInput,
+    haar_scale: RationalInput,
+    verifier_nonce: bytes,
+    colony_seed: int = 0,
+    epoch: int = 0,
+    max_haar_rows: Optional[int] = None,
+    dominant_weight: RationalInput = Fraction(25, 1),
+    alert_threshold: RationalInput = Fraction(1, 1),
+) -> HaarProbeRefreshReceipt:
+    """
+    Two-stage MPDI + Fiat-Shamir Haar complement gate:
+      1. Derives the challenge seed from
+         `(colony_seed, epoch, candidate_peripheral_delta, verifier_nonce)`.
+      2. Samples `Q_haar` inside `null(observed_peripheral_probes)`.
+      3. Evaluates `haar_energy = ||Q_haar @ candidate_peripheral_delta||_F` and
+         feeds BOTH `static_tail_delta` and `haar_energy` into
+         `evaluate_multi_probe_divergence_gate` as opposing probes.
+
+    Quantization directions are conservative (no rounding optimism): the Haar
+    probe energy is a degradation reading and quantizes UP onto the fixed-radix
+    `10^-6` lattice, while the Haar scale is a budget and quantizes DOWN.
+    """
+    cand_delta = np.asarray(candidate_peripheral_delta, dtype=np.float64)
+    if cand_delta.ndim != 2:
+        raise ValueError("candidate_peripheral_delta must be 2-D (d_periph, out_dim)")
+    seed_u64, challenge_hex = fiat_shamir_probe_seed(
+        colony_seed, epoch, cand_delta, verifier_nonce=verifier_nonce
+    )
+    q_haar, meta = sample_haar_orthogonal_probe(
+        observed_peripheral_probes,
+        challenge_seed=seed_u64,
+        max_haar_rows=max_haar_rows,
+    )
+    if q_haar.shape[0] > 0:
+        haar_energy = float(np.linalg.norm(q_haar @ cand_delta, ord="fro"))
+    else:
+        haar_energy = 0.0
+
+    haar_e_q = quantize_fixed_radix_q(haar_energy, direction="up")
+    haar_s_q = quantize_fixed_radix_q(haar_scale, direction="down")
+
+    mpdi_rec = evaluate_multi_probe_divergence_gate(
+        delta_dominant=delta_dominant,
+        delta_opposing_probes=[static_tail_delta, haar_e_q],
+        probe_scales=[static_tail_scale, haar_s_q],
+        probe_weights=[Fraction(1, 1), Fraction(1, 1)],
+        dominant_weight=dominant_weight,
+        tail_weight=Fraction(1, 1),
+        alert_threshold=alert_threshold,
+    )
+    nonce_hex = bytes(verifier_nonce).hex()
+    raw = {
+        "peripheral_dim": meta["peripheral_dim"],
+        "prior_probe_rank": meta["prior_probe_rank"],
+        "prior_unobserved_nullity": meta["prior_unobserved_nullity"],
+        "haar_rows_drawn": meta["haar_rows_drawn"],
+        "post_refresh_nullity": meta["post_refresh_nullity"],
+        "verifier_nonce_hex": nonce_hex,
+        "fiat_shamir_challenge_sha256": challenge_hex,
+        "haar_probe_energy_q": _q_str(haar_e_q),
+        "haar_scale_q": _q_str(haar_s_q),
+        "mpdi_receipt": asdict(mpdi_rec),
+    }
+    return HaarProbeRefreshReceipt(
+        peripheral_dim=meta["peripheral_dim"],
+        prior_probe_rank=meta["prior_probe_rank"],
+        prior_unobserved_nullity=meta["prior_unobserved_nullity"],
+        haar_rows_drawn=meta["haar_rows_drawn"],
+        post_refresh_nullity=meta["post_refresh_nullity"],
+        verifier_nonce_hex=nonce_hex,
+        fiat_shamir_challenge_sha256=challenge_hex,
+        haar_probe_energy_q=_q_str(haar_e_q),
+        haar_scale_q=_q_str(haar_s_q),
+        mpdi_receipt=mpdi_rec,
+        certificate_sha256=_canon_sha256(raw),
+    )
+
+
+def verify_haar_probe_refresh_receipt(
+    rec: HaarProbeRefreshReceipt,
+    *,
+    expected_verifier_nonce: Optional[bytes] = None,
+) -> Dict[str, Any]:
+    """
+    Checks the outer digest, the nullity accounting, the stored verifier nonce
+    (against `expected_verifier_nonce` when supplied), and the inner MPDI
+    receipt. The nonce check is what ties the challenge to a verifier draw; it
+    only means something when the nonce was drawn by the verifier AFTER the
+    proposer committed to the delta and was unknown to the proposer beforehand.
+    """
+    raw_check = {
+        "peripheral_dim": rec.peripheral_dim,
+        "prior_probe_rank": rec.prior_probe_rank,
+        "prior_unobserved_nullity": rec.prior_unobserved_nullity,
+        "haar_rows_drawn": rec.haar_rows_drawn,
+        "post_refresh_nullity": rec.post_refresh_nullity,
+        "verifier_nonce_hex": rec.verifier_nonce_hex,
+        "fiat_shamir_challenge_sha256": rec.fiat_shamir_challenge_sha256,
+        "haar_probe_energy_q": rec.haar_probe_energy_q,
+        "haar_scale_q": rec.haar_scale_q,
+        "mpdi_receipt": asdict(rec.mpdi_receipt),
+    }
+    if _canon_sha256(raw_check) != rec.certificate_sha256:
+        return {"ok": False, "reason": "outer_certificate_sha256_mismatch"}
+    if rec.prior_unobserved_nullity - rec.haar_rows_drawn != rec.post_refresh_nullity:
+        return {"ok": False, "reason": "nullity_accounting_mismatch"}
+    if rec.post_refresh_nullity < 0 or rec.haar_rows_drawn < 0:
+        return {"ok": False, "reason": "negative_nullity_or_rows"}
+    try:
+        stored_nonce = bytes.fromhex(rec.verifier_nonce_hex)
+    except ValueError:
+        return {"ok": False, "reason": "verifier_nonce_not_hex"}
+    if expected_verifier_nonce is not None:
+        if not isinstance(expected_verifier_nonce, (bytes, bytearray)):
+            raise TypeError(f"expected_verifier_nonce must be bytes, got {type(expected_verifier_nonce)!r}")
+        if stored_nonce != bytes(expected_verifier_nonce):
+            return {"ok": False, "reason": "verifier_nonce_mismatch"}
+    inner = verify_multi_probe_divergence_receipt(rec.mpdi_receipt)
+    if not inner["ok"]:
+        return {"ok": False, "reason": f"inner_mpdi_invalid:{inner['reason']}"}
+    return {"ok": True, "reason": "verified"}
+
+
+# -----------------------------------------------------------------------------
+# 3. Exact Rational Farkas Probe-Identifiability & Probe Mitosis (Asma P02)
 # -----------------------------------------------------------------------------
 
 @dataclass(frozen=True)
@@ -284,7 +617,7 @@ def verify_farkas_identifiability_certificate(cert: FarkasIdentifiabilityCertifi
 
 
 # -----------------------------------------------------------------------------
-# 3. Helly-Swept Shift-Robust Synaptic Corridor Routing (Asma P01 -> Weft)
+# 4. Helly-Swept Shift-Robust Synaptic Corridor Routing (Asma P01 -> Weft)
 # -----------------------------------------------------------------------------
 
 class _DinicUnit:
