@@ -6,12 +6,14 @@ Imports nothing from `weft/` or `scripts/`; pure standard library, any Python
 3.10+. Checks the canonical SHA-256 over the file's own body, that the 12
 per-seed rows add up to the summary, and that the recorded invariants hold
 (zero frozen-core drift, poison accounting, budget non-negativity, drift cap,
-boundary-audit identities, and that `passed_joint_gate` follows from the
-recorded fields). Exits 1 if any of these checks fail.
+boundary-audit accounting identities — including the v1.1 Haar probe refresh,
+grinding and rational bit-length audits — and that `passed_joint_gate` follows
+from the recorded fields). Exits 1 if any of these checks fail.
 
 This is internal consistency of the JSON only. It does NOT assert any
 particular headline outcome (how many regimes pass, how many poisons are
-committed or vetoed): those are results, not invariants. It is not tamper
+committed or vetoed, how many attacks the Haar probe vetoes, how many grind
+tries succeeded): those are results, not invariants. It is not tamper
 evidence and not an independent re-derivation: the digest recipe is public,
 so an edited file with a recomputed `certificate_sha256` passes. Re-deriving
 the results needs `scripts/dual_morphogenesis_benchmark.py --check` in a
@@ -156,27 +158,125 @@ def verify_report_dict(rep: Dict[str, Any]) -> bool:
             if bool(r["passed_joint_gate"]) != recomputed:
                 return False
 
-    # Boundary audit identities (mathematical invariants, not headline outcomes).
-    ba = rep.get("boundary_audits", {}).get("unprobed_subspace_audit", {})
-    if int(ba.get("unobserved_nullity_dim", -1)) != int(ba.get("peripheral_dim", 0)) - int(ba.get("joint_probe_rank", -1)):
+    # Boundary audit identities (mathematical/accounting invariants, not headline outcomes).
+    ba = rep.get("boundary_audits", {})
+    us = ba.get("unprobed_subspace_audit", {})
+    if int(us.get("unobserved_nullity_dim", -1)) != int(us.get("peripheral_dim", 0)) - int(us.get("joint_probe_rank", -1)):
         return False
-    if int(ba.get("unobserved_nullity_dim", 0)) <= 0:
+    if int(us.get("unobserved_nullity_dim", 0)) <= 0:
         return False
-    if not 1 <= int(ba.get("joint_probe_rank", 0)) <= min(int(ba.get("n_dom_samples", 0)) + int(ba.get("n_tail_samples", 0)), int(ba.get("peripheral_dim", 0))):
+    if not 1 <= int(us.get("joint_probe_rank", 0)) <= min(int(us.get("n_dom_samples", 0)) + int(us.get("n_tail_samples", 0)), int(us.get("peripheral_dim", 0))):
         return False
-    if ba.get("mpdi_detects_unprobed_nullspace") is not False:
+    if us.get("mpdi_detects_unprobed_nullspace") is not False:
         return False
-    if float(ba.get("invisible_attack_dom_delta", 1.0)) > 1e-9 or float(ba.get("invisible_attack_tail_delta", 1.0)) > 1e-9:
+    if float(us.get("invisible_attack_dom_delta", 1.0)) > 1e-9 or float(us.get("invisible_attack_tail_delta", 1.0)) > 1e-9:
         return False
 
-    bl = rep.get("boundary_audits", {}).get("rational_bitlength_audit_250_steps", {})
-    # The fixed-radix accumulator has denominator dividing 10^6 < 2^20 forever.
-    if not 1 <= int(bl.get("fixed_radix_1e6_bits", 0)) <= 20:
+    # v1.1 Haar probe refresh audit: stated N, counts within [0, N], nullity accounting.
+    ha = ba.get("haar_probe_refresh_audit", {})
+    n_trials = int(ha.get("n_trials", 0))
+    if n_trials != 100:
         return False
-    if int(bl.get("raw_ieee754_dyadic_bits", 0)) < 1 or int(bl.get("stern_brocot_limit_denom_bits", 0)) < 1:
+    if len(ha.get("verifier_nonce_hex", "")) != 64:
         return False
-    # 250 quantisation steps of at most 5e-7 each.
-    if float(bl.get("max_fixed_radix_discrepancy", 1.0)) > 1e-3:
+    prior_nullity = int(ha.get("prior_unobserved_nullity_dim", -1))
+    if prior_nullity != int(ha.get("peripheral_dim", 0)) - int(ha.get("joint_probe_rank", -1)) or prior_nullity <= 0:
+        return False
+    sub4_rows = int(ha.get("sub4_haar_rows", 0))
+    if not 1 <= sub4_rows < prior_nullity:
+        return False
+    if int(ha.get("haar_full_post_refresh_nullity", -1)) != 0:
+        return False
+    if int(ha.get("haar_sub4_post_refresh_nullity", -1)) != prior_nullity - sub4_rows:
+        return False
+    for key in (
+        "static_mpdi_attack_vetoed_of_100",
+        "haar_full_complement_attack_vetoed_of_100",
+        "haar_sub4_attack_vetoed_of_100",
+        "static_mpdi_false_vetoed_of_100",
+        "haar_full_complement_false_vetoed_of_100",
+        "haar_sub4_false_vetoed_of_100",
+    ):
+        if not 0 <= int(ha.get(key, -1)) <= n_trials:
+            return False
+    n_seed_probes = int(ha.get("n_seed_probes", 0))
+    if n_seed_probes < 2:
+        return False
+    full_spread = float(ha.get("full_complement_energy_seed_spread", -1.0))
+    sub4_spread = float(ha.get("sub4_energy_seed_spread", -1.0))
+    if full_spread < 0.0 or sub4_spread < 0.0:
+        return False
+    if bool(ha.get("full_complement_is_deterministic_projection", False)):
+        # If full-complement mode is a deterministic projection, the measured
+        # spread must be within one 10^-6 quantization tick and the energy must
+        # match the plain null-space projection norm.
+        if full_spread > 1e-6 or ha.get("full_complement_energy_matches_null_projection") is not True:
+            return False
+    else:
+        if full_spread <= 1e-6 and ha.get("full_complement_energy_matches_null_projection") is True:
+            return False
+
+    # v1.1 grinding audit: stated N and cap, tries within the cap, rates consistent.
+    gr = ba.get("grinding_audit", {})
+    max_tries = int(gr.get("max_grind_tries", 0))
+    if max_tries < 1:
+        return False
+    if len(gr.get("fixed_public_nonce_hex", "")) != 64:
+        return False
+    for key in ("sub4_fixed_public_nonce_tries_to_success", "full_fixed_public_nonce_tries_to_success"):
+        v = gr.get(key)
+        if v is not None and not 1 <= int(v) <= max_tries:
+            return False
+    n_fresh = int(gr.get("n_fresh_nonce_submissions", 0))
+    if n_fresh != 100:
+        return False
+    for mode in ("sub4", "full"):
+        succ = int(gr.get(f"{mode}_fresh_nonce_attack_successes_of_100", -1))
+        if not 0 <= succ <= n_fresh:
+            return False
+        if abs(float(gr.get(f"{mode}_fresh_nonce_per_submission_success_rate", -1.0)) - succ / n_fresh) > 1e-12:
+            return False
+
+    # v1.1 rational bit-length audit. The fixed-radix accumulator has a
+    # denominator dividing 10^6 < 2^20 forever (BY CONSTRUCTION); the
+    # discrepancy is bounded by n_steps ticks of 10^-6 (direction="up").
+    bl = ba.get("rational_bitlength_audit", {})
+    if int(bl.get("fixed_radix_denom_bits_by_construction", -1)) != (10**6).bit_length():
+        return False
+    if not 1 <= int(bl.get("fixed_radix_1e6_250_steps_bits", 0)) <= 20:
+        return False
+    if not 1 <= int(bl.get("fixed_radix_1e6_2500_steps_bits", 0)) <= 20:
+        return False
+    if int(bl.get("raw_ieee754_dyadic_250_steps_bits", 0)) < 1 or int(bl.get("stern_brocot_250_steps_bits", 0)) < 1:
+        return False
+    if float(bl.get("max_250_step_discrepancy", 1.0)) > 250 * 1e-6 + 1e-9:
+        return False
+    if float(bl.get("max_2500_step_discrepancy", 1.0)) > 2500 * 1e-6 + 1e-9:
+        return False
+
+    # Measured per-seed denominator bit-lengths must agree with the per-seed
+    # records (recomputed here in pure stdlib; platform-independent).
+    da = ba.get("certificate_denominator_audit", {})
+    dual_passed = 0
+    max_cert_bits = 0
+    max_drift_bits = 0
+    for s in seeds:
+        for r in s["regimes"].values():
+            if r["dual_certificate_passed"]:
+                dual_passed += 1
+                max_cert_bits = max(
+                    max_cert_bits,
+                    Fraction(r["remaining_budget_q"]).denominator.bit_length(),
+                    Fraction(r["partitioned_drift_q"]).denominator.bit_length(),
+                )
+            for x in r["wave_r2s"]:
+                d = Fraction.from_float(max(0.0, 1.0 - float(x)))
+                max_drift_bits = max(max_drift_bits, d.denominator.bit_length())
+    if int(da.get("dual_certificates_passed_count", -1)) != dual_passed:
+        return False
+    if int(da.get("max_certificate_q_denom_bits", -1)) != max_cert_bits:
+        return False
+    if int(da.get("exact_drift_input_denom_bits_from_recorded_wave_r2_max", -1)) != max_drift_bits:
         return False
 
     return True

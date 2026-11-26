@@ -9,11 +9,19 @@ self-modification regimes across 12 deterministic seeds (`0..11`) on a
     while `5` waves x `4` rows/wave = `20` rows total demand -> `4`-row capacity deficit on Wave 5),
   - Covariate bias shift `abs(b) <= 1/20` on evaluation probes,
   - Two adversarial `25:1` null-space poisoned HGT proposals per wave (`10` per seed, `120` total),
-  - Plus two explicit boundary measurements:
+  - Plus explicit boundary measurements (all with fixed seeds and stated N):
       (B1) Residual unprobed subspace vulnerability when an attacker targets
-           `null([X_skill; X_ood_tail])` (`rank < dim - core_rows`), and
-      (B2) Exact `Fraction` numerator/denominator bit-length growth over 250 steps
-           with vs. without canonical micro-unit quantization.
+           `null([X_skill; X_ood_tail])` (`rank < dim - core_rows`),
+      (B2) v1.1 Haar-refreshed screening of that 12-D unobserved joint subspace:
+           BOTH the veto rate on 100 constructed null-space attacks AND the
+           false-veto rate on 100 generic updates (at a 0.125 tail reading and
+           swept over the statically accepted range), per mode
+           (full-complement vs sub-sampled sub-4),
+      (B3) v1.1 grinding audit of the Fiat-Shamir transcript with a fixed public
+           nonce vs a fresh verifier nonce per submission,
+      (B4) Exact `Fraction` numerator/denominator bit-length growth over 250 and
+           2,500 steps with vs. without fixed-radix `10^-6` quantization, plus
+           the measured per-seed drift-input denominator bit-lengths.
 
 This benchmark has NO roadmap E-number: `E15` on main is the graded-chemostat
 swarm experiment (`docs/design-notes/apple-silicon-dissipative-swarm.md`), so
@@ -59,6 +67,26 @@ metabolic dual are FORMAT DEMONSTRATIONS: the probe readings are data-derived
 as above, and the metabolic dual charges a measured cost (`3/2 + rows added`
 per wave), but neither is evidence of a real-world property.
 
+v1.1 boundary-audit honest limits (measured in `boundary_audits`):
+  - Full-complement Haar mode (`max_haar_rows=None`) spans the whole unobserved
+    null space, so its probe energy equals the plain null-space projection norm
+    for every challenge seed: a deterministic projection, "randomisation in
+    name only" (measured via the energy seed spread). Sub-sampled mode is
+    genuinely seed-dependent.
+  - The Fiat-Shamir transcript `SHA-256(colony_seed, epoch, quantized delta,
+    verifier_nonce)` is NOT a cryptographic commitment. With a public/fixed
+    nonce a rank-1 null-space attacker can grind the sub-4 challenge
+    (`grinding_audit`, tries-to-success recorded); the binding holds only when
+    the verifier draws a fresh nonce AFTER the proposer commits to the delta
+    and the nonce is unknown to the proposer beforehand, in which case the
+    per-submission attack success rate over N=100 is recorded.
+  - The fixed-radix `10^-6` quantizer is used ONLY in the boundary audit (with
+    the conservative `direction="up"` for drift-like values), never inside
+    certificates: `_to_q` / `_exact_nonneg_fraction` keep exact conversions.
+    The "<= 20 bits" claim applies BY CONSTRUCTION only to the fixed-radix
+    accumulator (common denominator `10^6`); the exact per-seed drift inputs
+    measure up to `certificate_denominator_audit` bits (recorded, not capped).
+
 Synthetic-world mathematics throughout. No study data, no patients, no
 clinical claims.
 """
@@ -91,9 +119,13 @@ from weft.runtime.plasm.synaptic_flow import (
     verify_min_cut_mitosis_certificate,
 )
 from weft.runtime.plasm.identifiability_gate import (
+    FIXED_RADIX_DENOM,
     certify_probe_world_identifiability,
+    evaluate_haar_refreshed_mpdi_gate,
     evaluate_multi_probe_divergence_gate,
+    quantize_fixed_radix_q,
     verify_farkas_identifiability_certificate,
+    verify_haar_probe_refresh_receipt,
     verify_multi_probe_divergence_receipt,
 )
 
@@ -123,7 +155,9 @@ PLATFORM_DEPENDENT_FIELDS = [
     "summary_by_regime[].mean_max_ood_tail_ratio",
     "boundary_audits.unprobed_subspace_audit.invisible_attack_dom_delta",
     "boundary_audits.unprobed_subspace_audit.invisible_attack_tail_delta",
-    "boundary_audits.rational_bitlength_audit_250_steps",
+    "boundary_audits.haar_probe_refresh_audit",
+    "boundary_audits.grinding_audit",
+    "boundary_audits.rational_bitlength_audit",
 ]
 
 
@@ -546,39 +580,233 @@ def run_single_seed(seed: int) -> Dict[str, Any]:
     }
 
 
-def run_boundary_audits() -> Dict[str, Any]:
+def run_boundary_audits(per_seed_records: Sequence[Dict[str, Any]]) -> Dict[str, Any]:
     """
-    Explicitly measures two real mathematical boundaries of the dual morphogenesis design:
-      1. Residual Unprobed Subspace Blindness: when `n_train + n_ood_tail < dim - core_rows`,
-         `rank([X_train; X_ood_tail])` leaves `d_blind = (dim - core_rows) - rank` directions
-         completely unobserved by BOTH dominant and MPDI tail probes!
-      2. Rational Bit-Length Growth: summing `250` raw IEEE-754 `Fraction.from_float` steps
-         vs. micro-quantized `limit_denominator(1_000_000)` rationals.
+    Measures the benchmark's structural boundaries. Every audit uses a fixed
+    seed and a stated N, so the certificate is replayable on the authoring
+    machine (`--check`).
+
+    (B1) `unprobed_subspace_audit` (unchanged from the #180 design): with 12
+         dominant + 8 tail probes on a 32-dim peripheral space,
+         `rank([X_dom; X_tail]) = 20` leaves `d_blind = 12` directions
+         completely unobserved by BOTH static probe families.
+    (B2) `haar_probe_refresh_audit` (v1.1): screens that 12-D unobserved joint
+         subspace with the Fiat-Shamir Haar probe refresh, for full-complement
+         (`max_haar_rows=None`) and sub-sampled (`max_haar_rows=4`) modes. For
+         EACH mode it records BOTH the veto rate on `n_trials = 100`
+         constructed null-space attacks AND the false-veto rate on `n_trials =
+         100` generic random healthy-sized updates (random direction, scaled so
+         its static tail reading is `generic_healthy_static_tail_delta = 0.125`,
+         half the 0.25 static scale), with a fixed PUBLIC verifier nonce. It
+         also measures whether full-complement mode is a deterministic
+         projection: one fixed attack probed over 20 challenge seeds, recording
+         the energy spread and whether it matches the plain null-space
+         projection norm ("randomisation in name only" if confirmed).
+    (B3) `grinding_audit` (v1.1): the Fiat-Shamir transcript is
+         `SHA-256(colony_seed, epoch, quantized delta, verifier_nonce)` and is
+         NOT a cryptographic commitment. (a) With a fixed PUBLIC nonce, a
+         rank-1 null-space attacker grinds the sub-4 (and full) challenge:
+         tries-to-success recorded up to `max_grind_tries`. (b) With a fresh
+         verifier nonce drawn per submission (AFTER the delta is committed,
+         unknown to the proposer beforehand), the per-submission attack
+         success rate over `n_fresh = 100` submissions is recorded.
+    (B4) `rational_bitlength_audit` (v1.1): 250-step and 2,500-step
+         accumulators for Stern-Brocot `limit_denominator(10^6)`, raw IEEE-754
+         dyadic `Fraction.from_float`, and the fixed-radix `10^-6` quantizer
+         (conservative `direction="up"` for these drift-like values). The
+         fixed-radix accumulator's denominator divides `10^6`, so it stays
+         <= 20 bits BY CONSTRUCTION. `certificate_denominator_audit` separately
+         records the MEASURED max denominator bit-length of the exact per-seed
+         drift inputs (recomputable from the recorded `wave_r2s` by the
+         checker); no 20-bit claim is made for those.
     """
     rng = np.random.default_rng(20261113)
-    periph_dim = 32
+    periph_dim, out_dim = 32, 6
     x_dom = rng.standard_normal((12, periph_dim))
     x_tail = rng.standard_normal((8, periph_dim))
-    stacked = np.vstack([x_dom, x_tail])  # 20 x 32 -> 12 unobserved null directions!
+    stacked = np.vstack([x_dom, x_tail])  # 20 x 32 -> 12 unobserved static null directions!
     rank_joint = int(np.linalg.matrix_rank(stacked))
     blind_nullity = periph_dim - rank_joint
     _, _, vh = np.linalg.svd(stacked, full_matrices=True)
     v_invisible = vh[-1, :]  # Orthogonal to BOTH X_dom AND X_tail!
     invisible_dom_delta = float(np.linalg.norm(x_dom @ v_invisible))
     invisible_tail_delta = float(np.linalg.norm(x_tail @ v_invisible))
+    null_basis = vh[rank_joint:, :]  # (d_blind, periph_dim)
 
-    # Boundary 2: Fraction denominator bit-length over 250 metabolic steps across 3 encodings:
-    #   - Stern-Brocot `limit_denominator(10^6)` picks coprime denominators whose LCM explodes to >3,200 bits!
-    #   - Raw IEEE-754 `Fraction.from_float` uses dyadic powers `2^k` (`lcm <= 2^60`, 60 bits).
-    #   - Fixed-radix `Fraction(round(x * 10^6), 10^6)` shares common denominator `10^6` (<= 20 bits forever!).
-    acc_raw_dyadic = Fraction(0, 1)
-    acc_stern_brocot = Fraction(0, 1)
-    acc_fixed_radix = Fraction(0, 1)
-    for k in range(1, 251):
+    # Shared constants for the v1.1 audits (stated in the certificate).
+    colony_seed = 2026
+    n_trials = 100
+    sub4_rows = 4
+    delta_dominant = -0.15
+    static_tail_scale = 0.25
+    haar_scale = 0.50
+    attack_norm = 4.0
+    generic_healthy_tail_delta = 0.125
+    screening_nonce = hashlib.sha256(b"dual-morphogenesis boundary audit screening nonce (fixed public)").digest()
+
+    def _static_gate(tail_delta: float) -> Any:
+        return evaluate_multi_probe_divergence_gate(
+            delta_dominant=delta_dominant,
+            delta_opposing_probes=[tail_delta],
+            probe_scales=[static_tail_scale],
+            dominant_weight=25.0,
+        )
+
+    def _haar_gate(attack: np.ndarray, epoch: int, max_haar_rows: Optional[int], nonce: bytes) -> Any:
+        rec = evaluate_haar_refreshed_mpdi_gate(
+            observed_peripheral_probes=stacked,
+            candidate_peripheral_delta=attack,
+            delta_dominant=delta_dominant,
+            static_tail_delta=float(np.linalg.norm(x_tail @ attack)),
+            static_tail_scale=static_tail_scale,
+            haar_scale=haar_scale,
+            verifier_nonce=nonce,
+            colony_seed=colony_seed,
+            epoch=epoch,
+            max_haar_rows=max_haar_rows,
+        )
+        assert verify_haar_probe_refresh_receipt(rec, expected_verifier_nonce=nonce)["ok"]
+        return rec
+
+    # (B2) attack veto rate AND false-veto rate, per mode, N=100 each, fixed seed.
+    static_attack_vetoed = haar_full_attack_vetoed = haar_sub4_attack_vetoed = 0
+    static_false_vetoed = haar_full_false_vetoed = haar_sub4_false_vetoed = 0
+    static_commits_sweep = haar_full_false_vetoed_sweep = haar_sub4_false_vetoed_sweep = 0
+    post_nullity_full = -1
+    post_nullity_sub4 = -1
+    for trial in range(n_trials):
+        # Constructed null-space attack: invisible to both static probe families.
+        coeff = rng.standard_normal((blind_nullity, out_dim))
+        attack = null_basis.T @ coeff
+        attack = attack * (attack_norm / (np.linalg.norm(attack) + 1e-12))
+        static_tail_delta = float(np.linalg.norm(x_tail @ attack))
+        if _static_gate(static_tail_delta).masked_regression_caught:
+            static_attack_vetoed += 1
+        rec_full = _haar_gate(attack, trial, None, screening_nonce)
+        post_nullity_full = rec_full.post_refresh_nullity
+        if rec_full.mpdi_receipt.masked_regression_caught:
+            haar_full_attack_vetoed += 1
+        rec_sub4 = _haar_gate(attack, trial, sub4_rows, screening_nonce)
+        post_nullity_sub4 = rec_sub4.post_refresh_nullity
+        if rec_sub4.mpdi_receipt.masked_regression_caught:
+            haar_sub4_attack_vetoed += 1
+
+        # Generic random healthy-sized update: scaled so its static tail
+        # reading is 0.125 (half the 0.25 static scale) — not adversarial.
+        g = rng.standard_normal((periph_dim, out_dim))
+        g = g * (generic_healthy_tail_delta / (np.linalg.norm(x_tail @ g) + 1e-12))
+        g_tail = float(np.linalg.norm(x_tail @ g))
+        if _static_gate(g_tail).masked_regression_caught:
+            static_false_vetoed += 1
+        if _haar_gate(g, trial, None, screening_nonce).mpdi_receipt.masked_regression_caught:
+            haar_full_false_vetoed += 1
+        if _haar_gate(g, trial, sub4_rows, screening_nonce).mpdi_receipt.masked_regression_caught:
+            haar_sub4_false_vetoed += 1
+
+        # Same generic direction, rescaled so its static tail reading is drawn
+        # uniformly from (0, static_tail_scale): every such update is one the
+        # static gate commits. A false veto is an update the static gate commits
+        # and the Haar gate rejects. This covers the whole statically-acceptable
+        # size range, not only the 0.125 point above.
+        t_target = float(rng.uniform(0.0, 1.0)) * static_tail_scale * 0.999
+        gm = g * (t_target / (np.linalg.norm(x_tail @ g) + 1e-12))
+        if _static_gate(float(np.linalg.norm(x_tail @ gm))).mpdi_gate_commits:
+            static_commits_sweep += 1
+            if not _haar_gate(gm, trial, None, screening_nonce).mpdi_receipt.mpdi_gate_commits:
+                haar_full_false_vetoed_sweep += 1
+            if not _haar_gate(gm, trial, sub4_rows, screening_nonce).mpdi_receipt.mpdi_gate_commits:
+                haar_sub4_false_vetoed_sweep += 1
+
+    # (B2 continued) deterministic-projection check: one fixed attack, 20 challenge seeds.
+    probe_delta = null_basis.T @ rng.standard_normal((blind_nullity, out_dim))
+    probe_delta = probe_delta * (attack_norm / (np.linalg.norm(probe_delta) + 1e-12))
+    null_proj_norm = float(np.linalg.norm(null_basis @ probe_delta))
+    n_seed_probes = 20
+    full_energies: List[float] = []
+    sub4_energies: List[float] = []
+    for s in range(n_seed_probes):
+        rec_f = _haar_gate(probe_delta, 1000 + s, None, screening_nonce)
+        full_energies.append(float(Fraction(rec_f.haar_probe_energy_q)))
+        rec_s = _haar_gate(probe_delta, 1000 + s, sub4_rows, screening_nonce)
+        sub4_energies.append(float(Fraction(rec_s.haar_probe_energy_q)))
+    full_spread = max(full_energies) - min(full_energies)
+    sub4_spread = max(sub4_energies) - min(sub4_energies)
+    # Energies are quantized UP, so each is within one 10^-6 tick of the norm.
+    full_matches_null_proj = all(
+        null_proj_norm - 1e-12 <= e <= null_proj_norm + 1e-6 for e in full_energies
+    )
+    full_is_deterministic = bool(full_spread <= 1e-6 and full_matches_null_proj)
+
+    # (B3) grinding audit: fixed public nonce vs fresh verifier nonce per submission.
+    grind_rng = np.random.default_rng(777001)
+    nonce_rng = np.random.default_rng(777002)
+    max_grind_tries = 2000
+    grind_attack_norm = 2.0
+    n_fresh = 100
+    fixed_public_nonce = hashlib.sha256(b"dual-morphogenesis fixed public nonce (grindable)").digest()
+
+    def _rank1_attack() -> np.ndarray:
+        a = grind_rng.standard_normal(blind_nullity)
+        b = grind_rng.standard_normal(out_dim)
+        atk = np.outer(null_basis.T @ a, b)
+        return atk * (grind_attack_norm / (np.linalg.norm(atk) + 1e-12))
+
+    def _grind(max_haar_rows: Optional[int], nonce: bytes) -> Optional[int]:
+        for t in range(1, max_grind_tries + 1):
+            if _haar_gate(_rank1_attack(), 0, max_haar_rows, nonce).mpdi_receipt.mpdi_gate_commits:
+                return t
+        return None
+
+    sub4_fixed_tries = _grind(sub4_rows, fixed_public_nonce)
+    full_fixed_tries = _grind(None, fixed_public_nonce)
+    sub4_fresh_successes = 0
+    full_fresh_successes = 0
+    for i in range(n_fresh):
+        fresh_nonce = nonce_rng.bytes(32)  # verifier draws AFTER commitment; unknown to proposer
+        atk = _rank1_attack()
+        if _haar_gate(atk, i, sub4_rows, fresh_nonce).mpdi_receipt.mpdi_gate_commits:
+            sub4_fresh_successes += 1
+        if _haar_gate(atk, i, None, fresh_nonce).mpdi_receipt.mpdi_gate_commits:
+            full_fresh_successes += 1
+
+    # (B4) Fraction denominator bit-length over 250 and 2,500 metabolic steps:
+    #   - Stern-Brocot `limit_denominator(10^6)` picks coprime denominators whose LCM explodes!
+    #   - Raw IEEE-754 `Fraction.from_float` uses dyadic powers `2^k`.
+    #   - Fixed-radix `quantize_fixed_radix_q(direction="up")` shares common denominator `10^6`
+    #     (<= 20 bits BY CONSTRUCTION; "up" is the conservative direction for these
+    #     drift-like values — they never round down).
+    acc_dyadic_250 = Fraction(0, 1)
+    acc_stern_250 = Fraction(0, 1)
+    acc_radix_250 = Fraction(0, 1)
+    acc_dyadic_2500 = Fraction(0, 1)
+    acc_radix_2500 = Fraction(0, 1)
+    for k in range(1, 2501):
         val = 0.0137 + 0.0001 * float(np.sin(k))
-        acc_raw_dyadic += Fraction.from_float(val)
-        acc_stern_brocot += Fraction.from_float(val).limit_denominator(1_000_000)
-        acc_fixed_radix += Fraction(int(round(val * 1_000_000)), 1_000_000)
+        q_rad = quantize_fixed_radix_q(val, direction="up")
+        acc_radix_2500 += q_rad
+        acc_dyadic_2500 += Fraction.from_float(val)
+        if k <= 250:
+            acc_stern_250 += Fraction.from_float(val).limit_denominator(1_000_000)
+            acc_dyadic_250 += Fraction.from_float(val)
+            acc_radix_250 += q_rad
+
+    # Measured per-seed denominator bit-lengths, recomputable from the recorded
+    # `wave_r2s` by the checker (pure stdlib, platform-independent).
+    dual_passed_count = 0
+    max_cert_q_denom_bits = 0
+    max_drift_denom_bits = 0
+    for srec in per_seed_records:
+        for r in srec["regimes"].values():
+            if r["dual_certificate_passed"]:
+                dual_passed_count += 1
+                max_cert_q_denom_bits = max(
+                    max_cert_q_denom_bits,
+                    Fraction(r["remaining_budget_q"]).denominator.bit_length(),
+                    Fraction(r["partitioned_drift_q"]).denominator.bit_length(),
+                )
+            for x in r["wave_r2s"]:
+                d = Fraction.from_float(max(0.0, 1.0 - float(x)))
+                max_drift_denom_bits = max(max_drift_denom_bits, d.denominator.bit_length())
 
     return {
         "unprobed_subspace_audit": {
@@ -591,11 +819,81 @@ def run_boundary_audits() -> Dict[str, Any]:
             "invisible_attack_tail_delta": round(invisible_tail_delta, 15),
             "mpdi_detects_unprobed_nullspace": False,
         },
-        "rational_bitlength_audit_250_steps": {
-            "stern_brocot_limit_denom_bits": acc_stern_brocot.denominator.bit_length(),
-            "raw_ieee754_dyadic_bits": acc_raw_dyadic.denominator.bit_length(),
-            "fixed_radix_1e6_bits": acc_fixed_radix.denominator.bit_length(),
-            "max_fixed_radix_discrepancy": round(abs(float(acc_raw_dyadic - acc_fixed_radix)), 7),
+        "haar_probe_refresh_audit": {
+            "audit_seed": 20261113,
+            "n_trials": n_trials,
+            "colony_seed": colony_seed,
+            "verifier_nonce_hex": screening_nonce.hex(),
+            "verifier_nonce_model": (
+                "fixed PUBLIC nonce for the screening trials (stated); the binding holds only "
+                "with a fresh verifier nonce per submission — see grinding_audit"
+            ),
+            "peripheral_dim": periph_dim,
+            "n_dom_samples": 12,
+            "n_tail_samples": 8,
+            "joint_probe_rank": rank_joint,
+            "prior_unobserved_nullity_dim": blind_nullity,
+            "delta_dominant": delta_dominant,
+            "static_tail_scale": static_tail_scale,
+            "haar_scale": haar_scale,
+            "attack_norm": attack_norm,
+            "generic_healthy_static_tail_delta": generic_healthy_tail_delta,
+            "sub4_haar_rows": sub4_rows,
+            "static_mpdi_attack_vetoed_of_100": static_attack_vetoed,
+            "haar_full_complement_attack_vetoed_of_100": haar_full_attack_vetoed,
+            "haar_sub4_attack_vetoed_of_100": haar_sub4_attack_vetoed,
+            "static_mpdi_false_vetoed_of_100": static_false_vetoed,
+            "haar_full_complement_false_vetoed_of_100": haar_full_false_vetoed,
+            "haar_sub4_false_vetoed_of_100": haar_sub4_false_vetoed,
+            "generic_sweep_static_tail_range": [0.0, static_tail_scale],
+            "static_mpdi_commits_sweep_of_100": static_commits_sweep,
+            "haar_full_complement_false_vetoed_sweep_of_100": haar_full_false_vetoed_sweep,
+            "haar_sub4_false_vetoed_sweep_of_100": haar_sub4_false_vetoed_sweep,
+            "haar_full_post_refresh_nullity": post_nullity_full,
+            "haar_sub4_post_refresh_nullity": post_nullity_sub4,
+            "n_seed_probes": n_seed_probes,
+            "full_complement_energy_seed_spread": round(full_spread, 15),
+            "sub4_energy_seed_spread": round(sub4_spread, 15),
+            "full_complement_energy_matches_null_projection": bool(full_matches_null_proj),
+            "full_complement_is_deterministic_projection": full_is_deterministic,
+        },
+        "grinding_audit": {
+            "audit_seed": 777001,
+            "max_grind_tries": max_grind_tries,
+            "grind_attack_norm": grind_attack_norm,
+            "fixed_public_nonce_hex": fixed_public_nonce.hex(),
+            "sub4_fixed_public_nonce_tries_to_success": sub4_fixed_tries,
+            "full_fixed_public_nonce_tries_to_success": full_fixed_tries,
+            "n_fresh_nonce_submissions": n_fresh,
+            "sub4_fresh_nonce_attack_successes_of_100": sub4_fresh_successes,
+            "sub4_fresh_nonce_per_submission_success_rate": sub4_fresh_successes / n_fresh,
+            "full_fresh_nonce_attack_successes_of_100": full_fresh_successes,
+            "full_fresh_nonce_per_submission_success_rate": full_fresh_successes / n_fresh,
+            "model": (
+                "transcript = SHA-256(colony_seed, epoch, quantized delta, verifier_nonce); NOT "
+                "cryptographic; grindable with a public/fixed nonce; binding only when the "
+                "verifier draws a fresh nonce after the proposer commits to the delta"
+            ),
+        },
+        "rational_bitlength_audit": {
+            "stern_brocot_250_steps_bits": acc_stern_250.denominator.bit_length(),
+            "raw_ieee754_dyadic_250_steps_bits": acc_dyadic_250.denominator.bit_length(),
+            "fixed_radix_1e6_250_steps_bits": acc_radix_250.denominator.bit_length(),
+            "fixed_radix_1e6_2500_steps_bits": acc_radix_2500.denominator.bit_length(),
+            "fixed_radix_denom_bits_by_construction": FIXED_RADIX_DENOM.bit_length(),
+            "quantizer_direction": "up (conservative: drift-like values never round down)",
+            "max_250_step_discrepancy": round(abs(float(acc_dyadic_250 - acc_radix_250)), 9),
+            "max_2500_step_discrepancy": round(abs(float(acc_dyadic_2500 - acc_radix_2500)), 9),
+        },
+        "certificate_denominator_audit": {
+            "dual_certificates_passed_count": dual_passed_count,
+            "max_certificate_q_denom_bits": max_cert_q_denom_bits,
+            "exact_drift_input_denom_bits_from_recorded_wave_r2_max": max_drift_denom_bits,
+            "note": (
+                "drift inputs are exact Fraction.from_float values (no 1e-6 rounding); the "
+                "<= 20-bit claim applies only to the fixed-radix accumulator above, by "
+                "construction (denominator divides 10^6)"
+            ),
         },
     }
 
@@ -618,7 +916,7 @@ def generate_report() -> Dict[str, Any]:
             "final_dim": int(rows[0]["final_dim"]),
         }
 
-    boundaries = run_boundary_audits()
+    boundaries = run_boundary_audits(seeds_out)
     report: Dict[str, Any] = {
         "benchmark_id": "dual_sensory_synaptic_morphogenesis",
         "n_seeds": 12,
