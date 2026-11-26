@@ -32,6 +32,10 @@ seconds, in `[2^30, 2^31)`), adjacent binary32 values are `2^(30 - 23) = 128`
 seconds apart (Paper 2 §6.7, experiment E7). Storing Unix time in slot 2 loses
 all sub-two-minute timing and rounds timestamps by tens of seconds.
 
+Paper 2 v1.1 (pinned to commit `a18fc40`) describes the fixture as it was at
+that commit, with Unix time in slot 2. That description is left unchanged under
+the `papers/README.md` versioning rule; the fixture was fixed by #78 here.
+
 Slot 2 is therefore strictly a **relative clock** measured in seconds from an
 epoch chosen by the producer or animation loop:
 
