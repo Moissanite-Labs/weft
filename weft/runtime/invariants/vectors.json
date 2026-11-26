@@ -626,6 +626,21 @@
       "upstream_bps": 1500,
       "expected_upstream_wei": 150,
       "expected_weaver_wei": 851
+    },
+    {
+      "name": "large_gross_one_eth",
+      "gross_wei": 1000000000000000000,
+      "upstream_bps": 1500,
+      "expected_upstream_wei": 150000000000000000,
+      "expected_weaver_wei": 850000000000000000
+    },
+    {
+      "name": "bps_above_max_clamped",
+      "gross_wei": 1000,
+      "upstream_bps": 20000,
+      "expected_upstream_wei": 1000,
+      "expected_weaver_wei": 0,
+      "python_error": "ValueError"
     }
   ]
 }
