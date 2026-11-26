@@ -50,9 +50,8 @@ SPEC8_DIM = 32
 SPEC8_SPINORS_PER_HEAD = 8
 SPEC8_FUSED_4IMMA_SMEM_BYTES = 1056     # 32 x 33 int8 (+1 padded, 0 bank conflicts)
 SPEC8_WOODBURY_SMEM_BYTES = 6400        # smem_xt[8][8][32] (2048) + smem_ek (4096) + smem_sc (256)
-SPEC8_SM86_US_PER_BRANCH = 1.039        # sm_86 Weight-in-A 4-IMMA latency per branch
-SPEC8_SM86_COMMIT_US = 0.20             # sm_86 rank-wl S_prefix Woodbury commit latency
 WEFT_PI_T0_BYTES_PER_SPINOR = 16        # Exact float4 (4 x fp32 = 16 B)
+UNIT_SPINOR_N2_TOL = 0.0009765625       # Exact dyadic 1/1024 squared-norm SU(2) tolerance
 _MAX_KV_BYTES = 1 << 60                 # 1 EiB safe float-conversion ceiling
 
 _SAFE_LEAN_ENV_KEYS = frozenset({"PATH", "HOME", "LANG", "LC_ALL", "TMPDIR", "USER", "TERM"})
@@ -201,7 +200,7 @@ def pack_pi_t0_16b(u_spinor: Sequence[float]) -> bytes:
     seq = _require_seq_len(u_spinor, 4, "PI_T0_ARITY_BAD", "u_spinor")
     vals = tuple(_finite_f32(c, "PI_T0_NONFINITE", "u_spinor") for c in seq)
     n2 = vals[0] * vals[0] + vals[1] * vals[1] + vals[2] * vals[2] + vals[3] * vals[3]
-    require_ok(abs(n2 - 1.0) <= 0.015625, "PI_T0_NOT_UNIT_SPINOR", f"n2={n2}")
+    require_ok(abs(n2 - 1.0) <= UNIT_SPINOR_N2_TOL, "PI_T0_NOT_UNIT_SPINOR", f"n2={n2}")
     return struct.pack("<4f", vals[0], vals[1], vals[2], vals[3])
 
 
@@ -219,7 +218,7 @@ def unpack_pi_t0_16b(raw: bytes) -> tuple[float, float, float, float]:
         "unpacked spinor contains non-finite value",
     )
     n2 = qw * qw + qx * qx + qy * qy + qz * qz
-    require_ok(abs(n2 - 1.0) <= 0.015625, "PI_T0_NOT_UNIT_SPINOR", f"n2={n2}")
+    require_ok(abs(n2 - 1.0) <= UNIT_SPINOR_N2_TOL, "PI_T0_NOT_UNIT_SPINOR", f"n2={n2}")
     return (qw, qx, qy, qz)
 
 
@@ -274,8 +273,6 @@ def compute_state_bytes_saved(
         "n_heads": nh,
         "spec8_fused_4imma_smem_bytes": SPEC8_FUSED_4IMMA_SMEM_BYTES,
         "spec8_woodbury_smem_bytes": SPEC8_WOODBURY_SMEM_BYTES,
-        "spec8_sm86_us_per_branch": SPEC8_SM86_US_PER_BRANCH,
-        "spec8_sm86_commit_us": SPEC8_SM86_COMMIT_US,
         "horizons": rows,
     }
 
@@ -419,21 +416,10 @@ class Spec8HolonomyEngine:
 
         self.u_holonomy = restored_u
         self.s_prefix = restored_s
-        post_u_drift = max(
-            math.sqrt(sum((a - b) ** 2 for a, b in zip(u_now, unpack_pi_t0_16b(raw_b))))
-            for u_now, raw_b in zip(self.u_holonomy, ckpt.pi_t0_bytes_list)
-        )
-        post_s_drift = max(
-            abs(self.s_prefix[r][c] - restored_s[r][c])
-            for r in range(SPEC8_DIM)
-            for c in range(SPEC8_DIM)
-        )
         self.step_counter += 1
         self.rollbacks += 1
         return {
             "action": "ROLLED_BACK_16B",
-            "post_rollback_u_drift": post_u_drift,
-            "post_rollback_s_drift": post_s_drift,
             "pi_t0_bytes_per_spinor": WEFT_PI_T0_BYTES_PER_SPINOR,
             "bit_exact_sha_restored": True,
             "post_state_sha256": post_sha,
@@ -584,33 +570,51 @@ class Spec8HolonomyEngine:
         ckpt: Spec8Checkpoint,
         arena: dict[str, Any],
     ) -> dict[str, Any]:
-        """Perturb SU(2) & S_prefix on branch 0 then execute exception-safe 16 B Pi_{t0} rollback."""
+        """Perturb SU(2) & S_prefix on branch 0 then execute exception-safe 16 B Pi_{t0} rollback.
+
+        Captures an independent pre-perturbation reference copy of `u_holonomy` and `s_prefix`
+        prior to mutating state so post-rollback drift is measured against the original
+        pre-perturbation state rather than the just-assigned checkpoint arrays.
+        """
         _xt_b, _sc_b, _ek_b, w_b = _validate_spec8_branch_arena(arena, 0, 1)
+        ref_u = [tuple(u) for u in self.u_holonomy]
+        ref_s = [list(row) for row in self.s_prefix]
+
         pert_u = [
-            quat_nr_polish(quat_mul(cayley_su2(*w_b[0][s_idx]), self.u_holonomy[s_idx]))
+            quat_nr_polish(quat_mul(cayley_su2(*w_b[0][s_idx]), ref_u[s_idx]))
             for s_idx in range(SPEC8_SPINORS_PER_HEAD)
         ]
-        pert_s00 = _finite_f32(self.s_prefix[0][0] + 0.5, "ARENA_NONFINITE", "s_prefix[0][0]")
+        pert_s00 = _finite_f32(ref_s[0][0] + 0.5, "ARENA_NONFINITE", "s_prefix[0][0]")
         pre_rb_drift = max(
             (
-                math.sqrt(sum((a - b) ** 2 for a, b in zip(u_now, unpack_pi_t0_16b(raw_b))))
-                for u_now, raw_b in zip(pert_u, ckpt.pi_t0_bytes_list)
+                math.sqrt(sum((a - b) ** 2 for a, b in zip(u_now, u_ref)))
+                for u_now, u_ref in zip(pert_u, ref_u)
             ),
             default=0.0,
         )
         require_ok(pre_rb_drift > 0.0, "SPEC_PERTURB_ZERO", "speculative branch did not move holonomy")
 
-        orig_u = self.u_holonomy
-        orig_s = [list(row) for row in self.s_prefix]
         self.u_holonomy = pert_u
         self.s_prefix[0][0] = pert_s00
         try:
             rb = self.rollback_16b(ckpt)
         except WeftHolonomyError:
-            self.u_holonomy = orig_u
-            self.s_prefix = orig_s
+            self.u_holonomy = list(ref_u)
+            self.s_prefix = [list(row) for row in ref_s]
             raise
+
+        post_u_drift = max(
+            math.sqrt(sum((a - b) ** 2 for a, b in zip(u_now, u_ref)))
+            for u_now, u_ref in zip(self.u_holonomy, ref_u)
+        )
+        post_s_drift = max(
+            abs(self.s_prefix[r][c] - ref_s[r][c])
+            for r in range(SPEC8_DIM)
+            for c in range(SPEC8_DIM)
+        )
         rb["pre_rollback_u_drift"] = round(pre_rb_drift, 6)
+        rb["post_rollback_u_drift"] = post_u_drift
+        rb["post_rollback_s_drift"] = post_s_drift
         return rb
 
 
@@ -894,15 +898,18 @@ class Lean4R12SandboxOracle:
                 "elapsed_ms": round((time.perf_counter_ns() - t0) / 1e6, 2),
             }
 
-        proc = subprocess.run(
-            [self.lean_bin, "--stdin"],
-            input=src,
-            capture_output=True,
-            text=True,
-            timeout=self.timeout_s,
-            check=False,
-            env=self.env,
-        )
+        try:
+            proc = subprocess.run(
+                [self.lean_bin, "--stdin"],
+                input=src,
+                capture_output=True,
+                text=True,
+                timeout=self.timeout_s,
+                check=False,
+                env=self.env,
+            )
+        except (OSError, subprocess.SubprocessError) as exc:
+            raise WeftHolonomyError("LEAN_EXEC_ERROR", f"lean --stdin failed: {exc}") from exc
         elapsed_ms = round((time.perf_counter_ns() - t0) / 1e6, 2)
         if proc.returncode != 0 or proc.stderr != "" or ("warning" in proc.stdout.lower()):
             return {
