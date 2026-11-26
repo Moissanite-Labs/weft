@@ -129,10 +129,9 @@ jobs:
         run: python3 scripts/check_condensed.py
 
   siliconcordat-bundle:
-    # Pin check needs full history: git merge-base --is-ancestor <pin> HEAD
-    # fails on the depth-1 default checkout, and on merge_group refs GitHub's
-    # ephemeral queue commit is fetched shallowly with no fallback refspec for
-    # `git fetch --unshallow`.
+    # The Weft pin is the site/ tree hash (HEAD:site), which is present on a
+    # depth-1 checkout. fetch-depth: 0 is kept so merge_group runs still have
+    # the objects a full history would, and so a local unshallow is not needed.
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
