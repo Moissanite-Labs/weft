@@ -47,7 +47,12 @@ class TestWeftInvariants(unittest.TestCase):
                     self.assertTrue(math.isinf(dist))
                 else:
                     self.assertAlmostEqual(dist, float(vec["expected_distance"]), places=6)
-                self.assertAlmostEqual(rem, float(vec["expected_remaining_budget"]), places=6)
+                if vec["expected_remaining_budget"] == "NaN":
+                    self.assertTrue(math.isnan(rem))
+                elif vec["expected_remaining_budget"] in ("Inf", "-Inf"):
+                    self.assertEqual(rem, float(vec["expected_remaining_budget"]))
+                else:
+                    self.assertAlmostEqual(rem, float(vec["expected_remaining_budget"]), places=6)
 
     def test_weight_update_vectors_torch_fast_path(self) -> None:
         try:
@@ -78,7 +83,12 @@ class TestWeftInvariants(unittest.TestCase):
                     self.assertAlmostEqual(
                         dist, expected_dist, delta=max(1e-5, abs(expected_dist) * 1e-6)
                     )
-                self.assertAlmostEqual(rem, float(vec["expected_remaining_budget"]), places=5)
+                if vec["expected_remaining_budget"] == "NaN":
+                    self.assertTrue(math.isnan(rem))
+                elif vec["expected_remaining_budget"] in ("Inf", "-Inf"):
+                    self.assertEqual(rem, float(vec["expected_remaining_budget"]))
+                else:
+                    self.assertAlmostEqual(rem, float(vec["expected_remaining_budget"]), places=5)
 
     def test_torch_path_rejects_move_between_f32_norm_and_exact_distance(self) -> None:
         # Regression for #213: with the radius set between the float32 norm and
@@ -138,6 +148,33 @@ class TestWeftInvariants(unittest.TestCase):
                 self.assertEqual(split["upstream_wei"], vec["expected_upstream_wei"])
                 self.assertEqual(split["weaver_wei"], vec["expected_weaver_wei"])
                 self.assertEqual(split["upstream_wei"] + split["weaver_wei"], vec["gross_wei"])
+
+    def test_non_finite_parameters_preserve_budget(self) -> None:
+        base = [1.0, 0.0, 0.0, 1.0]
+        cand = [1.05, 0.0, 0.0, 1.0]
+        for bad in (float("nan"), float("inf"), float("-inf")):
+            for budget in (10.0, 0.0, -2.5):
+                with self.subTest(bad_cost=bad, budget=budget):
+                    ok, dist, rem, reason = verify_weight_update_safety_ex(base, cand, 0.5, budget, bad)
+                    self.assertFalse(ok)
+                    self.assertTrue(math.isinf(dist))
+                    self.assertEqual(rem, budget)
+                    self.assertEqual(reason, "non_finite_parameters")
+                with self.subTest(bad_radius=bad, budget=budget):
+                    ok, dist, rem, reason = verify_weight_update_safety_ex(base, cand, bad, budget, 1.0)
+                    self.assertFalse(ok)
+                    self.assertTrue(math.isinf(dist))
+                    self.assertEqual(rem, budget)
+                    self.assertEqual(reason, "non_finite_parameters")
+            with self.subTest(bad_budget=bad):
+                ok, dist, rem, reason = verify_weight_update_safety_ex(base, cand, 0.5, bad, 1.0)
+                self.assertFalse(ok)
+                self.assertTrue(math.isinf(dist))
+                if math.isnan(bad):
+                    self.assertTrue(math.isnan(rem))
+                else:
+                    self.assertEqual(rem, bad)
+                self.assertEqual(reason, "non_finite_parameters")
 
     def test_constants_block_matches_module(self) -> None:
         constants = self.vectors["constants"]
