@@ -932,7 +932,7 @@
       "reason": "non_positive_budget_or_cost",
       "distance": "Inf",
       "cost": 1.0,
-      "remaining_budget": 4.0
+      "remaining_budget": 5.0
     },
     {
       "vector": "reject_negative_radius",
@@ -943,7 +943,7 @@
       "reason": "non_positive_budget_or_cost",
       "distance": "Inf",
       "cost": 1.0,
-      "remaining_budget": 9.0
+      "remaining_budget": 10.0
     },
     {
       "vector": "reject_negative_radius",
@@ -954,7 +954,7 @@
       "reason": "non_positive_budget_or_cost",
       "distance": "Inf",
       "cost": 1.0,
-      "remaining_budget": 24.0
+      "remaining_budget": 25.0
     },
     {
       "vector": "reject_negative_radius",
@@ -965,7 +965,7 @@
       "reason": "non_positive_budget_or_cost",
       "distance": "Inf",
       "cost": 1.0,
-      "remaining_budget": 4.0
+      "remaining_budget": 5.0
     },
     {
       "vector": "reject_negative_radius",
@@ -976,7 +976,7 @@
       "reason": "non_positive_budget_or_cost",
       "distance": "Inf",
       "cost": 1.0,
-      "remaining_budget": 9.0
+      "remaining_budget": 10.0
     },
     {
       "vector": "reject_negative_radius",
@@ -987,7 +987,7 @@
       "reason": "non_positive_budget_or_cost",
       "distance": "Inf",
       "cost": 1.0,
-      "remaining_budget": 24.0
+      "remaining_budget": 25.0
     },
     {
       "vector": "reject_negative_radius",
@@ -998,7 +998,7 @@
       "reason": "non_positive_budget_or_cost",
       "distance": "Inf",
       "cost": 1.0,
-      "remaining_budget": 4.0
+      "remaining_budget": 5.0
     },
     {
       "vector": "reject_negative_radius",
@@ -1009,7 +1009,7 @@
       "reason": "non_positive_budget_or_cost",
       "distance": "Inf",
       "cost": 1.0,
-      "remaining_budget": 9.0
+      "remaining_budget": 10.0
     },
     {
       "vector": "reject_negative_radius",
@@ -1020,7 +1020,7 @@
       "reason": "non_positive_budget_or_cost",
       "distance": "Inf",
       "cost": 1.0,
-      "remaining_budget": 24.0
+      "remaining_budget": 25.0
     },
     {
       "vector": "reject_empty_weights",
@@ -2590,7 +2590,7 @@
       "reason": "non_positive_budget_or_cost",
       "distance": "Inf",
       "cost": 1.0,
-      "remaining_budget": -1.0
+      "remaining_budget": 0.0
     }
   ],
   "summary": {
