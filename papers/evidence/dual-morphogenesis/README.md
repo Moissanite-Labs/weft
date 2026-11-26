@@ -14,15 +14,20 @@ it as a paper).
 
 - `certificate.json`. The recorded 12-seed, 5-wave differential run (regimes
   `M0` to `M3`), with provenance (git commit, python/numpy versions, platform,
-  exact command) and a `platform_dependent_fields` list.
+  exact command), a `platform_dependent_fields` list, and the boundary audits
+  (unprobed-subspace, v1.1 Haar probe refresh, grinding, rational bit-length
+  and certificate denominator audits).
 - `verify_certificate.py`. Zero-import (from `weft/`) self-consistency
   checker. Recomputes the file's SHA-256 and checks that the per-seed rows add
   up to the summary and that the recorded invariants hold (zero core drift,
-  poison accounting, budget/drift caps, boundary-audit identities,
-  `passed_joint_gate` recomputable from the recorded fields). It asserts no
-  headline outcome (no "12/12", no "0/120"), it is not tamper evidence — anyone
-  who edits a number and recomputes the digest passes it — and it does not
-  re-derive any result. Run it with any Python 3.10 or newer:
+  poison accounting, budget/drift caps, boundary-audit accounting identities —
+  including the v1.1 Haar probe refresh, grinding and rational bit-length
+  audits — `passed_joint_gate` recomputable from the recorded fields, and the
+  measured denominator bit-lengths recomputable from the recorded wave R^2
+  values). It asserts no headline outcome (no "12/12", no "0/120", no
+  "100/100 vetoed"), it is not tamper evidence — anyone who edits a number
+  and recomputes the digest passes it — and it does not re-derive any result.
+  Run it with any Python 3.10 or newer:
 
   ```bash
   python3 papers/evidence/dual-morphogenesis/verify_certificate.py
@@ -92,7 +97,9 @@ Boundary audits: with 12 dominant + 8 tail probes on a 32-dim peripheral space,
 (`invisible_attack_*_delta` ~ 2e-15, `mpdi_detects_unprobed_nullspace: false`);
 over 250 steps the Stern-Brocot accumulator's denominator grows to 3226 bits,
 the raw IEEE-754 dyadic accumulator to 59 bits, and the fixed-radix `10^6`
-accumulator stays at 19 bits with max discrepancy 5.1e-06.
+accumulator stays at 17 bits (18 bits over 2,500 steps; <= 20 bits by
+construction, since its denominator always divides `10^6`). The v1.1 Haar
+probe refresh, grinding and denominator measurements are below.
 
 Read these honestly: **no regime passes the joint gate on this design once the
 review defects are removed.** The old 12/12 M3 result was an artifact of the
@@ -115,6 +122,115 @@ The sensory step is now measured: probe mitosis fires 0-2 times per seed in
 the sensory regimes (data-derived from the wave's probe readings), and the
 chosen probe set is identifiable in 4-5 of 5 waves there (3-5 of 5 in the
 scalar regimes, which never expand the probe set).
+
+## v1.1 (from #181): fixed-radix `10^-6` quantizer + Fiat-Shamir Haar probe refresh
+
+Ported onto the fixed #180 benchmark and re-measured. All audits use fixed
+seeds and stated N (see `boundary_audits` in `certificate.json`); the per-seed
+regime records and the summary above are unchanged from the #180-fixed run.
+
+What was ported, in `weft/runtime/plasm/identifiability_gate.py` and
+`weft/runtime/plasm/synaptic_flow.py`:
+
+- `FIXED_RADIX_DENOM = 1_000_000` and `quantize_fixed_radix_q(val, *, denom,
+  direction)` — a boundary quantizer onto the `(1/10^6) Z` lattice with a
+  REQUIRED `direction` in `{"up", "down", "nearest"}`. It is used ONLY in the
+  boundary audit, never inside certificates: `_to_q` and
+  `_exact_nonneg_fraction` keep their exact `Fraction.from_float`
+  conversions, so costs, drifts and Farkas inputs never round in the
+  optimistic direction. Where the audit quantizes, it uses the conservative
+  direction (drift-like values round UP via `direction="up"`; the Haar scale
+  is a budget and rounds DOWN).
+- `fiat_shamir_probe_seed`, `sample_haar_orthogonal_probe`,
+  `evaluate_haar_refreshed_mpdi_gate`, `HaarProbeRefreshReceipt`,
+  `verify_haar_probe_refresh_receipt` — a Mezzadri-Haar orthonormal probe
+  basis sampled inside `null(observed_probes)` from a SHA-256 transcript
+  `(colony_seed, epoch, quantized delta, verifier_nonce)`, fed into the MPDI
+  gate as a second opposing probe. The receipt stores the verifier nonce and
+  the verifier checks it (`expected_verifier_nonce`).
+
+### Measured boundary-audit numbers (this machine; seeds and N stated in the certificate)
+
+Haar probe refresh screening of the 12-D unobserved joint subspace
+(`haar_probe_refresh_audit`, audit seed 20261113, N = 100 per cell, fixed
+public screening nonce, attack norm 4.0, generic updates scaled to a 0.125
+static tail reading = half the 0.25 static scale):
+
+| mode | attack veto rate | false vetoes, generic updates at 0.125 tail | false vetoes, generic updates swept over the statically accepted range | post-refresh nullity |
+|---|---|---|---|---|
+| static MPDI tail gate alone | 0/100 | 0/100 | 0/100 (all 100 commit by construction) | 12 (unchanged) |
+| Haar full-complement (`max_haar_rows=None`) | 100/100 | 0/100 | 7/100 | 12 -> 0 |
+| Haar sub-sampled sub-4 (`max_haar_rows=4`) | 100/100 | 0/100 | 4/100 | 12 -> 8 |
+
+In the sweep column each generic update is rescaled so its static tail
+reading is drawn uniformly from (0, 0.25), so the static gate commits all of
+them; a false veto is one the Haar gate then rejects. The 0.125 column alone
+understates the cost: the larger statically-acceptable updates carry enough
+energy in the 12-D unobserved subspace to trip the Haar probe.
+
+Full-complement mode is confirmed a deterministic projection: over 20
+challenge seeds its probe energy has spread exactly 0.0 and equals the plain
+null-space projection norm (`full_complement_energy_seed_spread: 0.0`,
+`full_complement_energy_matches_null_projection: true`) — the randomisation
+is in name only there. Sub-4 mode is genuinely seed-dependent (energy seed
+spread 0.898217).
+
+Grinding audit (`grinding_audit`, audit seed 777001, rank-1 null-space
+attacks of norm 2.0, `max_grind_tries = 2000`, N = 100 fresh-nonce
+submissions):
+
+| attack measurement | sub-4 mode | full-complement mode |
+|---|---|---|
+| fixed PUBLIC nonce: tries-to-success (grinding) | 12 | not found within 2000 |
+| fresh verifier nonce per submission: attack successes /100 | 5 (5% per submission) | 0 (0%) |
+
+Rational bit-length audit (`rational_bitlength_audit`, 250 and 2,500 steps):
+Stern-Brocot `limit_denominator(10^6)` denominator 3226 bits (250 steps), raw
+IEEE-754 dyadic 59 bits, fixed-radix `10^-6` accumulator 17 bits (250 steps)
+and 18 bits (2,500 steps) — always <= 20 bits BY CONSTRUCTION because its
+denominator divides `10^6` (`fixed_radix_denom_bits_by_construction: 20`);
+max discrepancy vs the exact dyadic sum is 1.23e-04 (250 steps) and
+1.25e-03 (2,500 steps) with the conservative `direction="up"`.
+
+Certificate denominator audit (`certificate_denominator_audit`): the
+per-seed cost-partitioned duals all fail closed on the drift cap in this
+design (`dual_certificates_passed_count: 0`), so no certificate `*_q` fields
+exist; the exact per-seed drift inputs (exact `Fraction.from_float` of the
+recorded wave R^2 values, no 1e-6 rounding) measure a max denominator of
+53 bits. No 20-bit claim is made for them — the 20-bit figure applies only
+to the fixed-radix accumulator, by construction.
+
+### Honest limits
+
+- **Full-complement Haar mode is a deterministic projection.** Its probe
+  energy is identical across challenge seeds and equals the plain null-space
+  projection norm (measured: seed spread 0.0). "Randomisation in name only."
+  It vetoes every null-space attack (100/100) but provides no per-seed
+  randomness; only sub-sampled mode is genuinely randomised.
+- **The Fiat-Shamir transcript is not a cryptographic commitment.** It is
+  `SHA-256(colony_seed, epoch, quantized delta, verifier_nonce)`; everything
+  except the nonce is known to the proposer. With a public or fixed nonce a
+  rank-1 null-space attacker grinds the sub-4 challenge in a few tries
+  (measured: 12). The binding holds only when the verifier draws a fresh
+  nonce AFTER the proposer commits to the delta and the nonce is unknown to
+  the proposer beforehand — and even then the sub-sampled (sub-4) mode still
+  leaks: measured 5/100 per-submission attack successes with fresh nonces,
+  because 4 probe rows cannot cover a 12-D null space. Full-complement mode
+  catches 100% but is the deterministic projection above. Nothing here is
+  cryptographic.
+- **100/100 attack vetoes alone do not prove the gate is selective** — that is
+  why false-veto rates are recorded per mode. At a fixed 0.125 tail reading
+  they are 0/100, but across the whole range the static gate accepts they are
+  7/100 (full-complement) and 4/100 (sub-4): the Haar gate rejects some
+  updates the static gate would commit.
+- **The fixed-radix quantizer bounds denominators only where it is applied**
+  (the boundary audit). Certificate paths stay exact; the measured exact
+  drift-input denominators reach 53 bits, and no 20-bit ceiling is claimed
+  for them.
+- The regime results above are unchanged from the #180-fixed run: no regime
+  passes the joint gate on this design, and the v1.1 additions do not change
+  that — they close the *measured boundary* (the unprobed 12-D subspace and
+  the denominator blowup), not the headline scores.
 
 ## Format demonstrations
 

@@ -1,11 +1,73 @@
 {
   "benchmark_id": "dual_sensory_synaptic_morphogenesis",
   "boundary_audits": {
-    "rational_bitlength_audit_250_steps": {
-      "fixed_radix_1e6_bits": 19,
-      "max_fixed_radix_discrepancy": 5.1e-06,
-      "raw_ieee754_dyadic_bits": 59,
-      "stern_brocot_limit_denom_bits": 3226
+    "certificate_denominator_audit": {
+      "dual_certificates_passed_count": 0,
+      "exact_drift_input_denom_bits_from_recorded_wave_r2_max": 53,
+      "max_certificate_q_denom_bits": 0,
+      "note": "drift inputs are exact Fraction.from_float values (no 1e-6 rounding); the <= 20-bit claim applies only to the fixed-radix accumulator above, by construction (denominator divides 10^6)"
+    },
+    "grinding_audit": {
+      "audit_seed": 777001,
+      "fixed_public_nonce_hex": "d9deabc0a8bca88faa422103975c6c0abf5ebaace8e874b87904c1fe90580c46",
+      "full_fixed_public_nonce_tries_to_success": null,
+      "full_fresh_nonce_attack_successes_of_100": 0,
+      "full_fresh_nonce_per_submission_success_rate": 0.0,
+      "grind_attack_norm": 2.0,
+      "max_grind_tries": 2000,
+      "model": "transcript = SHA-256(colony_seed, epoch, quantized delta, verifier_nonce); NOT cryptographic; grindable with a public/fixed nonce; binding only when the verifier draws a fresh nonce after the proposer commits to the delta",
+      "n_fresh_nonce_submissions": 100,
+      "sub4_fixed_public_nonce_tries_to_success": 12,
+      "sub4_fresh_nonce_attack_successes_of_100": 5,
+      "sub4_fresh_nonce_per_submission_success_rate": 0.05
+    },
+    "haar_probe_refresh_audit": {
+      "attack_norm": 4.0,
+      "audit_seed": 20261113,
+      "colony_seed": 2026,
+      "delta_dominant": -0.15,
+      "full_complement_energy_matches_null_projection": true,
+      "full_complement_energy_seed_spread": 0.0,
+      "full_complement_is_deterministic_projection": true,
+      "generic_healthy_static_tail_delta": 0.125,
+      "generic_sweep_static_tail_range": [
+        0.0,
+        0.25
+      ],
+      "haar_full_complement_attack_vetoed_of_100": 100,
+      "haar_full_complement_false_vetoed_of_100": 0,
+      "haar_full_complement_false_vetoed_sweep_of_100": 7,
+      "haar_full_post_refresh_nullity": 0,
+      "haar_scale": 0.5,
+      "haar_sub4_attack_vetoed_of_100": 100,
+      "haar_sub4_false_vetoed_of_100": 0,
+      "haar_sub4_false_vetoed_sweep_of_100": 4,
+      "haar_sub4_post_refresh_nullity": 8,
+      "joint_probe_rank": 20,
+      "n_dom_samples": 12,
+      "n_seed_probes": 20,
+      "n_tail_samples": 8,
+      "n_trials": 100,
+      "peripheral_dim": 32,
+      "prior_unobserved_nullity_dim": 12,
+      "static_mpdi_attack_vetoed_of_100": 0,
+      "static_mpdi_commits_sweep_of_100": 100,
+      "static_mpdi_false_vetoed_of_100": 0,
+      "static_tail_scale": 0.25,
+      "sub4_energy_seed_spread": 0.898217,
+      "sub4_haar_rows": 4,
+      "verifier_nonce_hex": "502096ca0ceffb1dc9766fb021b878d15f12137e2161b4245e25380efdcf28a4",
+      "verifier_nonce_model": "fixed PUBLIC nonce for the screening trials (stated); the binding holds only with a fresh verifier nonce per submission \u2014 see grinding_audit"
+    },
+    "rational_bitlength_audit": {
+      "fixed_radix_1e6_2500_steps_bits": 18,
+      "fixed_radix_1e6_250_steps_bits": 17,
+      "fixed_radix_denom_bits_by_construction": 20,
+      "max_2500_step_discrepancy": 0.001246525,
+      "max_250_step_discrepancy": 0.000123058,
+      "quantizer_direction": "up (conservative: drift-like values never round down)",
+      "raw_ieee754_dyadic_250_steps_bits": 59,
+      "stern_brocot_250_steps_bits": 3226
     },
     "unprobed_subspace_audit": {
       "invisible_attack_dom_delta": 2e-15,
@@ -18,7 +80,7 @@
       "unobserved_nullity_dim": 12
     }
   },
-  "certificate_sha256": "59484663fc4c05b9cb5e5633ce2226e9f29838a46413e6676049bf385fa46880",
+  "certificate_sha256": "c7f1ee5f86b9485b48d06684ce5c004ec6937f0dd5e703e80555ebbb46da2195",
   "n_seeds": 12,
   "n_waves": 5,
   "per_seed_records": [
@@ -1586,11 +1648,13 @@
     "summary_by_regime[].mean_max_ood_tail_ratio",
     "boundary_audits.unprobed_subspace_audit.invisible_attack_dom_delta",
     "boundary_audits.unprobed_subspace_audit.invisible_attack_tail_delta",
-    "boundary_audits.rational_bitlength_audit_250_steps"
+    "boundary_audits.haar_probe_refresh_audit",
+    "boundary_audits.grinding_audit",
+    "boundary_audits.rational_bitlength_audit"
   ],
   "provenance": {
     "command": "scripts/dual_morphogenesis_benchmark.py",
-    "git_commit": "7d4914641b5ba036b3139bcd09c8267e691d5dbc",
+    "git_commit": "9b7ec227a8cff36a8b0fd473977a96a9549f55b8",
     "machine": "x86_64",
     "numpy_version": "2.5.4",
     "platform": "Linux-6.12.113+-x86_64-with-glibc2.41",

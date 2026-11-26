@@ -127,11 +127,67 @@ def _exact_nonneg_fraction(value: Union[int, float, str, Fraction], *, upward_di
     """
     Converts `value` into an exact `fractions.Fraction` without float rounding optimism.
     Rejects `bool`, `NaN`, `Inf`, and negative numbers fail-closed with `ValueError`.
+    Floats use their exact IEEE-754 binary value (`Fraction.from_float`); this helper
+    NEVER rounds onto the fixed-radix `10^-6` lattice — that quantizer
+    (`quantize_fixed_radix_q` below) is a separate boundary-audit tool and is not
+    applied here, so certificate costs, drifts and Farkas inputs never round in the
+    optimistic direction.
     """
     q = _exact_fraction(value, upward_digits=upward_digits)
     if q < 0:
         raise ValueError(f"Negative quantity {q} rejected; expected a non-negative rational.")
     return q
+
+
+FIXED_RADIX_DENOM: int = 1_000_000  # 10^-6 micro-unit denominator; bit_length() == 20 by construction
+
+
+def quantize_fixed_radix_q(
+    value: Union[int, float, str, Fraction],
+    *,
+    denom: int = FIXED_RADIX_DENOM,
+    direction: str,
+) -> Fraction:
+    """
+    Boundary quantizer: maps a float onto the fixed-radix lattice
+    `Fraction(ticks, denom)` (`denom = 10^6` default), so arbitrary sums of
+    quantized values keep a denominator dividing `denom` (<= 20 bits for
+    `denom = 10^6`, by construction; this replaces the 3,226-bit Stern-Brocot
+    coprime-denominator blowup). `direction` is REQUIRED and selects the rounding
+    applied to the exact binary value of the float:
+      - "up":      ceil   (conservative for costs and drifts, which must not round down)
+      - "down":    floor  (conservative for budgets and scales, which must not round up)
+      - "nearest": round-half-even on the exact rational value
+    Exact `Fraction`, `int`, and `"p/q"` `str` inputs pass through unchanged.
+    Used only where bounded denominators are the stated goal (boundary audits);
+    certificate paths (`_exact_fraction` / `_exact_nonneg_fraction`) stay exact.
+    """
+    if direction not in ("up", "down", "nearest"):
+        raise ValueError(f"direction must be one of 'up', 'down', 'nearest', got {direction!r}")
+    if isinstance(value, (bool, np.bool_)):
+        raise ValueError("Boolean values are not valid rational quantities.")
+    if isinstance(denom, (bool, np.bool_)) or not isinstance(denom, (int, np.integer)) or int(denom) <= 0:
+        raise ValueError("denom must be a positive integer.")
+    denom = int(denom)
+    if isinstance(value, Fraction):
+        return value
+    if _is_int(value):
+        return Fraction(int(value), 1)
+    if isinstance(value, str):
+        return Fraction(value)
+    if isinstance(value, (float, np.floating)):
+        fv = float(value)
+        if not math.isfinite(fv):
+            raise ValueError(f"Non-finite float {fv!r} cannot be converted to Fraction.")
+        scaled = Fraction.from_float(fv) * denom
+        if direction == "up":
+            ticks = math.ceil(scaled)
+        elif direction == "down":
+            ticks = math.floor(scaled)
+        else:
+            ticks = round(scaled)  # exact round-half-even on the Fraction
+        return Fraction(ticks, denom)
+    raise ValueError(f"Unsupported numeric type for Fraction conversion: {type(value)!r}")
 
 
 def _parse_canonical_q(value: Any) -> Optional[Fraction]:
