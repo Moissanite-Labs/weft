@@ -370,9 +370,7 @@ static size_t run_weight_vectors(JsonCursor *c) {
             exit(1);
         }
         assert_close_f32(name, "distance", got_dist, expected_distance, 1e-5f);
-        if (!isnan(expected_rem)) {
-            assert_close_f32(name, "remaining_budget", mut_budget, expected_rem, 1e-5f);
-        }
+        assert_close_f32(name, "remaining_budget", mut_budget, expected_rem, 1e-5f);
         count++;
         if (consume_char_if(c, ',')) continue;
         expect_char(c, ']');

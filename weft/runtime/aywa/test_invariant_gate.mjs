@@ -45,7 +45,8 @@ for (const v of vectors.weight_update_vectors) {
     if (v.expected_remaining_budget != null) {
       const want = decode(v.expected_remaining_budget);
       if (Number.isNaN(want)) assert.ok(Number.isNaN(got.remainingBudget));
-      else assert.ok(Math.abs(got.remainingBudget - want) < 1e-9);
+      else if (Number.isFinite(want)) assert.ok(Math.abs(got.remainingBudget - want) < 1e-9);
+      else assert.equal(got.remainingBudget, want);
     }
   });
 }
