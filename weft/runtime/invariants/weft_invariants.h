@@ -202,13 +202,24 @@ static inline bool weft_verify_tension_bound(
     return accepted;
 }
 
+/* Royalty split in integer wei.
+ *
+ * The product gross_wei * upstream_bps is split so it never overflows 64 bits:
+ * up = (gross / 10000) * bps + ((gross % 10000) * bps) / 10000. This equals
+ * (gross * bps) / 10000 exactly while bps is at most 10000.
+ *
+ * upstream_bps above 10000 is treated as 10000: the whole gross goes upstream
+ * and the weaver gets 0. Python raises ValueError for the same input instead;
+ * this function has no error channel, so it clamps and says so here.
+ */
 static inline void weft_royalty_split_u64(
     uint64_t gross_wei,
     uint64_t upstream_bps,
     uint64_t *out_upstream_wei,
     uint64_t *out_weaver_wei
 ) {
-    uint64_t up = (gross_wei * upstream_bps) / 10000ULL;
+    uint64_t bps = upstream_bps > 10000ULL ? 10000ULL : upstream_bps;
+    uint64_t up = (gross_wei / 10000ULL) * bps + ((gross_wei % 10000ULL) * bps) / 10000ULL;
     uint64_t wv = gross_wei - up;
     if (out_upstream_wei != NULL) *out_upstream_wei = up;
     if (out_weaver_wei != NULL) *out_weaver_wei = wv;
