@@ -33,6 +33,7 @@ from fractions import Fraction
 import hashlib
 import json
 import math
+import re
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Set, Tuple, Union
 
 import numpy as np
@@ -61,60 +62,88 @@ def _restore_like(arr: np.ndarray, template: Any) -> Any:
     return arr
 
 
-FIXED_RADIX_DENOM: int = 1_000_000  # 10^-6 micro-units (<= 20-bit denominator invariant; exact C11 int64 parity)
+# Input bounds. Every builder and verifier rejects inputs above these before
+# allocating anything proportional to them.
+MAX_NEURONS = 1 << 20
+MAX_PLASMIDS = 1 << 16
+MAX_NETWORK_EDGES = 1 << 24
+MAX_RATIONAL_TERMS = 1 << 16
+MAX_RATIONAL_CHARS = 4096
+MAX_DEMAND = 1 << 40
+_CANONICAL_Q_RE = re.compile(r"-?(0|[1-9][0-9]*)/[1-9][0-9]*")
 
 
-def quantize_fixed_radix_q(
-    value: Union[int, float, str, Fraction],
-    *,
-    denom: int = FIXED_RADIX_DENOM,
-    min_positive_tick: bool = False,
-) -> Fraction:
+def _is_int(x: Any) -> bool:
+    """True for Python and numpy integers, never for bool."""
+    return isinstance(x, (int, np.integer)) and not isinstance(x, (bool, np.bool_))
+
+
+def _require_int(x: Any, name: str, *, lo: Optional[int] = None, hi: Optional[int] = None) -> int:
+    if not _is_int(x):
+        raise ValueError(f"{name} must be an integer, got {type(x).__name__} {x!r}.")
+    v = int(x)
+    if lo is not None and v < lo:
+        raise ValueError(f"{name}={v} is below {lo}.")
+    if hi is not None and v > hi:
+        raise ValueError(f"{name}={v} is above {hi}.")
+    return v
+
+
+def _exact_fraction(value: Union[int, float, str, Fraction], *, upward_digits: Optional[int] = None) -> Fraction:
     """
-    Boundary quantizer mapping floating-point telemetry into fixed-radix `1 / denom`
-    rationals (`denom = 1_000_000` default -> denominator bit-length <= 20 bits forever across
-    arbitrary linear combinations, eliminating the 3,226-bit Stern-Brocot coprime LCM blowup).
-    Exact `Fraction`, `int`, and `"p/q"` `str` inputs pass through without quantization.
+    Converts `value` into an exact signed `fractions.Fraction` without float rounding
+    optimism. Rejects `bool`, `None`, `NaN`, `Inf`, a zero denominator and any other type
+    with `ValueError`. Used for Farkas matrix and right-hand-side entries, which may be
+    negative.
     """
-    if isinstance(value, bool):
+    if isinstance(value, (bool, np.bool_)):
         raise ValueError("Boolean values are not valid rational quantities.")
     if isinstance(value, Fraction):
-        return value
-    if isinstance(value, (int, str)):
-        return Fraction(value)
-    if isinstance(value, (float, np.floating)):
+        q = value
+    elif _is_int(value):
+        q = Fraction(int(value))
+    elif isinstance(value, str):
+        if len(value) > MAX_RATIONAL_CHARS:
+            raise ValueError("Rational string is too long.")
+        try:
+            q = Fraction(value)
+        except (ValueError, ZeroDivisionError) as exc:
+            raise ValueError(f"Invalid rational string {value!r}: {exc}") from None
+    elif isinstance(value, (float, np.floating)):
         fv = float(value)
         if not math.isfinite(fv):
             raise ValueError(f"Non-finite float {fv!r} cannot be converted to Fraction.")
-        if fv == 0.0:
-            return Fraction(0, 1)
-        ticks = int(round(fv * int(denom)))
-        if min_positive_tick and fv > 0.0 and ticks == 0:
-            ticks = 1
-        elif min_positive_tick and fv < 0.0 and ticks == 0:
-            ticks = -1
-        return Fraction(ticks, int(denom))
-    raise TypeError(f"Unsupported numeric type for Fraction conversion: {type(value)!r}")
+        # Exact IEEE-754 binary float value in Q (never string-rounded!)
+        q = Fraction.from_float(fv)
+        if upward_digits is not None:
+            scale = 10 ** int(upward_digits)
+            q = Fraction(math.ceil(q * scale), scale)
+    else:
+        raise ValueError(f"Unsupported numeric type for Fraction conversion: {type(value)!r}")
+    return q
 
 
-def _exact_nonneg_fraction(
-    value: Union[int, float, str, Fraction],
-    *,
-    upward_digits: Optional[int] = None,
-    min_positive_tick: bool = True,
-) -> Fraction:
+def _exact_nonneg_fraction(value: Union[int, float, str, Fraction], *, upward_digits: Optional[int] = None) -> Fraction:
     """
-    Converts `value` into an exact `fractions.Fraction` using fixed-radix `10^-6` micro-units
-    on floats (or upward ceiling at `10^-upward_digits` when explicitly requested).
-    Rejects `bool`, `NaN`, and `Inf` fail-closed.
+    Converts `value` into an exact `fractions.Fraction` without float rounding optimism.
+    Rejects `bool`, `NaN`, `Inf`, and negative numbers fail-closed with `ValueError`.
     """
-    if isinstance(value, (float, np.floating)) and upward_digits is not None:
-        fv = float(value)
-        if not math.isfinite(fv):
-            raise ValueError(f"Non-finite float {fv!r} cannot be converted to Fraction.")
-        scale = 10 ** int(upward_digits)
-        return Fraction(math.ceil(Fraction.from_float(fv) * scale), scale)
-    return quantize_fixed_radix_q(value, denom=FIXED_RADIX_DENOM, min_positive_tick=min_positive_tick)
+    q = _exact_fraction(value, upward_digits=upward_digits)
+    if q < 0:
+        raise ValueError(f"Negative quantity {q} rejected; expected a non-negative rational.")
+    return q
+
+
+def _parse_canonical_q(value: Any) -> Optional[Fraction]:
+    """Parses a certificate's canonical `num/den` string. Returns None if it is not one."""
+    if not isinstance(value, str) or len(value) > MAX_RATIONAL_CHARS:
+        return None
+    if not _CANONICAL_Q_RE.fullmatch(value):
+        return None
+    q = Fraction(value)
+    if f"{q.numerator}/{q.denominator}" != value:
+        return None
+    return q
 
 
 # =============================================================================
@@ -154,6 +183,26 @@ class MinCutMitosisCertificate:
     sha256_digest: str
 
 
+_MIN_CUT_FIELDS: Tuple[str, ...] = (
+    "total_neurons",
+    "core_rows_frozen",
+    "frozen_indices",
+    "eligible_indices",
+    "plasmid_demands",
+    "total_demand",
+    "max_flow",
+    "deficit",
+    "requires_mitosis",
+    "assignments",
+    "source_minimal_cut",
+    "sink_minimal_cut",
+    "cut_capacity_source_minimal",
+    "cut_capacity_sink_minimal",
+    "network_vertex_count",
+    "network_edges",
+)
+
+
 class DinicSynapticFlowKernel:
     """
     Deterministic integer Dinic max-flow kernel with forward (`source_minimal`) and
@@ -161,6 +210,7 @@ class DinicSynapticFlowKernel:
     """
 
     def __init__(self, n_vertices: int) -> None:
+        n_vertices = _require_int(n_vertices, "n_vertices", hi=2 * MAX_NEURONS + MAX_PLASMIDS + 2)
         if n_vertices < 2:
             raise ValueError("Flow network requires at least source and sink vertices.")
         self.n = int(n_vertices)
@@ -168,11 +218,13 @@ class DinicSynapticFlowKernel:
         self.original_edges: List[Tuple[int, int, int]] = []
 
     def add_edge(self, u: int, v: int, cap: int) -> None:
+        u = _require_int(u, "edge tail")
+        v = _require_int(v, "edge head")
         if not (0 <= u < self.n and 0 <= v < self.n):
             raise ValueError(f"Edge ({u}, {v}) out of vertex bounds [0, {self.n}).")
-        if int(cap) < 0:
+        c = _require_int(cap, "edge capacity")
+        if c < 0:
             raise ValueError(f"Edge capacity must be non-negative, got {cap}.")
-        c = int(cap)
         fwd = _ResidualEdge(to=v, rev=len(self.adj[v]), cap=c, flow=0)
         bwd = _ResidualEdge(to=u, rev=len(self.adj[u]), cap=0, flow=0)
         self.adj[u].append(fwd)
@@ -192,33 +244,51 @@ class DinicSynapticFlowKernel:
                     q.append(e.to)
         return level
 
-    def _dfs_push(self, u: int, sink: int, pushed: int, level: List[int], ptr: List[int]) -> int:
-        if pushed == 0 or u == sink:
-            return pushed
-        while ptr[u] < len(self.adj[u]):
-            idx = ptr[u]
-            e = self.adj[u][idx]
-            if level[e.to] == level[u] + 1 and e.cap - e.flow > 0:
-                tr = self._dfs_push(e.to, sink, min(pushed, e.cap - e.flow), level, ptr)
-                if tr > 0:
-                    e.flow += tr
-                    self.adj[e.to][e.rev].flow -= tr
-                    return tr
+    def _augment_once(self, source: int, sink: int, level: List[int], ptr: List[int]) -> int:
+        """
+        Finds one augmenting path in the level graph and pushes its bottleneck.
+        Iterative, so path length is bounded by memory rather than the recursion limit.
+        """
+        path: List[_ResidualEdge] = []
+        u = source
+        while True:
+            if u == sink:
+                pushed = min(e.cap - e.flow for e in path)
+                for e in path:
+                    e.flow += pushed
+                    self.adj[e.to][e.rev].flow -= pushed
+                return pushed
+            advanced = False
+            adj_u = self.adj[u]
+            while ptr[u] < len(adj_u):
+                e = adj_u[ptr[u]]
+                if level[e.to] == level[u] + 1 and e.cap - e.flow > 0:
+                    path.append(e)
+                    u = e.to
+                    advanced = True
+                    break
+                ptr[u] += 1
+            if advanced:
+                continue
+            if not path:
+                return 0
+            # Dead end: retreat one edge and skip it from the parent.
+            level[u] = -1
+            last = path.pop()
+            u = self.adj[last.to][last.rev].to
             ptr[u] += 1
-        return 0
 
     def solve_max_flow(self, source: int, sink: int) -> int:
         if source == sink:
             raise ValueError("Source and sink must be distinct vertices.")
         total_flow = 0
-        inf_cap = sum(c for _, _, c in self.original_edges) + 1
         while True:
             level = self._bfs_levels(source, sink)
             if level[sink] < 0:
                 break
             ptr = [0] * self.n
             while True:
-                pushed = self._dfs_push(source, sink, inf_cap, level, ptr)
+                pushed = self._augment_once(source, sink, level, ptr)
                 if pushed == 0:
                     break
                 total_flow += pushed
@@ -267,8 +337,30 @@ def compute_cut_capacity(edges: Iterable[Tuple[int, int, int]], s_cut: Set[int])
 
 
 def _digest_min_cut_payload(payload: Mapping[str, Any]) -> str:
-    canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"))
+    canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"), allow_nan=False)
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
+MIN_CUT_DIGEST_SCHEMA = "WEFT-PLASM-MINCUT/2"
+
+
+def _min_cut_digest_body(fields: Mapping[str, Any]) -> Dict[str, Any]:
+    """Every certificate field except the digest itself, so no field can change unsealed."""
+    def _tuples(x: Any) -> Any:
+        if isinstance(x, (tuple, list)):
+            return [_tuples(i) for i in x]
+        if _is_int(x):
+            return int(x)
+        return x
+
+    body = {k: _tuples(fields[k]) for k in _MIN_CUT_FIELDS}
+    body["schema"] = MIN_CUT_DIGEST_SCHEMA
+    return body
+
+
+def min_cut_certificate_digest(cert: "MinCutMitosisCertificate") -> str:
+    """SHA-256 over every field of `cert` except `sha256_digest`."""
+    return _digest_min_cut_payload(_min_cut_digest_body({k: getattr(cert, k) for k in _MIN_CUT_FIELDS}))
 
 
 def allocate_disjoint_synaptic_corridors(
@@ -287,18 +379,44 @@ def allocate_disjoint_synaptic_corridors(
     Strictly enforces `weft.runtime.plasm` core-freezing (`0 .. core_rows - 1` where
     `core_rows` defaults to `M // 4` matching `compute_plasticity_mask`) and `locked_mask != 0`.
     """
-    scores = _to_numpy_f64(fisher_sensitivity).ravel()
+    try:
+        scores = _to_numpy_f64(fisher_sensitivity).ravel()
+    except (TypeError, ValueError) as exc:
+        raise ValueError(f"fisher_sensitivity must be numeric: {exc}") from None
     if scores.size == 0 or not np.all(np.isfinite(scores)):
         raise ValueError("fisher_sensitivity must be a non-empty finite 1-D sequence.")
     M = int(scores.size)
+    if M > MAX_NEURONS:
+        raise ValueError(f"fisher_sensitivity has {M} entries; the limit is {MAX_NEURONS}.")
 
-    c_rows = (M // 4) if core_rows is None else int(core_rows)
+    c_rows = (M // 4) if core_rows is None else _require_int(core_rows, "core_rows")
     if c_rows < 0 or c_rows > M:
         raise ValueError(f"core_rows={c_rows} out of bounds for M={M}.")
 
-    demands = tuple(int(d) for d in plasmid_demands)
-    if any(d < 0 for d in demands):
-        raise ValueError(f"plasmid_demands must be non-negative integers, got {demands}.")
+    if isinstance(plasmid_demands, (str, bytes, Mapping)) or not isinstance(plasmid_demands, Sequence):
+        raise ValueError("plasmid_demands must be a sequence of non-negative integers.")
+    if len(plasmid_demands) > MAX_PLASMIDS:
+        raise ValueError(f"{len(plasmid_demands)} plasmids exceeds the limit of {MAX_PLASMIDS}.")
+    demands = tuple(_require_int(d, "plasmid demand", lo=0, hi=MAX_DEMAND) for d in plasmid_demands)
+
+    if max_fisher_threshold is not None:
+        if isinstance(max_fisher_threshold, (bool, np.bool_)) or not isinstance(max_fisher_threshold, (int, float, np.integer, np.floating)):
+            raise ValueError("max_fisher_threshold must be a finite number.")
+        if not math.isfinite(float(max_fisher_threshold)):
+            raise ValueError("max_fisher_threshold must be a finite number.")
+    if allowed_corridors is not None:
+        if len(allowed_corridors) != len(demands):
+            raise ValueError(
+                f"allowed_corridors has {len(allowed_corridors)} entries for {len(demands)} plasmids."
+            )
+        corridors_checked: List[Tuple[int, ...]] = []
+        for k, row in enumerate(allowed_corridors):
+            if isinstance(row, (str, bytes, Mapping)):
+                raise ValueError(f"allowed_corridors[{k}] must be a sequence of neuron indices.")
+            corridors_checked.append(
+                tuple(_require_int(j, f"allowed_corridors[{k}] entry", lo=0, hi=M - 1) for j in row)
+            )
+        allowed_corridors = corridors_checked
 
     frozen_set: Set[int] = set(range(c_rows))
     if locked_mask is not None:
@@ -322,6 +440,8 @@ def allocate_disjoint_synaptic_corridors(
     eligible_set = set(eligible)
 
     K = len(demands)
+    if K * len(eligible) + 2 * len(eligible) + K > MAX_NETWORK_EDGES:
+        raise ValueError("Routing network would exceed MAX_NETWORK_EDGES.")
     src = 0
     snk = 1 + K + 2 * M
     kernel = DinicSynapticFlowKernel(snk + 1)
@@ -339,7 +459,7 @@ def allocate_disjoint_synaptic_corridors(
 
     for k in range(K):
         if allowed_corridors is not None:
-            cand_js = [int(j) for j in allowed_corridors[k] if int(j) in eligible_set]
+            cand_js = sorted({j for j in allowed_corridors[k] if j in eligible_set})
             # Sort in ascending Fisher sensitivity order so augmenting paths prefer quietest slots
             cand_js.sort(key=lambda idx: (float(scores[idx]), idx))
         else:
@@ -368,7 +488,7 @@ def allocate_disjoint_synaptic_corridors(
     eligible_tuple = tuple(sorted(eligible))
     edges_tuple = tuple(kernel.original_edges)
 
-    digest_payload = {
+    digest = _digest_min_cut_payload(_min_cut_digest_body({
         "total_neurons": M,
         "core_rows_frozen": c_rows,
         "frozen_indices": frozen_tuple,
@@ -377,11 +497,15 @@ def allocate_disjoint_synaptic_corridors(
         "total_demand": total_demand,
         "max_flow": max_flow,
         "deficit": deficit,
-        "assignments": assigned_lists,
+        "requires_mitosis": deficit > 0,
+        "assignments": tuple(assigned_lists),
         "source_minimal_cut": s_min,
         "sink_minimal_cut": t_min,
-    }
-    digest = _digest_min_cut_payload(digest_payload)
+        "cut_capacity_source_minimal": cap_s,
+        "cut_capacity_sink_minimal": cap_t,
+        "network_vertex_count": snk + 1,
+        "network_edges": edges_tuple,
+    }))
 
     return MinCutMitosisCertificate(
         total_neurons=M,
@@ -404,17 +528,63 @@ def allocate_disjoint_synaptic_corridors(
     )
 
 
+def _int_seq(x: Any, *, lo: int, hi: int, limit: int) -> Optional[Tuple[int, ...]]:
+    """A tuple of ints in [lo, hi] from a list or tuple, or None if anything is off."""
+    if not isinstance(x, (tuple, list)) or len(x) > limit:
+        return None
+    out = []
+    for v in x:
+        if not _is_int(v) or not (lo <= int(v) <= hi):
+            return None
+        out.append(int(v))
+    return tuple(out)
+
+
 def verify_min_cut_mitosis_certificate(cert: MinCutMitosisCertificate) -> Dict[str, Any]:
     """
     Independent fail-closed verifier for `MinCutMitosisCertificate` (`cut_certificate.py` analog).
+
+    Trusts nothing the certificate states about optimality. It checks that
+    `network_edges` is exactly the vertex-split network the builder would emit for
+    the recorded demands and eligible slots (non-negative capacities, in-range
+    vertices, unit split, an edge to the sink for each slot), rebuilds the s-t flow
+    the assignments describe, and recomputes both residual min cuts from that flow.
+    A flow whose value equals a cut's capacity is maximum, so `max_flow`, `deficit`
+    and `requires_mitosis` follow from the network rather than from the peer.
+    Malformed input returns a reason; it never raises.
     """
-    src = 0
-    snk = cert.network_vertex_count - 1
-    if cert.total_neurons <= 0 or snk != 1 + len(cert.plasmid_demands) + 2 * cert.total_neurons:
+    if not isinstance(cert, MinCutMitosisCertificate):
+        return {"ok": False, "reason": "not_a_min_cut_certificate"}
+
+    # 0. Types and bounds, before anything is allocated from peer-supplied sizes.
+    if not _is_int(cert.total_neurons) or not (1 <= int(cert.total_neurons) <= MAX_NEURONS):
         return {"ok": False, "reason": "invalid_vertex_layout"}
-    if any(d < 0 for d in cert.plasmid_demands):
-        return {"ok": False, "reason": "negative_demand"}
-    if cert.total_demand != sum(cert.plasmid_demands):
+    M = int(cert.total_neurons)
+    if not _is_int(cert.core_rows_frozen) or not (0 <= int(cert.core_rows_frozen) <= M):
+        return {"ok": False, "reason": "core_rows_out_of_range"}
+    c_rows = int(cert.core_rows_frozen)
+    demands = _int_seq(cert.plasmid_demands, lo=0, hi=MAX_DEMAND, limit=MAX_PLASMIDS)
+    if demands is None:
+        if isinstance(cert.plasmid_demands, (tuple, list)) and any(
+            _is_int(d) and int(d) < 0 for d in cert.plasmid_demands
+        ):
+            return {"ok": False, "reason": "negative_demand"}
+        return {"ok": False, "reason": "malformed_plasmid_demands"}
+    K = len(demands)
+    for name in ("total_demand", "max_flow", "deficit", "cut_capacity_source_minimal",
+                 "cut_capacity_sink_minimal", "network_vertex_count"):
+        if not _is_int(getattr(cert, name)):
+            return {"ok": False, "reason": f"malformed_{name}"}
+    if not isinstance(cert.requires_mitosis, bool):
+        return {"ok": False, "reason": "malformed_requires_mitosis"}
+    if not isinstance(cert.sha256_digest, str):
+        return {"ok": False, "reason": "malformed_sha256_digest"}
+
+    src = 0
+    snk = int(cert.network_vertex_count) - 1
+    if snk != 1 + K + 2 * M:
+        return {"ok": False, "reason": "invalid_vertex_layout"}
+    if cert.total_demand != sum(demands):
         return {"ok": False, "reason": "demand_sum_mismatch"}
     if cert.max_flow < 0 or cert.max_flow > cert.total_demand:
         return {"ok": False, "reason": "invalid_max_flow_bounds"}
@@ -422,76 +592,154 @@ def verify_min_cut_mitosis_certificate(cert: MinCutMitosisCertificate) -> Dict[s
     if cert.deficit != expected_deficit or cert.requires_mitosis != (expected_deficit > 0):
         return {"ok": False, "reason": "mitosis_deficit_mismatch"}
 
-    # 1. Verify strong Max-Flow == Min-Cut duality on BOTH source_minimal & sink_minimal cuts!
-    s_set = set(cert.source_minimal_cut)
-    t_set = set(cert.sink_minimal_cut)
+    frozen = _int_seq(cert.frozen_indices, lo=0, hi=M - 1, limit=M)
+    eligible = _int_seq(cert.eligible_indices, lo=0, hi=M - 1, limit=M)
+    if frozen is None or eligible is None or len(set(frozen)) != len(frozen) or len(set(eligible)) != len(eligible):
+        return {"ok": False, "reason": "malformed_index_sets"}
+    frozen_set = set(frozen)
+    eligible_set = set(eligible)
+    if frozen_set & eligible_set:
+        return {"ok": False, "reason": "frozen_core_in_eligible_pool"}
+    if any(j not in frozen_set for j in range(c_rows)):
+        return {"ok": False, "reason": "core_rows_missing_from_frozen_set"}
+
+    s_cut = _int_seq(cert.source_minimal_cut, lo=0, hi=snk, limit=snk + 1)
+    t_cut = _int_seq(cert.sink_minimal_cut, lo=0, hi=snk, limit=snk + 1)
+    if s_cut is None or t_cut is None:
+        return {"ok": False, "reason": "malformed_cut"}
+    s_set = set(s_cut)
+    t_set = set(t_cut)
     if src not in s_set or snk in s_set or src not in t_set or snk in t_set:
         return {"ok": False, "reason": "invalid_cut_endpoints"}
     if not s_set.issubset(t_set):
         return {"ok": False, "reason": "source_minimal_not_subset_of_sink_minimal"}
 
-    cap_s = compute_cut_capacity(cert.network_edges, s_set)
-    cap_t = compute_cut_capacity(cert.network_edges, t_set)
-    if cap_s != cert.max_flow or cap_t != cert.max_flow:
-        return {"ok": False, "reason": "cut_capacity_does_not_match_max_flow"}
-    if cap_s != cert.cut_capacity_source_minimal or cap_t != cert.cut_capacity_sink_minimal:
-        return {"ok": False, "reason": "recorded_cut_capacity_mismatch"}
+    # 1. The network must be exactly the vertex-split routing network.
+    if not isinstance(cert.network_edges, (tuple, list)) or len(cert.network_edges) > MAX_NETWORK_EDGES:
+        return {"ok": False, "reason": "malformed_network_edges"}
+    cap: Dict[Tuple[int, int], int] = {}
+    for edge in cert.network_edges:
+        if not isinstance(edge, (tuple, list)) or len(edge) != 3 or not all(_is_int(x) for x in edge):
+            return {"ok": False, "reason": "malformed_network_edges"}
+        u, v, c = (int(x) for x in edge)
+        if not (0 <= u <= snk and 0 <= v <= snk) or u == v:
+            return {"ok": False, "reason": "edge_vertex_out_of_range"}
+        if c < 0:
+            return {"ok": False, "reason": "negative_edge_capacity"}
+        if c == 0:
+            return {"ok": False, "reason": "zero_capacity_edge"}
+        if (u, v) in cap:
+            return {"ok": False, "reason": "duplicate_network_edge"}
+        cap[(u, v)] = c
 
-    # 2. Verify integral flow feasibility, frozen-core exclusion, & zero Hall-stacking collisions!
-    frozen_set = set(cert.frozen_indices)
-    eligible_set = set(cert.eligible_indices)
-    if frozen_set & eligible_set:
-        return {"ok": False, "reason": "frozen_core_in_eligible_pool"}
-    if not set(range(cert.core_rows_frozen)).issubset(frozen_set):
-        return {"ok": False, "reason": "core_rows_missing_from_frozen_set"}
+    def vin(j: int) -> int:
+        return 1 + K + j
 
-    if len(cert.assignments) != len(cert.plasmid_demands):
+    def vout(j: int) -> int:
+        return 1 + K + M + j
+
+    expected_fixed: Dict[Tuple[int, int], int] = {}
+    for k, d in enumerate(demands):
+        if d > 0:
+            expected_fixed[(src, 1 + k)] = d
+    for j in eligible:
+        expected_fixed[(vin(j), vout(j))] = 1
+        expected_fixed[(vout(j), snk)] = 1
+    for key, c in expected_fixed.items():
+        if cap.get(key) != c:
+            return {"ok": False, "reason": "network_missing_required_edge"}
+    for (u, v), c in cap.items():
+        if (u, v) in expected_fixed:
+            continue
+        is_corridor = 1 <= u <= K and vin(0) <= v < vin(M) and (v - vin(0)) in eligible_set and c == 1
+        if not is_corridor:
+            return {"ok": False, "reason": "unexpected_network_edge"}
+
+    # 2. Assignments must be an integral s-t flow on that network.
+    if not isinstance(cert.assignments, (tuple, list)) or len(cert.assignments) != K:
         return {"ok": False, "reason": "assignment_count_mismatch"}
-
+    flow: Dict[Tuple[int, int], int] = {}
     seen_slots: Set[int] = set()
     routed_total = 0
-    edge_lookup = {(u, v): cap for u, v, cap in cert.network_edges}
-    K = len(cert.plasmid_demands)
-    M = cert.total_neurons
-
     for k, slots in enumerate(cert.assignments):
-        if len(slots) > cert.plasmid_demands[k]:
+        slots_t = _int_seq(slots, lo=-(1 << 62), hi=1 << 62, limit=M)
+        if slots_t is None:
+            return {"ok": False, "reason": "malformed_assignments"}
+        if len(slots_t) > demands[k]:
             return {"ok": False, "reason": "plasmid_assignment_exceeds_demand"}
-        for j in slots:
+        for j in slots_t:
             if j in frozen_set or j not in eligible_set:
                 return {"ok": False, "reason": "slot_violates_frozen_or_eligible_mask"}
             if j in seen_slots:
                 return {"ok": False, "reason": "hall_stacking_slot_collision"}
-            if edge_lookup.get((1 + k, 1 + K + j), 0) < 1:
+            if cap.get((1 + k, vin(j)), 0) < 1:
                 return {"ok": False, "reason": "missing_network_corridor_edge"}
             seen_slots.add(j)
             routed_total += 1
+            for e in ((1 + k, vin(j)), (vin(j), vout(j)), (vout(j), snk)):
+                flow[e] = flow.get(e, 0) + 1
+        if slots_t:
+            flow[(src, 1 + k)] = len(slots_t)
 
     if routed_total != cert.max_flow:
         return {"ok": False, "reason": "assignment_total_does_not_equal_max_flow"}
 
-    # 3. Verify canonical SHA-256 integrity digest
-    expected_digest = _digest_min_cut_payload({
-        "total_neurons": cert.total_neurons,
-        "core_rows_frozen": cert.core_rows_frozen,
-        "frozen_indices": cert.frozen_indices,
-        "eligible_indices": cert.eligible_indices,
-        "plasmid_demands": cert.plasmid_demands,
-        "total_demand": cert.total_demand,
-        "max_flow": cert.max_flow,
-        "deficit": cert.deficit,
-        "assignments": list(cert.assignments),
-        "source_minimal_cut": cert.source_minimal_cut,
-        "sink_minimal_cut": cert.sink_minimal_cut,
-    })
+    # 3. Recompute both residual min cuts from that flow. If the flow's value equals
+    #    a cut's capacity, the flow is maximum and the cut is minimum.
+    out_res: List[List[int]] = [[] for _ in range(snk + 1)]
+    in_res: List[List[int]] = [[] for _ in range(snk + 1)]
+    for (u, v), c in cap.items():
+        f = flow.get((u, v), 0)
+        if f < c:  # forward residual u -> v
+            out_res[u].append(v)
+            in_res[v].append(u)
+        if f > 0:  # backward residual v -> u
+            out_res[v].append(u)
+            in_res[u].append(v)
+
+    reach = {src}
+    q = deque([src])
+    while q:
+        u = q.popleft()
+        for v in out_res[u]:
+            if v not in reach:
+                reach.add(v)
+                q.append(v)
+    if snk in reach:
+        return {"ok": False, "reason": "max_flow_not_maximum"}
+    co_reach = {snk}
+    q = deque([snk])
+    while q:
+        v = q.popleft()
+        for u in in_res[v]:
+            if u not in co_reach:
+                co_reach.add(u)
+                q.append(u)
+    s_expected = reach
+    t_expected = set(range(snk + 1)) - co_reach
+
+    cap_s = compute_cut_capacity(((u, v, c) for (u, v), c in cap.items()), s_expected)
+    cap_t = compute_cut_capacity(((u, v, c) for (u, v), c in cap.items()), t_expected)
+    if cap_s != routed_total or cap_t != routed_total:
+        return {"ok": False, "reason": "cut_capacity_does_not_match_max_flow"}
+    if s_set != s_expected or t_set != t_expected:
+        return {"ok": False, "reason": "cut_not_residual_min_cut"}
+    if cap_s != cert.cut_capacity_source_minimal or cap_t != cert.cut_capacity_sink_minimal:
+        return {"ok": False, "reason": "recorded_cut_capacity_mismatch"}
+
+    # 4. Canonical SHA-256 over every field, network_edges included.
+    try:
+        expected_digest = min_cut_certificate_digest(cert)
+    except (TypeError, ValueError):
+        return {"ok": False, "reason": "malformed_certificate"}
     if cert.sha256_digest != expected_digest:
         return {"ok": False, "reason": "sha256_digest_mismatch"}
 
     return {
         "ok": True,
         "reason": "verified",
-        "max_flow": cert.max_flow,
-        "deficit": cert.deficit,
+        "max_flow": int(cert.max_flow),
+        "deficit": int(cert.deficit),
         "requires_mitosis": cert.requires_mitosis,
     }
 
@@ -511,13 +759,15 @@ def expand_weights_orthogonal_mitosis(
     w_np = _to_numpy_f64(weights)
     if w_np.ndim != 2:
         raise ValueError(f"Expected 2-D weight matrix, got shape {w_np.shape}.")
-    r_add = int(deficit_rows)
-    c_add = int(deficit_cols)
+    r_add = _require_int(deficit_rows, "deficit_rows", hi=MAX_NEURONS)
+    c_add = _require_int(deficit_cols, "deficit_cols", hi=MAX_NEURONS)
     if r_add < 0 or c_add < 0:
         raise ValueError("Mitosis deficits must be non-negative.")
 
     orig_r, orig_c = w_np.shape
-    c_rows = (orig_r // 4) if core_rows is None else int(core_rows)
+    c_rows = (orig_r // 4) if core_rows is None else _require_int(core_rows, "core_rows")
+    if c_rows < 0 or c_rows > orig_r:
+        raise ValueError(f"core_rows={c_rows} out of bounds for {orig_r} rows.")
     expanded = np.zeros((orig_r + r_add, orig_c + c_add), dtype=np.float64)
     expanded[:orig_r, :orig_c] = w_np
 
@@ -561,7 +811,7 @@ def _fmt_q(q: Fraction) -> str:
 
 
 def _digest_fraction_cert(payload: Mapping[str, Any]) -> str:
-    canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"))
+    canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"), allow_nan=False)
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
 
@@ -584,6 +834,11 @@ def certify_cost_partitioned_dual(
       - Optionally certifies Farkas Lemma infeasibility (`lambda >= 0`, `lambda^T A == 0`,
         `lambda^T b < 0`) for infeasible linear constraint systems `A x <= b`.
     """
+    for name, seq in (("step_costs", step_costs), ("quotient_drifts", quotient_drifts)):
+        if isinstance(seq, (str, bytes, Mapping)) or not isinstance(seq, (Sequence, np.ndarray)):
+            raise ValueError(f"{name} must be a sequence.")
+        if len(seq) > MAX_RATIONAL_TERMS:
+            raise ValueError(f"{name} exceeds MAX_RATIONAL_TERMS.")
     b0 = _exact_nonneg_fraction(initial_budget)
     if b0 <= Fraction(0, 1):
         raise ValueError(f"initial_budget must be strictly positive, got {b0}.")
@@ -591,7 +846,7 @@ def certify_cost_partitioned_dual(
     costs_q: List[Fraction] = []
     rem = b0
     for c in step_costs:
-        cq = _exact_nonneg_fraction(c)
+        cq = _exact_fraction(c)
         if cq <= Fraction(0, 1):
             raise ValueError(f"Each step_cost must be strictly positive (got {cq}); negative/zero costs forbidden.")
         rem = rem - cq
@@ -601,7 +856,7 @@ def certify_cost_partitioned_dual(
 
     if len(quotient_drifts) == 0:
         raise ValueError("quotient_drifts must be non-empty.")
-    drifts_q = [_exact_nonneg_fraction(d) for d in quotient_drifts]
+    drifts_q = [_exact_fraction(d) for d in quotient_drifts]
     if any(d < Fraction(0, 1) for d in drifts_q):
         raise ValueError("quotient_drifts must be non-negative.")
 
@@ -611,7 +866,7 @@ def certify_cost_partitioned_dual(
     else:
         if len(quotient_weights) != M_q:
             raise ValueError("quotient_weights length must match quotient_drifts.")
-        weights_q = [_exact_nonneg_fraction(w) for w in quotient_weights]
+        weights_q = [_exact_fraction(w) for w in quotient_weights]
         if any(w < Fraction(0, 1) for w in weights_q) or sum(weights_q) != Fraction(1, 1):
             raise ValueError("quotient_weights must be non-negative and sum identically to 1.")
 
@@ -625,15 +880,33 @@ def certify_cost_partitioned_dual(
     f_mul_s: Optional[Tuple[str, ...]] = None
 
     if farkas_system is not None:
-        A_raw, b_raw, lam_raw = farkas_system
-        A_q = [[_exact_nonneg_fraction(val) for val in row] for row in A_raw]
-        b_q = [_exact_nonneg_fraction(val) for val in b_raw]
-        lam_q = [_exact_nonneg_fraction(val) for val in lam_raw]
+        try:
+            A_raw, b_raw, lam_raw = farkas_system
+        except (TypeError, ValueError):
+            raise ValueError("farkas_system must be a triple (A, b, lambda).") from None
+        for name, part in (("A", A_raw), ("b", b_raw), ("lambda", lam_raw)):
+            if isinstance(part, (str, bytes, Mapping)) or not isinstance(part, (Sequence, np.ndarray)):
+                raise ValueError(f"Farkas {name} must be a sequence.")
+            if len(part) > MAX_RATIONAL_TERMS:
+                raise ValueError(f"Farkas {name} exceeds MAX_RATIONAL_TERMS.")
+        rows_raw = []
+        for row in A_raw:
+            if isinstance(row, (str, bytes, Mapping)) or not isinstance(row, (Sequence, np.ndarray)):
+                raise ValueError("farkas_dimension_mismatch: every Farkas row must be a sequence.")
+            rows_raw.append(row)
+        if sum(len(r) for r in rows_raw) > MAX_RATIONAL_TERMS:
+            raise ValueError("Farkas matrix exceeds MAX_RATIONAL_TERMS.")
+        # A and b carry signed entries; only the multipliers must be non-negative.
+        A_q = [[_exact_fraction(val) for val in row] for row in rows_raw]
+        b_q = [_exact_fraction(val) for val in b_raw]
+        lam_q = [_exact_fraction(val) for val in lam_raw]
         if len(A_q) == 0 or len(A_q) != len(b_q) or len(lam_q) != len(A_q):
-            raise ValueError("Malformed Farkas system dimensions.")
+            raise ValueError("farkas_dimension_mismatch: Malformed Farkas system dimensions.")
+        n_cols = len(A_q[0])
+        if n_cols == 0 or any(len(row) != n_cols for row in A_q):
+            raise ValueError("farkas_dimension_mismatch: the Farkas matrix must be rectangular with at least one column.")
         if any(l < Fraction(0, 1) for l in lam_q):
             raise ValueError("Farkas dual multipliers lambda must be >= 0.")
-        n_cols = len(A_q[0])
         for col in range(n_cols):
             col_dot = sum((lam_q[row] * A_q[row][col] for row in range(len(A_q))), Fraction(0, 1))
             if col_dot != Fraction(0, 1):
@@ -682,21 +955,53 @@ def certify_cost_partitioned_dual(
     )
 
 
+def fraction_dual_certificate_digest(cert: "FractionDualCertificate") -> str:
+    """SHA-256 over every field of `cert` except `sha256_digest`."""
+    return _digest_fraction_cert({
+        "initial_budget_q": cert.initial_budget_q,
+        "step_costs_q": cert.step_costs_q,
+        "remaining_budget_q": cert.remaining_budget_q,
+        "quotient_weights_q": cert.quotient_weights_q,
+        "quotient_drifts_q": cert.quotient_drifts_q,
+        "partitioned_drift_q": cert.partitioned_drift_q,
+        "drift_cap_q": cert.drift_cap_q,
+        "farkas_matrix_q": cert.farkas_matrix_q,
+        "farkas_rhs_q": cert.farkas_rhs_q,
+        "farkas_multipliers_q": cert.farkas_multipliers_q,
+    })
+
+
+def _q_list(x: Any) -> Optional[List[Fraction]]:
+    if not isinstance(x, (tuple, list)) or len(x) > MAX_RATIONAL_TERMS:
+        return None
+    out = []
+    for v in x:
+        q = _parse_canonical_q(v)
+        if q is None:
+            return None
+        out.append(q)
+    return out
+
+
 def verify_fraction_dual_certificate(cert: FractionDualCertificate) -> Dict[str, Any]:
     """
     Standalone pure-`Fraction` verifier (zero floating-point operations in the TCB!).
+    Every quantity must be a canonical `num/den` string. Malformed input returns a
+    reason; it never raises.
     """
-    try:
-        b0 = Fraction(cert.initial_budget_q)
-        costs = [Fraction(c) for c in cert.step_costs_q]
-        rem_claimed = Fraction(cert.remaining_budget_q)
-        weights = [Fraction(w) for w in cert.quotient_weights_q]
-        drifts = [Fraction(d) for d in cert.quotient_drifts_q]
-        part_claimed = Fraction(cert.partitioned_drift_q)
-        cap = Fraction(cert.drift_cap_q)
-    except (ValueError, ZeroDivisionError):
+    if not isinstance(cert, FractionDualCertificate):
+        return {"ok": False, "reason": "not_a_fraction_dual_certificate"}
+    b0 = _parse_canonical_q(cert.initial_budget_q)
+    costs = _q_list(cert.step_costs_q)
+    rem_claimed = _parse_canonical_q(cert.remaining_budget_q)
+    weights = _q_list(cert.quotient_weights_q)
+    drifts = _q_list(cert.quotient_drifts_q)
+    part_claimed = _parse_canonical_q(cert.partitioned_drift_q)
+    cap = _parse_canonical_q(cert.drift_cap_q)
+    if any(x is None for x in (b0, costs, rem_claimed, weights, drifts, part_claimed, cap)):
         return {"ok": False, "reason": "malformed_rational_string"}
-
+    if not isinstance(cert.sha256_digest, str):
+        return {"ok": False, "reason": "malformed_sha256_digest"}
     if b0 <= Fraction(0, 1):
         return {"ok": False, "reason": "non_positive_initial_budget"}
 
@@ -736,17 +1041,25 @@ def verify_fraction_dual_certificate(cert: FractionDualCertificate) -> Dict[str,
             or cert.farkas_multipliers_q is None
         ):
             return {"ok": False, "reason": "incomplete_farkas_tuple"}
-        try:
-            A_q = [[Fraction(x) for x in row] for row in cert.farkas_matrix_q]
-            b_q = [Fraction(x) for x in cert.farkas_rhs_q]
-            lam_q = [Fraction(x) for x in cert.farkas_multipliers_q]
-        except (ValueError, ZeroDivisionError):
+        if not isinstance(cert.farkas_matrix_q, (tuple, list)) or len(cert.farkas_matrix_q) > MAX_RATIONAL_TERMS:
+            return {"ok": False, "reason": "malformed_farkas_rational"}
+        A_q = []
+        for row in cert.farkas_matrix_q:
+            row_q = _q_list(row)
+            if row_q is None:
+                return {"ok": False, "reason": "malformed_farkas_rational"}
+            A_q.append(row_q)
+        b_q = _q_list(cert.farkas_rhs_q)
+        lam_q = _q_list(cert.farkas_multipliers_q)
+        if b_q is None or lam_q is None:
             return {"ok": False, "reason": "malformed_farkas_rational"}
         if len(A_q) == 0 or len(A_q) != len(b_q) or len(lam_q) != len(A_q):
             return {"ok": False, "reason": "farkas_dimension_mismatch"}
+        n_cols = len(A_q[0])
+        if n_cols == 0 or any(len(row) != n_cols for row in A_q):
+            return {"ok": False, "reason": "farkas_dimension_mismatch"}
         if any(l < Fraction(0, 1) for l in lam_q):
             return {"ok": False, "reason": "negative_farkas_multiplier"}
-        n_cols = len(A_q[0])
         for col in range(n_cols):
             if sum((lam_q[r] * A_q[r][col] for r in range(len(A_q))), Fraction(0, 1)) != Fraction(0, 1):
                 return {"ok": False, "reason": "farkas_stationarity_failed"}
@@ -754,18 +1067,10 @@ def verify_fraction_dual_certificate(cert: FractionDualCertificate) -> Dict[str,
             return {"ok": False, "reason": "farkas_rhs_not_negative"}
         farkas_verified = True
 
-    expected_digest = _digest_fraction_cert({
-        "initial_budget_q": cert.initial_budget_q,
-        "step_costs_q": cert.step_costs_q,
-        "remaining_budget_q": cert.remaining_budget_q,
-        "quotient_weights_q": cert.quotient_weights_q,
-        "quotient_drifts_q": cert.quotient_drifts_q,
-        "partitioned_drift_q": cert.partitioned_drift_q,
-        "drift_cap_q": cert.drift_cap_q,
-        "farkas_matrix_q": cert.farkas_matrix_q,
-        "farkas_rhs_q": cert.farkas_rhs_q,
-        "farkas_multipliers_q": cert.farkas_multipliers_q,
-    })
+    try:
+        expected_digest = fraction_dual_certificate_digest(cert)
+    except (TypeError, ValueError):
+        return {"ok": False, "reason": "malformed_certificate"}
     if cert.sha256_digest != expected_digest:
         return {"ok": False, "reason": "sha256_digest_mismatch"}
 
@@ -788,7 +1093,15 @@ def pack_certificate_lock_record(
     Packs a deterministic UTF-8 JSON audit record into a fixed-length byte buffer sized for
     `StratifiedMemoryArena.cryptographic_lock` (`12,288` bytes). Note per `weft/runtime/plasm`
     I4 contract: this stores an offline-verifiable audit receipt, not an OS memory lock.
+    Refuses (ValueError) a certificate that either verifier rejects.
     """
+    mc_verdict = verify_min_cut_mitosis_certificate(min_cut_cert)
+    if not mc_verdict["ok"]:
+        raise ValueError(f"Min-cut certificate rejected: {mc_verdict['reason']}.")
+    dc_verdict = verify_fraction_dual_certificate(dual_cert)
+    if not dc_verdict["ok"]:
+        raise ValueError(f"Fraction dual certificate rejected: {dc_verdict['reason']}.")
+    lock_capacity_bytes = _require_int(lock_capacity_bytes, "lock_capacity_bytes", lo=1, hi=1 << 24)
     record = json.dumps(
         {
             "schema": "WEFT-PLASM-SOKO-LOCK/1.0",
@@ -828,27 +1141,51 @@ def canonicalize_peripheral_gauge(
     """
     wi = _to_numpy_f64(w_in).copy()
     wo = _to_numpy_f64(w_out).copy()
+    if wi.ndim != 2 or wo.ndim != 2:
+        raise ValueError("w_in and w_out must be 2-D.")
     bi = _to_numpy_f64(bias_in).ravel().copy() if bias_in is not None else None
 
     M, d_in = wi.shape
+    if M > MAX_NEURONS:
+        raise ValueError(f"w_in has {M} rows; the limit is {MAX_NEURONS}.")
     if wo.shape[1] != M:
         raise ValueError(f"w_out columns ({wo.shape[1]}) must equal w_in rows ({M}).")
-    c_rows = (M // 4) if core_rows is None else int(core_rows)
+    if bi is not None and bi.size != M:
+        raise ValueError(f"bias_in has {bi.size} entries; expected {M}.")
+    for name, arr in (("w_in", wi), ("w_out", wo), ("bias_in", bi)):
+        if arr is not None and not np.all(np.isfinite(arr)):
+            raise ValueError(f"{name} must be finite.")
+    c_rows = (M // 4) if core_rows is None else _require_int(core_rows, "core_rows")
     if c_rows < 0 or c_rows > M:
         raise ValueError(f"Invalid core_rows={c_rows} for M={M}.")
+    seed = _require_int(probe_seed, "probe_seed", lo=0)
 
-    rng = np.random.default_rng(probe_seed)
+    rng = np.random.default_rng(seed)
     X_probe = rng.normal(0.0, 1.0, size=(64, d_in))
     anchor = rng.normal(0.0, 1.0, size=64)
 
-    pre = X_probe @ wi[c_rows:, :].T
+    # Smooth GELU probe signature, computed one unit at a time from a fresh copy of
+    # that unit's parameters, so equal units get bit-identical keys wherever they sit.
+    P = M - c_rows
+    keys = np.empty(P, dtype=np.float64)
+    for p_idx in range(P):
+        j = c_rows + p_idx
+        row = np.array(wi[j, :], dtype=np.float64, copy=True)
+        pre = X_probe @ row
+        if bi is not None:
+            pre = pre + bi[j]
+        act = pre * (1.0 / (1.0 + np.exp(-1.702 * np.clip(pre, -20.0, 20.0))))
+        keys[p_idx] = float(anchor @ act + 1e-3 * np.sum(act ** 2))
+
+    # Ties on the probe key (identical incoming rows and biases) are broken by the
+    # unit's exact parameters, outgoing column included, so the canonical form does
+    # not depend on input order.
+    tie_cols = [wi[c_rows:, c] for c in range(d_in)]
     if bi is not None:
-        pre = pre + bi[None, c_rows:]
-    # Smooth GELU probe signature (equivariant under peripheral channel permutations)
-    act = pre * (1.0 / (1.0 + np.exp(-1.702 * np.clip(pre, -20.0, 20.0))))
-    keys = anchor @ act + 1e-3 * np.sum(act ** 2, axis=0)
-    periph_perm = np.argsort(keys, kind="mergesort") + c_rows
-    full_order = np.concatenate([np.arange(c_rows, dtype=int), periph_perm])
+        tie_cols.append(bi[c_rows:])
+    tie_cols.extend(wo[r, c_rows:] for r in range(wo.shape[0]))
+    periph_perm = np.lexsort(tuple(reversed(tie_cols)) + (keys,)) + c_rows
+    full_order = np.concatenate([np.arange(c_rows, dtype=int), periph_perm]).astype(int)
 
     wi_c = wi[full_order, :]
     wo_c = wo[:, full_order]
@@ -883,26 +1220,42 @@ def build_reproducible_plasm_report(
     """
     if backend not in ("cpu", "mps", "cuda"):
         raise ValueError(f"Explicit execution backend required ('cpu', 'mps', 'cuda'), got {backend!r}.")
-    iters = int(iterations_requested)
+    if not isinstance(committed, bool):
+        raise ValueError(f"committed must be a bool, got {type(committed).__name__} {committed!r}.")
+    seed = _require_int(seed, "seed")
+    iters = _require_int(iterations_requested, "iterations_requested")
     if iters < 0:
         raise ValueError("iterations_requested must be >= 0.")
+    if not isinstance(effective_config, Mapping) or not isinstance(committed_state_metrics, Mapping):
+        raise ValueError("effective_config and committed_state_metrics must be mappings.")
+    if proposed_candidate_metrics is not None and not isinstance(proposed_candidate_metrics, Mapping):
+        raise ValueError("proposed_candidate_metrics must be a mapping or None.")
+    if min_cut_cert is not None and not isinstance(min_cut_cert, MinCutMitosisCertificate):
+        raise ValueError("min_cut_cert must be a MinCutMitosisCertificate or None.")
+    if dual_cert is not None and not isinstance(dual_cert, FractionDualCertificate):
+        raise ValueError("dual_cert must be a FractionDualCertificate or None.")
     if iters == 0 and committed:
         raise ValueError("Zero-iteration run cannot claim committed=True.")
 
     report = {
         "schema": "WEFT-PLASM-REPORT/2.0",
-        "seed": int(seed),
+        "seed": seed,
         "backend": backend,
         "iterations_executed": iters,
         "zero_iteration_noop": (iters == 0),
         "effective_config": dict(effective_config),
-        "committed": bool(committed),
+        "committed": committed,
         "proposed_candidate": dict(proposed_candidate_metrics) if proposed_candidate_metrics is not None else None,
         "committed_state": dict(committed_state_metrics),
         "min_cut_certificate_sha256": min_cut_cert.sha256_digest if min_cut_cert is not None else None,
         "fraction_dual_certificate_sha256": dual_cert.sha256_digest if dual_cert is not None else None,
     }
-    report["report_sha256"] = _digest_fraction_cert(report)
+    try:
+        report["report_sha256"] = _digest_fraction_cert(report)
+    except ValueError:
+        raise ValueError("Report contains NaN or Infinity; reports must be strict JSON.") from None
+    except TypeError as exc:
+        raise ValueError(f"Report contains a value that is not JSON: {exc}") from None
     return report
 
 
@@ -916,6 +1269,8 @@ __all__ = [
     "certify_cost_partitioned_dual",
     "compute_cut_capacity",
     "expand_weights_orthogonal_mitosis",
+    "fraction_dual_certificate_digest",
+    "min_cut_certificate_digest",
     "pack_certificate_lock_record",
     "verify_fraction_dual_certificate",
     "verify_min_cut_mitosis_certificate",

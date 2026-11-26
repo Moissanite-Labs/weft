@@ -27,6 +27,11 @@ if str(_THIS_DIR) not in sys.path:
 
 try:
     from weft.runtime.plasm.synaptic_flow import (
+        FractionDualCertificate,
+        MinCutMitosisCertificate,
+        _exact_nonneg_fraction,
+        fraction_dual_certificate_digest,
+        min_cut_certificate_digest,
         DinicSynapticFlowKernel,
         allocate_disjoint_synaptic_corridors,
         build_reproducible_plasm_report,
@@ -40,6 +45,11 @@ try:
     )
 except ImportError:
     from synaptic_flow import (  # type: ignore
+        FractionDualCertificate,
+        MinCutMitosisCertificate,
+        _exact_nonneg_fraction,
+        fraction_dual_certificate_digest,
+        min_cut_certificate_digest,
         DinicSynapticFlowKernel,
         allocate_disjoint_synaptic_corridors,
         build_reproducible_plasm_report,
@@ -307,6 +317,262 @@ class TestPeripheralGaugeCanonizationAndIssue51Report(unittest.TestCase):
         self.assertIsInstance(w_exp, torch.Tensor)
         self.assertEqual(tuple(w_exp.shape), (20, 8))
         self.assertEqual(meta["core_row_drift"], 0.0)
+
+
+def _reseal_min_cut(cert: "MinCutMitosisCertificate") -> "MinCutMitosisCertificate":
+    """What a peer can do: change fields, then recompute a valid digest."""
+    return replace(cert, sha256_digest=min_cut_certificate_digest(cert))
+
+
+def _reseal_dual(cert: "FractionDualCertificate") -> "FractionDualCertificate":
+    return replace(cert, sha256_digest=fraction_dual_certificate_digest(cert))
+
+
+class TestPeerSuppliedMinCutCertificates(unittest.TestCase):
+    """Review 5907258965 items 1, 3 and 5 on #170: peer-built certificates."""
+
+    def test_overstated_flow_into_dead_end_is_rejected(self) -> None:
+        # Demand 5, a capacity-5 source edge, corridor edges into five slots that
+        # have no split edge and no edge to the sink. The true max flow is 0; the
+        # peer claims 5 with no deficit and assigns all five slots.
+        M, K = 5, 1
+        snk = 1 + K + 2 * M
+        edges = ((0, 1, 5),) + tuple((1, 1 + K + j, 1) for j in range(M))
+        cut = (0,)
+        forged = MinCutMitosisCertificate(
+            total_neurons=M, core_rows_frozen=0, frozen_indices=(), eligible_indices=tuple(range(M)),
+            plasmid_demands=(5,), total_demand=5, max_flow=5, deficit=0, requires_mitosis=False,
+            assignments=(tuple(range(M)),), source_minimal_cut=cut, sink_minimal_cut=cut,
+            cut_capacity_source_minimal=5, cut_capacity_sink_minimal=5,
+            network_vertex_count=snk + 1, network_edges=edges, sha256_digest="",
+        )
+        res = verify_min_cut_mitosis_certificate(_reseal_min_cut(forged))
+        self.assertEqual(res, {"ok": False, "reason": "network_missing_required_edge"})
+
+    def test_added_cycle_changes_digest_and_is_rejected(self) -> None:
+        base = allocate_disjoint_synaptic_corridors(np.linspace(0.1, 1.0, 8), [2], core_rows=2)
+        self.assertTrue(verify_min_cut_mitosis_certificate(base)["ok"])
+        cyc = replace(base, network_edges=base.network_edges + ((1, 2, 1), (2, 1, 1)))
+        self.assertNotEqual(min_cut_certificate_digest(cyc), base.sha256_digest)
+        self.assertFalse(verify_min_cut_mitosis_certificate(cyc)["ok"])
+        self.assertFalse(verify_min_cut_mitosis_certificate(_reseal_min_cut(cyc))["ok"])
+
+    def test_negative_capacity_edge_cannot_fake_mitosis(self) -> None:
+        base = allocate_disjoint_synaptic_corridors(np.linspace(0.1, 1.0, 8), [2], core_rows=2)
+        self.assertEqual(base.max_flow, 2)
+        forged = replace(
+            base,
+            network_edges=base.network_edges + ((0, 2, -2),),
+            max_flow=0, deficit=2, requires_mitosis=True, assignments=((),),
+            source_minimal_cut=(0,), cut_capacity_source_minimal=0,
+        )
+        res = verify_min_cut_mitosis_certificate(_reseal_min_cut(forged))
+        self.assertFalse(res["ok"], res)
+        self.assertEqual(res["reason"], "negative_edge_capacity")
+
+    def test_wrong_cut_with_matching_capacity_is_rejected(self) -> None:
+        base = allocate_disjoint_synaptic_corridors(np.linspace(0.1, 1.0, 8), [2], core_rows=2)
+        # Swap the sink-minimal cut for the source-minimal one. Both have capacity
+        # equal to the flow, but only one is the inclusion-maximal residual cut.
+        self.assertNotEqual(base.source_minimal_cut, base.sink_minimal_cut)
+        forged = replace(base, sink_minimal_cut=base.source_minimal_cut,
+                         cut_capacity_sink_minimal=base.cut_capacity_source_minimal)
+        res = verify_min_cut_mitosis_certificate(_reseal_min_cut(forged))
+        self.assertEqual(res, {"ok": False, "reason": "cut_not_residual_min_cut"})
+
+    def test_negative_core_rows_is_rejected(self) -> None:
+        base = allocate_disjoint_synaptic_corridors(np.linspace(0.1, 1.0, 8), [1], core_rows=0)
+        forged = _reseal_min_cut(replace(base, core_rows_frozen=-5))
+        res = verify_min_cut_mitosis_certificate(forged)
+        self.assertEqual(res, {"ok": False, "reason": "core_rows_out_of_range"})
+
+    def test_huge_core_rows_rejected_before_allocation(self) -> None:
+        base = allocate_disjoint_synaptic_corridors(np.linspace(0.1, 1.0, 8), [1], core_rows=0)
+        res = verify_min_cut_mitosis_certificate(replace(base, core_rows_frozen=10 ** 12))
+        self.assertEqual(res, {"ok": False, "reason": "core_rows_out_of_range"})
+
+    def test_malformed_peer_values_return_reasons(self) -> None:
+        base = allocate_disjoint_synaptic_corridors(np.linspace(0.1, 1.0, 8), [2], core_rows=2)
+        cases = {
+            "dict": {"network_vertex_count": 3},
+            "none": None,
+            "demands_str": replace(base, plasmid_demands=("2",)),
+            "edge_2_tuple": replace(base, network_edges=((0, 1),) + base.network_edges[1:]),
+            "edge_cap_nan": replace(base, network_edges=((0, 1, float("nan")),) + base.network_edges[1:]),
+            "core_rows_float": replace(base, core_rows_frozen=2.0),
+            "cut_none": replace(base, source_minimal_cut=None),
+            "assign_none": replace(base, assignments=None),
+        }
+        for name, cert in cases.items():
+            with self.subTest(name=name):
+                try:
+                    res = verify_min_cut_mitosis_certificate(cert)  # type: ignore[arg-type]
+                except Exception as exc:  # pragma: no cover - the failure being tested
+                    self.fail(f"{name} raised {type(exc).__name__}: {exc}")
+                self.assertFalse(res["ok"])
+                self.assertIsInstance(res["reason"], str)
+
+    def test_lock_packer_refuses_rejected_certificate(self) -> None:
+        mc = allocate_disjoint_synaptic_corridors(np.linspace(0.1, 1.0, 16), [2, 2])
+        dc = certify_cost_partitioned_dual(10, [1, 1], [Fraction(1, 20)], Fraction(1, 10))
+        with self.assertRaises(ValueError):
+            pack_certificate_lock_record(replace(mc, max_flow=mc.max_flow + 1), dc)
+        with self.assertRaises(ValueError):
+            pack_certificate_lock_record(mc, replace(dc, remaining_budget_q="9/1"))
+
+
+class TestBuilderInputValidation(unittest.TestCase):
+    """Review 5907258965 items 3 and 5: builders reject bad input with ValueError."""
+
+    def test_fractional_demands_rejected(self) -> None:
+        with self.assertRaises(ValueError):
+            allocate_disjoint_synaptic_corridors(np.linspace(0.1, 1.0, 8), [1.9, 2.2])
+
+    def test_short_allowed_corridors_rejected(self) -> None:
+        with self.assertRaises(ValueError):
+            allocate_disjoint_synaptic_corridors(
+                np.linspace(0.1, 1.0, 8), [1, 1], core_rows=0, allowed_corridors=[[0, 1]]
+            )
+
+    def test_long_path_runs_without_recursion_limit(self) -> None:
+        n = sys.getrecursionlimit() + 500
+        net = DinicSynapticFlowKernel(n)
+        for u in range(n - 1):
+            net.add_edge(u, u + 1, 1)
+        self.assertEqual(net.solve_max_flow(0, n - 1), 1)
+
+    def test_iterative_dinic_matches_reference_on_random_graphs(self) -> None:
+        rng = np.random.default_rng(170)
+        for _ in range(40):
+            n = int(rng.integers(4, 12))
+            edges = [(int(u), int(v), int(c)) for u, v, c in zip(
+                rng.integers(0, n, 30), rng.integers(0, n, 30), rng.integers(0, 6, 30)) if u != v]
+            net = DinicSynapticFlowKernel(n)
+            for u, v, c in edges:
+                net.add_edge(u, v, c)
+            got = net.solve_max_flow(0, n - 1)
+            # Reference: Edmonds-Karp on a dense capacity matrix.
+            capm = [[0] * n for _ in range(n)]
+            for u, v, c in edges:
+                capm[u][v] += c
+            total = 0
+            while True:
+                par = [-1] * n
+                par[0] = 0
+                q = [0]
+                while q and par[n - 1] < 0:
+                    u = q.pop(0)
+                    for v in range(n):
+                        if par[v] < 0 and capm[u][v] > 0:
+                            par[v] = u
+                            q.append(v)
+                if par[n - 1] < 0:
+                    break
+                f, v = 10 ** 9, n - 1
+                while v != 0:
+                    f = min(f, capm[par[v]][v])
+                    v = par[v]
+                v = n - 1
+                while v != 0:
+                    capm[par[v]][v] -= f
+                    capm[v][par[v]] += f
+                    v = par[v]
+                total += f
+            self.assertEqual(got, total)
+            s_min = net.extract_residual_min_cut(0, n - 1, "source_minimal")
+            self.assertEqual(compute_cut_capacity(net.original_edges, set(s_min)), total)
+
+    def test_short_bias_and_bad_seed_rejected(self) -> None:
+        rng = np.random.default_rng(5)
+        w_in, w_out = rng.normal(size=(8, 3)), rng.normal(size=(2, 8))
+        with self.assertRaises(ValueError):
+            canonicalize_peripheral_gauge(w_in, w_out, bias_in=np.zeros(3), core_rows=2)
+        with self.assertRaises(ValueError):
+            canonicalize_peripheral_gauge(w_in, w_out, core_rows=2, probe_seed=1.5)
+        with self.assertRaises(ValueError):
+            canonicalize_peripheral_gauge(w_in, w_out, core_rows=-1)
+
+    def test_gauge_tie_collapses_to_one_canonical_form(self) -> None:
+        # Two hidden units with identical incoming rows and biases and different
+        # outgoing columns implement the same map after a swap.
+        rng = np.random.default_rng(9)
+        M, d_in, d_out, core = 6, 3, 2, 0
+        w_in = rng.normal(size=(M, d_in))
+        b_in = rng.normal(size=M)
+        w_out = rng.normal(size=(d_out, M))
+        w_in[1] = w_in[0]
+        b_in[1] = b_in[0]
+        perm = np.array([1, 0, 2, 3, 4, 5])
+        a = canonicalize_peripheral_gauge(w_in, w_out, bias_in=b_in, core_rows=core)
+        b = canonicalize_peripheral_gauge(w_in[perm], w_out[:, perm], bias_in=b_in[perm], core_rows=core)
+        np.testing.assert_array_equal(a[0], b[0])
+        np.testing.assert_array_equal(a[1], b[1])
+        np.testing.assert_array_equal(a[2], b[2])
+
+
+class TestFarkasAndFractionHardening(unittest.TestCase):
+    """Review 5907258965 items 2, 3 and 4."""
+
+    def test_feasible_system_with_unchecked_column_is_not_certified(self) -> None:
+        # x0 - x1 <= -1 and -x0 + x1 + 7 x2 <= -1 is feasible at (0, 1, -1).
+        A = [[1, -1], [-1, 1, 7]]
+        b = [-1, -1]
+        lam = [1, 1]
+        with self.assertRaises(ValueError):
+            certify_cost_partitioned_dual(5, [1], [0], 1, farkas_system=(A, b, lam))
+        base = certify_cost_partitioned_dual(5, [1], [0], 1, farkas_system=([[1, -1], [-1, 1]], b, lam))
+        self.assertTrue(verify_fraction_dual_certificate(base)["ok"])
+        forged = _reseal_dual(replace(base, farkas_matrix_q=(("1/1", "-1/1"), ("-1/1", "1/1", "7/1"))))
+        res = verify_fraction_dual_certificate(forged)
+        self.assertEqual(res, {"ok": False, "reason": "farkas_dimension_mismatch"})
+
+    def test_short_row_returns_reason(self) -> None:
+        with self.assertRaises(ValueError) as ctx:
+            certify_cost_partitioned_dual(5, [1], [0], 1, farkas_system=([[1, -1], [1]], [-1, -1], [1, 1]))
+        self.assertIn("farkas_dimension_mismatch", str(ctx.exception))
+        base = certify_cost_partitioned_dual(5, [1], [0], 1, farkas_system=([[-1], [1]], [-2, 1], [1, 1]))
+        forged = _reseal_dual(replace(base, farkas_matrix_q=(("-1/1", "0/1"), ("1/1",))))
+        self.assertEqual(verify_fraction_dual_certificate(forged)["reason"], "farkas_dimension_mismatch")
+
+    def test_malformed_fraction_inputs_return_reasons(self) -> None:
+        base = certify_cost_partitioned_dual(5, [1], [0], 1)
+        for name, cert in {
+            "none_budget": replace(base, initial_budget_q=None),
+            "dict": {"initial_budget_q": "5/1"},
+            "none": None,
+            "non_canonical": replace(base, initial_budget_q="10/2"),
+            "costs_none": replace(base, step_costs_q=None),
+        }.items():
+            with self.subTest(name=name):
+                try:
+                    res = verify_fraction_dual_certificate(cert)  # type: ignore[arg-type]
+                except Exception as exc:  # pragma: no cover
+                    self.fail(f"{name} raised {type(exc).__name__}: {exc}")
+                self.assertFalse(res["ok"])
+
+    def test_exact_nonneg_fraction_rejects_negatives(self) -> None:
+        for v in (-5, "-1/2", -0.25, Fraction(-1, 3)):
+            with self.subTest(v=v):
+                with self.assertRaises(ValueError):
+                    _exact_nonneg_fraction(v)
+        self.assertEqual(_exact_nonneg_fraction("3/4"), Fraction(3, 4))
+
+    def test_committed_must_be_a_real_bool(self) -> None:
+        kwargs = dict(seed=1, backend="cpu", effective_config={}, iterations_requested=2,
+                      proposed_candidate_metrics=None, committed_state_metrics={"mse": 0.4})
+        with self.assertRaises(ValueError):
+            build_reproducible_plasm_report(committed="false", **kwargs)
+        self.assertIs(build_reproducible_plasm_report(committed=False, **kwargs)["committed"], False)
+
+    def test_report_rejects_nan_and_infinity(self) -> None:
+        for bad in (float("nan"), float("inf")):
+            with self.subTest(bad=bad):
+                with self.assertRaises(ValueError):
+                    build_reproducible_plasm_report(
+                        seed=1, backend="cpu", effective_config={}, iterations_requested=1,
+                        proposed_candidate_metrics={"mse": bad}, committed=False,
+                        committed_state_metrics={"mse": 0.4},
+                    )
 
 
 if __name__ == "__main__":

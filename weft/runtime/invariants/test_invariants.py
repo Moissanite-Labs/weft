@@ -47,7 +47,12 @@ class TestWeftInvariants(unittest.TestCase):
                     self.assertTrue(math.isinf(dist))
                 else:
                     self.assertAlmostEqual(dist, float(vec["expected_distance"]), places=6)
-                self.assertAlmostEqual(rem, float(vec["expected_remaining_budget"]), places=6)
+                if vec["expected_remaining_budget"] == "NaN":
+                    self.assertTrue(math.isnan(rem))
+                elif vec["expected_remaining_budget"] in ("Inf", "-Inf"):
+                    self.assertEqual(rem, float(vec["expected_remaining_budget"]))
+                else:
+                    self.assertAlmostEqual(rem, float(vec["expected_remaining_budget"]), places=6)
 
     def test_weight_update_vectors_torch_fast_path(self) -> None:
         try:
@@ -56,10 +61,6 @@ class TestWeftInvariants(unittest.TestCase):
             self.skipTest("torch not installed")
         dec = lambda x: float(x) if isinstance(x, str) else x  # noqa: E731
         for vec in self.vectors["weight_update_vectors"]:
-            if vec.get("locked_mask") is not None:
-                continue
-            if vec["name"] in ("accept_huge_scale_weight_move", "reject_pre_cast_radius_boundary"):
-                continue
             with self.subTest(vec=vec["name"]):
                 b_t = torch.tensor([dec(x) for x in vec["baseline"]], dtype=torch.float32)
                 c_t = torch.tensor([dec(x) for x in vec["candidate"]], dtype=torch.float32)
@@ -69,14 +70,68 @@ class TestWeftInvariants(unittest.TestCase):
                     vec["r_invariant"],
                     vec["budget"],
                     vec["cost"],
+                    vec.get("locked_mask"),
                 )
                 self.assertEqual(ok, vec["expected_accepted"])
                 self.assertEqual(reason, vec["expected_reason"])
                 if vec["expected_distance"] == "Inf":
                     self.assertTrue(math.isinf(dist))
                 else:
-                    self.assertAlmostEqual(dist, float(vec["expected_distance"]), places=5)
-                self.assertAlmostEqual(rem, float(vec["expected_remaining_budget"]), places=5)
+                    # The float32 inputs quantize the exact distance, so the
+                    # tolerance is relative (float32 epsilon is about 1.2e-7).
+                    expected_dist = float(vec["expected_distance"])
+                    self.assertAlmostEqual(
+                        dist, expected_dist, delta=max(1e-5, abs(expected_dist) * 1e-6)
+                    )
+                if vec["expected_remaining_budget"] == "NaN":
+                    self.assertTrue(math.isnan(rem))
+                elif vec["expected_remaining_budget"] in ("Inf", "-Inf"):
+                    self.assertEqual(rem, float(vec["expected_remaining_budget"]))
+                else:
+                    self.assertAlmostEqual(rem, float(vec["expected_remaining_budget"]), places=5)
+
+    def test_torch_path_rejects_move_between_f32_norm_and_exact_distance(self) -> None:
+        # Regression for #213: with the radius set between the float32 norm and
+        # the exact distance, the move is over the radius and must be rejected.
+        try:
+            import torch
+        except ImportError:
+            self.skipTest("torch not installed")
+        from fractions import Fraction
+
+        rng = random.Random(20261115)
+        case = None
+        for _ in range(400):
+            n = rng.choice([16, 257, 4096])
+            base = [self._f32(rng.gauss(0.0, 1.0)) for _ in range(n)]
+            cand = [self._f32(b + rng.gauss(0.0, 0.05)) for b in base]
+            exact_sq = sum((Fraction(c) - Fraction(b)) ** 2 for b, c in zip(base, cand))
+            exact = math.sqrt(exact_sq)
+            b_t = torch.tensor(base, dtype=torch.float32)
+            c_t = torch.tensor(cand, dtype=torch.float32)
+            d32 = float(torch.linalg.norm(c_t - b_t).item())
+            if d32 >= exact:
+                continue
+            radius = (d32 + exact) / 2.0
+            if not Fraction(radius) ** 2 < exact_sq:
+                continue
+            case = (b_t, c_t, base, cand, radius)
+            break
+        self.assertIsNotNone(case, "no f32-norm-below-exact case found in 400 draws")
+        b_t, c_t, base, cand, radius = case
+        ok_t, _, _, reason_t = verify_weight_update_safety_ex(b_t, c_t, radius, 10.0, 1.0)
+        ok_l, _, _, reason_l = verify_weight_update_safety_ex(base, cand, radius, 10.0, 1.0)
+        self.assertFalse(ok_l)
+        self.assertFalse(ok_t)
+        self.assertEqual(reason_t, "baseline_distance_exceeded")
+        self.assertEqual(reason_t, reason_l)
+        if torch.backends.mps.is_available():
+            # MPS has no float64; the gate must still give the same answer there.
+            ok_m, _, _, reason_m = verify_weight_update_safety_ex(
+                b_t.to("mps"), c_t.to("mps"), radius, 10.0, 1.0
+            )
+            self.assertFalse(ok_m)
+            self.assertEqual(reason_m, "baseline_distance_exceeded")
 
     def test_tension_vectors(self) -> None:
         for vec in self.vectors["tension_vectors"]:
@@ -93,6 +148,33 @@ class TestWeftInvariants(unittest.TestCase):
                 self.assertEqual(split["upstream_wei"], vec["expected_upstream_wei"])
                 self.assertEqual(split["weaver_wei"], vec["expected_weaver_wei"])
                 self.assertEqual(split["upstream_wei"] + split["weaver_wei"], vec["gross_wei"])
+
+    def test_non_finite_parameters_preserve_budget(self) -> None:
+        base = [1.0, 0.0, 0.0, 1.0]
+        cand = [1.05, 0.0, 0.0, 1.0]
+        for bad in (float("nan"), float("inf"), float("-inf")):
+            for budget in (10.0, 0.0, -2.5):
+                with self.subTest(bad_cost=bad, budget=budget):
+                    ok, dist, rem, reason = verify_weight_update_safety_ex(base, cand, 0.5, budget, bad)
+                    self.assertFalse(ok)
+                    self.assertTrue(math.isinf(dist))
+                    self.assertEqual(rem, budget)
+                    self.assertEqual(reason, "non_finite_parameters")
+                with self.subTest(bad_radius=bad, budget=budget):
+                    ok, dist, rem, reason = verify_weight_update_safety_ex(base, cand, bad, budget, 1.0)
+                    self.assertFalse(ok)
+                    self.assertTrue(math.isinf(dist))
+                    self.assertEqual(rem, budget)
+                    self.assertEqual(reason, "non_finite_parameters")
+            with self.subTest(bad_budget=bad):
+                ok, dist, rem, reason = verify_weight_update_safety_ex(base, cand, 0.5, bad, 1.0)
+                self.assertFalse(ok)
+                self.assertTrue(math.isinf(dist))
+                if math.isnan(bad):
+                    self.assertTrue(math.isnan(rem))
+                else:
+                    self.assertEqual(rem, bad)
+                self.assertEqual(reason, "non_finite_parameters")
 
     def test_constants_block_matches_module(self) -> None:
         constants = self.vectors["constants"]
