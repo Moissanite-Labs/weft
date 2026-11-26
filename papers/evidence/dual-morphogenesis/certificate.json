@@ -80,7 +80,7 @@
       "unobserved_nullity_dim": 12
     }
   },
-  "certificate_sha256": "864be2868572cc66814a4549f10d2a4c62aeb05c1d4ba0b3e1fd91fde6dd1d22",
+  "certificate_sha256": "c7f1ee5f86b9485b48d06684ce5c004ec6937f0dd5e703e80555ebbb46da2195",
   "n_seeds": 12,
   "n_waves": 5,
   "per_seed_records": [
@@ -1654,7 +1654,7 @@
   ],
   "provenance": {
     "command": "scripts/dual_morphogenesis_benchmark.py",
-    "git_commit": "6f2df689a0378043e2ab84ba2634dbece464ff5e",
+    "git_commit": "9b7ec227a8cff36a8b0fd473977a96a9549f55b8",
     "machine": "x86_64",
     "numpy_version": "2.5.4",
     "platform": "Linux-6.12.113+-x86_64-with-glibc2.41",
