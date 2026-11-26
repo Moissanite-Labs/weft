@@ -14,7 +14,7 @@ with the shared JSON conformance corpus in
 [`weft/runtime/invariants/vectors.json`](../../weft/runtime/invariants/vectors.json).
 
 All three implementations are tested directly against `vectors.json` in CI:
-Python and C11 execute all 36 cases (24 weight-update, 8 tension, 4 royalty).
+Python and C11 execute all 38 cases (24 weight-update, 8 tension, 6 royalty).
 The browser port defers `reject_pre_cast_radius_boundary`,
 `accept_huge_scale_weight_move`, `reject_locked_mask_ulp_tamper`,
 `accept_locked_mask_negzero_normalize`, `reject_locked_value_beyond_f32`,
@@ -43,12 +43,12 @@ proceeds in strict precondition order:
 1. **Parameter finiteness (`non_finite_parameters`)**: if any of $b, c, R$ is
    `NaN` or `±Inf`, reject with `distance = +Inf`, preserving remaining budget
    $b$ unchanged.
-2. **Sign preconditions (`non_positive_budget_or_cost`)**: if $c \le 0$, reject
-   with `distance = +Inf` and remaining budget $b$ (the caller's budget is
-   unchanged). If $b \le 0$ or $R < 0$ with a positive cost, reject with
-   `distance = +Inf` and deficit budget $b - c`.
+2. **Sign preconditions (`non_positive_budget_or_cost`)**: if $c \le 0$, $b \le 0$,
+   or $R < 0$, reject with `distance = +Inf` and remaining budget $b$ (the
+   caller's budget is unchanged).
 3. **Budget sufficiency (`insufficient_metabolic_budget`)**: if $b < c$, reject
-   with `distance = +Inf` and deficit budget $b - c$.
+   with `distance = +Inf` and remaining budget $b$ (the caller's budget is
+   unchanged).
 4. **Shape and non-empty check (`shape_mismatch`)**: if lengths differ or length
    is `0` (or a pointer is `NULL` in C11), reject with `distance = +Inf` and
    unchanged budget $b$.
@@ -96,8 +96,10 @@ $$
 At `gross_wei = 1` (`single_wei_dust` in `vectors.json`), C2 yields
 `upstream_wei = 0, weaver_wei = 1`; at `gross_wei = 1001` (`odd_amount_rounding`),
 C2 yields `upstream_wei = 150, weaver_wei = 851`. Exact conservation
-`upstream_wei + weaver_wei == gross_wei` holds for every unsigned input
-(assuming `gross_wei * upstream_bps` does not overflow `uint64_t` in C11).
+`upstream_wei + weaver_wei == gross_wei` holds for every unsigned input.
+The C11 split never forms the full product, so it cannot overflow `uint64_t`.
+An `upstream_bps` above 10000 is treated as 10000 in C11; Python raises
+`ValueError` for the same input.
 
 **Known discrepancy with C4 (`WeftTokenTissue.sol`):** `executeExcisionValve` in
 [`weft/runtime/ledger/WeftTokenTissue.sol`](../../weft/runtime/ledger/WeftTokenTissue.sol)

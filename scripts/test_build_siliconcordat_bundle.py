@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Tests that weft pin checks fail when the pin is missing or off HEAD's history."""
+"""Tests that the weft site_tree pin matches HEAD:site and survives a squash."""
 
 from __future__ import annotations
 
@@ -46,29 +46,21 @@ def _init_repo(path: Path) -> str:
     (path / "site" / "index.html").write_text("<h1>weft</h1>\n", encoding="utf-8")
     _git(path, "add", "site/index.html")
     _git(path, "commit", "-m", "initial site")
-    return _git(path, "rev-parse", "HEAD").stdout.strip()
+    return _git(path, "rev-parse", "HEAD:site").stdout.strip()
 
 
-def _orphan_commit(path: Path) -> str:
-    _git(path, "checkout", "--orphan", "orphan-pin")
-    (path / "site" / "index.html").write_text("<h1>orphan</h1>\n", encoding="utf-8")
-    _git(path, "add", "site/index.html")
-    _git(path, "commit", "-m", "orphan site")
-    sha = _git(path, "rev-parse", "HEAD").stdout.strip()
-    _git(path, "checkout", "main")
-    return sha
+def _site_tree(path: Path, rev: str = "HEAD") -> str:
+    return _git(path, "rev-parse", f"{rev}:site").stdout.strip()
 
 
-class _PinMixin:
-    module = bundle
-
+class BundleAssertWeftPinTest(unittest.TestCase):
     def setUp(self) -> None:
         self.tmp = tempfile.TemporaryDirectory()
         self.root = Path(self.tmp.name)
-        self.head = _init_repo(self.root)
+        self.site_tree = _init_repo(self.root)
         self.patches = [
-            mock.patch.object(self.module, "ROOT", self.root),
-            mock.patch.object(self.module, "SITE", self.root / "site"),
+            mock.patch.object(bundle, "ROOT", self.root),
+            mock.patch.object(bundle, "SITE", self.root / "site"),
         ]
         for patch in self.patches:
             patch.start()
@@ -78,51 +70,69 @@ class _PinMixin:
             patch.stop()
         self.tmp.cleanup()
 
-    def _pin(self, sha: str) -> dict:
-        return {"weft": {"sha": sha}}
+    def _pin(self, site_tree: str) -> dict:
+        return {"weft": {"site_tree": site_tree}}
 
-    def test_unresolvable_pin_exits(self) -> None:
+    def test_missing_site_tree_exits(self) -> None:
+        stderr = io.StringIO()
+        with redirect_stderr(stderr), self.assertRaises(SystemExit) as cm:
+            bundle.assert_weft_pin({"weft": {}})
+        self.assertEqual(cm.exception.code, 1)
+        self.assertIn("site_tree pin is missing", stderr.getvalue())
+
+    def test_unresolvable_site_tree_exits(self) -> None:
         missing = "0" * 40
         stderr = io.StringIO()
         with redirect_stderr(stderr), self.assertRaises(SystemExit) as cm:
-            self.module.require_weft_pin(missing)
+            bundle.assert_weft_pin(self._pin(missing))
         self.assertEqual(cm.exception.code, 1)
         self.assertIn("cannot be resolved", stderr.getvalue())
         self.assertIn(missing, stderr.getvalue())
 
-    def test_pin_not_in_head_history_exits(self) -> None:
-        orphan = _orphan_commit(self.root)
+    def test_mismatched_site_tree_exits(self) -> None:
+        _git(self.root, "checkout", "-b", "other")
+        (self.root / "site" / "index.html").write_text("<h1>other</h1>\n", encoding="utf-8")
+        _git(self.root, "add", "site/index.html")
+        _git(self.root, "commit", "-m", "other site")
+        other_tree = _site_tree(self.root)
+        _git(self.root, "checkout", "main")
+        self.assertNotEqual(other_tree, self.site_tree)
+        # The other tree is still in the object database, but it is not HEAD:site.
         stderr = io.StringIO()
         with redirect_stderr(stderr), self.assertRaises(SystemExit) as cm:
-            self.module.require_weft_pin(orphan)
+            bundle.assert_weft_pin(self._pin(other_tree))
         self.assertEqual(cm.exception.code, 1)
-        self.assertIn("is not in HEAD's history", stderr.getvalue())
-        self.assertIn(orphan, stderr.getvalue())
+        self.assertIn("does not match the pinned weft site tree", stderr.getvalue())
+        self.assertIn(other_tree, stderr.getvalue())
+        self.assertIn(self.site_tree, stderr.getvalue())
 
-    def test_pin_on_head_passes(self) -> None:
-        self.module.require_weft_pin(self.head)
+    def test_matching_site_tree_passes(self) -> None:
+        bundle.assert_weft_pin(self._pin(self.site_tree))
 
+    def test_pin_survives_squash_of_a_site_changing_branch(self) -> None:
+        # Main is self.site_tree. A branch changes site/ and pins the new tree.
+        _git(self.root, "checkout", "-b", "feature")
+        (self.root / "site" / "index.html").write_text("<h1>feature</h1>\n", encoding="utf-8")
+        _git(self.root, "add", "site/index.html")
+        _git(self.root, "commit", "-m", "feature site")
+        feature_tip = _git(self.root, "rev-parse", "HEAD").stdout.strip()
+        feature_tree = _site_tree(self.root)
+        self.assertNotEqual(feature_tree, self.site_tree)
+        bundle.assert_weft_pin(self._pin(feature_tree))
 
-class BundleRequireWeftPinTest(_PinMixin, unittest.TestCase):
-    module = bundle
-
-    def test_assert_weft_pin_rejects_unresolvable(self) -> None:
-        stderr = io.StringIO()
-        with redirect_stderr(stderr), self.assertRaises(SystemExit) as cm:
-            bundle.assert_weft_pin(self._pin("0" * 40))
-        self.assertEqual(cm.exception.code, 1)
-        self.assertIn("cannot be resolved", stderr.getvalue())
-
-    def test_assert_weft_pin_rejects_off_history(self) -> None:
-        orphan = _orphan_commit(self.root)
-        stderr = io.StringIO()
-        with redirect_stderr(stderr), self.assertRaises(SystemExit) as cm:
-            bundle.assert_weft_pin(self._pin(orphan))
-        self.assertEqual(cm.exception.code, 1)
-        self.assertIn("is not in HEAD's history", stderr.getvalue())
-
-    def test_assert_weft_pin_accepts_head(self) -> None:
-        bundle.assert_weft_pin(self._pin(self.head))
+        # Squash landing onto main: the branch tip is not an ancestor of the
+        # squash commit, but site/ (and the pin) are unchanged, so the check
+        # still passes.
+        _git(self.root, "checkout", "main")
+        _git(self.root, "merge", "--squash", "feature")
+        _git(self.root, "commit", "-m", "squash feature")
+        squash = _git(self.root, "rev-parse", "HEAD").stdout.strip()
+        ancestry = _git(
+            self.root, "merge-base", "--is-ancestor", feature_tip, squash, check=False
+        )
+        self.assertNotEqual(ancestry.returncode, 0)
+        self.assertEqual(_site_tree(self.root), feature_tree)
+        bundle.assert_weft_pin(self._pin(feature_tree))
 
 
 if __name__ == "__main__":

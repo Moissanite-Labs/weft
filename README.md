@@ -38,8 +38,8 @@ This repository holds the software we use to run those falsifiers, alongside thr
   exploratory update, keeps whichever does better on its target, and leaves a frozen core untouched while the edges adapt.
 - **Bounds you can check.** A weight update is committed only if it stays within a fixed distance of a saved baseline,
   `‖W − W₀‖_F ≤ R`, and fits its resource budget, `budget ≥ cost > 0`. The same predicate is implemented in Python, C11 and
-  JavaScript. Python and C11 are tested against one shared vector file with 27 cases: 15 weight-update, 8 tension and
-  4 royalty. The JavaScript gate covers weight updates only and runs 10 of those 15 cases, with the other 5 listed
+  JavaScript. Python and C11 are tested against one shared vector file with 38 cases: 24 weight-update, 8 tension and
+  6 royalty. The JavaScript gate covers weight updates only and runs 18 of those 24 cases, with the other 6 listed
   as deferred in its test.
 - **Interfaces as fields.** [*Eido*](https://github.com/Moissanite-Labs/weft-eido), Weft's design language (internal name *Aywa*), treats visual style as a point in a continuous space and feeds
   the screen small hash-checked lines instead of loose JSON.
@@ -59,7 +59,7 @@ holds the software, the site and the papers.
 | Component | Path | What it is | Status |
 |---|---|---|---|
 | C1 · Plasm | [`weft/runtime/plasm`](weft/runtime/plasm) | Shared-memory arena, A/B candidate updates, frozen-core mask, provenance watermark checks | ✅ runs · tested |
-| C2 · Invariants | [`weft/runtime/invariants`](weft/runtime/invariants) | The safety gate in Python, C11 and [JS](site/assets/js/invariant-gate.js), tested against one shared file of 27 conformance vectors (JS has the weight-update gate only and runs 10 of its 15 vectors) | ✅ runs · tested |
+| C2 · Invariants | [`weft/runtime/invariants`](weft/runtime/invariants) | The safety gate in Python, C11 and [JS](site/assets/js/invariant-gate.js), tested against one shared file of 38 conformance vectors (JS has the weight-update gate only and runs 18 of its 24 vectors) | ✅ runs · tested |
 | C3 · IC | [`weft/runtime/ic`](weft/runtime/ic) | Interaction-combinator reducer, binary serializer, graph-committed execution record | ✅ runs · tested |
 | C4 · Ledger | [`weft/runtime/ledger`](weft/runtime/ledger) | Solidity drafts for provenance, metering and disputes | 📝 draft · not compiled in CI, never deployed |
 | C5 · Gateway | [`weft/runtime/gateway`](weft/runtime/gateway) | Offline contract simulator, pure-Python Keccak-256, ABI topic checks | 🧪 simulation only |

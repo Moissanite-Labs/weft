@@ -39,77 +39,13 @@ def load_manifest() -> dict:
         return json.load(fh)
 
 
-def ensure_commit(sha: str) -> bool:
+def ensure_tree(sha: str) -> bool:
     probe = subprocess.run(
-        ["git", "cat-file", "-e", f"{sha}^{{commit}}"],
+        ["git", "cat-file", "-e", f"{sha}^{{tree}}"],
         cwd=ROOT,
         capture_output=True,
     )
-    if probe.returncode == 0:
-        return True
-    fetch = subprocess.run(
-        ["git", "fetch", "origin", sha],
-        cwd=ROOT,
-        capture_output=True,
-    )
-    if fetch.returncode != 0:
-        return False
-    verify = subprocess.run(
-        ["git", "cat-file", "-e", f"{sha}^{{commit}}"],
-        cwd=ROOT,
-        capture_output=True,
-    )
-    return verify.returncode == 0
-
-
-def is_shallow_repository() -> bool:
-    probe = subprocess.run(
-        ["git", "rev-parse", "--is-shallow-repository"],
-        cwd=ROOT,
-        capture_output=True,
-        text=True,
-    )
-    return probe.returncode == 0 and probe.stdout.strip() == "true"
-
-
-def pin_is_in_head_history(sha: str) -> bool:
-    check = subprocess.run(
-        ["git", "merge-base", "--is-ancestor", sha, "HEAD"],
-        cwd=ROOT,
-        capture_output=True,
-    )
-    if check.returncode == 0:
-        return True
-    if not is_shallow_repository():
-        return False
-    unshallow = subprocess.run(
-        ["git", "fetch", "--unshallow"],
-        cwd=ROOT,
-        capture_output=True,
-    )
-    if unshallow.returncode != 0:
-        return False
-    retry = subprocess.run(
-        ["git", "merge-base", "--is-ancestor", sha, "HEAD"],
-        cwd=ROOT,
-        capture_output=True,
-    )
-    return retry.returncode == 0
-
-
-def require_weft_pin(pinned: str) -> None:
-    if not ensure_commit(pinned):
-        print(
-            f"error: pinned weft commit {pinned} cannot be resolved",
-            file=sys.stderr,
-        )
-        sys.exit(1)
-    if not pin_is_in_head_history(pinned):
-        print(
-            f"error: pinned weft commit {pinned} is not in HEAD's history",
-            file=sys.stderr,
-        )
-        sys.exit(1)
+    return probe.returncode == 0
 
 
 def site_tree_at(rev: str) -> str:
@@ -121,18 +57,32 @@ def site_tree_at(rev: str) -> str:
 
 
 def assert_weft_pin(manifest: dict) -> None:
-    pinned = manifest["weft"]["sha"]
-    require_weft_pin(pinned)
+    """Require weft.site_tree to exist and to equal HEAD:site.
+
+    The pin is the git tree hash of site/, not a commit SHA, so it still
+    resolves after a squash merge: the squash commit keeps the same site/
+    tree. The build copies the working-tree site/ into dist/weft only after
+    this check passes, so the deployed mirror matches the pinned source.
+    """
+    pinned = (manifest.get("weft") or {}).get("site_tree")
+    if not isinstance(pinned, str) or not pinned:
+        print("error: weft site_tree pin is missing", file=sys.stderr)
+        sys.exit(1)
+    if not ensure_tree(pinned):
+        print(
+            f"error: pinned weft site tree {pinned} cannot be resolved",
+            file=sys.stderr,
+        )
+        sys.exit(1)
     try:
         head_site = site_tree_at("HEAD")
-        pin_site = site_tree_at(pinned)
     except subprocess.CalledProcessError as exc:
         print(f"error: could not resolve site/ tree: {exc}", file=sys.stderr)
         sys.exit(1)
-    if head_site != pin_site:
+    if head_site != pinned:
         print(
-            "error: site/ at HEAD does not match site/ at pinned weft "
-            f"{pinned} (HEAD:site={head_site}, pin:site={pin_site})",
+            "error: site/ at HEAD does not match the pinned weft site tree "
+            f"{pinned} (HEAD:site={head_site})",
             file=sys.stderr,
         )
         sys.exit(1)
@@ -280,7 +230,7 @@ def build() -> None:
     lab = manifest["lab_site"]
     lab_root = fetch_lab_checkout(lab["sha"], lab["repo"] + ".git")
     copy_lab_docs(lab_root, lab["docs_path"])
-    print(f"Built {DIST} (weft @ {manifest['weft']['sha'][:12]}, lab @ {lab['sha'][:12]})")
+    print(f"Built {DIST} (weft site_tree @ {manifest['weft']['site_tree'][:12]}, lab @ {lab['sha'][:12]})")
 
 
 def main() -> None:

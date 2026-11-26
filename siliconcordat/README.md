@@ -6,12 +6,14 @@ Pinned sources live in [`sources-manifest.json`](sources-manifest.json):
 
 | Input | Pin |
 |-------|-----|
-| Weft `site/` | `50d0f938f470856be99520825cc11a93c87664af` on this repo |
-| Public lab `docs/` | `a42df12a53ab3c86b31573012a16ee5a62ce1a26` on [Moissanite-Labs/.github](https://github.com/Moissanite-Labs/.github) |
+| Weft `site/` | `weft.site_tree`, the git tree hash of `site/` on this repo |
+| Public lab `docs/` | `lab_site.sha` on [Moissanite-Labs/.github](https://github.com/Moissanite-Labs/.github) |
+
+The Weft pin is a tree hash, not a commit SHA, so a squash merge that keeps the same `site/` tree still satisfies the check. The build copies `site/` into `dist/weft` only after `HEAD:site` equals the pin.
 
 ## Rebuild `dist/`
 
-From any commit whose **`site/` tree** matches the Weft pin (the build compares `HEAD:site` to `{pin}:site` and fails if they differ):
+From any commit whose **`site/` tree** equals `weft.site_tree` (the build compares `HEAD:site` to the pin and fails if they differ):
 
 ```bash
 python3 scripts/build_siliconcordat_bundle.py
